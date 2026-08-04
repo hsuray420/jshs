@@ -1,5 +1,5 @@
 import { getAdminFile, getR2 } from "../../../../db/admin-store";
-import { getChatGPTUser } from "../../../chatgpt-auth";
+import { getAdminSession } from "../../../admin/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -12,12 +12,8 @@ export async function GET(
   if (!file) return new Response("Not found", { status: 404 });
 
   if (file.visibility !== "public") {
-    const user = await getChatGPTUser();
-    const allowedEmails = (process.env.ADMIN_EMAILS || "")
-      .split(",")
-      .map((email) => email.trim().toLowerCase())
-      .filter(Boolean);
-    if (!user || !allowedEmails.includes(user.email.toLowerCase())) {
+    const user = await getAdminSession();
+    if (!user) {
       return new Response("Forbidden", { status: 403 });
     }
   }
