@@ -22,6 +22,15 @@ export async function POST(request: Request) {
   return Response.json({ ok: true, line: result });
 }
 
+export async function GET() {
+  return Response.json({
+    ok: true,
+    endpoint: "monitor-alert",
+    configured: Boolean(process.env.MONITOR_ALERT_SECRET),
+    method: "POST",
+  });
+}
+
 async function safeJson(request: Request) {
   try {
     return (await request.json()) as Record<string, unknown>;

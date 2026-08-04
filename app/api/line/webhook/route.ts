@@ -47,3 +47,12 @@ export async function POST(request: Request) {
     next: "Connect LINE reply logic after channel access token is configured.",
   });
 }
+
+export async function GET() {
+  return Response.json({
+    ok: true,
+    endpoint: "line-webhook",
+    configured: Boolean(process.env.LINE_CHANNEL_SECRET),
+    method: "POST",
+  });
+}

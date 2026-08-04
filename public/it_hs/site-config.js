@@ -1,4 +1,4 @@
 window.JSHS_SITE_CONFIG = {
-    schoolsCsvPath: 'schools.csv',
+    schoolsCsvPath: '/api/schools.csv',
     schoolsDataVar: 'IT_HS_SCHOOLS'
 };

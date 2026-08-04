@@ -113,6 +113,14 @@ export async function listSiteSettings() {
   return result.results ?? [];
 }
 
+export async function getSiteSetting(key: string) {
+  await ensureAdminSchema();
+  return getD1()
+    .prepare(`SELECT * FROM site_settings WHERE key = ? LIMIT 1`)
+    .bind(key)
+    .first<SiteSetting>();
+}
+
 export async function upsertSiteSetting(
   key: string,
   value: string,
