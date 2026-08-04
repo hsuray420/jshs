@@ -19,8 +19,7 @@ export default async function AdminLoginPage({
         <p className="admin-eyebrow">Admin</p>
         <h1>後台登入</h1>
         <p className="admin-muted">
-          請輸入後台密碼。登入後會停留在 ct-jshs-edu.abrdns.com，不會跳到
-          ChatGPT 網站。
+          請輸入後台密碼。登入後會停留在 ct-jshs-edu.abrdns.com，不會離開本站。
         </p>
         {error ? (
           <p className="admin-alert">
