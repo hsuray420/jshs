@@ -123,7 +123,7 @@
                             </div>
                             <div class="rounded-[28px] bg-white p-5 shadow-sm border border-neo-blueGray/50">
                                 <h3 class="font-semibold text-lg text-neo-text mb-1">未來職涯想像</h3>
-                                <p class="text-sm text-neo-muted leading-relaxed">不只是升學，更要看見未來的無限可能。了解不同學制對應的職業發展與科系。提升</p>
+                                <p class="text-sm text-neo-muted leading-relaxed">不只是升學，更要看見未來的無限可能。了解不同學制對應的職業發展與科系。</p>
                             </div>
                             <div class="rounded-[28px] bg-white p-5 shadow-sm border border-neo-blueGray/50">
                                 <h3 class="font-semibold text-lg text-neo-text mb-1">我的積分試算</h3>
@@ -282,7 +282,7 @@
                                 <td>五科分數換算為 100 制比序積點（上限 30 分）；作文等級計入 111 制比序積分。</td>
                             </tr>
                             <tr class="total-row">
-                                <td colspan="4" class="total-cell">總積分（志願序30 + 就近10 + 弱勢3 + 多元27 + 會考30）</td>
+                                <td colspan="4" class="total-cell">總積分（志願序30 + 就近10 + 弱勢依當年度簡章 + 多元27 + 會考30）</td>
                                 <td class="total-score">100 分</td>
                             </tr>
                         </tbody>
@@ -348,7 +348,7 @@
                                 <option value="1">偏鄉/中低（1 分）</option>
                                 <option value="2">低收（2 分）</option>
                             </select>
-                            <p class="calc-small-note">依弱勢種類擇一計分，最多 3 分。</p>
+                            <p class="calc-small-note">依弱勢種類擇一計分，目前試算最高 2 分；若當年度簡章調整，請以官方公告為準。</p>
                         </div>
                         <div class="calc-help-detail" id="help-weakScore">
                             <p>扶助弱勢採擇一項計分。若符合偏鄉或中低收入條件，可得 1 分；若符合低收入條件，可得 2 分。系統會以最高項目計算。</p>
@@ -519,12 +519,12 @@
                 <aside class="result-panel">
                     <div class="result-heading">計算結果</div>
                     <div class="panel-card result-card result-card-primary">
-                        <p class="result-label">會考比序積點</p>
+                        <p class="result-label">會考 111 制比序積分</p>
                         <p class="stat-value" id="resPcts">0</p>
                         <p class="result-unit">/ 111 點</p>
                     </div>
                     <div class="panel-card result-card">
-                        <p class="result-label text-neo-muted">免試總積分</p>
+                        <p class="result-label text-neo-muted">免試總積分（100 制）</p>
                         <p class="stat-value text-neo-text" id="resPoints">0</p>
                         <p class="result-unit text-neo-muted">/ 100 分</p>
                     </div>
@@ -626,7 +626,7 @@
                 <div class="mb-8">
                     <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">學校查詢</p>
                     <h2 class="section-title">中投區高中職學校一覽表。</h2>
-                    <p class="section-copy">依 115 學年度中投區免試入學簡章整理，學校以錄取門檻與區域聲量概略排序；招生名額保留空白欄，之後可接正式公告或落點分析資料。</p>
+                    <p class="section-copy">依 115 學年度中投區免試入學簡章整理，學校以錄取門檻與區域聲量概略排序；名額與分數若尚未公開，畫面會以待公告或待補標示。</p>
                 </div>
                 <div class="school-toolbar">
                     <div class="school-search-wrap">
@@ -659,7 +659,7 @@
                 <div class="school-summary" id="schoolSummary">載入學校清單中...</div>
                 <div id="schoolGrid" class="school-grid" aria-live="polite"></div>
                 <div id="schoolEmpty" class="school-empty hidden">沒有符合條件的學校，請換一個分類或關鍵字。</div>
-                <p class="school-source-note">資料來源：115 學年度中投區高級中等學校免試入學簡章；最低錄取分數以 CTTW 中投區歷年錄取分數查詢可取得資料先行整理，未公開或 114 年仍更新中的學校保留空白。</p>
+                <p class="school-source-note">資料來源：115 學年度中投區高級中等學校免試入學簡章；最低錄取分數以 CTTW 中投區歷年錄取分數查詢可取得資料先行整理，未公開或尚待查核的學校以待補標示。</p>
                 <div class="section-footer">
                     <button type="button" data-page="download">下一頁：資料下載 →</button>
                 </div>
@@ -671,13 +671,14 @@
                 <div>
                     <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">報名資料與下載</p>
                     <h2 class="section-title">常用報名資料與下載連結。</h2>
-                    <p class="section-copy mb-6">本段提供報名簡章、表單範本與官方公告連結，方便你準備高中職免試入學。</p>
+                    <p class="section-copy mb-6">本段提供報名簡章、表單範本、學校清單與後台可更新的公開檔案入口，方便你準備高中職免試入學。</p>
                 </div>
                 <div class="space-y-4">
                     <a href="https://ct.entry.edu.tw" target="_blank" rel="noopener noreferrer" class="ui-btn ui-btn-primary w-full">前往官方簡章網站</a>
                     <a href="schools.csv" download class="ui-btn w-full">下載學校清單 CSV</a>
+                    <a href="../admin" class="ui-btn w-full">管理後台上傳檔案</a>
                 </div>
-                <div class="text-neo-muted text-sm leading-relaxed lg:col-span-2">正式簡章、表單與實際招生名額請以中投區高級中等學校免試入學委員會公告為準。</div>
+                <div class="text-neo-muted text-sm leading-relaxed lg:col-span-2">正式簡章、表單與實際招生名額請以中投區高級中等學校免試入學委員會公告為準。公開檔案上傳到後台後，下一階段可直接顯示在這裡。</div>
                 <div class="section-footer">
                     <button type="button" data-page="faq">下一頁：FAQ →</button>
                 </div>

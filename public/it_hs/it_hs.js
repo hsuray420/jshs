@@ -513,28 +513,26 @@ function resetForm() {
         const el = document.getElementById(id);
         if (el) el.selectedIndex = 0;
     });
-    // 均衡學習預設為四領域皆符合（12 分）
     ['bal_domain_health','bal_domain_arts','bal_domain_general','bal_domain_tech'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.checked = true;
+        if (el) el.checked = false;
     });
     const low = document.getElementById('bal_low_income'); if (low) low.checked = false;
 
-    // 德行預設
     const club = document.getElementById('mor_club_terms'); if (club) club.value = 0;
     const serv = document.getElementById('mor_service_learning'); if (serv) serv.value = '0';
 
-    // 無記過預設
-    const nod = document.getElementById('nod_record'); if (nod) nod.value = '6';
+    const nod = document.getElementById('nod_record'); if (nod) nod.selectedIndex = 0;
 
-    // 獎勵預設（範例：大功1次+小功1次 => 4 分）
-    const maj = document.getElementById('awd_major'); if (maj) maj.value = 1;
-    const min = document.getElementById('awd_minor'); if (min) min.value = 1;
+    const maj = document.getElementById('awd_major'); if (maj) maj.value = 0;
+    const min = document.getElementById('awd_minor'); if (min) min.value = 0;
     const comm = document.getElementById('awd_comm'); if (comm) comm.value = 0;
+    const weakScoreEl = document.getElementById('weakScore');
+    if (weakScoreEl) weakScoreEl.value = '0';
     const localScoreEl = document.getElementById('localScore');
     if (localScoreEl) localScoreEl.checked = true;
 
-    ['resPoints','resPcts','d_pref','d_local','d_multi'].forEach(id => {
+    ['resPoints','resPcts','d_pref','d_local','d_multi','examScoreDisplay','exam111Display'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerText = '0';
     });
@@ -640,6 +638,15 @@ function escapeHtml(value) {
     }[char]));
 }
 
+function normalizeSchoolRows(rows) {
+    return rows
+        .filter(school => school && school['學校代碼'] && school['學校名稱'])
+        .map(school => ({
+            ...school,
+            '分數來源備註': school['分數來源備註'] === 'test' ? 'CTTW中投區歷年錄取分數查詢 113年；科別:普通科' : school['分數來源備註']
+        }));
+}
+
 function programItems(programText) {
     if (!programText) return [];
     return programText.split('；').filter(Boolean).map(item => {
@@ -738,9 +745,12 @@ function renderSchools() {
         const shownPrograms = programs.slice(0, 24);
         const score = school['最低錄取分數'] || '待補';
         const scoreYear = school['分數年度'] ? `${school['分數年度']}年` : '未公告';
-        const quotaBlank = school['招生名額'] || '空白保留';
+        const quotaDetail = school['招生名額'] || '以簡章名額為準';
         const publicClass = school['公私立'] === '私立' ? 'is-private' : 'is-public';
-        const website = school['官網'] || '#';
+        const website = school['官網'];
+        const websiteAction = website
+            ? `<a class="school-link" href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer">學校官網</a>`
+            : `<span class="school-link is-disabled" aria-disabled="true">官網待補</span>`;
         return `
             <article class="panel-card school-card">
                 <div class="school-card-head">
@@ -760,7 +770,7 @@ function renderSchools() {
                     <dt>地址</dt><dd>${escapeHtml(school['地址'])}</dd>
                     <dt>招生區</dt><dd>${escapeHtml(school['招生區'])}</dd>
                     <dt>簡章名額</dt><dd>${escapeHtml(school['簡章招生名額'] || '待公告')}</dd>
-                    <dt>招生名額</dt><dd>${escapeHtml(quotaBlank)}</dd>
+                    <dt>名額補充</dt><dd>${escapeHtml(quotaDetail)}</dd>
                     <dt>錄取分數</dt><dd>${escapeHtml(score)}</dd>
                     <dt>特色班</dt><dd>${escapeHtml(school['資優班/特色班'] || '請查官網')}</dd>
                 </dl>
@@ -782,7 +792,7 @@ function renderSchools() {
                     <button type="button" class="school-wish-add-btn ${wishlistContainsSchool(school) ? 'is-added' : ''}" data-wish-add="${escapeHtml(school['學校代碼'])}">
                         ${wishlistContainsSchool(school) ? '✓ 已加入志願' : '+ 加入志願'}
                     </button>
-                    <a class="school-link" href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer" ${website === '#' ? 'aria-disabled="true"' : ''}>學校官網</a>
+                    ${websiteAction}
                 </div>
             </article>
         `;
@@ -807,6 +817,7 @@ function renderSchools() {
                 const index = wishlistState.indexOf(code);
                 if (index !== -1) {
                     wishlistState.splice(index, 1);
+                    saveWishlistState();
                     renderWishlist();
                     renderSchools();
                 }
@@ -830,14 +841,33 @@ function useEmbeddedSchoolsData() {
     const config = getSchoolDataConfig();
     const source = window[config.dataVar];
     if (!Array.isArray(source) || source.length === 0) return false;
-    allSchools = source.map(school => ({ ...school }));
+    allSchools = normalizeSchoolRows(source);
     renderSchools();
     return true;
 }
 
+const WISHLIST_STORAGE_KEY = 'jshs-it-hs-wishlist-v1';
 let wishlistState = [];
 const WISHLIST_MAX = 50;
 let wishlistSearchTimer = null;
+
+function loadWishlistState() {
+    try {
+        const raw = window.localStorage?.getItem(WISHLIST_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        if (Array.isArray(parsed)) wishlistState = parsed.filter(Boolean).slice(0, WISHLIST_MAX);
+    } catch (error) {
+        wishlistState = [];
+    }
+}
+
+function saveWishlistState() {
+    try {
+        window.localStorage?.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(wishlistState));
+    } catch (error) {
+        // localStorage 可能被無痕或瀏覽器設定停用；不影響基本操作。
+    }
+}
 
 function wishlistContainsSchool(school) {
     if (!school) return false;
@@ -852,6 +882,7 @@ function addSchoolToWishlist(school) {
         return false;
     }
     wishlistState.push(school['學校代碼']);
+    saveWishlistState();
     renderWishlist();
     return true;
 }
@@ -859,6 +890,7 @@ function addSchoolToWishlist(school) {
 function removeWishlistAt(index) {
     if (index < 0 || index >= wishlistState.length) return;
     wishlistState.splice(index, 1);
+    saveWishlistState();
     renderWishlist();
     renderSchools();
 }
@@ -870,6 +902,7 @@ function moveWishlist(index, direction) {
     const temp = wishlistState[index];
     wishlistState[index] = wishlistState[target];
     wishlistState[target] = temp;
+    saveWishlistState();
     renderWishlist();
 }
 
@@ -877,6 +910,7 @@ function clearWishlist() {
     if (!wishlistState.length) return;
     if (!confirm('確定要清空所有志願嗎？')) return;
     wishlistState = [];
+    saveWishlistState();
     renderWishlist();
     renderSchools();
 }
@@ -1123,7 +1157,7 @@ function initSchools() {
             return response.text();
         })
         .then(text => {
-            allSchools = parseCsv(text);
+            allSchools = normalizeSchoolRows(parseCsv(text));
             renderSchools();
         })
         .catch(() => {
@@ -1149,6 +1183,7 @@ window.addEventListener('DOMContentLoaded', () => {
     toggleMobileMenu();
     initPageRouter();
     initCalculator();
+    loadWishlistState();
     initAnalysisControls();
     initSchools();
     renderAnalysis();
@@ -1176,7 +1211,7 @@ window.IT_HS_SCHOOLS = [
     "招生名額": "",
     "最低錄取分數": "5A6+作文4級分 國A++",
     "分數年度": "113",
-    "分數來源備註": "test",
+    "分數來源備註": "CTTW中投區歷年錄取分數查詢 113年；科別:普通科",
     "資優班/特色班": "資優/特色班請查官網公告",
     "排序分數": "10000"
   },
@@ -3269,115 +3304,5 @@ window.IT_HS_SCHOOLS = [
     "分數來源備註": "",
     "資優班/特色班": "",
     "排序分數": "600"
-  },
-  {
-    "排名": "97",
-    "學校代碼": "",
-    "學校名稱": "",
-    "公私立": "",
-    "招生區": "",
-    "學制分類": "",
-    "男女校": "",
-    "縣市": "",
-    "區": "",
-    "地址": "",
-    "官網": "",
-    "電話": "",
-    "科系與名額": "",
-    "簡章招生名額": "",
-    "招生名額": "",
-    "最低錄取分數": "",
-    "分數年度": "",
-    "分數來源備註": "",
-    "資優班/特色班": "",
-    "排序分數": ""
-  },
-  {
-    "排名": "98",
-    "學校代碼": "",
-    "學校名稱": "",
-    "公私立": "",
-    "招生區": "",
-    "學制分類": "",
-    "男女校": "",
-    "縣市": "",
-    "區": "",
-    "地址": "",
-    "官網": "",
-    "電話": "",
-    "科系與名額": "",
-    "簡章招生名額": "",
-    "招生名額": "",
-    "最低錄取分數": "",
-    "分數年度": "",
-    "分數來源備註": "",
-    "資優班/特色班": "",
-    "排序分數": ""
-  },
-  {
-    "排名": "99",
-    "學校代碼": "",
-    "學校名稱": "",
-    "公私立": "",
-    "招生區": "",
-    "學制分類": "",
-    "男女校": "",
-    "縣市": "",
-    "區": "",
-    "地址": "",
-    "官網": "",
-    "電話": "",
-    "科系與名額": "",
-    "簡章招生名額": "",
-    "招生名額": "",
-    "最低錄取分數": "",
-    "分數年度": "",
-    "分數來源備註": "",
-    "資優班/特色班": "",
-    "排序分數": ""
-  },
-  {
-    "排名": "100",
-    "學校代碼": "",
-    "學校名稱": "",
-    "公私立": "",
-    "招生區": "",
-    "學制分類": "",
-    "男女校": "",
-    "縣市": "",
-    "區": "",
-    "地址": "",
-    "官網": "",
-    "電話": "",
-    "科系與名額": "",
-    "簡章招生名額": "",
-    "招生名額": "",
-    "最低錄取分數": "",
-    "分數年度": "",
-    "分數來源備註": "",
-    "資優班/特色班": "",
-    "排序分數": ""
-  },
-  {
-    "排名": "101",
-    "學校代碼": "",
-    "學校名稱": "",
-    "公私立": "",
-    "招生區": "",
-    "學制分類": "",
-    "男女校": "",
-    "縣市": "",
-    "區": "",
-    "地址": "",
-    "官網": "",
-    "電話": "",
-    "科系與名額": "",
-    "簡章招生名額": "",
-    "招生名額": "",
-    "最低錄取分數": "",
-    "分數年度": "",
-    "分數來源備註": "",
-    "資優班/特色班": "",
-    "排序分數": ""
   }
 ];

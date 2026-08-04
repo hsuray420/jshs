@@ -1906,6 +1906,16 @@ header {
     color: var(--accent);
 }
 
+.school-link.is-disabled {
+    color: var(--muted);
+    cursor: default;
+    opacity: 0.72;
+}
+
+.school-link.is-disabled:hover {
+    color: var(--muted);
+}
+
 .school-empty {
     border-radius: var(--radius-lg);
     background: rgba(255,255,255,0.68);
