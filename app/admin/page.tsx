@@ -19,9 +19,7 @@ export default async function AdminPage() {
         <section className="admin-panel">
           <p className="admin-eyebrow">Admin</p>
           <h1>此帳號沒有管理權限</h1>
-          <p className="admin-muted">
-            你已登入為 {admin.user.email}，但不在管理員名單內。
-          </p>
+          <p className="admin-muted">你已登入 LINE，但不在管理員名單內。</p>
           <a className="admin-button" href={admin.signOutPath}>
             登出
           </a>
@@ -42,7 +40,7 @@ export default async function AdminPage() {
         <div>
           <p className="admin-eyebrow">JSHS Admin</p>
           <h1>網站管理後台</h1>
-          <p className="admin-muted">登入帳號：{admin.user.email}</p>
+          <p className="admin-muted">LINE 管理員：{admin.user.displayName}</p>
         </div>
         <div className="admin-actions">
           <a href="/jshs/jshs.html">看前台</a>

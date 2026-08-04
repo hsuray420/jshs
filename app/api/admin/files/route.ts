@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     category,
     visibility,
     description,
-    uploaded_by: admin.user.email,
+    uploaded_by: admin.user.displayName,
     created_at: createdAt,
   });
 

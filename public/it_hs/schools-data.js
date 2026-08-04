@@ -1,4 +1,4 @@
-// Generated from schools.csv by jshs_dev.html.
+// Embedded fallback data generated from schools.csv.
 window.IT_HS_SCHOOLS = [
   {
     "排名": "1",

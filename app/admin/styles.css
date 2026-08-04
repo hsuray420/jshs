@@ -122,6 +122,18 @@
   gap: 14px;
 }
 
+.admin-line-button {
+  background: #06c755;
+  border-color: #06c755;
+  color: #fff;
+  width: 100%;
+}
+
+.admin-line-button:hover {
+  background: #05b64d;
+  border-color: #05b64d;
+}
+
 .admin-alert,
 .admin-success {
   border-radius: 8px;

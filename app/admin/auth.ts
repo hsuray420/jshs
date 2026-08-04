@@ -5,7 +5,9 @@ const ADMIN_COOKIE = "jshs_admin_session";
 const SESSION_HOURS = 8;
 
 export type AdminSession = {
-  email: string;
+  lineUserId: string;
+  displayName: string;
+  pictureUrl?: string;
 };
 
 export async function requireAdmin() {
@@ -20,21 +22,35 @@ export async function getAdminSession(): Promise<AdminSession | null> {
   const session = cookieStore.get(ADMIN_COOKIE)?.value;
   if (!session) return null;
 
-  const [expiresText, signature] = session.split(".");
-  const expires = Number(expiresText);
-  if (!expires || !signature || expires < Date.now()) return null;
+  const [payload, signature] = session.split(".");
+  if (!payload || !signature) return null;
 
-  const expected = await signSession(expiresText);
+  const expected = await signSession(payload);
   if (!constantTimeEqual(signature, expected)) return null;
 
-  return { email: process.env.ADMIN_EMAILS || "site-admin" };
+  const data = parseSessionPayload(payload);
+  if (!data) return null;
+
+  const expires = Number(data.expires);
+  if (!expires || !signature || expires < Date.now()) return null;
+
+  return {
+    lineUserId: data.lineUserId,
+    displayName: data.displayName || "LINE 管理員",
+    pictureUrl: data.pictureUrl,
+  };
 }
 
-export async function createAdminSessionCookie() {
-  const expires = String(Date.now() + SESSION_HOURS * 60 * 60 * 1000);
-  const signature = await signSession(expires);
+export async function createAdminSessionCookie(admin: Omit<AdminSession, "email">) {
+  const payload = toBase64Url(
+    JSON.stringify({
+      ...admin,
+      expires: Date.now() + SESSION_HOURS * 60 * 60 * 1000,
+    }),
+  );
+  const signature = await signSession(payload);
   const cookieStore = await cookies();
-  cookieStore.set(ADMIN_COOKIE, `${expires}.${signature}`, {
+  cookieStore.set(ADMIN_COOKIE, `${payload}.${signature}`, {
     httpOnly: true,
     maxAge: SESSION_HOURS * 60 * 60,
     path: "/",
@@ -52,14 +68,6 @@ export async function clearAdminSessionCookie() {
     sameSite: "lax",
     secure: true,
   });
-}
-
-export function hasAdminPasswordConfigured() {
-  return Boolean(process.env.ADMIN_PASSWORD && getSessionSecret());
-}
-
-export function verifyAdminPassword(password: string) {
-  return Boolean(process.env.ADMIN_PASSWORD && password === process.env.ADMIN_PASSWORD);
 }
 
 async function signSession(payload: string) {
@@ -84,7 +92,7 @@ async function signSession(payload: string) {
 }
 
 function getSessionSecret() {
-  return process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PASSWORD || "";
+  return process.env.ADMIN_SESSION_SECRET || process.env.LINE_LOGIN_CHANNEL_SECRET || "";
 }
 
 function constantTimeEqual(a: string, b: string) {
@@ -94,4 +102,24 @@ function constantTimeEqual(a: string, b: string) {
     result |= a.charCodeAt(index) ^ b.charCodeAt(index);
   }
   return result === 0;
+}
+
+function toBase64Url(value: string) {
+  return btoa(value).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+
+function fromBase64Url(value: string) {
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+  return atob(padded);
+}
+
+function parseSessionPayload(payload: string) {
+  try {
+    const parsed = JSON.parse(fromBase64Url(payload));
+    if (!parsed || typeof parsed.lineUserId !== "string") return null;
+    return parsed as AdminSession & { expires: number };
+  } catch {
+    return null;
+  }
 }

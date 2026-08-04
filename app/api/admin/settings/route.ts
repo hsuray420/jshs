@@ -14,12 +14,12 @@ export async function POST(request: Request) {
   await upsertSiteSetting(
     "site_notice",
     String(formData.get("site_notice") || "").slice(0, 1000),
-    admin.user.email,
+    admin.user.displayName,
   );
   await upsertSiteSetting(
     "contact_email",
     String(formData.get("contact_email") || "").slice(0, 200),
-    admin.user.email,
+    admin.user.displayName,
   );
 
   redirect("/admin");
