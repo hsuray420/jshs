@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中投區國中升學資訊網</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="jshs.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <a class="brand" href="#top" aria-label="中投區國中升學資訊網首頁">
+            <span class="brand-mark" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <path d="M6 24 L14 12 L20 18 L26 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="26" cy="8" r="2.4" fill="currentColor"/>
+                </svg>
+            </span>
+            <span class="brand-name">中投區國中升學資訊網</span>
+        </a>
+        <nav class="site-nav" aria-label="主要導覽">
+            <a href="#pathways">探索路徑</a>
+            <a href="#tools">升學工具</a>
+        </nav>
+        <a class="nav-cta" href="../it_hs/it_hs.html">高中資訊<span aria-hidden="true">→</span></a>
+    </header>
+
+    <main id="top">
+
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-inner section-shell">
+                <div class="hero-copy">
+                    <p class="eyebrow">116 年國中升學規劃</p>
+                    <h1 id="hero-title">找到你的<br><span>下一步</span></h1>
+                    <p class="hero-lede">從會考到入學，用最少的步驟，看清楚接下來的路。</p>
+                    <div class="hero-actions">
+                        <a class="button button-primary" href="#pathways">開始探索路徑<span aria-hidden="true">→</span></a>
+                        <a class="hero-quiet-link" href="../it_hs/it_hs.html#overview">先認識會考制度</a>
+                    </div>
+                </div>
+
+                <div class="hero-visual" aria-hidden="true">
+                    <svg class="fork-diagram" viewBox="0 0 420 320" fill="none">
+                        <path class="fork-trunk" d="M60 40 V150" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path class="fork-branch fork-branch-a" d="M60 150 C60 210, 150 200, 210 260" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path class="fork-branch fork-branch-b" d="M60 150 C60 210, 260 150, 360 190" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <circle class="fork-node fork-node-start" cx="60" cy="40" r="5"/>
+                        <circle class="fork-node fork-node-split" cx="60" cy="150" r="5"/>
+                        <circle class="fork-node fork-node-a" cx="210" cy="260" r="6"/>
+                        <circle class="fork-node fork-node-b" cx="360" cy="190" r="6"/>
+                        <text class="fork-label fork-label-a" x="222" y="264">高中職</text>
+                        <text class="fork-label fork-label-b" x="372" y="194">五專</text>
+                    </svg>
+                </div>
+
+                <div class="exam-status" aria-label="116年國中教育會考倒數">
+                    <span class="status-dot"></span>
+                    <span class="status-text">距離 116 年國中教育會考</span>
+                    <span class="status-time"><b id="days">00</b>天<b id="hours">00</b>時<b id="minutes">00</b>分<b id="seconds">00</b>秒</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="pathways-section section-shell" id="pathways" aria-labelledby="pathways-title">
+            <div class="section-heading">
+                <p class="section-label">選擇方向</p>
+                <h2 id="pathways-title">兩條路，通向不同的成長方式。</h2>
+                <p class="section-sub">了解學制差異，選一條你想投入的學習方式。</p>
+            </div>
+            <div class="pathway-grid">
+                <a class="pathway-card path-hs" href="../it_hs/it_hs.html">
+                    <span class="pathway-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M3 6.8 12 3l9 3.8-9 3.8-9-3.8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 11v4.4c0 1.7 2.7 3.6 6 3.6s6-1.9 6-3.6V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <h3>高中職</h3>
+                    <p>修業三年，兼顧學科基礎與職能探索，保留多元升學彈性。</p>
+                    <span class="pathway-link">進入高中職專區<span aria-hidden="true">→</span></span>
+                </a>
+                <a class="pathway-card path-five" href="../it_5/it_5.html">
+                    <span class="pathway-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <h3>五專</h3>
+                    <p>修業五年，及早深入專業實作，銜接就業與升學。</p>
+                    <span class="pathway-link">進入五專專區<span aria-hidden="true">→</span></span>
+                </a>
+            </div>
+        </section>
+
+        <section class="tools-section section-shell" id="tools" aria-labelledby="tools-title">
+            <div class="section-heading">
+                <p class="section-label">準備好時</p>
+                <h2 id="tools-title">升學工具都在這裡。</h2>
+            </div>
+            <div class="tool-row">
+                <a href="../it_hs/it_hs.html#calculator">
+                    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 8h8M8 12h3M8 16h3M13 12h3M13 16h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                    <span class="tool-text">積分試算</span>
+                </a>
+                <a href="../it_hs/it_hs.html#analysis">
+                    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9M11 19V4M18 19v-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                    <span class="tool-text">落點分析</span>
+                </a>
+                <a href="../it_hs/it_hs.html#schools">
+                    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="m20 20-4.3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                    <span class="tool-text">學校查詢</span>
+                </a>
+                <a href="../it_hs/it_hs.html#download">
+                    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 19h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                    <span class="tool-text">資料下載</span>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="footer-inner section-shell">
+            <a class="brand" href="#top">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none"><path d="M6 24 L14 12 L20 18 L26 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="8" r="2.4" fill="currentColor"/></svg>
+                </span>
+                <span class="brand-name">中投區國中升學資訊網</span>
+            </a>
+            <a class="footer-link" href="../it_hs/it_hs.html">高中職完整指南<span aria-hidden="true">→</span></a>
+        </div>
+    </footer>
+
+    <script src="jshs.js"></script>
+</body>
+</html>
