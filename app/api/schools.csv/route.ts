@@ -17,5 +17,5 @@ export async function GET(request: Request) {
     }
   }
 
-  return fetch(new URL("/it_hs/schools.csv", request.url));
+  return Response.redirect(new URL("/it_hs/schools.csv", request.url), 307);
 }
