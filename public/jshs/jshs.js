@@ -45,7 +45,7 @@ function closePathwayForm() {
 
 async function loadPublicConfig() {
     try {
-        const response = await fetch('/api/site-config', { headers: { 'accept': 'application/json' } });
+        const response = await fetch('/api/site-config/', { headers: { 'accept': 'application/json' } });
         if (!response.ok) return;
         const config = await response.json();
         if (formOpen && config.pathway_form_url) {
