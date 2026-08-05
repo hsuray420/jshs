@@ -181,6 +181,7 @@ export default async function AdminPage({
           <div className="admin-link-grid">
             <a href="/admin/code/">查看所有程式碼</a>
             <a href="/api/health">伺服器健康檢查</a>
+            <a href="/api/admission/calculate">後端試算 API</a>
             <a href="/api/schools.csv">學校 CSV</a>
             <a href="/it_hs/it_hs.html#calculator">積分試算</a>
             <a href="/it_hs/it_hs.html#analysis">落點分析</a>

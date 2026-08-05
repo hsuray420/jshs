@@ -431,6 +431,29 @@ function calculateDisadvantagedScore() {
     return Math.min(score, 3);
 }
 
+function calculatePreferenceScoreBySequence(preferenceSequence) {
+    if (preferenceSequence >= 1 && preferenceSequence <= 10) return 30;
+    if (preferenceSequence >= 11 && preferenceSequence <= 20) return 29;
+    if (preferenceSequence >= 21) return 28;
+    return 0;
+}
+
+function assignPreferenceSequences(choices) {
+    let currentSequence = 0;
+    let previousSchoolId = null;
+    return choices.map(choice => {
+        const schoolId = choice.schoolId || choice['學校代碼'];
+        if (schoolId !== previousSchoolId) currentSequence += 1;
+        previousSchoolId = schoolId;
+        return {
+            ...choice,
+            schoolId,
+            preferenceSequence: currentSequence,
+            preferenceScore: calculatePreferenceScoreBySequence(currentSequence)
+        };
+    });
+}
+
 function computeMultiLearningParts() {
     const domains = ['bal_domain_health','bal_domain_arts','bal_domain_general','bal_domain_tech']
         .map(id => document.getElementById(id))
@@ -1089,9 +1112,10 @@ function renderWishlist() {
     const wishSchools = wishlistState
         .map(code => allSchools.find(s => s['學校代碼'] === code))
         .filter(Boolean);
+    const sequencedWishes = assignPreferenceSequences(wishSchools);
 
     const counts = { 挑戰: 0, 適中: 0, 穩定: 0 };
-    wishSchools.forEach(school => {
+    sequencedWishes.forEach(school => {
         const { recommendation } = getWishlistAnalysisForSchool(school);
         counts[recommendation.status] = (counts[recommendation.status] || 0) + 1;
     });
@@ -1103,7 +1127,7 @@ function renderWishlist() {
         if (countReachable) countReachable.textContent = counts['穩定'] || 0;
     }
 
-    listEl.innerHTML = wishSchools.map((school, index) => {
+    listEl.innerHTML = sequencedWishes.map((school, index) => {
         const { userBand, schoolTier, recommendation } = getWishlistAnalysisForSchool(school);
         const pubClass = school['公私立'] === '私立' ? 'is-private' : 'is-public';
         const pubLabel = school['公私立'];
@@ -1131,6 +1155,8 @@ function renderWishlist() {
                         <p class="wish-analysis-detail">${recommendation.detail}</p>
                         <div class="wish-analysis-meta">
                             <span>排名 #${escapeHtml(String(rank))}</span>
+                            <span>校序：${school.preferenceSequence}</span>
+                            <span>志願序積分：${school.preferenceScore}</span>
                             <span>你的區間：${userBand.label}</span>
                             <span>學校難度：${schoolTier.label}</span>
                             <span>錄取分數：${escapeHtml(scoreText)}</span>
