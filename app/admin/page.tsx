@@ -200,6 +200,7 @@ export default async function AdminPage({
         >
           <p className="admin-eyebrow">Files</p>
           <h2>檔案與下載管理</h2>
+          <p className="admin-muted">要上傳程式碼，請在分類選「程式碼備份」。上傳後會保存到後台檔案庫，不會直接執行；正式網站程式仍需更新版本後重新部署。</p>
           <label>
             檔案
             <input name="file" type="file" required />
@@ -210,6 +211,7 @@ export default async function AdminPage({
               <option value="download">資料下載</option>
               <option value="notice">公告附件</option>
               <option value="school">學校資料</option>
+              <option value="code">程式碼備份</option>
               <option value="general">一般檔案</option>
             </select>
           </label>
@@ -231,7 +233,7 @@ export default async function AdminPage({
 
         <form className="admin-panel" action="/api/admin/settings" method="post">
           <p className="admin-eyebrow">Settings</p>
-          <h2>網站內容設定</h2>
+          <h2>網站內容、表單與廣告</h2>
           <label>
             首頁公告
             <textarea
@@ -248,9 +250,47 @@ export default async function AdminPage({
               defaultValue={settingsMap.get("contact_email") ?? ""}
             />
           </label>
+          <label>
+            「我要讀哪裡？」第三方表單網址
+            <input
+              name="pathway_form_url"
+              type="url"
+              placeholder="https://forms.google.com/..."
+              defaultValue={settingsMap.get("pathway_form_url") ?? ""}
+            />
+          </label>
+          <p className="admin-muted">可使用 Google 表單、Microsoft Forms、Tally 等可嵌入表單。</p>
+          <fieldset className="admin-fieldset">
+            <legend>Google AdSense</legend>
+            <label className="admin-check-label">
+              <input
+                name="google_ads_enabled"
+                type="checkbox"
+                defaultChecked={settingsMap.get("google_ads_enabled") === "1"}
+              />
+              啟用頁面廣告區塊
+            </label>
+            <label>
+              Publisher ID（例如 ca-pub-xxxxxxxx）
+              <input
+                name="google_ads_client"
+                placeholder="ca-pub-xxxxxxxxxxxxxxxx"
+                defaultValue={settingsMap.get("google_ads_client") ?? ""}
+              />
+            </label>
+            <label>
+              Ad Slot ID
+              <input
+                name="google_ads_slot"
+                placeholder="1234567890"
+                defaultValue={settingsMap.get("google_ads_slot") ?? ""}
+              />
+            </label>
+          </fieldset>
           <button className="admin-button" type="submit">
             儲存設定
           </button>
+          <p className="admin-muted">使用方式：先在 AdSense 建立廣告單元，填入 Publisher ID 與 Slot ID，再勾選啟用。申請核准前不會顯示收益廣告。</p>
         </form>
       </section>
 

@@ -25,7 +25,7 @@
             <a href="#pathways">探索路徑</a>
             <a href="#tools">升學工具</a>
         </nav>
-        <a class="nav-cta" href="../it_hs/it_hs.html">高中資訊<span aria-hidden="true">→</span></a>
+            <a class="nav-cta" href="../it_hs/it_hs.html">高中資訊<span aria-hidden="true">→</span></a>
     </header>
 
     <main id="top">
@@ -79,14 +79,22 @@
                     <p>修業三年，兼顧學科基礎與職能探索，保留多元升學彈性。</p>
                     <span class="pathway-link">進入高中職專區<span aria-hidden="true">→</span></span>
                 </a>
-                <a class="pathway-card path-five" href="../it_5/it_5.html">
+                    <a class="pathway-card path-five" href="../it_5/it_5.html">
                     <span class="pathway-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </span>
                     <h3>五專</h3>
                     <p>修業五年，及早深入專業實作，銜接就業與升學。</p>
                     <span class="pathway-link">進入五專專區<span aria-hidden="true">→</span></span>
-                </a>
+                    </a>
+                <button class="pathway-card path-form" id="pathwayFormOpen" type="button">
+                    <span class="pathway-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M5 4.5h14v15H5z" stroke="currentColor" stroke-width="1.6"/><path d="M8 9h8M8 13h6M8 17h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                    </span>
+                    <h3>我要讀哪裡？</h3>
+                    <p>回答幾個問題，取得適合你的升學方向建議。</p>
+                    <span class="pathway-link">開始填寫表單<span aria-hidden="true">→</span></span>
+                </button>
             </div>
         </section>
 
@@ -116,6 +124,22 @@
         </section>
 
     </main>
+
+    <aside class="site-ad" id="siteAd" hidden aria-label="廣告">
+        <span class="site-ad-label">廣告</span>
+        <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    </aside>
+
+    <div class="form-modal" id="pathwayFormModal" hidden>
+        <div class="form-modal-backdrop" data-form-close></div>
+        <section class="form-modal-panel" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
+            <button class="form-modal-close" type="button" data-form-close aria-label="關閉表單">×</button>
+            <p class="section-label">方向探索</p>
+            <h2 id="formModalTitle">我要讀哪裡？</h2>
+            <p class="form-modal-note">這份表單由網站管理員設定，你的回答會送到指定的第三方表單服務。</p>
+            <div class="form-frame-wrap" id="pathwayFormFrame"></div>
+        </section>
+    </div>
 
     <footer>
         <div class="footer-inner section-shell">

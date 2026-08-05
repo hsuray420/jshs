@@ -917,7 +917,6 @@ function renderSchools() {
                     <div>
                         <h3 class="school-title">${escapeHtml(school['學校名稱'])}</h3>
                     </div>
-                    <span class="school-rank">#${escapeHtml(school['排名'])}</span>
                 </div>
                 <div class="school-chip-row">
                     <span class="school-chip ${publicClass}">${escapeHtml(school['公私立'])}</span>

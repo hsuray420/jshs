@@ -359,7 +359,7 @@ a { color: inherit; text-decoration: none; }
 
 .pathway-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: 24px;
 }
 
@@ -394,6 +394,9 @@ a { color: inherit; text-decoration: none; }
 
 .path-hs .pathway-icon { background: var(--amber-tint); color: var(--amber); }
 .path-five .pathway-icon { background: var(--jade-tint); color: var(--jade); }
+.path-form { font: inherit; text-align: left; cursor: pointer; border: 1px solid var(--line); }
+.path-form .pathway-icon { background: var(--brand-tint); color: var(--brand); }
+.path-form:hover .pathway-link { color: var(--brand); }
 
 .pathway-card h3 {
     font-size: 24px;
@@ -477,6 +480,25 @@ a { color: inherit; text-decoration: none; }
     color: var(--ink);
 }
 
+.site-ad {
+    max-width: var(--shell-max);
+    margin: 0 auto 48px;
+    padding: 0 32px;
+}
+.site-ad-label { display: block; font-size: 11px; color: var(--ink-faint); margin-bottom: 6px; }
+.adsbygoogle { min-height: 90px; background: var(--paper); border: 1px solid var(--line); }
+.modal-open { overflow: hidden; }
+.form-modal { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 24px; }
+.form-modal[hidden] { display: none; }
+.form-modal-backdrop { position: absolute; inset: 0; background: rgba(20, 24, 28, .58); }
+.form-modal-panel { position: relative; width: min(760px, 100%); max-height: min(860px, 92vh); overflow: auto; background: var(--paper); border-radius: var(--radius-lg); padding: 36px; box-shadow: 0 24px 70px rgba(0,0,0,.22); }
+.form-modal-panel h2 { margin: 0 0 8px; font-size: 28px; }
+.form-modal-close { position: absolute; top: 16px; right: 18px; border: 0; background: transparent; color: var(--ink-soft); font-size: 30px; cursor: pointer; line-height: 1; }
+.form-modal-note { color: var(--ink-soft); margin: 0 0 18px; line-height: 1.7; }
+.form-frame-wrap { min-height: 480px; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg); }
+.form-frame-wrap iframe { display: block; width: 100%; height: 600px; border: 0; }
+.form-empty { display: grid; place-items: center; min-height: 480px; color: var(--ink-soft); padding: 24px; text-align: center; }
+
 /* =========================================================
    Footer
    ========================================================= */
@@ -545,4 +567,8 @@ footer {
 
     .tools-section { padding-bottom: 72px; }
     .tool-row { grid-template-columns: 1fr; }
+    .site-ad { padding: 0 20px; margin-bottom: 32px; }
+    .form-modal { padding: 12px; }
+    .form-modal-panel { padding: 28px 18px 18px; border-radius: var(--radius-md); }
+    .form-frame-wrap iframe { height: 68vh; min-height: 420px; }
 }

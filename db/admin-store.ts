@@ -137,3 +137,15 @@ export async function upsertSiteSetting(
     .bind(key, value, updatedBy, new Date().toISOString())
     .run();
 }
+
+export const PUBLIC_SETTING_KEYS = new Set([
+  "pathway_form_url",
+  "google_ads_enabled",
+  "google_ads_client",
+  "google_ads_slot",
+]);
+
+export async function listPublicSiteSettings() {
+  const settings = await listSiteSettings();
+  return settings.filter((item) => PUBLIC_SETTING_KEYS.has(item.key));
+}
