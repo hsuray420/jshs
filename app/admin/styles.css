@@ -169,6 +169,65 @@
   font-weight: 800;
 }
 
+.admin-link-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-link-grid a {
+  background: #f8fafc;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  color: #172033;
+  padding: 12px;
+  text-decoration: none;
+}
+
+.admin-code-layout {
+  align-items: start;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 280px minmax(0, 1fr);
+  margin: 0 auto;
+  max-width: 1180px;
+}
+
+.admin-code-list {
+  display: grid;
+  gap: 8px;
+  max-height: 76vh;
+  overflow: auto;
+}
+
+.admin-code-list a {
+  background: #f8fafc;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  color: #172033;
+  font-size: 13px;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.admin-code-file {
+  min-width: 0;
+}
+
+.admin-code-file pre {
+  background: #0f172a;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+  max-height: 76vh;
+  overflow: auto;
+  padding: 18px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .admin-kv {
   display: grid;
   gap: 10px;
@@ -305,7 +364,9 @@
 
   .admin-header,
   .admin-stat-grid,
-  .admin-grid {
+  .admin-grid,
+  .admin-code-layout,
+  .admin-link-grid {
     grid-template-columns: 1fr;
   }
 

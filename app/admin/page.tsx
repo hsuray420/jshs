@@ -47,6 +47,7 @@ export default async function AdminPage({
         <div className="admin-actions">
           <a href="/jshs/jshs.html">看前台</a>
           <a href="/it_hs/it_hs.html#schools">看學校資料</a>
+          <a href="/admin/code">看程式碼</a>
           <a href={admin.signOutPath}>登出</a>
         </div>
       </header>
@@ -63,6 +64,7 @@ export default async function AdminPage({
         <StatusCard label="LINE 推播" value={linePushReady ? "已啟用" : "待設定"} tone={linePushReady ? "ok" : "warn"} />
         <StatusCard label="學校 CSV" value={schoolCsvUpdatedAt ? "後台管理" : "內建資料"} tone="ok" />
         <StatusCard label="檔案庫" value={`${files.length} 個檔案`} tone="ok" />
+        <StatusCard label="程式碼" value="後台可看" tone="ok" />
       </section>
 
       <section className="admin-grid admin-grid-3">
@@ -144,6 +146,47 @@ export default async function AdminPage({
             <dd>ct-jshs-edu.abrdns.com</dd>
           </dl>
           <p className="admin-muted">整台服務掛掉時需要外部監控服務檢查健康檢查網址。</p>
+        </section>
+      </section>
+
+      <section className="admin-grid">
+        <section className="admin-panel">
+          <div className="admin-section-head">
+            <div>
+              <p className="admin-eyebrow">Backend</p>
+              <h2>後端位置與備份</h2>
+            </div>
+            <span className="admin-badge warn">需補定期備份</span>
+          </div>
+          <dl className="admin-kv">
+            <dt>網站程式</dt>
+            <dd>Cloudflare Sites / Pages 部署版本 + 本機 Git 專案</dd>
+            <dt>資料庫</dt>
+            <dd>Cloudflare D1：後台檔案紀錄、網站設定</dd>
+            <dt>檔案空間</dt>
+            <dd>Cloudflare R2：後台上傳檔案、學校 CSV</dd>
+            <dt>目前備份</dt>
+            <dd>Git commit + Sites 部署版本；D1/R2 尚未做自動排程備份</dd>
+          </dl>
+        </section>
+
+        <section className="admin-panel">
+          <div className="admin-section-head">
+            <div>
+              <p className="admin-eyebrow">Control</p>
+              <h2>後台功能入口</h2>
+            </div>
+            <span className="admin-badge ok">集中管理</span>
+          </div>
+          <div className="admin-link-grid">
+            <a href="/admin/code">查看所有程式碼</a>
+            <a href="/api/health">伺服器健康檢查</a>
+            <a href="/api/schools.csv">學校 CSV</a>
+            <a href="/it_hs/it_hs.html#calculator">積分試算</a>
+            <a href="/it_hs/it_hs.html#analysis">落點分析</a>
+            <a href="/it_hs/it_hs.html#wishlist">志願清單</a>
+          </div>
+          <p className="admin-muted">LINE 密鑰、管理員名單與告警接收者使用環境變數保護。</p>
         </section>
       </section>
 

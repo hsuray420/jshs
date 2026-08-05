@@ -233,6 +233,48 @@ function updateProgressBar(id, value, max = 100) {
     el.style.width = `${Math.min(100, (value / max) * 100)}%`;
 }
 
+const EXAM_SCORE_MAP = {
+    'A++': 6,
+    'A+': 6,
+    A: 6,
+    'B++': 4,
+    'B+': 4,
+    B: 4,
+    C: 2
+};
+
+const EXAM_POINT_MAP = {
+    'A++': 21,
+    'A+': 18,
+    A: 15,
+    'B++': 12,
+    'B+': 9,
+    B: 6,
+    C: 3
+};
+
+const GRADE_RANK_MAP = {
+    'A++': 7,
+    'A+': 6,
+    A: 5,
+    'B++': 4,
+    'B+': 3,
+    B: 2,
+    C: 1
+};
+
+const SUBJECT_IDS = ['subj_cn','subj_math','subj_en','subj_soc','subj_sci'];
+const SUBJECT_KEYS = ['chinese','math','english','social','science'];
+
+function roundScore(value) {
+    return Math.round(value * 10) / 10;
+}
+
+function formatScore(value) {
+    const rounded = roundScore(Number(value) || 0);
+    return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+}
+
 function getCurrentScoreSnapshot() {
     const totalPoints = Number(document.getElementById('resPoints')?.textContent || 0);
     const pts111 = Number(document.getElementById('resPcts')?.textContent || 0);
@@ -280,6 +322,19 @@ function getAnalysisRecommendation(userBand, schoolTier) {
     };
 }
 
+function bindAnalysisWishButtons() {
+    document.querySelectorAll('[data-analysis-wish-add]').forEach(button => {
+        button.addEventListener('click', () => {
+            const school = allSchools.find(s => s['學校代碼'] === button.dataset.analysisWishAdd);
+            const ok = addSchoolToWishlist(school);
+            if (ok) {
+                renderAnalysis();
+                renderSchools();
+            }
+        });
+    });
+}
+
 function renderAnalysis() {
     const summary = document.getElementById('analysisSummary');
     const results = document.getElementById('analysisResults');
@@ -296,7 +351,7 @@ function renderAnalysis() {
     }
 
     if (!totalPoints || totalPoints <= 0) {
-        summary.innerHTML = '先完成積分試算，這裡就會依你目前的分數幫你整理出「穩定 / 適中 / 挑戰」的學校落點。';
+        summary.innerHTML = '先完成積分試算，再檢視學校清單。';
         results.innerHTML = '';
         return;
     }
@@ -332,7 +387,7 @@ function renderAnalysis() {
         counts[rec.status] = (counts[rec.status] || 0) + 1;
     });
 
-    summary.innerHTML = `你目前的估算分數 <strong>${totalPoints} / 100</strong> 落在「${userBand.label}」區間。以下依「與你程度最接近」優先列出前 ${rankedSchools.length} 所：穩定 ${counts['穩定'] || 0} 所、適中 ${counts['適中'] || 0} 所、挑戰 ${counts['挑戰'] || 0} 所。建議志願序前段放挑戰、中段放適中、後段放穩定。`;
+    summary.innerHTML = `目前 <strong>${formatScore(totalPoints)} / 100</strong>，列出前 ${rankedSchools.length} 所：穩定 ${counts['穩定'] || 0}、適中 ${counts['適中'] || 0}、挑戰 ${counts['挑戰'] || 0}。`;
 
     results.innerHTML = rankedSchools.map(({ school, tier }) => {
         const recommendation = getAnalysisRecommendation(userBand, tier);
@@ -340,6 +395,7 @@ function renderAnalysis() {
         const quotaText = school['簡章招生名額'] || school['招生名額'] || '待公告';
         const schoolName = escapeHtml(school['學校名稱']);
         const schoolArea = escapeHtml(school['區'] || school['縣市']);
+        const schoolId = escapeHtml(school['學校代碼']);
         return `
             <article class="panel-card analysis-card ${recommendation.badgeClass}">
                 <div class="analysis-card-head">
@@ -359,29 +415,40 @@ function renderAnalysis() {
                     <span>簡章名額：${escapeHtml(quotaText)}</span>
                     <span>區域：${schoolArea}</span>
                 </div>
+                <button type="button" class="ui-btn" data-analysis-wish-add="${schoolId}" ${wishlistContainsSchool(school) ? 'disabled' : ''}>${wishlistContainsSchool(school) ? '已加入志願' : '加入志願清單'}</button>
             </article>
         `;
     }).join('');
+    bindAnalysisWishButtons();
+}
+
+function calculateDisadvantagedScore() {
+    const remoteAreaEligible = document.getElementById('weak_remote')?.checked;
+    const economicStatus = document.getElementById('weak_economic')?.value || 'NONE';
+    let score = remoteAreaEligible ? 1 : 0;
+    if (economicStatus === 'LOW_INCOME') score += 2;
+    if (economicStatus === 'LOWER_MIDDLE_INCOME') score += 1;
+    return Math.min(score, 3);
 }
 
 function computeMultiLearningParts() {
-    // 均衡學習
     const domains = ['bal_domain_health','bal_domain_arts','bal_domain_general','bal_domain_tech']
         .map(id => document.getElementById(id))
         .filter(el => el && el.checked).length;
-    const lowIncome = document.getElementById('bal_low_income')?.checked ? 2 : 0;
-    const bal = Math.min(12, domains * 3 + lowIncome);
+    const bal = Math.min(12, domains * 3);
 
-    // 德行：社團（上限2分）+ 服務學習（上限3分）
     const clubTerms = Math.max(0, Number(document.getElementById('mor_club_terms')?.value) || 0);
     const clubPts = Math.min(2, clubTerms);
-    const serviceLearning = Number(document.getElementById('mor_service_learning')?.value) || 0;
+    const serviceHours = [1,2,3,4,5,6].map(index => Number(document.getElementById(`service_sem_${index}`)?.value) || 0);
+    const serviceLearning = Math.min(3, serviceHours.filter(hours => hours >= 6).length);
     const mor = Math.min(5, clubPts + serviceLearning);
 
-    // 無記過
-    const nod = Number(document.getElementById('nod_record')?.value) || 0;
+    const warnings = Math.max(0, Number(document.getElementById('demerit_warning')?.value) || 0);
+    const minorDemerits = Math.max(0, Number(document.getElementById('demerit_minor')?.value) || 0);
+    const majorDemerits = Math.max(0, Number(document.getElementById('demerit_major')?.value) || 0);
+    const convertedMinorDemerits = minorDemerits + majorDemerits * 3 + Math.floor(warnings / 3);
+    const nod = convertedMinorDemerits > 0 ? 0 : (warnings % 3 > 0 ? 3 : 6);
 
-    // 獎勵
     const majCount = Math.max(0, Number(document.getElementById('awd_major')?.value) || 0);
     const minCount = Math.max(0, Number(document.getElementById('awd_minor')?.value) || 0);
     const commCount = Math.max(0, Number(document.getElementById('awd_comm')?.value) || 0);
@@ -394,7 +461,7 @@ function getCalculationBreakdown() {
     const pref = Number(document.getElementById('prefScore')?.value) || 0;
     const localEl = document.getElementById('localScore');
     const local = localEl?.checked ? Number(localEl.value) || 0 : 0;
-    const weak = Number(document.getElementById('weakScore')?.value) || 0;
+    const weak = calculateDisadvantagedScore();
     const multi = computeMultiLearningParts();
     const bal = multi.bal;
     const mor = multi.mor;
@@ -402,9 +469,77 @@ function getCalculationBreakdown() {
     const awd = multi.awd;
     const exam100 = Number(document.getElementById('examScoreDisplay')?.innerText) || 0;
     const pts111 = Number(document.getElementById('exam111Display')?.innerText) || 0;
-    const totalPoints = pref + local + weak + bal + mor + nod + awd + exam100;
+    const multipleLearningScore = Math.min(27, bal + mor + nod + awd);
+    const otherItemsTotal = Math.min(70, pref + local + weak + multipleLearningScore);
+    const totalPoints = Math.min(100, roundScore(otherItemsTotal + exam100));
+    const comparisonKeys = getComparisonKeys({
+        pref,
+        local,
+        weak,
+        bal,
+        mor,
+        nod,
+        awd,
+        exam100,
+        pts111,
+        multipleLearningScore,
+        otherItemsTotal,
+        totalPoints
+    });
 
-    return { pref, local, weak, bal, mor, nod, awd, exam100, pts111, totalPoints };
+    return { pref, local, weak, bal, mor, nod, awd, exam100, pts111, multipleLearningScore, otherItemsTotal, totalPoints, comparisonKeys };
+}
+
+function getSubjectGrades() {
+    return SUBJECT_IDS.map(id => document.getElementById(id)?.value || '');
+}
+
+function getSubjectScoreMap(grades) {
+    return SUBJECT_KEYS.reduce((result, key, index) => {
+        result[key] = EXAM_SCORE_MAP[grades[index]] || 0;
+        return result;
+    }, {});
+}
+
+function getSubjectRankMap(grades) {
+    return SUBJECT_KEYS.reduce((result, key, index) => {
+        result[key] = GRADE_RANK_MAP[grades[index]] || 0;
+        return result;
+    }, {});
+}
+
+function getGradeMarkerCounts(grades) {
+    return grades.reduce((counts, grade) => {
+        if (grade === 'A++') counts.aPlusCount += 2;
+        if (grade === 'A+') counts.aPlusCount += 1;
+        if (grade === 'B++') counts.bPlusCount += 2;
+        if (grade === 'B+') counts.bPlusCount += 1;
+        return counts;
+    }, { aPlusCount: 0, bPlusCount: 0 });
+}
+
+function getComparisonKeys(scores) {
+    const grades = getSubjectGrades();
+    const markers = getGradeMarkerCounts(grades);
+    return {
+        totalScore: scores.totalPoints,
+        preferenceScore: scores.pref,
+        nearbyEnrollmentScore: scores.local,
+        disadvantagedScore: scores.weak,
+        multipleLearningScore: scores.multipleLearningScore,
+        balancedLearningScore: scores.bal,
+        conductScore: scores.mor,
+        noDemeritScore: scores.nod,
+        rewardScore: scores.awd,
+        examPerformanceScore: scores.exam100,
+        examTotalPoints: scores.pts111,
+        aPlusCount: markers.aPlusCount,
+        bPlusCount: markers.bPlusCount,
+        subjectScores: getSubjectScoreMap(grades),
+        subjectGradeRanks: getSubjectRankMap(grades),
+        schoolSequence: 1,
+        choiceSequence: 1
+    };
 }
 
 function renderCalculationBreakdown() {
@@ -412,43 +547,49 @@ function renderCalculationBreakdown() {
     const breakdownNote = document.getElementById('calcBreakdownNote');
     if (!breakdownList) return;
 
-    const { pref, local, weak, bal, mor, nod, awd, exam100, pts111, totalPoints } = getCalculationBreakdown();
+    const { pref, local, weak, bal, mor, nod, awd, exam100, pts111, multipleLearningScore, otherItemsTotal, totalPoints, comparisonKeys } = getCalculationBreakdown();
     const items = [
         { label: '志願序', value: pref, note: '第 1–10 志願 30 分；第 11–20 志願 29 分；第 21–50 志願 28 分。' },
         { label: '就近入學', value: local, note: '符合中投區免試/共同就學區為 10 分。' },
-        { label: '扶助弱勢', value: weak, note: '一般 0 分；偏鄉／中低 1 分；低收 2 分（擇一計分）。' },
-        { label: '均衡學習', value: bal, note: '各領域各 3 分，四領域共 12 分；低收入戶加 2 分。' },
+        { label: '扶助弱勢', value: weak, note: '偏遠 1 分 + 中低 1 分或低收 2 分，最高 3 分。' },
+        { label: '均衡學習', value: bal, note: '四領域各 3 分，最高 12 分。' },
         { label: '德行表現', value: mor, note: '社團（上限 2 分）+ 服務學習（上限 3 分），合計最多 5 分。' },
-        { label: '無記過紀錄', value: nod, note: '無處分 6 分；銷過後無小過以上 3 分；有小過以上 0 分。' },
+        { label: '無記過紀錄', value: nod, note: '3 次警告折 1 次小過；有小過以上為 0 分。' },
         { label: '獎勵紀錄', value: awd, note: '大功 3 分／次，小功 1 分／次，嘉獎 0.5 分／次，上限 4 分。' },
-        { label: '會考比序積點', value: exam100, note: '五科與作文等級換算，上限 30 分。' },
-        { label: '111 制比序積分', value: pts111, note: '五科分數總和 + 作文等級，上限 111 分。' },
+        { label: '多元學習表現', value: multipleLearningScore, note: '均衡、德行、無記過、獎勵合計，上限 27 分。' },
+        { label: '其他項目', value: otherItemsTotal, note: '志願序、就近、扶弱、多元合計，上限 70 分。' },
+        { label: '教育會考表現', value: exam100, note: '五科 A/B/C 換算，違規每點扣 0.3 分，上限 30 分。' },
+        { label: '會考總積點', value: pts111, note: '五科等級標示點數 + 寫作級分，上限 111 點。' },
         { label: '免試總積分', value: totalPoints, note: '以上各項加總，滿分 100 分。' }
     ];
 
     breakdownList.innerHTML = items.map(item => `
         <li>
             <span>${item.label}</span>
-            <strong>${item.value}</strong>
+            <strong>${formatScore(item.value)}</strong>
         </li>
     `).join('');
 
     if (breakdownNote) {
-        breakdownNote.innerHTML = `本頁採用中投區免試入學公開說明框架做估算；實際以當年度簡章、公告與招生委員會審定為準。會考 111 制比序積分以五科分數與作文等級為基礎，會考 100 制比序積點則依各科等級換算。`;
+        breakdownNote.innerHTML = `同分比序鍵值：會考總積點 ${comparisonKeys.examTotalPoints}、A+標示 ${comparisonKeys.aPlusCount}、B+標示 ${comparisonKeys.bPlusCount}。正式結果以學校審查資料為準。`;
     }
 }
 
 function calculateScore() {
-    const { pref, local, weak, bal, mor, nod, awd, exam100, pts111, totalPoints } = getCalculationBreakdown();
+    const { pref, local, weak, bal, mor, nod, awd, exam100, pts111, otherItemsTotal, totalPoints } = getCalculationBreakdown();
 
     const resPointsEl = document.getElementById('resPoints');
     const resPctsEl = document.getElementById('resPcts');
-    if (resPointsEl) resPointsEl.innerText = String(totalPoints);
+    const resExamEl = document.getElementById('resExam');
+    const resOtherEl = document.getElementById('resOther');
+    if (resPointsEl) resPointsEl.innerText = formatScore(totalPoints);
     if (resPctsEl) resPctsEl.innerText = String(pts111);
+    if (resExamEl) resExamEl.innerText = formatScore(exam100);
+    if (resOtherEl) resOtherEl.innerText = formatScore(otherItemsTotal);
 
-    const d_pref = document.getElementById('d_pref'); if (d_pref) d_pref.innerText = String(pref);
-    const d_local = document.getElementById('d_local'); if (d_local) d_local.innerText = String(local);
-    const d_multi = document.getElementById('d_multi'); if (d_multi) d_multi.innerText = String(bal + mor + nod + awd + weak);
+    const d_pref = document.getElementById('d_pref'); if (d_pref) d_pref.innerText = formatScore(pref);
+    const d_local = document.getElementById('d_local'); if (d_local) d_local.innerText = formatScore(local);
+    const d_multi = document.getElementById('d_multi'); if (d_multi) d_multi.innerText = formatScore(bal + mor + nod + awd);
 
     updateProgressBar('bar_pref', pref, 30);
     updateProgressBar('bar_local', local, 10);
@@ -484,26 +625,17 @@ function computeAllPoints() {
 }
 
 function computeExamPoints() {
-    const subjIds = ['subj_cn','subj_en','subj_math','subj_sci','subj_soc'];
-    let levelTotal = 0;
-    let exam100 = 0;
-    subjIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        const v = Number(el.value) || 0;
-        if (v <= 0) return;
-        levelTotal += v;
-        if (v >= 15) exam100 += 6;
-        else if (v >= 6) exam100 += 4;
-        else exam100 += 2;
-    });
-    exam100 = Math.min(30, exam100);
+    const grades = getSubjectGrades();
+    const levelTotal = grades.reduce((sum, grade) => sum + (EXAM_POINT_MAP[grade] || 0), 0);
+    const rawExamScore = grades.reduce((sum, grade) => sum + (EXAM_SCORE_MAP[grade] || 0), 0);
+    const violationPoints = Math.max(0, Number(document.getElementById('exam_violation_points')?.value) || 0);
+    const exam100 = Math.min(30, Math.max(0, roundScore(rawExamScore - violationPoints * 0.3)));
     const write = Number(document.getElementById('subj_write')?.value) || 0;
     const pts111 = Math.min(111, levelTotal + write);
 
     const examDisplay = document.getElementById('examScoreDisplay');
     const exam111El = document.getElementById('exam111Display');
-    if (examDisplay) examDisplay.innerText = String(exam100);
+    if (examDisplay) examDisplay.innerText = formatScore(exam100);
     if (exam111El) exam111El.innerText = String(pts111);
 
 }
@@ -517,22 +649,27 @@ function resetForm() {
         const el = document.getElementById(id);
         if (el) el.checked = false;
     });
-    const low = document.getElementById('bal_low_income'); if (low) low.checked = false;
+    const weakRemote = document.getElementById('weak_remote'); if (weakRemote) weakRemote.checked = false;
+    const weakEconomic = document.getElementById('weak_economic'); if (weakEconomic) weakEconomic.value = 'NONE';
 
     const club = document.getElementById('mor_club_terms'); if (club) club.value = 0;
-    const serv = document.getElementById('mor_service_learning'); if (serv) serv.value = '0';
+    [1,2,3,4,5,6].forEach(index => {
+        const serv = document.getElementById(`service_sem_${index}`);
+        if (serv) serv.value = 0;
+    });
 
-    const nod = document.getElementById('nod_record'); if (nod) nod.selectedIndex = 0;
+    ['demerit_warning','demerit_minor','demerit_major','exam_violation_points'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = 0;
+    });
 
     const maj = document.getElementById('awd_major'); if (maj) maj.value = 0;
     const min = document.getElementById('awd_minor'); if (min) min.value = 0;
     const comm = document.getElementById('awd_comm'); if (comm) comm.value = 0;
-    const weakScoreEl = document.getElementById('weakScore');
-    if (weakScoreEl) weakScoreEl.value = '0';
     const localScoreEl = document.getElementById('localScore');
     if (localScoreEl) localScoreEl.checked = true;
 
-    ['resPoints','resPcts','d_pref','d_local','d_multi','examScoreDisplay','exam111Display'].forEach(id => {
+    ['resPoints','resPcts','resExam','resOther','d_pref','d_local','d_multi','examScoreDisplay','exam111Display'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerText = '0';
     });
@@ -552,7 +689,7 @@ function initCalculator() {
     // 計算僅在使用者按下「計算高中職積分」按鈕時執行。
     // 不要在每個欄位變更時自動計算，避免使用者還沒按完就跳分數。
     // 但會考欄位變更時可回寫會考預覽（hidden display），讓使用者看到會考轉換結果
-    const previewIds = ['subj_cn','subj_en','subj_math','subj_sci','subj_soc','subj_write'];
+    const previewIds = ['subj_cn','subj_en','subj_math','subj_sci','subj_soc','subj_write','exam_violation_points'];
     previewIds.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;

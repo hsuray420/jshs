@@ -199,7 +199,7 @@
         <section id="page-calculator" data-page-section="calculator" class="page-section">
             <div class="mb-6">
                 <h2 class="section-title mb-4">中投區高中職積分試算</h2>
-                <p class="section-copy">先輸入會考成績，再設定免試入學積分項目，系統會即時計算 100 制總分與 111 制比序積分。</p>
+                <p class="section-copy">先輸入會考成績，再設定免試入學積分項目，系統會計算免試總積分與會考總積點。</p>
             </div>
             <div class="panel-card calc-guide-card">
                 <div class="calc-guide-head">
@@ -238,7 +238,7 @@
                                 <td>扶助弱勢</td>
                                 <td>一般 0 分；偏鄉／中低收入 1 分；低收入 2 分。</td>
                                 <td>3 分</td>
-                                <td>採擇一最高分計算。</td>
+                                <td>偏遠可與經濟弱勢累加；低收與中低收互斥。</td>
                             </tr>
                             <tr class="section-divider">
                                 <td colspan="5" class="section-header">多元學習表現（共 27 分）</td>
@@ -246,7 +246,7 @@
                             <tr>
                                 <td class="bold-cell">均衡學習<br>（12 分）</td>
                                 <td class="indent-cell">均衡學習</td>
-                                <td>各領域各符合一項計 3 分；四領域皆符合計 12 分；符合低收入戶加 2 分。</td>
+                                <td>各領域各符合一項計 3 分；四領域皆符合計 12 分。</td>
                                 <td>12 分</td>
                                 <td>健體、藝文、綜合、科技四領域分別均衡修習。</td>
                             </tr>
@@ -279,7 +279,7 @@
                                 <td class="indent-cell">會考成績</td>
                                 <td>五科「精熟」6 分、「基礎」4 分、「待加強」2 分；作文另計入 111 制。</td>
                                 <td>30 分</td>
-                                <td>五科分數換算為 100 制比序積點（上限 30 分）；作文等級計入 111 制比序積分。</td>
+                                <td>五科 A/B/C 換算教育會考表現積分（上限 30 分）；作文級分只計入會考總積點。</td>
                             </tr>
                             <tr class="total-row">
                                 <td colspan="4" class="total-cell">總積分（志願序30 + 就近10 + 弱勢依當年度簡章 + 多元27 + 會考30）</td>
@@ -343,15 +343,19 @@
                         </div>
                         <div class="calc-divider"></div>
                         <div class="calc-field-group">
-                            <select id="weakScore" class="ui-input">
-                                <option value="0">一般</option>
-                                <option value="1">偏鄉/中低（1 分）</option>
-                                <option value="2">低收（2 分）</option>
+                            <label class="calc-check-row">
+                                <input id="weak_remote" type="checkbox">
+                                <span>符合偏遠地區資格（1 分）</span>
+                            </label>
+                            <select id="weak_economic" class="ui-input">
+                                <option value="NONE">一般</option>
+                                <option value="LOWER_MIDDLE_INCOME">中低收入戶（1 分）</option>
+                                <option value="LOW_INCOME">低收入戶（2 分）</option>
                             </select>
-                            <p class="calc-small-note">依弱勢種類擇一計分，目前試算最高 2 分；若當年度簡章調整，請以官方公告為準。</p>
+                            <p class="calc-small-note">偏遠地區可與經濟弱勢累加；扶助弱勢最高 3 分。</p>
                         </div>
                         <div class="calc-help-detail" id="help-weakScore">
-                            <p>扶助弱勢採擇一項計分。若符合偏鄉或中低收入條件，可得 1 分；若符合低收入條件，可得 2 分。系統會以最高項目計算。</p>
+                            <p>偏遠地區資格 1 分，低收入戶 2 分，中低收入戶 1 分；低收與中低收互斥，合計最高 3 分。</p>
                         </div>
                     </div>
                     <div class="panel-card calc-input-card">
@@ -372,8 +376,7 @@
                                     <label class="checkbox-chip"><input type="checkbox" id="bal_domain_general"> 綜合</label>
                                     <label class="checkbox-chip"><input type="checkbox" id="bal_domain_tech"> 科技</label>
                                 </div>
-                                <label class="checkbox-chip checkbox-chip-full"><input type="checkbox" id="bal_low_income"> 符合低收入戶（+2 分）</label>
-                                <p class="calc-small-note">每一領域符合計 3 分；四領域皆符合為 12 分，低收入戶可額外加 2 分。</p>
+                                <p class="calc-small-note">每一領域符合計 3 分；四領域皆符合為 12 分。</p>
                             </div>
                             <div class="calc-field-group">
                                 <label class="block text-sm font-medium mb-2">德行表現（上限 5 分）</label>
@@ -385,24 +388,25 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm mb-2">服務學習（上限 3 分）</label>
-                                        <select id="mor_service_learning" class="ui-input">
-                                            <option value="0">無</option>
-                                            <option value="1">1 分</option>
-                                            <option value="2">2 分</option>
-                                            <option value="3">3 分</option>
-                                        </select>
-                                        <p class="calc-small-note">依服務學習表現給分。</p>
+                                        <div class="service-semester-grid">
+                                            <input id="service_sem_1" type="number" min="0" step="0.5" value="0" class="ui-input" title="七上服務時數">
+                                            <input id="service_sem_2" type="number" min="0" step="0.5" value="0" class="ui-input" title="七下服務時數">
+                                            <input id="service_sem_3" type="number" min="0" step="0.5" value="0" class="ui-input" title="八上服務時數">
+                                            <input id="service_sem_4" type="number" min="0" step="0.5" value="0" class="ui-input" title="八下服務時數">
+                                            <input id="service_sem_5" type="number" min="0" step="0.5" value="0" class="ui-input" title="九上服務時數">
+                                            <input id="service_sem_6" type="number" min="0" step="0.5" value="0" class="ui-input" title="九下服務時數">
+                                        </div>
+                                        <p class="calc-small-note">每學期滿 6 小時得 1 分，不能跨學期合併，上限 3 分。</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="calc-field-group">
                                 <label class="block text-sm font-medium mb-2">無記過紀錄（上限 6 分）</label>
-                                <select id="nod_record" class="ui-input">
-                                    <option value="6">無處分紀錄（6 分）</option>
-                                    <option value="6">銷過後無處分紀錄（6 分）</option>
-                                    <option value="3">銷過後無小過以上紀錄（3 分）</option>
-                                    <option value="0">有小過以上紀錄（0 分）</option>
-                                </select>
+                                <div class="calc-field-row">
+                                    <label class="calc-compact-label">警告<input id="demerit_warning" type="number" min="0" value="0" class="ui-input"></label>
+                                    <label class="calc-compact-label">小過<input id="demerit_minor" type="number" min="0" value="0" class="ui-input"></label>
+                                    <label class="calc-compact-label">大過<input id="demerit_major" type="number" min="0" value="0" class="ui-input"></label>
+                                </div>
                                 <p class="calc-small-note">依銷過與紀錄情況給分，3 次警告折 1 次小過。</p>
                             </div>
                             <div class="calc-field-group">
@@ -433,65 +437,65 @@
                                 <label class="block text-sm font-medium mb-2">國文</label>
                                 <select id="subj_cn" class="ui-input">
                                     <option value="" disabled selected>請選擇</option>
-                                    <option value="21">A++ (精熟)</option>
-                                    <option value="18">A+ (精熟)</option>
-                                    <option value="15">A (精熟)</option>
-                                    <option value="12">B++ (基礎)</option>
-                                    <option value="9">B+ (基礎)</option>
-                                    <option value="6">B (基礎)</option>
-                                    <option value="3">C (待加強)</option>
+                                    <option value="A++">A++ (精熟)</option>
+                                    <option value="A+">A+ (精熟)</option>
+                                    <option value="A">A (精熟)</option>
+                                    <option value="B++">B++ (基礎)</option>
+                                    <option value="B+">B+ (基礎)</option>
+                                    <option value="B">B (基礎)</option>
+                                    <option value="C">C (待加強)</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">英文</label>
                                 <select id="subj_en" class="ui-input">
                                     <option value="" disabled selected>請選擇</option>
-                                    <option value="21">A++ (精熟)</option>
-                                    <option value="18">A+ (精熟)</option>
-                                    <option value="15">A (精熟)</option>
-                                    <option value="12">B++ (基礎)</option>
-                                    <option value="9">B+ (基礎)</option>
-                                    <option value="6">B (基礎)</option>
-                                    <option value="3">C (待加強)</option>
+                                    <option value="A++">A++ (精熟)</option>
+                                    <option value="A+">A+ (精熟)</option>
+                                    <option value="A">A (精熟)</option>
+                                    <option value="B++">B++ (基礎)</option>
+                                    <option value="B+">B+ (基礎)</option>
+                                    <option value="B">B (基礎)</option>
+                                    <option value="C">C (待加強)</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">數學</label>
                                 <select id="subj_math" class="ui-input">
                                     <option value="" disabled selected>請選擇</option>
-                                    <option value="21">A++ (精熟)</option>
-                                    <option value="18">A+ (精熟)</option>
-                                    <option value="15">A (精熟)</option>
-                                    <option value="12">B++ (基礎)</option>
-                                    <option value="9">B+ (基礎)</option>
-                                    <option value="6">B (基礎)</option>
-                                    <option value="3">C (待加強)</option>
+                                    <option value="A++">A++ (精熟)</option>
+                                    <option value="A+">A+ (精熟)</option>
+                                    <option value="A">A (精熟)</option>
+                                    <option value="B++">B++ (基礎)</option>
+                                    <option value="B+">B+ (基礎)</option>
+                                    <option value="B">B (基礎)</option>
+                                    <option value="C">C (待加強)</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">自然</label>
                                 <select id="subj_sci" class="ui-input">
                                     <option value="" disabled selected>請選擇</option>
-                                    <option value="21">A++ (精熟)</option>
-                                    <option value="18">A+ (精熟)</option>
-                                    <option value="15">A (精熟)</option>
-                                    <option value="12">B++ (基礎)</option>
-                                    <option value="9">B+ (基礎)</option>
-                                    <option value="6">B (基礎)</option>
-                                    <option value="3">C (待加強)</option>
+                                    <option value="A++">A++ (精熟)</option>
+                                    <option value="A+">A+ (精熟)</option>
+                                    <option value="A">A (精熟)</option>
+                                    <option value="B++">B++ (基礎)</option>
+                                    <option value="B+">B+ (基礎)</option>
+                                    <option value="B">B (基礎)</option>
+                                    <option value="C">C (待加強)</option>
                                 </select>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">社會</label>
                                 <select id="subj_soc" class="ui-input">
                                     <option value="" disabled selected>請選擇</option>
-                                    <option value="21">A++ (精熟)</option>
-                                    <option value="18">A+ (精熟)</option>
-                                    <option value="15">A (精熟)</option>
-                                    <option value="12">B++ (基礎)</option>
-                                    <option value="9">B+ (基礎)</option>
-                                    <option value="6">B (基礎)</option>
-                                    <option value="3">C (待加強)</option>
+                                    <option value="A++">A++ (精熟)</option>
+                                    <option value="A+">A+ (精熟)</option>
+                                    <option value="A">A (精熟)</option>
+                                    <option value="B++">B++ (基礎)</option>
+                                    <option value="B+">B+ (基礎)</option>
+                                    <option value="B">B (基礎)</option>
+                                    <option value="C">C (待加強)</option>
                                 </select>
                             </div>
                             <div>
@@ -506,9 +510,13 @@
                                     <option value="1">1 級</option>
                                 </select>
                             </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">會考違規記點</label>
+                                <input id="exam_violation_points" type="number" min="0" step="1" value="0" class="ui-input">
+                            </div>
                         </div>
                         <div class="calc-help-detail" id="help-examScore">
-                            <p>五科成績依「精熟 / 基礎 / 待加強」換算 100 制比序積點；作文等級則納入 111 制比序積分。請完整填寫後按「計算高中職積分」。</p>
+                            <p>五科 A/B/C 換算教育會考表現積分最高 30 分；每一違規記點扣 0.3 分。作文只納入會考總積點。</p>
                         </div>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-3">
@@ -519,9 +527,19 @@
                 <aside class="result-panel">
                     <div class="result-heading">計算結果</div>
                     <div class="panel-card result-card result-card-primary">
-                        <p class="result-label">會考 111 制比序積分</p>
+                        <p class="result-label">會考總積點</p>
                         <p class="stat-value" id="resPcts">0</p>
                         <p class="result-unit">/ 111 點</p>
+                    </div>
+                    <div class="panel-card result-card">
+                        <p class="result-label text-neo-muted">教育會考表現積分</p>
+                        <p class="stat-value text-neo-text" id="resExam">0</p>
+                        <p class="result-unit text-neo-muted">/ 30 分</p>
+                    </div>
+                    <div class="panel-card result-card">
+                        <p class="result-label text-neo-muted">其他項目積分</p>
+                        <p class="stat-value text-neo-text" id="resOther">0</p>
+                        <p class="result-unit text-neo-muted">/ 70 分</p>
                     </div>
                     <div class="panel-card result-card">
                         <p class="result-label text-neo-muted">免試總積分（100 制）</p>
@@ -547,7 +565,7 @@
                     <div class="analysis-header">
                         <div>
                             <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">落點分析</p>
-                            <h2 class="section-title">依你的試算結果，先看哪些學校值得優先排。</h2>
+                            <h2 class="section-title">落點分析</h2>
                             <p class="section-copy">這個版本以你目前的會考與免試積分，搭配學校的歷年錄取位置做估算，幫你快速抓出「穩定、適中、挑戰」三種落點。</p>
                         </div>
                         <div class="analysis-score-pill" id="analysisScoreBadge">目前分數：0 / 100</div>

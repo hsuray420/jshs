@@ -589,6 +589,17 @@ header {
     width: 100%;
 }
 
+.service-semester-grid {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.service-semester-grid .ui-input {
+    min-width: 0;
+    text-align: center;
+}
+
 .calc-card-title {
     margin: 0;
     font-family: 'Plus Jakarta Sans', sans-serif;
