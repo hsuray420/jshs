@@ -47,7 +47,7 @@ export default async function AdminPage({
         <div className="admin-actions">
           <a href="/jshs/jshs.html">看前台</a>
           <a href="/it_hs/it_hs.html#schools">看學校資料</a>
-          <a href="/admin/code">看程式碼</a>
+          <a href="/admin/code/">看程式碼</a>
           <a href={admin.signOutPath}>登出</a>
         </div>
       </header>
@@ -179,7 +179,7 @@ export default async function AdminPage({
             <span className="admin-badge ok">集中管理</span>
           </div>
           <div className="admin-link-grid">
-            <a href="/admin/code">查看所有程式碼</a>
+            <a href="/admin/code/">查看所有程式碼</a>
             <a href="/api/health">伺服器健康檢查</a>
             <a href="/api/schools.csv">學校 CSV</a>
             <a href="/it_hs/it_hs.html#calculator">積分試算</a>
