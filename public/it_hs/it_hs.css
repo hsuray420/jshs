@@ -589,17 +589,6 @@ header {
     width: 100%;
 }
 
-.service-semester-grid {
-    display: grid;
-    gap: 0.5rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.service-semester-grid .ui-input {
-    min-width: 0;
-    text-align: center;
-}
-
 .calc-card-title {
     margin: 0;
     font-family: 'Plus Jakarta Sans', sans-serif;
@@ -1915,16 +1904,6 @@ header {
 
 .school-link:hover {
     color: var(--accent);
-}
-
-.school-link.is-disabled {
-    color: var(--muted);
-    cursor: default;
-    opacity: 0.72;
-}
-
-.school-link.is-disabled:hover {
-    color: var(--muted);
 }
 
 .school-empty {

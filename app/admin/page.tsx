@@ -12,7 +12,7 @@ import "./styles.css";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "管理後台｜中投區國中升學資訊網",
+  title: "管理後台｜全國國中升學資訊網",
   description: "網站管理、檔案上傳與營運設定。",
 };
 

@@ -11,7 +11,7 @@ function showPage(page) {
     const sections = document.querySelectorAll('[data-page-section]');
     const routeControls = document.querySelectorAll('[data-page]');
     const pages = Array.from(sections).map(section => section.dataset.pageSection);
-    const targetPage = pages.includes(page) ? page : 'home';
+    const targetPage = pages.includes(page) ? page : 'overview';
 
     sections.forEach(section => {
         section.classList.toggle('active', section.dataset.pageSection === targetPage);
@@ -223,7 +223,7 @@ function initPageRouter() {
     initOverviewCards();
     initHomeSections();
 
-    const initialPage = window.location.hash.replace('#', '') || 'home';
+    const initialPage = window.location.hash.replace('#', '') || 'overview';
     showPage(initialPage);
 }
 
@@ -231,48 +231,6 @@ function updateProgressBar(id, value, max = 100) {
     const el = document.getElementById(id);
     if (!el) return;
     el.style.width = `${Math.min(100, (value / max) * 100)}%`;
-}
-
-const EXAM_SCORE_MAP = {
-    'A++': 6,
-    'A+': 6,
-    A: 6,
-    'B++': 4,
-    'B+': 4,
-    B: 4,
-    C: 2
-};
-
-const EXAM_POINT_MAP = {
-    'A++': 21,
-    'A+': 18,
-    A: 15,
-    'B++': 12,
-    'B+': 9,
-    B: 6,
-    C: 3
-};
-
-const GRADE_RANK_MAP = {
-    'A++': 7,
-    'A+': 6,
-    A: 5,
-    'B++': 4,
-    'B+': 3,
-    B: 2,
-    C: 1
-};
-
-const SUBJECT_IDS = ['subj_cn','subj_math','subj_en','subj_soc','subj_sci'];
-const SUBJECT_KEYS = ['chinese','math','english','social','science'];
-
-function roundScore(value) {
-    return Math.round(value * 10) / 10;
-}
-
-function formatScore(value) {
-    const rounded = roundScore(Number(value) || 0);
-    return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
 }
 
 function getCurrentScoreSnapshot() {
@@ -322,19 +280,6 @@ function getAnalysisRecommendation(userBand, schoolTier) {
     };
 }
 
-function bindAnalysisWishButtons() {
-    document.querySelectorAll('[data-analysis-wish-add]').forEach(button => {
-        button.addEventListener('click', () => {
-            const school = allSchools.find(s => s['學校代碼'] === button.dataset.analysisWishAdd);
-            const ok = addSchoolToWishlist(school);
-            if (ok) {
-                renderAnalysis();
-                renderSchools();
-            }
-        });
-    });
-}
-
 function renderAnalysis() {
     const summary = document.getElementById('analysisSummary');
     const results = document.getElementById('analysisResults');
@@ -351,7 +296,7 @@ function renderAnalysis() {
     }
 
     if (!totalPoints || totalPoints <= 0) {
-        summary.innerHTML = '先完成積分試算，再檢視學校清單。';
+        summary.innerHTML = '先完成積分試算，這裡就會依你目前的分數幫你整理出「穩定 / 適中 / 挑戰」的學校落點。';
         results.innerHTML = '';
         return;
     }
@@ -387,7 +332,7 @@ function renderAnalysis() {
         counts[rec.status] = (counts[rec.status] || 0) + 1;
     });
 
-    summary.innerHTML = `目前 <strong>${formatScore(totalPoints)} / 100</strong>，列出前 ${rankedSchools.length} 所：穩定 ${counts['穩定'] || 0}、適中 ${counts['適中'] || 0}、挑戰 ${counts['挑戰'] || 0}。`;
+    summary.innerHTML = `你目前的估算分數 <strong>${totalPoints} / 100</strong> 落在「${userBand.label}」區間。以下依「與你程度最接近」優先列出前 ${rankedSchools.length} 所：穩定 ${counts['穩定'] || 0} 所、適中 ${counts['適中'] || 0} 所、挑戰 ${counts['挑戰'] || 0} 所。建議志願序前段放挑戰、中段放適中、後段放穩定。`;
 
     results.innerHTML = rankedSchools.map(({ school, tier }) => {
         const recommendation = getAnalysisRecommendation(userBand, tier);
@@ -395,7 +340,6 @@ function renderAnalysis() {
         const quotaText = school['簡章招生名額'] || school['招生名額'] || '待公告';
         const schoolName = escapeHtml(school['學校名稱']);
         const schoolArea = escapeHtml(school['區'] || school['縣市']);
-        const schoolId = escapeHtml(school['學校代碼']);
         return `
             <article class="panel-card analysis-card ${recommendation.badgeClass}">
                 <div class="analysis-card-head">
@@ -415,63 +359,29 @@ function renderAnalysis() {
                     <span>簡章名額：${escapeHtml(quotaText)}</span>
                     <span>區域：${schoolArea}</span>
                 </div>
-                <button type="button" class="ui-btn" data-analysis-wish-add="${schoolId}" ${wishlistContainsSchool(school) ? 'disabled' : ''}>${wishlistContainsSchool(school) ? '已加入志願' : '加入志願清單'}</button>
             </article>
         `;
     }).join('');
-    bindAnalysisWishButtons();
-}
-
-function calculateDisadvantagedScore() {
-    const remoteAreaEligible = document.getElementById('weak_remote')?.checked;
-    const economicStatus = document.getElementById('weak_economic')?.value || 'NONE';
-    let score = remoteAreaEligible ? 1 : 0;
-    if (economicStatus === 'LOW_INCOME') score += 2;
-    if (economicStatus === 'LOWER_MIDDLE_INCOME') score += 1;
-    return Math.min(score, 3);
-}
-
-function calculatePreferenceScoreBySequence(preferenceSequence) {
-    if (preferenceSequence >= 1 && preferenceSequence <= 10) return 30;
-    if (preferenceSequence >= 11 && preferenceSequence <= 20) return 29;
-    if (preferenceSequence >= 21) return 28;
-    return 0;
-}
-
-function assignPreferenceSequences(choices) {
-    let currentSequence = 0;
-    let previousSchoolId = null;
-    return choices.map(choice => {
-        const schoolId = choice.schoolId || choice['學校代碼'];
-        if (schoolId !== previousSchoolId) currentSequence += 1;
-        previousSchoolId = schoolId;
-        return {
-            ...choice,
-            schoolId,
-            preferenceSequence: currentSequence,
-            preferenceScore: calculatePreferenceScoreBySequence(currentSequence)
-        };
-    });
 }
 
 function computeMultiLearningParts() {
+    // 均衡學習
     const domains = ['bal_domain_health','bal_domain_arts','bal_domain_general','bal_domain_tech']
         .map(id => document.getElementById(id))
         .filter(el => el && el.checked).length;
-    const bal = Math.min(12, domains * 3);
+    const lowIncome = document.getElementById('bal_low_income')?.checked ? 2 : 0;
+    const bal = Math.min(12, domains * 3 + lowIncome);
 
+    // 德行：社團（上限2分）+ 服務學習（上限3分）
     const clubTerms = Math.max(0, Number(document.getElementById('mor_club_terms')?.value) || 0);
     const clubPts = Math.min(2, clubTerms);
-    const serviceHours = [1,2,3,4,5,6].map(index => Number(document.getElementById(`service_sem_${index}`)?.value) || 0);
-    const serviceLearning = Math.min(3, serviceHours.filter(hours => hours >= 6).length);
+    const serviceLearning = Number(document.getElementById('mor_service_learning')?.value) || 0;
     const mor = Math.min(5, clubPts + serviceLearning);
 
-    const warnings = Math.max(0, Number(document.getElementById('demerit_warning')?.value) || 0);
-    const minorDemerits = Math.max(0, Number(document.getElementById('demerit_minor')?.value) || 0);
-    const majorDemerits = Math.max(0, Number(document.getElementById('demerit_major')?.value) || 0);
-    const convertedMinorDemerits = minorDemerits + majorDemerits * 3 + Math.floor(warnings / 3);
-    const nod = convertedMinorDemerits > 0 ? 0 : (warnings % 3 > 0 ? 3 : 6);
+    // 無記過
+    const nod = Number(document.getElementById('nod_record')?.value) || 0;
 
+    // 獎勵
     const majCount = Math.max(0, Number(document.getElementById('awd_major')?.value) || 0);
     const minCount = Math.max(0, Number(document.getElementById('awd_minor')?.value) || 0);
     const commCount = Math.max(0, Number(document.getElementById('awd_comm')?.value) || 0);
@@ -484,7 +394,7 @@ function getCalculationBreakdown() {
     const pref = Number(document.getElementById('prefScore')?.value) || 0;
     const localEl = document.getElementById('localScore');
     const local = localEl?.checked ? Number(localEl.value) || 0 : 0;
-    const weak = calculateDisadvantagedScore();
+    const weak = Number(document.getElementById('weakScore')?.value) || 0;
     const multi = computeMultiLearningParts();
     const bal = multi.bal;
     const mor = multi.mor;
@@ -492,77 +402,9 @@ function getCalculationBreakdown() {
     const awd = multi.awd;
     const exam100 = Number(document.getElementById('examScoreDisplay')?.innerText) || 0;
     const pts111 = Number(document.getElementById('exam111Display')?.innerText) || 0;
-    const multipleLearningScore = Math.min(27, bal + mor + nod + awd);
-    const otherItemsTotal = Math.min(70, pref + local + weak + multipleLearningScore);
-    const totalPoints = Math.min(100, roundScore(otherItemsTotal + exam100));
-    const comparisonKeys = getComparisonKeys({
-        pref,
-        local,
-        weak,
-        bal,
-        mor,
-        nod,
-        awd,
-        exam100,
-        pts111,
-        multipleLearningScore,
-        otherItemsTotal,
-        totalPoints
-    });
+    const totalPoints = pref + local + weak + bal + mor + nod + awd + exam100;
 
-    return { pref, local, weak, bal, mor, nod, awd, exam100, pts111, multipleLearningScore, otherItemsTotal, totalPoints, comparisonKeys };
-}
-
-function getSubjectGrades() {
-    return SUBJECT_IDS.map(id => document.getElementById(id)?.value || '');
-}
-
-function getSubjectScoreMap(grades) {
-    return SUBJECT_KEYS.reduce((result, key, index) => {
-        result[key] = EXAM_SCORE_MAP[grades[index]] || 0;
-        return result;
-    }, {});
-}
-
-function getSubjectRankMap(grades) {
-    return SUBJECT_KEYS.reduce((result, key, index) => {
-        result[key] = GRADE_RANK_MAP[grades[index]] || 0;
-        return result;
-    }, {});
-}
-
-function getGradeMarkerCounts(grades) {
-    return grades.reduce((counts, grade) => {
-        if (grade === 'A++') counts.aPlusCount += 2;
-        if (grade === 'A+') counts.aPlusCount += 1;
-        if (grade === 'B++') counts.bPlusCount += 2;
-        if (grade === 'B+') counts.bPlusCount += 1;
-        return counts;
-    }, { aPlusCount: 0, bPlusCount: 0 });
-}
-
-function getComparisonKeys(scores) {
-    const grades = getSubjectGrades();
-    const markers = getGradeMarkerCounts(grades);
-    return {
-        totalScore: scores.totalPoints,
-        preferenceScore: scores.pref,
-        nearbyEnrollmentScore: scores.local,
-        disadvantagedScore: scores.weak,
-        multipleLearningScore: scores.multipleLearningScore,
-        balancedLearningScore: scores.bal,
-        conductScore: scores.mor,
-        noDemeritScore: scores.nod,
-        rewardScore: scores.awd,
-        examPerformanceScore: scores.exam100,
-        examTotalPoints: scores.pts111,
-        aPlusCount: markers.aPlusCount,
-        bPlusCount: markers.bPlusCount,
-        subjectScores: getSubjectScoreMap(grades),
-        subjectGradeRanks: getSubjectRankMap(grades),
-        schoolSequence: 1,
-        choiceSequence: 1
-    };
+    return { pref, local, weak, bal, mor, nod, awd, exam100, pts111, totalPoints };
 }
 
 function renderCalculationBreakdown() {
@@ -570,49 +412,43 @@ function renderCalculationBreakdown() {
     const breakdownNote = document.getElementById('calcBreakdownNote');
     if (!breakdownList) return;
 
-    const { pref, local, weak, bal, mor, nod, awd, exam100, pts111, multipleLearningScore, otherItemsTotal, totalPoints, comparisonKeys } = getCalculationBreakdown();
+    const { pref, local, weak, bal, mor, nod, awd, exam100, pts111, totalPoints } = getCalculationBreakdown();
     const items = [
         { label: '志願序', value: pref, note: '第 1–10 志願 30 分；第 11–20 志願 29 分；第 21–50 志願 28 分。' },
-        { label: '就近入學', value: local, note: '符合中投區免試/共同就學區為 10 分。' },
-        { label: '扶助弱勢', value: weak, note: '偏遠 1 分 + 中低 1 分或低收 2 分，最高 3 分。' },
-        { label: '均衡學習', value: bal, note: '四領域各 3 分，最高 12 分。' },
+        { label: '就近入學', value: local, note: '符合目前開發區域免試/共同就學區為 10 分。' },
+        { label: '扶助弱勢', value: weak, note: '一般 0 分；偏鄉／中低 1 分；低收 2 分（擇一計分）。' },
+        { label: '均衡學習', value: bal, note: '各領域各 3 分，四領域共 12 分；低收入戶加 2 分。' },
         { label: '德行表現', value: mor, note: '社團（上限 2 分）+ 服務學習（上限 3 分），合計最多 5 分。' },
-        { label: '無記過紀錄', value: nod, note: '3 次警告折 1 次小過；有小過以上為 0 分。' },
+        { label: '無記過紀錄', value: nod, note: '無處分 6 分；銷過後無小過以上 3 分；有小過以上 0 分。' },
         { label: '獎勵紀錄', value: awd, note: '大功 3 分／次，小功 1 分／次，嘉獎 0.5 分／次，上限 4 分。' },
-        { label: '多元學習表現', value: multipleLearningScore, note: '均衡、德行、無記過、獎勵合計，上限 27 分。' },
-        { label: '其他項目', value: otherItemsTotal, note: '志願序、就近、扶弱、多元合計，上限 70 分。' },
-        { label: '教育會考表現', value: exam100, note: '五科 A/B/C 換算，違規每點扣 0.3 分，上限 30 分。' },
-        { label: '會考總積點', value: pts111, note: '五科等級標示點數 + 寫作級分，上限 111 點。' },
+        { label: '會考比序積點', value: exam100, note: '五科與作文等級換算，上限 30 分。' },
+        { label: '111 制比序積分', value: pts111, note: '五科分數總和 + 作文等級，上限 111 分。' },
         { label: '免試總積分', value: totalPoints, note: '以上各項加總，滿分 100 分。' }
     ];
 
     breakdownList.innerHTML = items.map(item => `
         <li>
             <span>${item.label}</span>
-            <strong>${formatScore(item.value)}</strong>
+            <strong>${item.value}</strong>
         </li>
     `).join('');
 
     if (breakdownNote) {
-        breakdownNote.innerHTML = `同分比序鍵值：會考總積點 ${comparisonKeys.examTotalPoints}、A+標示 ${comparisonKeys.aPlusCount}、B+標示 ${comparisonKeys.bPlusCount}。正式結果以學校審查資料為準。`;
+        breakdownNote.innerHTML = `本頁目前採用中投區免試入學公開說明框架做估算；實際以當年度簡章、公告與招生委員會審定為準。會考 111 制比序積分以五科分數與作文等級為基礎，會考 100 制比序積點則依各科等級換算。`;
     }
 }
 
 function calculateScore() {
-    const { pref, local, weak, bal, mor, nod, awd, exam100, pts111, otherItemsTotal, totalPoints } = getCalculationBreakdown();
+    const { pref, local, weak, bal, mor, nod, awd, exam100, pts111, totalPoints } = getCalculationBreakdown();
 
     const resPointsEl = document.getElementById('resPoints');
     const resPctsEl = document.getElementById('resPcts');
-    const resExamEl = document.getElementById('resExam');
-    const resOtherEl = document.getElementById('resOther');
-    if (resPointsEl) resPointsEl.innerText = formatScore(totalPoints);
+    if (resPointsEl) resPointsEl.innerText = String(totalPoints);
     if (resPctsEl) resPctsEl.innerText = String(pts111);
-    if (resExamEl) resExamEl.innerText = formatScore(exam100);
-    if (resOtherEl) resOtherEl.innerText = formatScore(otherItemsTotal);
 
-    const d_pref = document.getElementById('d_pref'); if (d_pref) d_pref.innerText = formatScore(pref);
-    const d_local = document.getElementById('d_local'); if (d_local) d_local.innerText = formatScore(local);
-    const d_multi = document.getElementById('d_multi'); if (d_multi) d_multi.innerText = formatScore(bal + mor + nod + awd);
+    const d_pref = document.getElementById('d_pref'); if (d_pref) d_pref.innerText = String(pref);
+    const d_local = document.getElementById('d_local'); if (d_local) d_local.innerText = String(local);
+    const d_multi = document.getElementById('d_multi'); if (d_multi) d_multi.innerText = String(bal + mor + nod + awd + weak);
 
     updateProgressBar('bar_pref', pref, 30);
     updateProgressBar('bar_local', local, 10);
@@ -648,17 +484,26 @@ function computeAllPoints() {
 }
 
 function computeExamPoints() {
-    const grades = getSubjectGrades();
-    const levelTotal = grades.reduce((sum, grade) => sum + (EXAM_POINT_MAP[grade] || 0), 0);
-    const rawExamScore = grades.reduce((sum, grade) => sum + (EXAM_SCORE_MAP[grade] || 0), 0);
-    const violationPoints = Math.max(0, Number(document.getElementById('exam_violation_points')?.value) || 0);
-    const exam100 = Math.min(30, Math.max(0, roundScore(rawExamScore - violationPoints * 0.3)));
+    const subjIds = ['subj_cn','subj_en','subj_math','subj_sci','subj_soc'];
+    let levelTotal = 0;
+    let exam100 = 0;
+    subjIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const v = Number(el.value) || 0;
+        if (v <= 0) return;
+        levelTotal += v;
+        if (v >= 15) exam100 += 6;
+        else if (v >= 6) exam100 += 4;
+        else exam100 += 2;
+    });
+    exam100 = Math.min(30, exam100);
     const write = Number(document.getElementById('subj_write')?.value) || 0;
     const pts111 = Math.min(111, levelTotal + write);
 
     const examDisplay = document.getElementById('examScoreDisplay');
     const exam111El = document.getElementById('exam111Display');
-    if (examDisplay) examDisplay.innerText = formatScore(exam100);
+    if (examDisplay) examDisplay.innerText = String(exam100);
     if (exam111El) exam111El.innerText = String(pts111);
 
 }
@@ -668,31 +513,28 @@ function resetForm() {
         const el = document.getElementById(id);
         if (el) el.selectedIndex = 0;
     });
+    // 均衡學習預設為四領域皆符合（12 分）
     ['bal_domain_health','bal_domain_arts','bal_domain_general','bal_domain_tech'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.checked = false;
+        if (el) el.checked = true;
     });
-    const weakRemote = document.getElementById('weak_remote'); if (weakRemote) weakRemote.checked = false;
-    const weakEconomic = document.getElementById('weak_economic'); if (weakEconomic) weakEconomic.value = 'NONE';
+    const low = document.getElementById('bal_low_income'); if (low) low.checked = false;
 
+    // 德行預設
     const club = document.getElementById('mor_club_terms'); if (club) club.value = 0;
-    [1,2,3,4,5,6].forEach(index => {
-        const serv = document.getElementById(`service_sem_${index}`);
-        if (serv) serv.value = 0;
-    });
+    const serv = document.getElementById('mor_service_learning'); if (serv) serv.value = '0';
 
-    ['demerit_warning','demerit_minor','demerit_major','exam_violation_points'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = 0;
-    });
+    // 無記過預設
+    const nod = document.getElementById('nod_record'); if (nod) nod.value = '6';
 
-    const maj = document.getElementById('awd_major'); if (maj) maj.value = 0;
-    const min = document.getElementById('awd_minor'); if (min) min.value = 0;
+    // 獎勵預設（範例：大功1次+小功1次 => 4 分）
+    const maj = document.getElementById('awd_major'); if (maj) maj.value = 1;
+    const min = document.getElementById('awd_minor'); if (min) min.value = 1;
     const comm = document.getElementById('awd_comm'); if (comm) comm.value = 0;
     const localScoreEl = document.getElementById('localScore');
     if (localScoreEl) localScoreEl.checked = true;
 
-    ['resPoints','resPcts','resExam','resOther','d_pref','d_local','d_multi','examScoreDisplay','exam111Display'].forEach(id => {
+    ['resPoints','resPcts','d_pref','d_local','d_multi'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerText = '0';
     });
@@ -712,7 +554,7 @@ function initCalculator() {
     // 計算僅在使用者按下「計算高中職積分」按鈕時執行。
     // 不要在每個欄位變更時自動計算，避免使用者還沒按完就跳分數。
     // 但會考欄位變更時可回寫會考預覽（hidden display），讓使用者看到會考轉換結果
-    const previewIds = ['subj_cn','subj_en','subj_math','subj_sci','subj_soc','subj_write','exam_violation_points'];
+    const previewIds = ['subj_cn','subj_en','subj_math','subj_sci','subj_soc','subj_write'];
     previewIds.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
@@ -796,15 +638,6 @@ function escapeHtml(value) {
         '"': '&quot;',
         "'": '&#39;'
     }[char]));
-}
-
-function normalizeSchoolRows(rows) {
-    return rows
-        .filter(school => school && school['學校代碼'] && school['學校名稱'])
-        .map(school => ({
-            ...school,
-            '分數來源備註': school['分數來源備註'] === 'test' ? 'CTTW中投區歷年錄取分數查詢 113年；科別:普通科' : school['分數來源備註']
-        }));
 }
 
 function programItems(programText) {
@@ -905,18 +738,16 @@ function renderSchools() {
         const shownPrograms = programs.slice(0, 24);
         const score = school['最低錄取分數'] || '待補';
         const scoreYear = school['分數年度'] ? `${school['分數年度']}年` : '未公告';
-        const quotaDetail = school['招生名額'] || '以簡章名額為準';
+        const quotaBlank = school['招生名額'] || '空白保留';
         const publicClass = school['公私立'] === '私立' ? 'is-private' : 'is-public';
-        const website = school['官網'];
-        const websiteAction = website
-            ? `<a class="school-link" href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer">學校官網</a>`
-            : `<span class="school-link is-disabled" aria-disabled="true">官網待補</span>`;
+        const website = school['官網'] || '#';
         return `
             <article class="panel-card school-card">
                 <div class="school-card-head">
                     <div>
                         <h3 class="school-title">${escapeHtml(school['學校名稱'])}</h3>
                     </div>
+                    <span class="school-rank">#${escapeHtml(school['排名'])}</span>
                 </div>
                 <div class="school-chip-row">
                     <span class="school-chip ${publicClass}">${escapeHtml(school['公私立'])}</span>
@@ -929,7 +760,7 @@ function renderSchools() {
                     <dt>地址</dt><dd>${escapeHtml(school['地址'])}</dd>
                     <dt>招生區</dt><dd>${escapeHtml(school['招生區'])}</dd>
                     <dt>簡章名額</dt><dd>${escapeHtml(school['簡章招生名額'] || '待公告')}</dd>
-                    <dt>名額補充</dt><dd>${escapeHtml(quotaDetail)}</dd>
+                    <dt>招生名額</dt><dd>${escapeHtml(quotaBlank)}</dd>
                     <dt>錄取分數</dt><dd>${escapeHtml(score)}</dd>
                     <dt>特色班</dt><dd>${escapeHtml(school['資優班/特色班'] || '請查官網')}</dd>
                 </dl>
@@ -951,7 +782,7 @@ function renderSchools() {
                     <button type="button" class="school-wish-add-btn ${wishlistContainsSchool(school) ? 'is-added' : ''}" data-wish-add="${escapeHtml(school['學校代碼'])}">
                         ${wishlistContainsSchool(school) ? '✓ 已加入志願' : '+ 加入志願'}
                     </button>
-                    ${websiteAction}
+                    <a class="school-link" href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer" ${website === '#' ? 'aria-disabled="true"' : ''}>學校官網</a>
                 </div>
             </article>
         `;
@@ -976,7 +807,6 @@ function renderSchools() {
                 const index = wishlistState.indexOf(code);
                 if (index !== -1) {
                     wishlistState.splice(index, 1);
-                    saveWishlistState();
                     renderWishlist();
                     renderSchools();
                 }
@@ -1000,33 +830,14 @@ function useEmbeddedSchoolsData() {
     const config = getSchoolDataConfig();
     const source = window[config.dataVar];
     if (!Array.isArray(source) || source.length === 0) return false;
-    allSchools = normalizeSchoolRows(source);
+    allSchools = source.map(school => ({ ...school }));
     renderSchools();
     return true;
 }
 
-const WISHLIST_STORAGE_KEY = 'jshs-it-hs-wishlist-v1';
 let wishlistState = [];
 const WISHLIST_MAX = 50;
 let wishlistSearchTimer = null;
-
-function loadWishlistState() {
-    try {
-        const raw = window.localStorage?.getItem(WISHLIST_STORAGE_KEY);
-        const parsed = raw ? JSON.parse(raw) : [];
-        if (Array.isArray(parsed)) wishlistState = parsed.filter(Boolean).slice(0, WISHLIST_MAX);
-    } catch (error) {
-        wishlistState = [];
-    }
-}
-
-function saveWishlistState() {
-    try {
-        window.localStorage?.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(wishlistState));
-    } catch (error) {
-        // localStorage 可能被無痕或瀏覽器設定停用；不影響基本操作。
-    }
-}
 
 function wishlistContainsSchool(school) {
     if (!school) return false;
@@ -1041,7 +852,6 @@ function addSchoolToWishlist(school) {
         return false;
     }
     wishlistState.push(school['學校代碼']);
-    saveWishlistState();
     renderWishlist();
     return true;
 }
@@ -1049,7 +859,6 @@ function addSchoolToWishlist(school) {
 function removeWishlistAt(index) {
     if (index < 0 || index >= wishlistState.length) return;
     wishlistState.splice(index, 1);
-    saveWishlistState();
     renderWishlist();
     renderSchools();
 }
@@ -1061,7 +870,6 @@ function moveWishlist(index, direction) {
     const temp = wishlistState[index];
     wishlistState[index] = wishlistState[target];
     wishlistState[target] = temp;
-    saveWishlistState();
     renderWishlist();
 }
 
@@ -1069,7 +877,6 @@ function clearWishlist() {
     if (!wishlistState.length) return;
     if (!confirm('確定要清空所有志願嗎？')) return;
     wishlistState = [];
-    saveWishlistState();
     renderWishlist();
     renderSchools();
 }
@@ -1111,10 +918,9 @@ function renderWishlist() {
     const wishSchools = wishlistState
         .map(code => allSchools.find(s => s['學校代碼'] === code))
         .filter(Boolean);
-    const sequencedWishes = assignPreferenceSequences(wishSchools);
 
     const counts = { 挑戰: 0, 適中: 0, 穩定: 0 };
-    sequencedWishes.forEach(school => {
+    wishSchools.forEach(school => {
         const { recommendation } = getWishlistAnalysisForSchool(school);
         counts[recommendation.status] = (counts[recommendation.status] || 0) + 1;
     });
@@ -1126,7 +932,7 @@ function renderWishlist() {
         if (countReachable) countReachable.textContent = counts['穩定'] || 0;
     }
 
-    listEl.innerHTML = sequencedWishes.map((school, index) => {
+    listEl.innerHTML = wishSchools.map((school, index) => {
         const { userBand, schoolTier, recommendation } = getWishlistAnalysisForSchool(school);
         const pubClass = school['公私立'] === '私立' ? 'is-private' : 'is-public';
         const pubLabel = school['公私立'];
@@ -1154,8 +960,6 @@ function renderWishlist() {
                         <p class="wish-analysis-detail">${recommendation.detail}</p>
                         <div class="wish-analysis-meta">
                             <span>排名 #${escapeHtml(String(rank))}</span>
-                            <span>校序：${school.preferenceSequence}</span>
-                            <span>志願序積分：${school.preferenceScore}</span>
                             <span>你的區間：${userBand.label}</span>
                             <span>學校難度：${schoolTier.label}</span>
                             <span>錄取分數：${escapeHtml(scoreText)}</span>
@@ -1319,7 +1123,7 @@ function initSchools() {
             return response.text();
         })
         .then(text => {
-            allSchools = normalizeSchoolRows(parseCsv(text));
+            allSchools = parseCsv(text);
             renderSchools();
         })
         .catch(() => {
@@ -1345,7 +1149,6 @@ window.addEventListener('DOMContentLoaded', () => {
     toggleMobileMenu();
     initPageRouter();
     initCalculator();
-    loadWishlistState();
     initAnalysisControls();
     initSchools();
     renderAnalysis();
@@ -1353,7 +1156,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-// Embedded fallback data generated from schools.csv.
+// Generated from schools.csv by jshs_dev.html.
 window.IT_HS_SCHOOLS = [
   {
     "排名": "1",
@@ -1373,7 +1176,7 @@ window.IT_HS_SCHOOLS = [
     "招生名額": "",
     "最低錄取分數": "5A6+作文4級分 國A++",
     "分數年度": "113",
-    "分數來源備註": "CTTW中投區歷年錄取分數查詢 113年；科別:普通科",
+    "分數來源備註": "test",
     "資優班/特色班": "資優/特色班請查官網公告",
     "排序分數": "10000"
   },
@@ -3466,5 +3269,115 @@ window.IT_HS_SCHOOLS = [
     "分數來源備註": "",
     "資優班/特色班": "",
     "排序分數": "600"
+  },
+  {
+    "排名": "97",
+    "學校代碼": "",
+    "學校名稱": "",
+    "公私立": "",
+    "招生區": "",
+    "學制分類": "",
+    "男女校": "",
+    "縣市": "",
+    "區": "",
+    "地址": "",
+    "官網": "",
+    "電話": "",
+    "科系與名額": "",
+    "簡章招生名額": "",
+    "招生名額": "",
+    "最低錄取分數": "",
+    "分數年度": "",
+    "分數來源備註": "",
+    "資優班/特色班": "",
+    "排序分數": ""
+  },
+  {
+    "排名": "98",
+    "學校代碼": "",
+    "學校名稱": "",
+    "公私立": "",
+    "招生區": "",
+    "學制分類": "",
+    "男女校": "",
+    "縣市": "",
+    "區": "",
+    "地址": "",
+    "官網": "",
+    "電話": "",
+    "科系與名額": "",
+    "簡章招生名額": "",
+    "招生名額": "",
+    "最低錄取分數": "",
+    "分數年度": "",
+    "分數來源備註": "",
+    "資優班/特色班": "",
+    "排序分數": ""
+  },
+  {
+    "排名": "99",
+    "學校代碼": "",
+    "學校名稱": "",
+    "公私立": "",
+    "招生區": "",
+    "學制分類": "",
+    "男女校": "",
+    "縣市": "",
+    "區": "",
+    "地址": "",
+    "官網": "",
+    "電話": "",
+    "科系與名額": "",
+    "簡章招生名額": "",
+    "招生名額": "",
+    "最低錄取分數": "",
+    "分數年度": "",
+    "分數來源備註": "",
+    "資優班/特色班": "",
+    "排序分數": ""
+  },
+  {
+    "排名": "100",
+    "學校代碼": "",
+    "學校名稱": "",
+    "公私立": "",
+    "招生區": "",
+    "學制分類": "",
+    "男女校": "",
+    "縣市": "",
+    "區": "",
+    "地址": "",
+    "官網": "",
+    "電話": "",
+    "科系與名額": "",
+    "簡章招生名額": "",
+    "招生名額": "",
+    "最低錄取分數": "",
+    "分數年度": "",
+    "分數來源備註": "",
+    "資優班/特色班": "",
+    "排序分數": ""
+  },
+  {
+    "排名": "101",
+    "學校代碼": "",
+    "學校名稱": "",
+    "公私立": "",
+    "招生區": "",
+    "學制分類": "",
+    "男女校": "",
+    "縣市": "",
+    "區": "",
+    "地址": "",
+    "官網": "",
+    "電話": "",
+    "科系與名額": "",
+    "簡章招生名額": "",
+    "招生名額": "",
+    "最低錄取分數": "",
+    "分數年度": "",
+    "分數來源備註": "",
+    "資優班/特色班": "",
+    "排序分數": ""
   }
 ];

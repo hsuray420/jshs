@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>中投區國中升學資訊網</title>
+    <title>全國國中升學資訊網</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -12,33 +12,67 @@
 <body>
 
     <header class="site-header">
-        <a class="brand" href="#top" aria-label="中投區國中升學資訊網首頁">
+        <a class="brand" href="#top" aria-label="全國國中升學資訊網首頁">
             <span class="brand-mark" aria-hidden="true">
                 <svg viewBox="0 0 32 32" fill="none">
                     <path d="M6 24 L14 12 L20 18 L26 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
                     <circle cx="26" cy="8" r="2.4" fill="currentColor"/>
                 </svg>
             </span>
-            <span class="brand-name">中投區國中升學資訊網</span>
+            <span class="brand-name">全國國中升學資訊網</span>
         </a>
         <nav class="site-nav" aria-label="主要導覽">
-            <a href="#pathways">探索路徑</a>
-            <a href="#tools">升學工具</a>
+            <a href="#region-picker">所屬地區</a>
+            <a href="../it_hs/it_hs.html#overview">學制介紹</a>
+            <a href="../it_hs/it_hs.html#admission">入學方式</a>
+            <a href="../it_hs/it_hs.html#calculator">試算工具</a>
         </nav>
-            <a class="nav-cta" href="../it_hs/it_hs.html">高中資訊<span aria-hidden="true">→</span></a>
+        <a class="nav-cta" href="#region-picker">選擇地區<span aria-hidden="true">→</span></a>
     </header>
 
     <main id="top">
+
+        <section class="region-section section-shell" id="region-picker" aria-labelledby="region-title">
+            <div class="region-panel">
+                <div class="region-copy">
+                    <p class="eyebrow">全國升學服務平台</p>
+                    <h1 id="region-title">你目前屬於哪一個就學區？</h1>
+                    <p>先選擇所在地區，平台會帶你進入對應的學校資料、入學規則與試算工具。目前先開放中投區資料，其他區域將陸續建置。</p>
+                </div>
+                <div class="region-grid" aria-label="選擇就學區">
+                    <a class="region-card is-ready" href="../it_hs/it_hs.html#overview">
+                        <span class="region-status">開發中，可試用</span>
+                        <strong>中投區</strong>
+                        <span>臺中市、南投縣與共同就學區資料</span>
+                    </a>
+                    <button class="region-card" type="button" disabled>
+                        <span class="region-status">即將開放</span>
+                        <strong>北部區域</strong>
+                        <span>規劃中</span>
+                    </button>
+                    <button class="region-card" type="button" disabled>
+                        <span class="region-status">即將開放</span>
+                        <strong>南部區域</strong>
+                        <span>規劃中</span>
+                    </button>
+                    <button class="region-card" type="button" disabled>
+                        <span class="region-status">即將開放</span>
+                        <strong>東部與離島</strong>
+                        <span>規劃中</span>
+                    </button>
+                </div>
+            </div>
+        </section>
 
         <section class="hero" aria-labelledby="hero-title">
             <div class="hero-inner section-shell">
                 <div class="hero-copy">
                     <p class="eyebrow">116 年國中升學規劃</p>
                     <h1 id="hero-title">找到你的<br><span>下一步</span></h1>
-                    <p class="hero-lede">從會考到入學，用最少的步驟，看清楚接下來的路。</p>
+                    <p class="hero-lede">從會考到入學，用最少的步驟，看清楚各地區接下來的路。</p>
                     <div class="hero-actions">
-                        <a class="button button-primary" href="#pathways">開始探索路徑<span aria-hidden="true">→</span></a>
-                        <a class="hero-quiet-link" href="../it_hs/it_hs.html#overview">先認識會考制度</a>
+                        <a class="button button-primary" href="../it_hs/it_hs.html#overview">先看學制介紹<span aria-hidden="true">→</span></a>
+                        <a class="hero-quiet-link" href="../it_hs/it_hs.html#admission">了解入學方式</a>
                     </div>
                 </div>
 
@@ -66,44 +100,40 @@
 
         <section class="pathways-section section-shell" id="pathways" aria-labelledby="pathways-title">
             <div class="section-heading">
-                <p class="section-label">選擇方向</p>
-                <h2 id="pathways-title">兩條路，通向不同的成長方式。</h2>
-                <p class="section-sub">了解學制差異，選一條你想投入的學習方式。</p>
+                <p class="section-label">學制介紹</p>
+                <h2 id="pathways-title">不同學制，通向不同的成長方式。</h2>
+                <p class="section-sub">先了解普通高中、技術型高中、綜合高中與五專，再選一條你想投入的學習方式。</p>
             </div>
             <div class="pathway-grid">
-                <a class="pathway-card path-hs" href="../it_hs/it_hs.html">
+                <a class="pathway-card path-hs" href="../it_hs/it_hs.html#overview">
                     <span class="pathway-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none"><path d="M3 6.8 12 3l9 3.8-9 3.8-9-3.8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 11v4.4c0 1.7 2.7 3.6 6 3.6s6-1.9 6-3.6V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </span>
-                    <h3>高中職</h3>
-                    <p>修業三年，兼顧學科基礎與職能探索，保留多元升學彈性。</p>
-                    <span class="pathway-link">進入高中職專區<span aria-hidden="true">→</span></span>
+                    <h3>高中、高職與綜合高中</h3>
+                    <p>修業三年，分別偏向學科升學、專業實作或彈性探索，保留多元升學選擇。</p>
+                    <span class="pathway-link">查看學制介紹<span aria-hidden="true">→</span></span>
                 </a>
-                    <a class="pathway-card path-five" href="../it_5/it_5.html">
+                <a class="pathway-card path-five" href="../it_5/it_5.html">
                     <span class="pathway-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </span>
                     <h3>五專</h3>
                     <p>修業五年，及早深入專業實作，銜接就業與升學。</p>
                     <span class="pathway-link">進入五專專區<span aria-hidden="true">→</span></span>
-                    </a>
-                <button class="pathway-card path-form" id="pathwayFormOpen" type="button">
-                    <span class="pathway-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none"><path d="M5 4.5h14v15H5z" stroke="currentColor" stroke-width="1.6"/><path d="M8 9h8M8 13h6M8 17h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-                    </span>
-                    <h3>我要讀哪裡？</h3>
-                    <p>回答幾個問題，取得適合你的升學方向建議。</p>
-                    <span class="pathway-link">開始填寫表單<span aria-hidden="true">→</span></span>
-                </button>
+                </a>
             </div>
         </section>
 
         <section class="tools-section section-shell" id="tools" aria-labelledby="tools-title">
             <div class="section-heading">
                 <p class="section-label">準備好時</p>
-                <h2 id="tools-title">升學工具都在這裡。</h2>
+                <h2 id="tools-title">入學方式與試算工具都在這裡。</h2>
             </div>
             <div class="tool-row">
+                <a href="../it_hs/it_hs.html#admission">
+                    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5h14v14H5z" stroke="currentColor" stroke-width="1.6"/><path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
+                    <span class="tool-text">入學方式</span>
+                </a>
                 <a href="../it_hs/it_hs.html#calculator">
                     <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 8h8M8 12h3M8 16h3M13 12h3M13 16h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
                     <span class="tool-text">積分試算</span>
@@ -116,30 +146,10 @@
                     <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="m20 20-4.3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
                     <span class="tool-text">學校查詢</span>
                 </a>
-                <a href="../it_hs/it_hs.html#download">
-                    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0-4-4m4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 19h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-                    <span class="tool-text">資料下載</span>
-                </a>
             </div>
         </section>
 
     </main>
-
-    <aside class="site-ad" id="siteAd" hidden aria-label="廣告">
-        <span class="site-ad-label">廣告</span>
-        <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-full-width-responsive="true"></ins>
-    </aside>
-
-    <div class="form-modal" id="pathwayFormModal" hidden>
-        <div class="form-modal-backdrop" data-form-close></div>
-        <section class="form-modal-panel" role="dialog" aria-modal="true" aria-labelledby="formModalTitle">
-            <button class="form-modal-close" type="button" data-form-close aria-label="關閉表單">×</button>
-            <p class="section-label">方向探索</p>
-            <h2 id="formModalTitle">我要讀哪裡？</h2>
-            <p class="form-modal-note">這份表單由網站管理員設定，你的回答會送到指定的第三方表單服務。</p>
-            <div class="form-frame-wrap" id="pathwayFormFrame"></div>
-        </section>
-    </div>
 
     <footer>
         <div class="footer-inner section-shell">
@@ -147,7 +157,7 @@
                 <span class="brand-mark" aria-hidden="true">
                     <svg viewBox="0 0 32 32" fill="none"><path d="M6 24 L14 12 L20 18 L26 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="8" r="2.4" fill="currentColor"/></svg>
                 </span>
-                <span class="brand-name">中投區國中升學資訊網</span>
+                <span class="brand-name">全國國中升學資訊網</span>
             </a>
             <a class="footer-link" href="../it_hs/it_hs.html">高中職完整指南<span aria-hidden="true">→</span></a>
         </div>
