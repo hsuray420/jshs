@@ -55,6 +55,7 @@ export default async function AdminPage({
       {params.updated || params.tested ? (
         <section className="admin-flash">
           {params.updated === "schools_csv" ? "學校 CSV 已更新。" : null}
+          {params.updated === "code_upload" ? "程式包已上傳，已建立待部署/執行紀錄。" : null}
           {params.tested === "line" ? "LINE 測試通知已送出。" : null}
         </section>
       ) : null}
@@ -64,7 +65,7 @@ export default async function AdminPage({
         <StatusCard label="LINE 推播" value={linePushReady ? "已啟用" : "待設定"} tone={linePushReady ? "ok" : "warn"} />
         <StatusCard label="學校 CSV" value={schoolCsvUpdatedAt ? "後台管理" : "內建資料"} tone="ok" />
         <StatusCard label="檔案庫" value={`${files.length} 個檔案`} tone="ok" />
-        <StatusCard label="程式碼" value="後台可看" tone="ok" />
+        <StatusCard label="程式碼" value="可上傳" tone="ok" />
       </section>
 
       <section className="admin-grid admin-grid-3">
@@ -180,6 +181,7 @@ export default async function AdminPage({
           </div>
           <div className="admin-link-grid">
             <a href="/admin/code/">查看所有程式碼</a>
+            <a href="#code-upload">上傳程式包</a>
             <a href="/api/health">伺服器健康檢查</a>
             <a href="/api/admission/calculate">後端試算 API</a>
             <a href="/api/schools.csv">學校 CSV</a>
@@ -192,6 +194,46 @@ export default async function AdminPage({
       </section>
 
       <section className="admin-grid">
+        <form
+          id="code-upload"
+          className="admin-panel"
+          action="/api/admin/code-upload"
+          method="post"
+          encType="multipart/form-data"
+        >
+          <div className="admin-section-head">
+            <div>
+              <p className="admin-eyebrow">Program Upload</p>
+              <h2>程式上傳與執行紀錄</h2>
+            </div>
+            <span className="admin-badge warn">待部署</span>
+          </div>
+          <p className="admin-muted">
+            上傳你修改後的程式包，系統會保存到後台私有檔案庫並建立「待部署/執行」紀錄。正式執行仍需由受控部署流程套用，避免任意程式直接影響線上網站。
+          </p>
+          <label>
+            程式檔或壓縮包
+            <input
+              name="program"
+              type="file"
+              accept=".zip,.tar,.tgz,.gz,.js,.ts,.tsx,.html,.css,.json,.md"
+              required
+            />
+          </label>
+          <label>
+            修改內容與執行說明
+            <textarea
+              name="run_note"
+              rows={4}
+              placeholder="例如：更新積分試算公式、修改前台選單、補學校 CSV 欄位..."
+            />
+          </label>
+          <button className="admin-button" type="submit">
+            上傳並建立執行紀錄
+          </button>
+          <p className="admin-muted">上傳後可在下方檔案庫找到分類為 code-deploy 的紀錄。</p>
+        </form>
+
         <form
           className="admin-panel"
           action="/api/admin/files"
@@ -257,6 +299,15 @@ export default async function AdminPage({
               type="url"
               placeholder="https://forms.google.com/..."
               defaultValue={settingsMap.get("pathway_form_url") ?? ""}
+            />
+          </label>
+          <label>
+            LINE 官方帳號連結
+            <input
+              name="official_line_url"
+              type="url"
+              placeholder="https://lin.ee/..."
+              defaultValue={settingsMap.get("official_line_url") ?? ""}
             />
           </label>
           <p className="admin-muted">可使用 Google 表單、Microsoft Forms、Tally 等可嵌入表單。</p>

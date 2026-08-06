@@ -3,7 +3,6 @@
   "name": "jshs",
   "main": "dist/server/index.js",
   "compatibility_date": "2026-05-15",
-  "compatibility_flags": ["nodejs_compat"],
   "no_bundle": true,
   "assets": {
     "directory": "dist/client",
@@ -26,7 +25,7 @@
     {
       "binding": "DB",
       "database_name": "jshs-db",
-      "database_id": "REPLACE_WITH_CLOUDFLARE_D1_DATABASE_ID"
+      "database_id": "ab07d794-b69b-44bf-bd20-8854870c7bd7"
     }
   ],
   "r2_buckets": [

@@ -140,6 +140,7 @@ export async function upsertSiteSetting(
 
 export const PUBLIC_SETTING_KEYS = new Set([
   "pathway_form_url",
+  "official_line_url",
   "google_ads_enabled",
   "google_ads_client",
   "google_ads_slot",

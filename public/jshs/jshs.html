@@ -10,6 +10,25 @@
     <link rel="stylesheet" href="jshs.css">
 </head>
 <body>
+    <div id="districtModal" class="district-modal" role="dialog" aria-modal="true" aria-labelledby="district-modal-title">
+        <div class="district-modal-panel">
+            <p class="eyebrow">就學區選擇</p>
+            <h2 id="district-modal-title">你目前屬於哪一個就學區？</h2>
+            <p>先選擇就學區，平台會帶你進入對應的規則、積分試算與學校資料。</p>
+            <div class="district-modal-grid">
+                <a class="district-choice is-ready" href="../it_hs/it_hs.html#overview">
+                    <span>可使用</span>
+                    <strong>中投區</strong>
+                    <small>臺中市、南投縣與共同就學區</small>
+                </a>
+                <button class="district-choice" type="button" disabled>
+                    <span>即將開放</span>
+                    <strong>其他就學區</strong>
+                    <small>資料建置中</small>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <header class="site-header">
         <a class="brand" href="#top" aria-label="全國國中升學資訊網首頁">
@@ -163,6 +182,10 @@
         </div>
     </footer>
 
+    <a id="lineFloatingLink" class="line-floating-link" href="#" aria-label="加入 LINE 官方帳號">
+        <span>LINE</span>
+        <small>加入好友</small>
+    </a>
     <script src="jshs.js"></script>
 </body>
 </html>

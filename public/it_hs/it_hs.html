@@ -53,15 +53,31 @@
         </div>
         <div class="header-nav-wrap border-t border-neo-blueGray bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="section-nav hidden md:grid py-3">
-                    <a href="../jshs/jshs.html">回首頁</a>
-                    <button type="button" data-page="overview">學制介紹</button>
-                    <button type="button" data-page="admission">入學方式</button>
-                    <button type="button" data-page="calculator">積分試算</button>
-                    <button type="button" data-page="analysis">落點分析</button>
-                    <button type="button" data-page="schools">學校查詢</button>
-                    <button type="button" data-page="download">資料下載</button>
-                    <button type="button" data-page="faq">FAQ</button>
+                <div class="section-nav menu-board hidden md:grid py-3" aria-label="高中職功能選單">
+                    <div class="menu-column">
+                        <button type="button" class="menu-heading" data-page="overview">高中職學制介紹⬇</button>
+                        <button type="button" data-page="overview">高中。</button>
+                        <button type="button" data-page="overview">高職。</button>
+                        <button type="button" data-page="overview">綜合高中。</button>
+                    </div>
+                    <div class="menu-column">
+                        <button type="button" class="menu-heading" data-page="admission">入學管道及規則⬇</button>
+                        <button type="button" data-page="admission">免試入學</button>
+                        <button type="button" data-page="admission">特殊選材</button>
+                        <button type="button" data-page="admission">獨招/直升</button>
+                        <button type="button" data-page="download">等等</button>
+                    </div>
+                    <div class="menu-column menu-column-wide">
+                        <button type="button" class="menu-heading" data-page="calculator">免試入學各項積分試算⬇。</button>
+                        <button type="button" data-page="calculator"><strong>100</strong> 分積分/<strong>111</strong> 會考積點↵</button>
+                        <button type="button" data-page="analysis">落點分析↵</button>
+                    </div>
+                    <div class="menu-column">
+                        <button type="button" class="menu-heading" data-page="schools">學校查詢↵</button>
+                        <button type="button" data-page="schools">學校清單</button>
+                        <button type="button" data-page="download">資料下載</button>
+                        <button type="button" data-page="faq">FAQ</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -235,102 +251,21 @@
                 <h2 class="section-title mb-4">高中職積分試算</h2>
                 <p class="section-copy">先輸入會考成績，再設定免試入學積分項目，系統會即時計算 100 制總分與 111 制比序積分。目前試算公式先套用中投區公開規則。</p>
             </div>
-            <div class="panel-card calc-guide-card">
-                <div class="calc-guide-head">
-                    <span class="calc-note-badge">官方積分對照表</span>
-                    <h3>115學年度免試入學超額比序評分項目積分對照表</h3>
-                    <p>目前依照中投區免試入學簡章公告建置，積分總和最高 100 分，是免試入學超額比序時最重要的第一順序。</p>
-                </div>
-                <div class="calc-guide-table-wrapper">
-                    <table class="calc-guide-table">
-                        <thead>
-                            <tr>
-                                <th>項目配分</th>
-                                <th>項目</th>
-                                <th>積分計算方式</th>
-                                <th>上限</th>
-                                <th>備註</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td rowspan="1" class="bold-cell">志願序<br>（30 分）</td>
-                                <td>志願序</td>
-                                <td>第 1–10 志願 30 分；第 11–20 志願 29 分；第 21–50 志願 28 分。</td>
-                                <td>30 分</td>
-                                <td>建議把最想去的校系排在前 10 個。</td>
-                            </tr>
-                            <tr>
-                                <td class="bold-cell">就近入學<br>（10 分）</td>
-                                <td>就近入學</td>
-                                <td>符合目前開發區域的免試就學區或共同就學區。</td>
-                                <td>10 分</td>
-                                <td>一般條件較容易達成。</td>
-                            </tr>
-                            <tr>
-                                <td rowspan="1" class="bold-cell">扶助弱勢<br>（3 分）</td>
-                                <td>扶助弱勢</td>
-                                <td>一般 0 分；偏鄉／中低收入 1 分；低收入 2 分。</td>
-                                <td>3 分</td>
-                                <td>採擇一最高分計算。</td>
-                            </tr>
-                            <tr class="section-divider">
-                                <td colspan="5" class="section-header">多元學習表現（共 27 分）</td>
-                            </tr>
-                            <tr>
-                                <td class="bold-cell">均衡學習<br>（12 分）</td>
-                                <td class="indent-cell">均衡學習</td>
-                                <td>各領域各符合一項計 3 分；四領域皆符合計 12 分；符合低收入戶加 2 分。</td>
-                                <td>12 分</td>
-                                <td>健體、藝文、綜合、科技四領域分別均衡修習。</td>
-                            </tr>
-                            <tr>
-                                <td class="bold-cell">德行表現<br>（5 分）</td>
-                                <td class="indent-cell">德行表現</td>
-                                <td>社團(2 分) + 服務學習(3 分)。</td>
-                                <td>5 分</td>
-                                <td>社團每一學期 1 分，上限 2 分；服務學習依表現給分。</td>
-                            </tr>
-                            <tr>
-                                <td class="bold-cell">無記過紀錄<br>（6 分）</td>
-                                <td class="indent-cell">無記過紀錄</td>
-                                <td>無處分紀錄 6 分；銷過後無小過以上紀錄 3 分；有小過以上紀錄 0 分。</td>
-                                <td>6 分</td>
-                                <td>依紀錄分級；3 次警告折 1 次小過。</td>
-                            </tr>
-                            <tr>
-                                <td class="bold-cell">獎勵紀錄<br>（4 分）</td>
-                                <td class="indent-cell">獎勵紀錄</td>
-                                <td>大功 3 分／次；小功 1 分／次；嘉獎 0.5 分／次。</td>
-                                <td>4 分</td>
-                                <td>每學年計算，合計上限 4 分。</td>
-                            </tr>
-                            <tr class="section-divider">
-                                <td colspan="5" class="section-header">教育會考表現（30 分）</td>
-                            </tr>
-                            <tr>
-                                <td class="bold-cell">會考成績<br>（30 分）</td>
-                                <td class="indent-cell">會考成績</td>
-                                <td>五科「精熟」6 分、「基礎」4 分、「待加強」2 分；作文另計入 111 制。</td>
-                                <td>30 分</td>
-                                <td>五科分數換算為 100 制比序積點（上限 30 分）；作文等級計入 111 制比序積分。</td>
-                            </tr>
-                            <tr class="total-row">
-                                <td colspan="4" class="total-cell">總積分（志願序30 + 就近10 + 弱勢3 + 多元27 + 會考30）</td>
-                                <td class="total-score">100 分</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p class="calc-guide-foot">本表依據 115 學年度中投區高級中等學校免試入學簡章編製，實際積分最終仍需由學校審核與免試入學委員會確認。</p>
+            <div class="calc-score-map" aria-label="積分試算分區">
+                <button type="button" class="calc-score-tile" data-help-title="會考積分（30）" data-help-text="會考五科依 A、B、C 等級換算為免試入學積分，每科最高 6 分，五科合計最高 30 分。作文另外納入 111 制會考比序積點。">
+                    會考積分（30） ↵
+                </button>
+                <button type="button" class="calc-score-tile calc-score-tile-large" data-help-title="其他幾分志願序等（70）" data-help-text="除會考外，其餘 70 分包含志願序 30 分、就近入學 10 分、扶助弱勢最多 3 分，以及多元學習表現 27 分。">
+                    其他幾分志願序等<br>（70） ↵
+                </button>
             </div>
             <div class="grid gap-6 lg:grid-cols-[1.65fr_0.85fr] items-start mt-6">
                 <div class="calc-form-stack">
                     <div class="panel-card calc-input-card">
                         <div class="calc-card-title-row">
                             <h3 class="calc-card-title">志願序</h3>
-                            <button type="button" class="calc-help-toggle" aria-expanded="false" aria-controls="help-prefScore" data-help-id="help-prefScore" title="查看志願序說明">
-                                <span aria-hidden="true">?</span>
+                            <button type="button" class="calc-help-toggle" aria-controls="help-prefScore" data-help-id="help-prefScore" title="查看志願序說明">
+                                <span aria-hidden="true">💡</span>
                                 <span class="sr-only">志願序說明</span>
                             </button>
                         </div>
@@ -350,8 +285,8 @@
                     <div class="panel-card calc-input-card">
                         <div class="calc-card-title-row">
                             <h3 class="calc-card-title">就近入學</h3>
-                            <button type="button" class="calc-help-toggle" aria-expanded="false" aria-controls="help-localScore" data-help-id="help-localScore" title="查看就近入學說明">
-                                <span aria-hidden="true">?</span>
+                            <button type="button" class="calc-help-toggle" aria-controls="help-localScore" data-help-id="help-localScore" title="查看就近入學說明">
+                                <span aria-hidden="true">💡</span>
                                 <span class="sr-only">就近入學說明</span>
                             </button>
                         </div>
@@ -370,8 +305,8 @@
                     <div class="panel-card calc-input-card">
                         <div class="calc-card-title-row">
                             <h3 class="calc-card-title">扶助弱勢</h3>
-                            <button type="button" class="calc-help-toggle" aria-expanded="false" aria-controls="help-weakScore" data-help-id="help-weakScore" title="查看扶助弱勢說明">
-                                <span aria-hidden="true">?</span>
+                            <button type="button" class="calc-help-toggle" aria-controls="help-weakScore" data-help-id="help-weakScore" title="查看扶助弱勢說明">
+                                <span aria-hidden="true">💡</span>
                                 <span class="sr-only">扶助弱勢說明</span>
                             </button>
                         </div>
@@ -391,8 +326,8 @@
                     <div class="panel-card calc-input-card">
                         <div class="calc-card-title-row">
                             <h3 class="calc-card-title">多元學習表現</h3>
-                            <button type="button" class="calc-help-toggle" aria-expanded="false" aria-controls="help-multiScore" data-help-id="help-multiScore" title="查看多元學習表現說明">
-                                <span aria-hidden="true">?</span>
+                            <button type="button" class="calc-help-toggle" aria-controls="help-multiScore" data-help-id="help-multiScore" title="查看多元學習表現說明">
+                                <span aria-hidden="true">💡</span>
                                 <span class="sr-only">多元學習表現說明</span>
                             </button>
                         </div>
@@ -456,8 +391,8 @@
                     <div class="panel-card calc-input-card">
                         <div class="calc-card-title-row">
                             <h3 class="calc-card-title">會考成績</h3>
-                            <button type="button" class="calc-help-toggle" aria-expanded="false" aria-controls="help-examScore" data-help-id="help-examScore" title="查看會考成績說明">
-                                <span aria-hidden="true">?</span>
+                            <button type="button" class="calc-help-toggle" aria-controls="help-examScore" data-help-id="help-examScore" title="查看會考成績說明">
+                                <span aria-hidden="true">💡</span>
                                 <span class="sr-only">會考成績說明</span>
                             </button>
                         </div>
@@ -746,6 +681,19 @@
     <div class="sr-only">
         <div id="examScoreDisplay">0</div>
         <div id="exam111Display">0</div>
+    </div>
+    <a id="lineFloatingLink" class="line-floating-link" href="#" aria-label="加入 LINE 官方帳號">
+        <span>LINE</span>
+        <small>加入好友</small>
+    </a>
+    <div id="calcHelpModal" class="calc-help-modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="calc-help-backdrop" data-calc-help-close></div>
+        <div class="calc-help-panel">
+            <button type="button" class="calc-help-close" data-calc-help-close aria-label="關閉說明">×</button>
+            <p class="calc-help-eyebrow">積分邏輯</p>
+            <h3 id="calcHelpTitle">說明</h3>
+            <div id="calcHelpBody"></div>
+        </div>
     </div>
     <script src="it_hs.js"></script>
 </body>

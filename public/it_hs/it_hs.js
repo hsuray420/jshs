@@ -227,6 +227,28 @@ function initPageRouter() {
     showPage(initialPage);
 }
 
+async function initLineFloatingLink() {
+    const link = document.getElementById('lineFloatingLink');
+    if (!link) return;
+    try {
+        const response = await fetch('/api/site-config/', { headers: { accept: 'application/json' } });
+        if (response.ok) {
+            const config = await response.json();
+            if (config.official_line_url) {
+                link.href = config.official_line_url;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                return;
+            }
+        }
+    } catch (_) {}
+
+    link.addEventListener('click', (event) => {
+        event.preventDefault();
+        alert('後台尚未設定 LINE 官方帳號連結。');
+    });
+}
+
 function updateProgressBar(id, value, max = 100) {
     const el = document.getElementById(id);
     if (!el) return;
@@ -571,15 +593,45 @@ function initCalculator() {
         });
     }
 
+    const helpModal = document.getElementById('calcHelpModal');
+    const helpTitle = document.getElementById('calcHelpTitle');
+    const helpBody = document.getElementById('calcHelpBody');
+    const closeHelpButtons = document.querySelectorAll('[data-calc-help-close]');
+
+    const openHelpModal = (title, html) => {
+        if (!helpModal || !helpTitle || !helpBody) return;
+        helpTitle.textContent = title || '積分說明';
+        helpBody.innerHTML = html || '<p>這個項目依當年度簡章規則計算，實際仍以招生委員會審定為準。</p>';
+        helpModal.classList.add('active');
+        helpModal.setAttribute('aria-hidden', 'false');
+    };
+
+    const closeHelpModal = () => {
+        if (!helpModal) return;
+        helpModal.classList.remove('active');
+        helpModal.setAttribute('aria-hidden', 'true');
+    };
+
     const helpButtons = document.querySelectorAll('.calc-help-toggle');
     helpButtons.forEach(button => {
         const targetId = button.dataset.helpId;
         const target = document.getElementById(targetId);
         if (!target) return;
         button.addEventListener('click', () => {
-            const isActive = target.classList.toggle('active');
-            button.setAttribute('aria-expanded', String(isActive));
+            const title = button.closest('.calc-card-title-row')?.querySelector('.calc-card-title')?.textContent || '積分說明';
+            openHelpModal(title, target.innerHTML);
         });
+    });
+
+    document.querySelectorAll('.calc-score-tile').forEach(button => {
+        button.addEventListener('click', () => {
+            openHelpModal(button.dataset.helpTitle, `<p>${escapeHtml(button.dataset.helpText || '')}</p>`);
+        });
+    });
+
+    closeHelpButtons.forEach(button => button.addEventListener('click', closeHelpModal));
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') closeHelpModal();
     });
 }
 
@@ -1149,6 +1201,7 @@ window.addEventListener('DOMContentLoaded', () => {
     toggleMobileMenu();
     initPageRouter();
     initCalculator();
+    initLineFloatingLink();
     initAnalysisControls();
     initSchools();
     renderAnalysis();
