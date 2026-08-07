@@ -54,7 +54,9 @@ function loginErrorMessage(error: string, lineUserId?: string) {
   if (error === "line_allowlist") {
     return `這個 LINE 帳號尚未加入管理員名單。請把此 userId 加到 ADMIN_LINE_USER_IDS：${lineUserId || "未取得"}`;
   }
-  if (error === "line_forbidden") return "這個 LINE 帳號沒有後台權限。";
+  if (error === "line_forbidden") {
+    return `這個 LINE 帳號沒有後台權限。請把此 userId 加到 ADMIN_LINE_USER_IDS：${lineUserId || "未取得"}`;
+  }
   if (error === "line_failed") return "LINE 登入失敗，請稍後再試。";
   return "登入失敗，請重新登入。";
 }

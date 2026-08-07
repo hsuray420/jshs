@@ -44,7 +44,10 @@ export async function GET(request: Request) {
       );
     }
     if (!allowedIds.includes(profile.userId)) {
-      return redirectTo(url, "/admin/login?error=line_forbidden");
+      return redirectTo(
+        url,
+        `/admin/login?error=line_forbidden&line_user_id=${encodeURIComponent(profile.userId)}`,
+      );
     }
 
     await createAdminSessionCookie({
