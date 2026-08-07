@@ -1026,14 +1026,18 @@ function renderSchools() {
 
 function getSchoolDataConfig() {
     const config = window.JSHS_SITE_CONFIG || {};
+    const district = getSelectedDistrict();
+    const districtCsvPath = config.schoolsCsvPathsByDistrict?.[district];
     return {
-        csvPath: config.schoolsCsvPath || 'schools.csv',
+        csvPath: districtCsvPath || config.schoolsCsvPath || 'schools.csv',
+        district,
         dataVar: config.schoolsDataVar || 'IT_HS_SCHOOLS'
     };
 }
 
 function useEmbeddedSchoolsData() {
     const config = getSchoolDataConfig();
+    if (config.district === 'tp') return false;
     const source = window[config.dataVar];
     if (!Array.isArray(source) || source.length === 0) return false;
     allSchools = source.map(school => ({ ...school }));
@@ -1323,6 +1327,9 @@ function initSchools() {
 
     const config = getSchoolDataConfig();
 
+    const downloadLink = document.getElementById('schoolsCsvDownload');
+    if (downloadLink) downloadLink.href = config.csvPath;
+
     fetch(config.csvPath)
         .then(response => {
             if (!response.ok) throw new Error('CSV load failed');
@@ -1334,7 +1341,7 @@ function initSchools() {
         })
         .catch(() => {
             if (useEmbeddedSchoolsData()) return;
-            summary.textContent = `無法載入 ${config.csvPath}。若要改成後端檔案，請在 it_hs/site-config.js 中更新 schoolsCsvPath。`;
+            summary.textContent = `無法載入 ${config.csvPath}，請稍後再試。`;
         });
 
     document.querySelectorAll('.school-filter').forEach(button => {
