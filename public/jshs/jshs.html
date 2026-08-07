@@ -14,19 +14,20 @@
         <div class="district-modal-panel">
             <p class="eyebrow">就學區選擇</p>
             <h2 id="district-modal-title">你目前屬於哪一個就學區？</h2>
-            <p>先選擇就學區，平台會帶你進入對應的規則、積分試算與學校資料。</p>
+            <p>先選擇就學區，平台會記住你的地區，之後在積分試算、落點分析與學校查詢中套用。</p>
             <div class="district-modal-grid">
-                <a class="district-choice is-ready" href="../it_hs/it_hs.html#overview">
+                <button class="district-choice is-ready" type="button" data-district-choice="ct" data-district-label="中投區">
                     <span>可使用</span>
                     <strong>中投區</strong>
                     <small>臺中市、南投縣與共同就學區</small>
-                </a>
+                </button>
                 <button class="district-choice" type="button" disabled>
                     <span>即將開放</span>
                     <strong>其他就學區</strong>
                     <small>資料建置中</small>
                 </button>
             </div>
+            <p class="district-modal-foot">選完會先留在首頁，不會自動跳頁。</p>
         </div>
     </div>
 
@@ -45,6 +46,7 @@
             <a href="../it_hs/it_hs.html#overview">學制介紹</a>
             <a href="../it_hs/it_hs.html#admission">入學方式</a>
             <a href="../it_hs/it_hs.html#calculator">試算工具</a>
+            <button class="nav-link-button" type="button" data-pathway-open>我要讀哪裡</button>
         </nav>
         <a class="nav-cta" href="#region-picker">選擇地區<span aria-hidden="true">→</span></a>
     </header>
@@ -56,14 +58,15 @@
                 <div class="region-copy">
                     <p class="eyebrow">全國升學服務平台</p>
                     <h1 id="region-title">你目前屬於哪一個就學區？</h1>
-                    <p>先選擇所在地區，平台會帶你進入對應的學校資料、入學規則與試算工具。目前先開放中投區資料，其他區域將陸續建置。</p>
+                    <p>先選擇所在地區，平台會記住你的就學區，後續在試算、落點與查校時套用。你仍會留在首頁，可以慢慢看完資訊再前往功能頁。</p>
+                    <div id="districtStatus" class="district-status" aria-live="polite">尚未選擇就學區</div>
                 </div>
                 <div class="region-grid" aria-label="選擇就學區">
-                    <a class="region-card is-ready" href="../it_hs/it_hs.html#overview">
+                    <button class="region-card is-ready" type="button" data-district-choice="ct" data-district-label="中投區">
                         <span class="region-status">開發中，可試用</span>
                         <strong>中投區</strong>
                         <span>臺中市、南投縣與共同就學區資料</span>
-                    </a>
+                    </button>
                     <button class="region-card" type="button" disabled>
                         <span class="region-status">即將開放</span>
                         <strong>北部區域</strong>
@@ -90,7 +93,8 @@
                     <h1 id="hero-title">找到你的<br><span>下一步</span></h1>
                     <p class="hero-lede">從會考到入學，用最少的步驟，看清楚各地區接下來的路。</p>
                     <div class="hero-actions">
-                        <a class="button button-primary" href="../it_hs/it_hs.html#overview">先看學制介紹<span aria-hidden="true">→</span></a>
+                        <button class="button button-primary" type="button" data-pathway-open>我要讀哪裡<span aria-hidden="true">→</span></button>
+                        <a class="button button-secondary" href="../it_hs/it_hs.html#overview">先看學制介紹<span aria-hidden="true">→</span></a>
                         <a class="hero-quiet-link" href="../it_hs/it_hs.html#admission">了解入學方式</a>
                     </div>
                 </div>
@@ -149,6 +153,10 @@
                 <h2 id="tools-title">入學方式與試算工具都在這裡。</h2>
             </div>
             <div class="tool-row">
+                <button type="button" data-pathway-open>
+                    <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4.6 7-11a7 7 0 1 0-14 0c0 6.4 7 11 7 11Z" stroke="currentColor" stroke-width="1.6"/><path d="M9.5 10.3 11.3 12l3.2-3.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="tool-text">我要讀哪裡</span>
+                </button>
                 <a href="../it_hs/it_hs.html#admission">
                     <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5h14v14H5z" stroke="currentColor" stroke-width="1.6"/><path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
                     <span class="tool-text">入學方式</span>
@@ -186,6 +194,30 @@
         <span>LINE</span>
         <small>加入好友</small>
     </a>
+    <div id="districtMini" class="district-mini" hidden>
+        <span>目前就學區</span>
+        <strong data-district-mini-label>中投區</strong>
+        <button type="button" data-district-change>更改</button>
+    </div>
+    <div id="pathwayModal" class="pathway-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="pathway-modal-title">
+        <div class="pathway-modal-backdrop" data-pathway-close></div>
+        <div class="pathway-modal-panel">
+            <div class="pathway-modal-head">
+                <div>
+                    <p class="eyebrow">我要讀哪裡</p>
+                    <h2 id="pathway-modal-title">先整理方向，再進入試算。</h2>
+                </div>
+                <button class="pathway-close" type="button" data-pathway-close aria-label="關閉我要讀哪裡">×</button>
+            </div>
+            <div id="pathwayModalBody" class="pathway-modal-body">
+                <div class="pathway-fallback">
+                    <a href="../it_hs/it_hs.html#calculator">先試算積分</a>
+                    <a href="../it_hs/it_hs.html#analysis">看落點分析</a>
+                    <a href="../it_hs/it_hs.html#schools">查詢學校</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="jshs.js"></script>
 </body>
 </html>

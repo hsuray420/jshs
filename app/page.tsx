@@ -1,8 +1,10 @@
 "use client";
 
 export default function Home() {
-  const goToDistrict = (href: string) => {
-    window.location.href = href;
+  const rememberDistrict = (district: string) => {
+    const expires = new Date(Date.now() + 180 * 864e5).toUTCString();
+    document.cookie = `jshs_district=${encodeURIComponent(district)}; expires=${expires}; path=/; SameSite=Lax`;
+    window.location.href = "/jshs/jshs.html";
   };
 
   return (
@@ -25,13 +27,13 @@ export default function Home() {
             你目前屬於哪一個就學區？
           </h1>
           <p className="mb-6 leading-8 text-slate-600">
-            先選擇就學區，網站會自動帶你進入對應的入學規則、積分試算與學校查詢頁面。目前可直接使用中投區，高中職資料會依各區規則陸續擴充。
+            先選擇就學區，網站會先記住你的地區並留在首頁；之後進入積分試算、落點分析與學校查詢時再套用。
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <button
               type="button"
               className="rounded-xl border border-blue-200 bg-blue-50 p-5 text-left transition hover:border-blue-500 hover:bg-blue-100"
-              onClick={() => goToDistrict("/it_hs/it_hs.html#overview")}
+              onClick={() => rememberDistrict("ct")}
             >
               <span className="mb-2 inline-flex rounded-full bg-blue-600 px-3 py-1 text-xs font-black text-white">
                 可使用

@@ -108,14 +108,26 @@ a { color: inherit; text-decoration: none; }
 
 .site-nav {
     display: flex;
+    align-items: center;
     gap: 24px;
     font-size: 14.5px;
     font-weight: 500;
     color: var(--ink-soft);
 }
 
-.site-nav a { transition: color 0.2s var(--ease); }
-.site-nav a:hover { color: var(--ink); }
+.site-nav a,
+.nav-link-button { transition: color 0.2s var(--ease); }
+.site-nav a:hover,
+.nav-link-button:hover { color: var(--ink); }
+
+.nav-link-button {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
+}
 
 .nav-cta {
     display: inline-flex;
@@ -292,6 +304,9 @@ a { color: inherit; text-decoration: none; }
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
     font-size: 15.5px;
     font-weight: 700;
     padding: 15px 26px;
@@ -313,6 +328,17 @@ a { color: inherit; text-decoration: none; }
 }
 
 .button-primary:hover span { transform: translateX(3px); }
+
+.button-secondary {
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    color: var(--brand);
+}
+
+.button-secondary:hover {
+    background: var(--brand-tint);
+    border-color: var(--brand);
+}
 
 .hero-quiet-link {
     font-size: 14.5px;
@@ -540,7 +566,7 @@ a { color: inherit; text-decoration: none; }
 
 .tool-row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);
@@ -548,16 +574,23 @@ a { color: inherit; text-decoration: none; }
     overflow: hidden;
 }
 
-.tool-row a {
+.tool-row a,
+.tool-row button {
     background: var(--paper);
+    border: 0;
     padding: 30px 24px;
     display: flex;
     align-items: center;
     gap: 14px;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
     transition: background 0.2s var(--ease);
 }
 
-.tool-row a:hover { background: var(--brand-tint); }
+.tool-row a:hover,
+.tool-row button:hover { background: var(--brand-tint); }
 
 .tool-icon {
     width: 38px;
@@ -620,6 +653,19 @@ footer {
     backdrop-filter: blur(4px);
 }
 
+.district-modal[hidden] { display: none; }
+
+.district-modal.is-minimizing {
+    animation: modal-out .24s var(--ease) forwards;
+}
+
+@keyframes modal-out {
+    to {
+        opacity: 0;
+        transform: scale(.96) translateY(18px);
+    }
+}
+
 .district-modal-panel {
     width: min(640px, 100%);
     background: var(--paper);
@@ -658,6 +704,7 @@ footer {
     gap: 6px;
     padding: 20px;
     text-align: left;
+    cursor: pointer;
 }
 
 .district-choice.is-ready {
@@ -679,6 +726,153 @@ footer {
 .district-choice small {
     color: var(--ink-soft);
     line-height: 1.6;
+}
+
+.district-choice.is-selected,
+.region-card.is-selected {
+    box-shadow: 0 0 0 3px rgba(31, 51, 88, .16);
+}
+
+.district-modal-foot {
+    color: var(--ink-faint) !important;
+    font-size: 13px;
+    margin: 14px 0 0 !important;
+}
+
+.district-status {
+    align-items: center;
+    background: var(--brand-tint);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--brand);
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 800;
+    margin-top: 20px;
+    min-height: 34px;
+    padding: 7px 12px;
+}
+
+.district-mini {
+    align-items: center;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    bottom: 22px;
+    box-shadow: 0 16px 34px rgba(20,24,28,.14);
+    display: flex;
+    gap: 8px;
+    left: 22px;
+    min-height: 46px;
+    padding: 8px 10px 8px 14px;
+    position: fixed;
+    z-index: 31;
+}
+
+.district-mini span {
+    color: var(--ink-faint);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.district-mini strong {
+    color: var(--brand);
+    font-size: 14px;
+}
+
+.district-mini button {
+    background: var(--brand-tint);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--brand);
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 6px 9px;
+}
+
+.pathway-modal {
+    align-items: center;
+    display: none;
+    inset: 0;
+    justify-content: center;
+    padding: 22px;
+    position: fixed;
+    z-index: 60;
+}
+
+.pathway-modal.active { display: flex; }
+
+.pathway-modal-backdrop {
+    background: rgba(20, 24, 28, .52);
+    backdrop-filter: blur(4px);
+    inset: 0;
+    position: absolute;
+}
+
+.pathway-modal-panel {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 26px 80px rgba(20,24,28,.24);
+    max-height: min(760px, 88vh);
+    overflow: hidden;
+    position: relative;
+    width: min(820px, 100%);
+}
+
+.pathway-modal-head {
+    align-items: flex-start;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+    padding: 24px 26px;
+}
+
+.pathway-modal-head h2 {
+    font-size: clamp(22px, 3vw, 30px);
+    margin: 0;
+}
+
+.pathway-close {
+    background: var(--brand-tint);
+    border: 0;
+    border-radius: 999px;
+    color: var(--brand);
+    cursor: pointer;
+    font: inherit;
+    font-size: 28px;
+    height: 42px;
+    line-height: 1;
+    width: 42px;
+}
+
+.pathway-modal-body {
+    padding: 22px;
+}
+
+.pathway-modal-body iframe {
+    border: 0;
+    height: min(620px, 66vh);
+    width: 100%;
+}
+
+.pathway-fallback {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.pathway-fallback a {
+    background: var(--brand-tint);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--brand);
+    font-weight: 800;
+    padding: 18px;
+    text-align: center;
 }
 
 .line-floating-link {
@@ -716,6 +910,7 @@ footer {
     .hero-visual { order: -1; margin-bottom: 8px; }
     .fork-diagram { max-width: 300px; }
     .tool-row { grid-template-columns: repeat(2, 1fr); }
+    .pathway-fallback { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {
@@ -750,4 +945,5 @@ footer {
     .district-modal-panel { padding: 26px 18px; }
     .district-modal-grid { grid-template-columns: 1fr; }
     .line-floating-link { bottom: 14px; min-height: 56px; min-width: 78px; right: 14px; }
+    .district-mini { bottom: 80px; left: 14px; right: 14px; justify-content: center; }
 }

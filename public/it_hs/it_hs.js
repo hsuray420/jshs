@@ -7,6 +7,19 @@ function toggleMobileMenu() {
     });
 }
 
+function getCookieValue(name) {
+    return document.cookie
+        .split('; ')
+        .find(row => row.startsWith(`${name}=`))
+        ?.split('=')
+        .slice(1)
+        .join('=') || '';
+}
+
+function getSelectedDistrict() {
+    return decodeURIComponent(getCookieValue('jshs_district') || '');
+}
+
 const topicPages = {
     'program-general': { eyebrow: '學制介紹 / 普通高中', title: '普通高中：把學科基礎走得更穩。', intro: '普通高中以學科學習為主，適合想累積國英數、社會與自然基礎，並保留大學多元升學選擇的學生。', points: [['學習重點', '以核心學科、閱讀理解與探究能力為主要訓練。'], ['適合特質', '喜歡系統整理知識，能長期投入學科準備。'], ['下一步', '比較學校課程、特色班與通勤距離，再安排志願。']], action: '查看中投區學校', actionPage: 'schools' },
     'program-vocational': { eyebrow: '學制介紹 / 技術型高中', title: '技術型高中：在實作裡找到專業。', intro: '技術型高中強調專業科目、實作課程與證照能力，讓學生在高中階段逐步建立可延伸的技術基礎。', points: [['學習重點', '專業課程、實習、專題與技術證照並行。'], ['適合特質', '對資訊、設計、餐飲、機械或商管等領域有興趣。'], ['下一步', '從科別與校內設備開始比較，確認自己想投入的方向。']], action: '瀏覽技術型高中', actionPage: 'schools' },
@@ -626,6 +639,12 @@ function resetForm() {
 }
 
 function initCalculator() {
+    const selectedDistrict = getSelectedDistrict();
+    const localScore = document.getElementById('localScore');
+    if (localScore && selectedDistrict && selectedDistrict !== 'ct') {
+        localScore.checked = false;
+    }
+
     // 計算僅在使用者按下「計算高中職積分」按鈕時執行。
     // 不要在每個欄位變更時自動計算，避免使用者還沒按完就跳分數。
     // 但會考欄位變更時可回寫會考預覽（hidden display），讓使用者看到會考轉換結果
