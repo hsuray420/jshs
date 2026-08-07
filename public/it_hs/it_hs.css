@@ -173,6 +173,52 @@ header {
     }
 }
 
+/* Final cascade: keep the refreshed system above legacy overrides. */
+body { background: #f7f9fc !important; color: #202124; letter-spacing: 0; }
+header.site-header { background: rgba(255,255,255,.92) !important; border-bottom-color: #e4e7eb !important; box-shadow: 0 1px 10px rgba(32,33,36,.05) !important; }
+.header-nav-wrap { background: rgba(255,255,255,.96) !important; border-bottom: 1px solid #e4e7eb; box-shadow: 0 2px 12px rgba(32,33,36,.04); }
+.menu-board { gap: 8px !important; padding: 8px 0 !important; }
+.mega-menu { flex: 1 1 0; }
+.mega-menu-trigger { width: 100%; min-height: 44px !important; border-radius: 12px !important; color: #3c4043 !important; padding: 8px 12px !important; transition: background 180ms ease, color 180ms ease, box-shadow 180ms ease; }
+.mega-menu-trigger:hover, .mega-menu.is-open .mega-menu-trigger { background: #e8f0fe !important; color: #0b57d0 !important; box-shadow: inset 0 0 0 1px #c2d7f5; }
+.mega-menu-panel { min-width: 280px; gap: 6px; padding: 8px; border: 1px solid #dfe5ec; border-radius: 16px; box-shadow: 0 16px 36px rgba(32,33,36,.14); }
+.mega-menu-panel button { min-height: 60px !important; border-radius: 10px !important; padding: 10px 12px !important; }
+.mega-menu-panel button:hover, .mega-menu-panel button:focus-visible, .mega-menu-panel button.active { background: #f1f6fe !important; border-color: #c2d7f5 !important; color: #0b57d0; }
+.mobile-menu-stack { gap: 8px; padding: 16px; }
+.mobile-home-link, .mobile-line-link, .mobile-menu-group summary, .mobile-menu-group button { min-height: 48px; border-radius: 12px; padding: 12px 14px; }
+.mobile-menu-group { border-color: #e4e7eb; border-radius: 14px; background: #fff; }
+.mobile-menu-group[open] summary { background: #e8f0fe; color: #0b57d0; }
+.section-panel, .panel-card, .ui-card { border: 1px solid #e4e7eb; border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgba(32,33,36,.07); }
+.section-panel:hover, .hero-panel:hover { transform: none; box-shadow: 0 8px 24px rgba(32,33,36,.07); }
+.panel-card { padding: 24px; }
+.section-grid, .analysis-grid, .school-grid { gap: 16px; align-items: stretch; }
+.overview-card, .analysis-card, .school-card, .wishlist-shell, .analysis-control-card { height: 100%; display: flex; flex-direction: column; }
+.overview-card { gap: 16px; border-radius: 16px; box-shadow: none; }
+.overview-card:hover, .overview-card:focus-visible { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(26,115,232,.11); border-color: #b8d2f6; }
+.overview-card-link, .school-actions, .wish-item-controls { margin-top: auto; }
+.calc-form-stack, .result-panel, .analysis-shell { gap: 16px; }
+.calc-input-card, .calc-breakdown-card, .analysis-card, .school-card { border-radius: 16px; }
+.calc-field-grid, .calc-guide-grid, .calc-formula-grid { gap: 16px; }
+.calc-field-group, .calc-guide-section, .calc-formula-box { border-radius: 12px; border-color: #e4e7eb; background: #f8fafc; }
+.checkbox-chip { min-height: 44px; border-radius: 10px; padding: 10px 12px; }
+.ui-btn, .ui-btn-primary { min-height: 48px; border-radius: 12px; box-shadow: none; }
+.ui-btn-primary { background: #1a73e8; }
+.ui-btn-primary:hover { background: #0b57d0; }
+.ui-input { min-height: 48px; border: 1px solid #dfe5ec; border-radius: 12px; background: #fff; box-shadow: none; }
+.ui-input:focus { border-color: #8ab4f8; box-shadow: 0 0 0 3px rgba(26,115,232,.14); }
+.overview-detail-card, .calc-help-panel { width: min(100%, 720px); max-height: 90vh; overflow: auto; border-radius: 20px; padding: 28px; }
+.overview-detail-popup, .calc-help-modal { padding: 24px; }
+.line-floating-link { bottom: 24px; right: 24px; min-width: 88px; border-radius: 16px; }
+@media (max-width: 768px) {
+    .main-content { padding: 20px 16px 48px; }
+    .panel-card { padding: 20px; }
+    .section-grid, .analysis-grid, .school-grid { gap: 16px; }
+    .overview-detail-popup, .calc-help-modal { padding: 12px; }
+    .overview-detail-card, .calc-help-panel { max-height: calc(100vh - 24px); padding: 22px 18px; }
+    .calc-score-map { grid-template-columns: 1fr; }
+    .line-floating-link { bottom: 14px; right: 14px; }
+}
+
 /* =========================================================
    macOS x Material visual pass
    ========================================================= */
@@ -2434,4 +2480,50 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
         min-width: 78px;
         right: 14px;
     }
+}
+
+/* End-of-file cascade for the refreshed visual system. */
+body { background: #f7f9fc !important; color: #202124 !important; letter-spacing: 0 !important; }
+header.site-header { background: rgba(255,255,255,.92) !important; border-bottom-color: #e4e7eb !important; box-shadow: 0 1px 10px rgba(32,33,36,.05) !important; }
+.header-nav-wrap { background: rgba(255,255,255,.96) !important; border-bottom: 1px solid #e4e7eb !important; }
+.menu-board { gap: 8px !important; padding: 8px 0 !important; }
+.mega-menu { flex: 1 1 0; }
+.mega-menu-trigger { width: 100%; min-height: 44px !important; border-radius: 12px !important; color: #3c4043 !important; padding: 8px 12px !important; }
+.mega-menu-trigger:hover, .mega-menu.is-open .mega-menu-trigger { background: #e8f0fe !important; color: #0b57d0 !important; box-shadow: inset 0 0 0 1px #c2d7f5; }
+.mega-menu-panel { min-width: 280px; gap: 6px; padding: 8px; border: 1px solid #dfe5ec; border-radius: 16px; box-shadow: 0 16px 36px rgba(32,33,36,.14); }
+.mega-menu-panel button { min-height: 60px !important; border-radius: 10px !important; padding: 10px 12px !important; }
+.mega-menu-panel button:hover, .mega-menu-panel button:focus-visible, .mega-menu-panel button.active { background: #f1f6fe !important; border-color: #c2d7f5 !important; color: #0b57d0; }
+.mobile-menu-stack { gap: 8px; padding: 16px; }
+.mobile-home-link, .mobile-line-link, .mobile-menu-group summary, .mobile-menu-group button { min-height: 48px; border-radius: 12px; padding: 12px 14px; }
+.mobile-menu-group { border-color: #e4e7eb; border-radius: 14px; background: #fff; }
+.mobile-menu-group[open] summary { background: #e8f0fe; color: #0b57d0; }
+.section-panel, .panel-card, .ui-card { border: 1px solid #e4e7eb !important; border-radius: 20px !important; background: #fff !important; box-shadow: 0 8px 24px rgba(32,33,36,.07) !important; }
+.section-panel:hover, .hero-panel:hover { transform: none !important; box-shadow: 0 8px 24px rgba(32,33,36,.07) !important; }
+.panel-card { padding: 24px; }
+.section-grid, .analysis-grid, .school-grid { gap: 16px; align-items: stretch; }
+.overview-card, .analysis-card, .school-card, .wishlist-shell, .analysis-control-card { height: 100%; display: flex; flex-direction: column; }
+.overview-card { gap: 16px; border-radius: 16px !important; box-shadow: none !important; }
+.overview-card:hover, .overview-card:focus-visible { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(26,115,232,.11) !important; border-color: #b8d2f6 !important; }
+.overview-card-link, .school-actions, .wish-item-controls { margin-top: auto; }
+.calc-form-stack, .result-panel, .analysis-shell { gap: 16px; }
+.calc-input-card, .calc-breakdown-card, .analysis-card, .school-card { border-radius: 16px !important; }
+.calc-field-grid, .calc-guide-grid, .calc-formula-grid { gap: 16px; }
+.calc-field-group, .calc-guide-section, .calc-formula-box { border-radius: 12px; border-color: #e4e7eb; background: #f8fafc; }
+.checkbox-chip { min-height: 44px; border-radius: 10px; padding: 10px 12px; }
+.ui-btn, .ui-btn-primary { min-height: 48px; border-radius: 12px; box-shadow: none !important; }
+.ui-btn-primary { background: #1a73e8 !important; }
+.ui-btn-primary:hover { background: #0b57d0 !important; }
+.ui-input { min-height: 48px; border: 1px solid #dfe5ec !important; border-radius: 12px; background: #fff !important; box-shadow: none !important; }
+.ui-input:focus { border-color: #8ab4f8 !important; box-shadow: 0 0 0 3px rgba(26,115,232,.14) !important; }
+.overview-detail-card, .calc-help-panel { width: min(100%, 720px); max-height: 90vh; overflow: auto; border-radius: 20px !important; padding: 28px; }
+.overview-detail-popup, .calc-help-modal { padding: 24px; }
+.line-floating-link { bottom: 24px; right: 24px; min-width: 88px; border-radius: 16px; }
+@media (max-width: 768px) {
+    .main-content { padding: 20px 16px 48px; }
+    .panel-card { padding: 20px; }
+    .section-grid, .analysis-grid, .school-grid { gap: 16px; }
+    .overview-detail-popup, .calc-help-modal { padding: 12px; }
+    .overview-detail-card, .calc-help-panel { max-height: calc(100vh - 24px); padding: 22px 18px; }
+    .calc-score-map { grid-template-columns: 1fr; }
+    .line-floating-link { bottom: 14px; right: 14px; }
 }
