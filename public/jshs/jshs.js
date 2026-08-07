@@ -1,7 +1,8 @@
 const targetDate = new Date("2027-05-16T08:00:00").getTime();
 const DISTRICT_COOKIE = 'jshs_district';
 const DISTRICTS = {
-    ct: '中投區'
+    ct: '中投區',
+    tp: '基北區'
 };
 
 function setCookie(name, value, days = 180) {

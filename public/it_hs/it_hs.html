@@ -277,21 +277,21 @@
 
         <section id="page-calculator" data-page-section="calculator" class="page-section">
             <div class="calculator-intro mb-6">
-                <span class="calculator-eyebrow">中投區免試入學</span>
+                <span class="calculator-eyebrow" id="calculatorDistrictLabel">中投區免試入學</span>
                 <h2 class="section-title mb-4">高中職積分試算</h2>
-                <p class="section-copy">先輸入會考成績，再設定免試入學積分項目，系統會即時計算 100 制總分與 111 制比序積分。目前試算公式先套用中投區公開規則。</p>
+                <p class="section-copy" id="calculatorDistrictIntro">先輸入會考成績，再設定免試入學積分項目，系統會即時計算 100 制總分與 111 制比序積分。目前試算公式先套用中投區公開規則。</p>
             </div>
             <div class="calc-score-map" aria-label="積分試算分區">
                 <button type="button" class="calc-score-tile" data-help-title="會考積分（30）" data-help-text="會考五科依 A、B、C 等級換算為免試入學積分，每科最高 6 分，五科合計最高 30 分。作文另外納入 111 制會考比序積點。">
                     <span class="score-tile-index">01</span>
-                    <span class="score-tile-main">會考積分</span>
-                    <span class="score-tile-value">30 <small>分</small></span>
+                    <span class="score-tile-main" id="examTileLabel">會考積分</span>
+                    <span class="score-tile-value" id="examTileValue">30 <small>分</small></span>
                     <span class="score-tile-action">查看計分方式 <b aria-hidden="true">→</b></span>
                 </button>
                 <button type="button" class="calc-score-tile calc-score-tile-large" data-help-title="其他幾分志願序等（70）" data-help-text="除會考外，其餘 70 分包含志願序 30 分、就近入學 10 分、扶助弱勢最多 3 分，以及多元學習表現 27 分。">
                     <span class="score-tile-index">02</span>
-                    <span class="score-tile-main">志願序與多元表現</span>
-                    <span class="score-tile-value">70 <small>分</small></span>
+                    <span class="score-tile-main" id="otherTileLabel">志願序與多元表現</span>
+                    <span class="score-tile-value" id="otherTileValue">70 <small>分</small></span>
                     <span class="score-tile-action">查看計分方式 <b aria-hidden="true">→</b></span>
                 </button>
             </div>
@@ -318,7 +318,7 @@
                             <p>志願序依申請順位給分。把最想錄取的校系放在前 10 筆，可取 30 分；若放在 11-20 筆，為 29 分；21-50 筆為 28 分。</p>
                         </div>
                     </div>
-                    <div class="panel-card calc-input-card">
+                    <div class="panel-card calc-input-card" data-district-only="ct">
                         <div class="calc-card-title-row">
                             <h3 class="calc-card-title">就近入學</h3>
                             <button type="button" class="calc-help-toggle" aria-controls="help-localScore" data-help-id="help-localScore" title="查看就近入學說明">
@@ -338,7 +338,7 @@
                             <p>若符合目前開發區域免試入學的就學區或共同就學區，即可獲得 10 分。這是就近入學的加分項目。</p>
                         </div>
                     </div>
-                    <div class="panel-card calc-input-card">
+                    <div class="panel-card calc-input-card" data-district-only="ct">
                         <div class="calc-card-title-row">
                             <h3 class="calc-card-title">扶助弱勢</h3>
                             <button type="button" class="calc-help-toggle" aria-controls="help-weakScore" data-help-id="help-weakScore" title="查看扶助弱勢說明">
@@ -526,12 +526,12 @@
                     <div class="panel-card result-card result-card-primary">
                         <p class="result-label">會考比序積點</p>
                         <p class="stat-value" id="resPcts">0</p>
-                        <p class="result-unit">/ 111 點</p>
+                        <p class="result-unit" id="examResultUnit">/ 111 點</p>
                     </div>
                     <div class="panel-card result-card">
                         <p class="result-label text-neo-muted">免試總積分</p>
                         <p class="stat-value text-neo-text" id="resPoints">0</p>
-                        <p class="result-unit text-neo-muted">/ 100 分</p>
+                        <p class="result-unit text-neo-muted" id="totalResultUnit">/ 100 分</p>
                     </div>
                     <div class="panel-card calc-breakdown-card">
                         <h3 class="calc-breakdown-title">積分明細與備註</h3>

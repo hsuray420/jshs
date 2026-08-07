@@ -20,6 +20,15 @@ function getSelectedDistrict() {
     return decodeURIComponent(getCookieValue('jshs_district') || '');
 }
 
+const DISTRICT_RULES = {
+    ct: { label: '中投區', totalMax: 100, examMax: 30, examUnit: '111 點', otherMax: 70 },
+    tp: { label: '基北區', totalMax: 108, examMax: 36, examUnit: '36 分', otherMax: 72 }
+};
+
+function getDistrictRules() {
+    return DISTRICT_RULES[getSelectedDistrict()] || DISTRICT_RULES.ct;
+}
+
 const topicPages = {
     'program-general': { eyebrow: '學制介紹 / 普通高中', title: '普通高中：把學科基礎走得更穩。', intro: '普通高中以學科學習為主，適合想累積國英數、社會與自然基礎，並保留大學多元升學選擇的學生。', points: [['學習重點', '以核心學科、閱讀理解與探究能力為主要訓練。'], ['適合特質', '喜歡系統整理知識，能長期投入學科準備。'], ['下一步', '比較學校課程、特色班與通勤距離，再安排志願。']], action: '查看中投區學校', actionPage: 'schools' },
     'program-vocational': { eyebrow: '學制介紹 / 技術型高中', title: '技術型高中：在實作裡找到專業。', intro: '技術型高中強調專業科目、實作課程與證照能力，讓學生在高中階段逐步建立可延伸的技術基礎。', points: [['學習重點', '專業課程、實習、專題與技術證照並行。'], ['適合特質', '對資訊、設計、餐飲、機械或商管等領域有興趣。'], ['下一步', '從科別與校內設備開始比較，確認自己想投入的方向。']], action: '瀏覽技術型高中', actionPage: 'schools' },
@@ -377,6 +386,13 @@ function renderAnalysis() {
 
     if (!summary || !results) return;
 
+    if (getSelectedDistrict() === 'tp') {
+        if (badge) badge.textContent = '基北區學校落點資料建置中';
+        summary.innerHTML = '基北區積分試算已可使用；學校查詢與落點分析將依基北區招生資料另行建置。';
+        results.innerHTML = '';
+        return;
+    }
+
     const { totalPoints } = getCurrentScoreSnapshot();
     const userBand = getUserAnalysisBand(totalPoints);
     if (badge) {
@@ -453,6 +469,15 @@ function renderAnalysis() {
 }
 
 function computeMultiLearningParts() {
+    if (getSelectedDistrict() === 'tp') {
+        const domainCount = ['bal_domain_health', 'bal_domain_arts', 'bal_domain_general']
+            .map(id => document.getElementById(id))
+            .filter(el => el && el.checked).length;
+        const balanced = Math.min(21, domainCount * 7);
+        const service = Math.min(15, Math.max(0, Number(document.getElementById('mor_service_learning')?.value) || 0));
+        return { bal: balanced, mor: service, nod: 0, awd: 0 };
+    }
+
     // 均衡學習
     const domains = ['bal_domain_health','bal_domain_arts','bal_domain_general','bal_domain_tech']
         .map(id => document.getElementById(id))
@@ -490,7 +515,9 @@ function getCalculationBreakdown() {
     const awd = multi.awd;
     const exam100 = Number(document.getElementById('examScoreDisplay')?.innerText) || 0;
     const pts111 = Number(document.getElementById('exam111Display')?.innerText) || 0;
-    const totalPoints = pref + local + weak + bal + mor + nod + awd + exam100;
+    const totalPoints = getSelectedDistrict() === 'tp'
+        ? pref + bal + mor + exam100
+        : pref + local + weak + bal + mor + nod + awd + exam100;
 
     return { pref, local, weak, bal, mor, nod, awd, exam100, pts111, totalPoints };
 }
@@ -501,7 +528,13 @@ function renderCalculationBreakdown() {
     if (!breakdownList) return;
 
     const { pref, local, weak, bal, mor, nod, awd, exam100, pts111, totalPoints } = getCalculationBreakdown();
-    const items = [
+    const items = getSelectedDistrict() === 'tp' ? [
+        { label: '志願序積分', value: pref, note: '基北區可填寫 30 個志願：第 1–5 志願 36 分，之後每 5 個志願遞減，第 26–30 志願為 32 分。' },
+        { label: '均衡學習', value: bal, note: '健康與體育、藝術、綜合活動三領域，每領域最高 7 分，合計上限 21 分。' },
+        { label: '服務學習', value: mor, note: '每學期服務學習滿 6 小時依規定計點，服務學習上限 15 分。' },
+        { label: '國中教育會考', value: exam100, note: '國文、英語、數學、社會、自然五科各最高 7 分，加上寫作測驗最高 1 分，合計上限 36 分。' },
+        { label: '基北區免試總積分', value: totalPoints, note: '志願序 36 分 + 多元學習表現 36 分 + 會考 36 分，滿分 108 分。' }
+    ] : [
         { label: '志願序', value: pref, note: '第 1–10 志願 30 分；第 11–20 志願 29 分；第 21–50 志願 28 分。' },
         { label: '就近入學', value: local, note: '符合目前開發區域免試/共同就學區為 10 分。' },
         { label: '扶助弱勢', value: weak, note: '一般 0 分；偏鄉／中低 1 分；低收 2 分（擇一計分）。' },
@@ -522,7 +555,9 @@ function renderCalculationBreakdown() {
     `).join('');
 
     if (breakdownNote) {
-        breakdownNote.innerHTML = `本頁目前採用中投區免試入學公開說明框架做估算；實際以當年度簡章、公告與招生委員會審定為準。會考 111 制比序積分以五科分數與作文等級為基礎，會考 100 制比序積點則依各科等級換算。`;
+        breakdownNote.innerHTML = getSelectedDistrict() === 'tp'
+            ? '目前已套用基北區三大核心比序項目試算；實際仍以當年度簡章、公告與招生委員會審定為準。'
+            : '本頁目前採用中投區免試入學公開說明框架做估算；實際以當年度簡章、公告與招生委員會審定為準。會考 111 制比序積分以五科分數與作文等級為基礎，會考 100 制比序積點則依各科等級換算。';
     }
 }
 
@@ -532,15 +567,15 @@ function calculateScore() {
     const resPointsEl = document.getElementById('resPoints');
     const resPctsEl = document.getElementById('resPcts');
     if (resPointsEl) resPointsEl.innerText = String(totalPoints);
-    if (resPctsEl) resPctsEl.innerText = String(pts111);
+    if (resPctsEl) resPctsEl.innerText = String(getSelectedDistrict() === 'tp' ? exam100 : pts111);
 
     const d_pref = document.getElementById('d_pref'); if (d_pref) d_pref.innerText = String(pref);
     const d_local = document.getElementById('d_local'); if (d_local) d_local.innerText = String(local);
-    const d_multi = document.getElementById('d_multi'); if (d_multi) d_multi.innerText = String(bal + mor + nod + awd + weak);
+    const d_multi = document.getElementById('d_multi'); if (d_multi) d_multi.innerText = String(getSelectedDistrict() === 'tp' ? bal + mor : bal + mor + nod + awd + weak);
 
-    updateProgressBar('bar_pref', pref, 30);
+    updateProgressBar('bar_pref', pref, getSelectedDistrict() === 'tp' ? 36 : 30);
     updateProgressBar('bar_local', local, 10);
-    updateProgressBar('bar_multi', Number(d_multi?.innerText || 0), 30);
+    updateProgressBar('bar_multi', Number(d_multi?.innerText || 0), getSelectedDistrict() === 'tp' ? 36 : 30);
     renderCalculationBreakdown();
 }
 
@@ -581,12 +616,20 @@ function computeExamPoints() {
         const v = Number(el.value) || 0;
         if (v <= 0) return;
         levelTotal += v;
-        if (v >= 15) exam100 += 6;
+        if (getSelectedDistrict() === 'tp') {
+            const points = { 21: 7, 18: 6, 15: 5, 12: 4, 9: 3, 6: 2, 3: 1 };
+            exam100 += points[v] || 0;
+        } else if (v >= 15) exam100 += 6;
         else if (v >= 6) exam100 += 4;
         else exam100 += 2;
     });
-    exam100 = Math.min(30, exam100);
     const write = Number(document.getElementById('subj_write')?.value) || 0;
+    if (getSelectedDistrict() === 'tp') {
+        const writingPoints = { 6: 1, 5: 0.8, 4: 0.6, 3: 0.4, 2: 0.2, 1: 0.1 };
+        exam100 = Math.min(36, exam100 + (writingPoints[write] || 0));
+    } else {
+        exam100 = Math.min(30, exam100);
+    }
     const pts111 = Math.min(111, levelTotal + write);
 
     const examDisplay = document.getElementById('examScoreDisplay');
@@ -640,6 +683,37 @@ function resetForm() {
 
 function initCalculator() {
     const selectedDistrict = getSelectedDistrict();
+    const rules = getDistrictRules();
+    const isTaipei = selectedDistrict === 'tp';
+    const label = document.getElementById('calculatorDistrictLabel');
+    const intro = document.getElementById('calculatorDistrictIntro');
+    const examTileValue = document.getElementById('examTileValue');
+    const otherTileValue = document.getElementById('otherTileValue');
+    const examResultUnit = document.getElementById('examResultUnit');
+    const totalResultUnit = document.getElementById('totalResultUnit');
+    if (label) label.textContent = `${rules.label}免試入學`;
+    if (intro && isTaipei) intro.textContent = '基北區免試入學採三大核心比序：志願序、多元學習表現、國中教育會考，總分 108 分。';
+    if (examTileValue) examTileValue.innerHTML = `${rules.examMax} <small>分</small>`;
+    if (otherTileValue) otherTileValue.innerHTML = `${rules.otherMax} <small>分</small>`;
+    if (examResultUnit) examResultUnit.textContent = `/ ${rules.examUnit}`;
+    if (totalResultUnit) totalResultUnit.textContent = `/ ${rules.totalMax} 分`;
+    document.querySelectorAll('[data-district-only]').forEach(card => {
+        card.hidden = isTaipei && card.dataset.districtOnly === 'ct';
+    });
+    if (isTaipei) {
+        const pref = document.getElementById('prefScore');
+        if (pref) pref.innerHTML = '<option value="36">第 1–5 志願（36 分）</option><option value="35">第 6–10 志願（35 分）</option><option value="34">第 11–15 志願（34 分）</option><option value="33">第 16–20 志願（33 分）</option><option value="32">第 21–30 志願（32 分）</option>';
+        const service = document.getElementById('mor_service_learning');
+        if (service) service.innerHTML = Array.from({ length: 16 }, (_, index) => `<option value="${index}">${index === 0 ? '無' : `${index} 分`}</option>`).join('');
+        const tech = document.getElementById('bal_domain_tech')?.closest('label');
+        if (tech) tech.hidden = true;
+        const low = document.getElementById('bal_low_income')?.closest('label');
+        if (low) low.hidden = true;
+        ['mor_club_terms', 'nod_record', 'awd_major'].forEach(id => {
+            const field = document.getElementById(id)?.closest('.calc-field-group');
+            if (field) field.hidden = true;
+        });
+    }
     const localScore = document.getElementById('localScore');
     if (localScore && selectedDistrict && selectedDistrict !== 'ct') {
         localScore.checked = false;
@@ -841,6 +915,14 @@ function renderSchools() {
     const search = document.getElementById('schoolSearch');
     const sort = document.getElementById('schoolSort');
     if (!grid || !summary || !empty) return;
+
+    if (getSelectedDistrict() === 'tp') {
+        summary.textContent = '基北區學校清單建置中，目前不顯示中投區資料。';
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        empty.textContent = '基北區學校資料即將加入，請先使用基北區積分試算。';
+        return;
+    }
 
     const keyword = normalizedSearchText((search?.value || '').trim());
     const sortValue = sort?.value || 'rank';
