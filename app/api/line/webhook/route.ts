@@ -1,4 +1,14 @@
+import { upsertLineUser } from "../../../../db/admin-store";
+
 const textEncoder = new TextEncoder();
+
+type LineWebhookEvent = {
+  type?: string;
+  source?: {
+    type?: string;
+    userId?: string;
+  };
+};
 
 async function verifyLineSignature(body: string, signature: string | null) {
   const secret = process.env.LINE_CHANNEL_SECRET;
@@ -41,10 +51,13 @@ export async function POST(request: Request) {
     );
   }
 
+  const events = parseLineEvents(body);
+  await Promise.all(events.map(recordLineEvent));
+
   return Response.json({
     ok: true,
     status: "received",
-    next: "Connect LINE reply logic after channel access token is configured.",
+    recorded: events.length,
   });
 }
 
@@ -54,5 +67,23 @@ export async function GET() {
     endpoint: "line-webhook",
     configured: Boolean(process.env.LINE_CHANNEL_SECRET),
     method: "POST",
+  });
+}
+
+function parseLineEvents(body: string) {
+  try {
+    const parsed = JSON.parse(body) as { events?: LineWebhookEvent[] };
+    return Array.isArray(parsed.events) ? parsed.events : [];
+  } catch {
+    return [];
+  }
+}
+
+async function recordLineEvent(event: LineWebhookEvent) {
+  const lineUserId = event.source?.userId;
+  if (!lineUserId) return;
+  await upsertLineUser({
+    lineUserId,
+    status: event.type === "unfollow" ? "blocked" : "friend",
   });
 }

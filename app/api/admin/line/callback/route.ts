@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { createAdminSessionCookie } from "../../../../admin/auth";
+import { listExtraAdminLineUserIds, upsertLineUser } from "../../../../../db/admin-store";
 import {
   exchangeLineCode,
   getAllowedLineUserIds,
@@ -36,7 +37,16 @@ export async function GET(request: Request) {
   try {
     const token = await exchangeLineCode({ code, origin });
     const profile = await verifyLineIdToken(token.id_token || "");
-    const allowedIds = getAllowedLineUserIds();
+    await upsertLineUser({
+      lineUserId: profile.userId,
+      displayName: profile.displayName,
+      pictureUrl: profile.pictureUrl,
+      status: "seen",
+    });
+    const allowedIds = [
+      ...getAllowedLineUserIds(),
+      ...(await listExtraAdminLineUserIds()),
+    ];
     if (!allowedIds.length) {
       return redirectTo(
         url,

@@ -154,6 +154,13 @@
   gap: 7px;
 }
 
+.admin-inline-form {
+  align-items: end;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
 .admin-panel input,
 .admin-panel select,
 .admin-panel textarea {

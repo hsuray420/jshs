@@ -20,6 +20,15 @@ export type SiteSetting = {
   updated_at: string;
 };
 
+export type LineUser = {
+  line_user_id: string;
+  display_name: string;
+  picture_url: string;
+  status: "friend" | "blocked" | "seen";
+  first_seen_at: string;
+  last_seen_at: string;
+};
+
 export function getD1() {
   if (!env.DB) throw new Error("D1 binding DB is not available.");
   return env.DB;
@@ -51,10 +60,20 @@ export async function ensureAdminSchema() {
       updated_by TEXT NOT NULL,
       updated_at TEXT NOT NULL
     )`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS line_users (
+      line_user_id TEXT PRIMARY KEY,
+      display_name TEXT NOT NULL DEFAULT '',
+      picture_url TEXT NOT NULL DEFAULT '',
+      status TEXT NOT NULL DEFAULT 'seen',
+      first_seen_at TEXT NOT NULL,
+      last_seen_at TEXT NOT NULL
+    )`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_admin_files_created_at
       ON admin_files(created_at)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_admin_files_visibility
       ON admin_files(visibility)`),
+    db.prepare(`CREATE INDEX IF NOT EXISTS idx_line_users_last_seen_at
+      ON line_users(last_seen_at)`),
   ]);
 }
 
@@ -136,6 +155,75 @@ export async function upsertSiteSetting(
         updated_at = excluded.updated_at`)
     .bind(key, value, updatedBy, new Date().toISOString())
     .run();
+}
+
+export async function listLineUsers() {
+  await ensureAdminSchema();
+  const result = await getD1()
+    .prepare(`SELECT * FROM line_users ORDER BY last_seen_at DESC LIMIT 200`)
+    .all<LineUser>();
+  return result.results ?? [];
+}
+
+export async function upsertLineUser(input: {
+  lineUserId: string;
+  displayName?: string;
+  pictureUrl?: string;
+  status?: LineUser["status"];
+}) {
+  await ensureAdminSchema();
+  const now = new Date().toISOString();
+  await getD1()
+    .prepare(`INSERT INTO line_users (
+      line_user_id, display_name, picture_url, status, first_seen_at, last_seen_at
+    ) VALUES (?, ?, ?, ?, ?, ?)
+      ON CONFLICT(line_user_id) DO UPDATE SET
+        display_name = CASE
+          WHEN excluded.display_name != '' THEN excluded.display_name
+          ELSE line_users.display_name
+        END,
+        picture_url = CASE
+          WHEN excluded.picture_url != '' THEN excluded.picture_url
+          ELSE line_users.picture_url
+        END,
+        status = excluded.status,
+        last_seen_at = excluded.last_seen_at`)
+    .bind(
+      input.lineUserId,
+      input.displayName || "",
+      input.pictureUrl || "",
+      input.status || "seen",
+      now,
+      now,
+    )
+    .run();
+}
+
+export function parseCsvIds(value?: string | null) {
+  return String(value || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+export function serializeCsvIds(ids: string[]) {
+  return Array.from(new Set(ids.map((item) => item.trim()).filter(Boolean))).join(",");
+}
+
+export async function listExtraAdminLineUserIds() {
+  const setting = await getSiteSetting("admin_line_user_ids_extra");
+  return parseCsvIds(setting?.value);
+}
+
+export async function addExtraAdminLineUserId(lineUserId: string, updatedBy: string) {
+  const current = await listExtraAdminLineUserIds();
+  if (!current.includes(lineUserId)) current.push(lineUserId);
+  await upsertSiteSetting("admin_line_user_ids_extra", serializeCsvIds(current), updatedBy);
+}
+
+export async function removeExtraAdminLineUserId(lineUserId: string, updatedBy: string) {
+  const next = (await listExtraAdminLineUserIds()).filter((id) => id !== lineUserId);
+  await upsertSiteSetting("admin_line_user_ids_extra", serializeCsvIds(next), updatedBy);
 }
 
 export const PUBLIC_SETTING_KEYS = new Set([

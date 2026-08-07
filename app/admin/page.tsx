@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { listAdminFiles, listSiteSettings } from "../../db/admin-store";
+import {
+  listAdminFiles,
+  listExtraAdminLineUserIds,
+  listLineUsers,
+  listSiteSettings,
+} from "../../db/admin-store";
 import {
   getAlertLineUserIds,
   getAllowedLineUserIds,
@@ -23,9 +28,11 @@ export default async function AdminPage({
 }) {
   const admin = await requireAdmin();
   const params = await searchParams;
-  const [files, settings] = await Promise.all([
+  const [files, settings, lineUsers, extraAdminLineUsers] = await Promise.all([
     listAdminFiles(),
     listSiteSettings(),
+    listLineUsers(),
+    listExtraAdminLineUserIds(),
   ]);
   const settingsMap = new Map(settings.map((item) => [item.key, item.value]));
   const publicFiles = files.filter((file) => file.visibility === "public");
@@ -33,8 +40,12 @@ export default async function AdminPage({
   const schoolCsvUpdatedAt = settingsMap.get("schools_csv_updated_at");
   const lineLoginReady = hasLineLoginConfigured();
   const linePushReady = hasLineMessagingConfigured();
-  const allowedLineUsers = getAllowedLineUserIds();
+  const envAllowedLineUsers = getAllowedLineUserIds();
+  const allowedLineUsers = Array.from(new Set([...envAllowedLineUsers, ...extraAdminLineUsers]));
   const alertLineUsers = getAlertLineUserIds(admin.user.lineUserId);
+  const pendingLineUsers = lineUsers.filter(
+    (user) => !allowedLineUsers.includes(user.line_user_id) && user.status !== "blocked",
+  );
 
   return (
     <main className="admin-shell">
@@ -56,6 +67,9 @@ export default async function AdminPage({
         <section className="admin-flash">
           {params.updated === "schools_csv" ? "學校 CSV 已更新。" : null}
           {params.updated === "code_upload" ? "程式包已上傳，已建立待部署/執行紀錄。" : null}
+          {params.updated === "line_users_added" ? "已加入 LINE 後台管理員。" : null}
+          {params.updated === "line_users_removed" ? "已移除後台新增的 LINE 管理員。" : null}
+          {params.updated === "line_users_invalid" ? "LINE userId 格式不正確。" : null}
           {params.tested === "line" ? "LINE 測試通知已送出。" : null}
         </section>
       ) : null}
@@ -85,7 +99,9 @@ export default async function AdminPage({
             <dt>官方帳號推播</dt>
             <dd>{linePushReady ? "已設定 Channel access token" : "尚未設定"}</dd>
             <dt>可登入管理員</dt>
-            <dd>{allowedLineUsers.length} 位</dd>
+            <dd>{allowedLineUsers.length} 位（環境 {envAllowedLineUsers.length} / 後台 {extraAdminLineUsers.length}）</dd>
+            <dt>待授權好友</dt>
+            <dd>{pendingLineUsers.length} 位</dd>
             <dt>告警接收者</dt>
             <dd>{alertLineUsers.length} 位</dd>
           </dl>
@@ -148,6 +164,75 @@ export default async function AdminPage({
           </dl>
           <p className="admin-muted">整台服務掛掉時需要外部監控服務檢查健康檢查網址。</p>
         </section>
+      </section>
+
+      <section className="admin-panel">
+        <div className="admin-section-head">
+          <div>
+            <p className="admin-eyebrow">LINE Access</p>
+            <h2>LINE 好友與管理員權限</h2>
+          </div>
+          <span className="admin-badge ok">{lineUsers.length} 位已記錄</span>
+        </div>
+        <form className="admin-inline-form" action="/api/admin/line-users" method="post">
+          <label>
+            手動加入 LINE userId
+            <input name="line_user_id" placeholder="Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required />
+          </label>
+          <button className="admin-button" type="submit">加入管理員</button>
+        </form>
+        <div className="admin-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>LINE 使用者</th>
+                <th>狀態</th>
+                <th>最後互動</th>
+                <th>權限</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lineUsers.map((user) => {
+                const isEnvAdmin = envAllowedLineUsers.includes(user.line_user_id);
+                const isExtraAdmin = extraAdminLineUsers.includes(user.line_user_id);
+                const isAdmin = isEnvAdmin || isExtraAdmin;
+                return (
+                  <tr key={user.line_user_id}>
+                    <td>
+                      <strong>{user.display_name || "未取得名稱"}</strong>
+                      <small>{user.line_user_id}</small>
+                    </td>
+                    <td>{user.status === "blocked" ? "已封鎖/取消好友" : "好友/已互動"}</td>
+                    <td>{formatDate(user.last_seen_at)}</td>
+                    <td>{isAdmin ? (isEnvAdmin ? "環境管理員" : "後台管理員") : "未授權"}</td>
+                    <td className="admin-row-actions">
+                      {isAdmin ? (
+                        <form action="/api/admin/line-users" method="post">
+                          <input type="hidden" name="line_user_id" value={user.line_user_id} />
+                          <input type="hidden" name="action" value="remove" />
+                          <button type="submit" disabled={isEnvAdmin}>移除</button>
+                        </form>
+                      ) : (
+                        <form action="/api/admin/line-users" method="post">
+                          <input type="hidden" name="line_user_id" value={user.line_user_id} />
+                          <input type="hidden" name="display_name" value={user.display_name} />
+                          <button type="submit">加成管理員</button>
+                        </form>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+              {!lineUsers.length ? (
+                <tr>
+                  <td colSpan={5}>尚未記錄 LINE 好友。請先讓使用者加入官方帳號或登入一次。</td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </div>
+        <p className="admin-muted">加入 LINE 官方帳號或傳訊息後，Webhook 會自動記錄 userId；環境管理員不可在後台移除，避免鎖住第一位管理者。</p>
       </section>
 
       <section className="admin-grid">
