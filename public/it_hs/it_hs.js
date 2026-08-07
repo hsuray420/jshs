@@ -7,11 +7,34 @@ function toggleMobileMenu() {
     });
 }
 
+const topicPages = {
+    'program-general': { eyebrow: '學制介紹 / 普通高中', title: '普通高中：把學科基礎走得更穩。', intro: '普通高中以學科學習為主，適合想累積國英數、社會與自然基礎，並保留大學多元升學選擇的學生。', points: [['學習重點', '以核心學科、閱讀理解與探究能力為主要訓練。'], ['適合特質', '喜歡系統整理知識，能長期投入學科準備。'], ['下一步', '比較學校課程、特色班與通勤距離，再安排志願。']], action: '查看中投區學校', actionPage: 'schools' },
+    'program-vocational': { eyebrow: '學制介紹 / 技術型高中', title: '技術型高中：在實作裡找到專業。', intro: '技術型高中強調專業科目、實作課程與證照能力，讓學生在高中階段逐步建立可延伸的技術基礎。', points: [['學習重點', '專業課程、實習、專題與技術證照並行。'], ['適合特質', '對資訊、設計、餐飲、機械或商管等領域有興趣。'], ['下一步', '從科別與校內設備開始比較，確認自己想投入的方向。']], action: '瀏覽技術型高中', actionPage: 'schools' },
+    'program-comprehensive': { eyebrow: '學制介紹 / 綜合高中', title: '綜合高中：先探索，也保留彈性。', intro: '綜合高中結合普通教育與職業教育，適合還在認識自己興趣、希望保留更多選擇的學生。', points: [['學習重點', '透過多元選修與試探課程，逐步找到適合的方向。'], ['適合特質', '不急著替未來定案，希望在學習中慢慢確認興趣。'], ['下一步', '了解各校的學程設計與轉銜安排，再選擇合適環境。']], action: '比較學制差異', actionPage: 'overview' },
+    'admission-exempt': { eyebrow: '入學管道 / 免試入學', title: '免試入學：用志願與積分完成分發。', intro: '中投區多數學生透過免試入學選填志願，依志願序、多元表現、會考成績與比序規則辦理分發。', points: [['先確認資格', '依當年度簡章確認就學區、報名身分與時程。'], ['整理志願', '先從學校與科別的適配度，再考量通勤與錄取機會。'], ['試算積分', '輸入目前資料，掌握可調整的項目與總分。']], action: '開始積分試算', actionPage: 'calculator' },
+    'admission-special': { eyebrow: '入學管道 / 特殊選才', title: '特殊選才：用你的特色爭取機會。', intro: '特色招生或特殊選才通常有獨立條件與流程，可能包含術科、面試、作品或特定能力認定。', points: [['確認簡章', '每一校、每一班條件不同，必須以當年度公告為準。'], ['準備佐證', '及早整理作品、競賽紀錄、證照或其他申請資料。'], ['保留主線', '同時規劃免試入學，讓選擇更完整。']], action: '查看常見問題', actionPage: 'faq' },
+    'admission-direct': { eyebrow: '入學管道 / 獨招與直升', title: '獨招與直升：為特定需求保留選項。', intro: '獨立招生與直升適用條件、招生學校及日程各不相同，建議將它們當作升學規劃中的個別選擇。', points: [['獨立招生', '由學校依簡章設定報名、甄選與錄取方式。'], ['直升入學', '通常適用於特定學校體系或符合資格的學生。'], ['安排時程', '比對各管道報名與放榜日，避免彼此衝突。']], action: '下載招生資料', actionPage: 'download' }
+};
+
+function renderTopic(page) {
+    const topic = topicPages[page];
+    if (!topic) return;
+    document.getElementById('topicEyebrow').textContent = topic.eyebrow;
+    document.getElementById('topicTitle').textContent = topic.title;
+    document.getElementById('topicIntro').textContent = topic.intro;
+    document.getElementById('topicPoints').innerHTML = topic.points.map(([title, copy], index) => `<article class="topic-point"><span>0${index + 1}</span><h3>${title}</h3><p>${copy}</p></article>`).join('');
+    const action = document.getElementById('topicAction');
+    action.textContent = topic.action;
+    action.dataset.page = topic.actionPage;
+}
+
 function showPage(page) {
     const sections = document.querySelectorAll('[data-page-section]');
     const routeControls = document.querySelectorAll('[data-page]');
     const pages = Array.from(sections).map(section => section.dataset.pageSection);
-    const targetPage = pages.includes(page) ? page : 'overview';
+    const isTopic = Boolean(topicPages[page]);
+    const targetPage = isTopic ? 'topic' : (pages.includes(page) ? page : 'overview');
+    if (isTopic) renderTopic(page);
 
     sections.forEach(section => {
         section.classList.toggle('active', section.dataset.pageSection === targetPage);
@@ -24,7 +47,27 @@ function showPage(page) {
     const mobileMenu = document.getElementById('mobileMenu');
     if (mobileMenu) mobileMenu.classList.add('hidden');
     history.replaceState(null, '', `#${targetPage}`);
+    if (isTopic) history.replaceState(null, '', `#${page}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function initMegaMenus() {
+    const menus = document.querySelectorAll('.mega-menu');
+    menus.forEach(menu => {
+        const trigger = menu.querySelector('.mega-menu-trigger');
+        trigger.addEventListener('click', event => {
+            event.stopPropagation();
+            const opening = !menu.classList.contains('is-open');
+            menus.forEach(other => { other.classList.remove('is-open'); other.querySelector('.mega-menu-trigger').setAttribute('aria-expanded', 'false'); });
+            if (opening) { menu.classList.add('is-open'); trigger.setAttribute('aria-expanded', 'true'); }
+        });
+        menu.querySelectorAll('[data-page]').forEach(item => item.addEventListener('click', () => {
+            menu.classList.remove('is-open');
+            trigger.setAttribute('aria-expanded', 'false');
+        }));
+    });
+    document.addEventListener('click', () => menus.forEach(menu => { menu.classList.remove('is-open'); menu.querySelector('.mega-menu-trigger').setAttribute('aria-expanded', 'false'); }));
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') document.dispatchEvent(new MouseEvent('click')); });
 }
 
 function initOverviewCards() {
@@ -222,6 +265,7 @@ function initPageRouter() {
 
     initOverviewCards();
     initHomeSections();
+    initMegaMenus();
 
     const initialPage = window.location.hash.replace('#', '') || 'overview';
     showPage(initialPage);
