@@ -47,9 +47,15 @@
                     <span class="brand-subtitle">高中職完整指南 · 目前開發中投區資料</span>
                 </span>
             </a>
-            <button id="mobileMenuBtn" class="md:hidden w-11 h-11 rounded-2xl bg-white shadow-md flex items-center justify-center text-neo-text border border-neo-blueGray/70">
-                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path></svg>
-            </button>
+            <div class="header-actions">
+                <a class="line-header-link" href="#" data-line-link aria-label="加入 LINE 官方帳號">
+                    <span class="line-dot" aria-hidden="true">LINE</span>
+                    <span>加入官方帳號</span>
+                </a>
+                <button id="mobileMenuBtn" class="md:hidden w-11 h-11 rounded-2xl bg-white shadow-md flex items-center justify-center text-neo-text border border-neo-blueGray/70" aria-label="開啟選單">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path></svg>
+                </button>
+            </div>
         </div>
         <div class="header-nav-wrap border-t border-neo-blueGray bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -95,6 +101,7 @@
         <div id="mobileMenu" class="hidden border-t border-neo-blueGray/70 bg-white">
             <div class="mobile-menu-stack">
                 <a href="../jshs/jshs.html" class="mobile-home-link">回首頁</a>
+                <a href="#" class="mobile-line-link" data-line-link>加入 LINE 官方帳號</a>
                 <details class="mobile-menu-group"><summary>高中職學制介紹</summary><button type="button" data-page="overview">學制總覽</button><button type="button" data-page="program-general">普通高中</button><button type="button" data-page="program-vocational">技術型高中</button><button type="button" data-page="program-comprehensive">綜合高中</button></details>
                 <details class="mobile-menu-group"><summary>入學管道及規則</summary><button type="button" data-page="admission">管道總覽</button><button type="button" data-page="admission-exempt">免試入學</button><button type="button" data-page="admission-special">特殊選才</button><button type="button" data-page="admission-direct">獨招與直升</button></details>
                 <details class="mobile-menu-group"><summary>免試入學積分試算</summary><button type="button" data-page="calculator">100 分積分試算</button><button type="button" data-page="calculator">111 會考積點</button><button type="button" data-page="analysis">落點分析</button></details>
@@ -711,7 +718,7 @@
         <div id="examScoreDisplay">0</div>
         <div id="exam111Display">0</div>
     </div>
-    <a id="lineFloatingLink" class="line-floating-link" href="#" aria-label="加入 LINE 官方帳號">
+    <a id="lineFloatingLink" class="line-floating-link" href="#" data-line-link aria-label="加入 LINE 官方帳號">
         <span>LINE</span>
         <small>加入好友</small>
     </a>
