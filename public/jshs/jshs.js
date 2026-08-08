@@ -1,27 +1,8 @@
 const targetDate = new Date("2027-05-16T08:00:00").getTime();
-const DISTRICT_COOKIE = 'jshs_district';
 const DISTRICTS = {
     ct: '中投區',
     tp: '基北區'
 };
-
-function setCookie(name, value, days = 180) {
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
-}
-
-function getCookie(name) {
-    return document.cookie
-        .split('; ')
-        .find(row => row.startsWith(`${name}=`))
-        ?.split('=')
-        .slice(1)
-        .join('=') || '';
-}
-
-function getSelectedDistrict() {
-    return decodeURIComponent(getCookie(DISTRICT_COOKIE) || '');
-}
 
 function updateCountdown() {
     const daysEl = document.getElementById("days");
@@ -91,13 +72,12 @@ function closeDistrictModal() {
 }
 
 function chooseDistrict(district) {
-    setCookie(DISTRICT_COOKIE, district);
     updateDistrictUI(district);
-    closeDistrictModal();
+    window.location.href = `/it_hs/${district}/`;
 }
 
 function initDistrictPicker() {
-    const selected = getSelectedDistrict();
+    const selected = '';
     updateDistrictUI(selected);
     if (!selected) {
         openDistrictModal();

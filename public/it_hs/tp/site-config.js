@@ -1,8 +1,7 @@
 window.JSHS_SITE_CONFIG = {
-    schoolsCsvPath: './schools.csv',
+    schoolsCsvPath: './schools_tp.csv',
     schoolsCsvPathsByDistrict: {
-        ct: './schools.csv',
-        tp: './schools.csv'
+        tp: './schools_tp.csv'
     },
     schoolsDataVar: 'IT_HS_SCHOOLS'
 };

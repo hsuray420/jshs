@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7151625151498067" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高中職升學完整指南｜全國國中升學資訊網</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neo: {
+                            bg: '#F5F7FB',
+                            text: '#1F2937',
+                            muted: '#6B7280',
+                            accent: '#2563EB',
+                            accentLight: '#60A5FA',
+                            blueGray: '#E2E8F0',
+                            surface: '#FFFFFF'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        body: ['"DM Sans"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="it_hs.css">
+</head>
+<body class="font-body text-neo-text antialiased overflow-x-hidden">
+
+    <header class="site-header sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-neo-blueGray/70">
+        <div class="header-main max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+            <a class="brand" href="../../jshs/jshs.html" aria-label="全國國中升學資訊網首頁">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none"><path d="M6 24 L14 12 L20 18 L26 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="8" r="2.4" fill="currentColor"/></svg>
+                </span>
+                <span class="brand-copy">
+                    <span class="brand-name">全國國中升學資訊網</span>
+                    <span class="brand-subtitle">高中職完整指南 · 目前開發基北區資料</span>
+                </span>
+            </a>
+            <div class="header-actions">
+                <a class="line-header-link" href="#" data-line-link aria-label="加入 LINE 官方帳號">
+                    <span class="line-dot" aria-hidden="true">LINE</span>
+                    <span>加入官方帳號</span>
+                </a>
+                <button id="mobileMenuBtn" class="md:hidden w-11 h-11 rounded-2xl bg-white shadow-md flex items-center justify-center text-neo-text border border-neo-blueGray/70" aria-label="開啟選單">
+                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path></svg>
+                </button>
+            </div>
+        </div>
+        <div class="header-nav-wrap border-t border-neo-blueGray bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <nav class="section-nav menu-board hidden md:flex" aria-label="高中職功能選單">
+                    <div class="mega-menu">
+                        <button type="button" class="mega-menu-trigger" aria-expanded="false">高中職學制介紹 <span aria-hidden="true">⌄</span></button>
+                        <div class="mega-menu-panel">
+                            <button type="button" data-page="overview"><b>學制總覽</b><small>三種學制一次比較</small></button>
+                            <button type="button" data-page="program-general"><b>普通高中</b><small>學科基礎與升學規劃</small></button>
+                            <button type="button" data-page="program-vocational"><b>技術型高中</b><small>專業技能與實作學習</small></button>
+                            <button type="button" data-page="program-comprehensive"><b>綜合高中</b><small>先探索，再選擇方向</small></button>
+                        </div>
+                    </div>
+                    <div class="mega-menu">
+                        <button type="button" class="mega-menu-trigger" aria-expanded="false">入學管道及規則 <span aria-hidden="true">⌄</span></button>
+                        <div class="mega-menu-panel">
+                            <button type="button" data-page="admission"><b>管道總覽</b><small>先認識適合的方式</small></button>
+                            <button type="button" data-page="admission-exempt"><b>免試入學</b><small>基北區主要升學管道</small></button>
+                            <button type="button" data-page="admission-special"><b>特殊選才</b><small>依招生條件個別申請</small></button>
+                            <button type="button" data-page="admission-direct"><b>獨招與直升</b><small>其他可評估的選擇</small></button>
+                        </div>
+                    </div>
+                    <div class="mega-menu">
+                        <button type="button" class="mega-menu-trigger" aria-expanded="false">免試入學積分試算 <span aria-hidden="true">⌄</span></button>
+                        <div class="mega-menu-panel mega-menu-panel-tools">
+                            <button type="button" data-page="calculator"><b>100 分積分試算</b><small>志願序、多元表現與會考</small></button>
+                            <button type="button" data-page="calculator"><b>111 會考積點</b><small>查看會考成績換算</small></button>
+                            <button type="button" data-page="analysis"><b>落點分析</b><small>整理你的志願可能性</small></button>
+                        </div>
+                    </div>
+                    <div class="mega-menu mega-menu-end">
+                        <button type="button" class="mega-menu-trigger" aria-expanded="false">學校查詢 <span aria-hidden="true">⌄</span></button>
+                        <div class="mega-menu-panel">
+                            <button type="button" data-page="schools"><b>學校清單</b><small>依地區與學制篩選</small></button>
+                            <button type="button" data-page="download"><b>資料下載</b><small>招生與學校資料</small></button>
+                            <button type="button" data-page="faq"><b>常見問題</b><small>快速找到解答</small></button>
+                        </div>
+                    </div>
+                </nav>
+                </div>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden border-t border-neo-blueGray/70 bg-white">
+            <div class="mobile-menu-stack">
+                <a href="../../jshs/jshs.html" class="mobile-home-link">回首頁</a>
+                <a href="#" class="mobile-line-link" data-line-link>加入 LINE 官方帳號</a>
+                <details class="mobile-menu-group"><summary>高中職學制介紹</summary><button type="button" data-page="overview">學制總覽</button><button type="button" data-page="program-general">普通高中</button><button type="button" data-page="program-vocational">技術型高中</button><button type="button" data-page="program-comprehensive">綜合高中</button></details>
+                <details class="mobile-menu-group"><summary>入學管道及規則</summary><button type="button" data-page="admission">管道總覽</button><button type="button" data-page="admission-exempt">免試入學</button><button type="button" data-page="admission-special">特殊選才</button><button type="button" data-page="admission-direct">獨招與直升</button></details>
+                <details class="mobile-menu-group"><summary>免試入學積分試算</summary><button type="button" data-page="calculator">100 分積分試算</button><button type="button" data-page="calculator">111 會考積點</button><button type="button" data-page="analysis">落點分析</button></details>
+                <details class="mobile-menu-group"><summary>學校查詢</summary><button type="button" data-page="schools">學校清單</button><button type="button" data-page="download">資料下載</button><button type="button" data-page="faq">常見問題</button></details>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+        <section id="page-home" data-page-section="home" class="page-section active rounded-[32px] bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)] border border-blueGray/70 overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-[1.35fr_0.9fr] gap-8 p-8 lg:p-12">
+                <div>
+                    <p class="inline-flex items-center gap-2 uppercase tracking-[0.3em] text-xs text-neo-accent font-semibold mb-4">目前開發基北區</p>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-[2.75rem] text-neo-text leading-[1.25] tracking-[-0.015em] mb-6">選擇高中職，是把自己帶往下一段成長的開始。</h2>
+                    <p class="text-base text-neo-muted leading-relaxed mb-5">會考與志願選填常常讓學生緊張，也讓家長擔心。但升學不是只看一次分數，而是把孩子的興趣、學習節奏、生活距離與未來方向放在一起思考。只要一步一步整理資訊，就能把不確定感變成可以討論、可以準備的選擇。</p>
+                    <p class="text-base text-neo-muted leading-relaxed mb-5">高中、技術型高中與綜合高中各有不同的學習樣貌。有人適合在普通高中累積學科基礎，有人會在實作課程中看見自己的亮點，也有人需要多一點時間探索方向。每一條路都值得被認真理解，也都可能走出很好的未來。</p>
+                    <p class="text-base text-neo-muted leading-relaxed">請把這個網站當成升學討論的起點：先理解制度，再試算積分，接著觀察落點與學校特色。學生不用一次就做出完美答案，家長也不必獨自承擔焦慮；穩穩地看清楚每一步，就已經是在替未來鋪路。全國版本會逐步擴充各就學區，目前先以基北區資料試行。</p>
+                    <div id="roleToggle" class="mt-8 flex gap-3">
+                        <button type="button" data-role-btn="parent" class="px-5 py-2 rounded-full border border-neo-accent text-neo-accent font-medium hover:bg-neo-accent hover:text-white transition-colors">家長視圖</button>
+                        <button type="button" data-role-btn="student" class="px-5 py-2 rounded-full border border-neo-accent text-neo-accent font-medium hover:bg-neo-accent hover:text-white transition-colors">學生視圖</button>
+                        <button type="button" data-role-btn="all" class="px-5 py-2 rounded-full bg-neo-blueGray text-neo-text font-medium transition-colors">顯示全部</button>
+                    </div>
+                </div>
+                <div class="space-y-8">
+                    <!-- 家長專區 -->
+                    <div id="home-parent-section" data-role="parent" class="rounded-[32px] bg-neo-blueGray/10 p-8">
+                        <p class="text-xs uppercase tracking-[0.3em] text-neo-accent font-semibold mb-4">家長專區：安心升學與風險控管</p>
+                        <div class="grid gap-4">
+                            <div class="rounded-[28px] bg-white p-5 shadow-sm border border-neo-blueGray/50">
+                                <h3 class="font-semibold text-lg text-neo-text mb-1">安心升學機制</h3>
+                                <p class="text-sm text-neo-muted leading-relaxed">了解免試入學的比序規則，掌握志願選填的保障機制，降低升學過程的不確定感。</p>
+                            </div>
+                            <div class="rounded-[28px] bg-white p-5 shadow-sm border border-neo-blueGray/50">
+                                <h3 class="font-semibold text-lg text-neo-text mb-1">學校類型比較</h3>
+                                <p class="text-sm text-neo-muted leading-relaxed">快速對照公私立學校、學制差異與特色班級，為孩子選擇最合適的學習環境。</p>
+                            </div>
+                            <div class="rounded-[28px] bg-white p-5 shadow-sm border border-neo-blueGray/50">
+                                <h3 class="font-semibold text-lg text-neo-text mb-1">落點風險評估</h3>
+                                <p class="text-sm text-neo-muted leading-relaxed">透過「穩定/適中/挑戰」三階分析，協助孩子建立合理的志願序，確保順利錄取。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 學生專區 -->
+                    <div id="home-student-section" data-role="student" class="rounded-[32px] bg-neo-blueGray/10 p-8">
+                        <p class="text-xs uppercase tracking-[0.3em] text-neo-accent font-semibold mb-4">學生專區：興趣探索與自我評估</p>
+                        <div class="grid gap-4">
+                            <div class="rounded-[28px] bg-white p-5 shadow-sm border border-neo-blueGray/50">
+                                <h3 class="font-semibold text-lg text-neo-text mb-1">發現你的學習亮點</h3>
+                                <p class="text-sm text-neo-muted leading-relaxed">探索高中、高職與綜合高中的學習生活，找出最能發揮你個人特質的舞台。</p>
+                            </div>
+                            <div class="rounded-[28px] bg-white p-5 shadow-sm border border-neo-blueGray/50">
+                                <h3 class="font-semibold text-lg text-neo-text mb-1">未來職涯想像</h3>
+                                <p class="text-sm text-neo-muted leading-relaxed">不只是升學，更要看見未來的無限可能。了解不同學制對應的職業發展與科系。提升</p>
+                            </div>
+                            <div class="rounded-[28px] bg-white p-5 shadow-sm border border-neo-blueGray/50">
+                                <h3 class="font-semibold text-lg text-neo-text mb-1">我的積分試算</h3>
+                                <p class="text-sm text-neo-muted leading-relaxed">親自動手試算積分，掌握自己的學習進度，為下一個目標做好最充分的準備。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-overview" data-page-section="overview" class="page-section">
+            <div class="section-panel panel-card">
+                <div class="mb-8">
+                    <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">學制介紹</p>
+                    <h2 class="section-title">高中職三種選擇，快速對照。</h2>
+                    <p class="section-copy">了解普通高中、技術型高中與綜合高中之間的差異，判斷自己的升學與職涯方向。</p>
+                </div>
+                <div class="section-grid section-grid-3">
+                    <button type="button" class="overview-card panel-card is-active" data-overview-target="overview-general" aria-controls="overview-general" aria-pressed="true">
+                        <span class="card-pill">01</span>
+                        <h3 class="overview-card-title">普通高中</h3>
+                        <p class="text-neo-muted leading-relaxed">以學科基礎與升學準備為主，適合想穩定累積知識、朝大學路線發展的學生。</p>
+                        <ul>
+                            <li>以國英數社自然為核心</li>
+                            <li>可接軌大學升學與多元入學</li>
+                            <li>適合重視學術與考試準備</li>
+                        </ul>
+                        <span class="overview-card-link">查看詳情</span>
+                    </button>
+                    <button type="button" class="overview-card panel-card" data-overview-target="overview-vocational" aria-controls="overview-vocational" aria-pressed="false">
+                        <span class="card-pill">02</span>
+                        <h3 class="overview-card-title">技術型高中 / 高職</h3>
+                        <p class="text-neo-muted leading-relaxed">以職能教育、實作訓練與產業接軌為核心，協助學生提早建立專業能力。</p>
+                        <ul>
+                            <li>重視實作、證照與技能養成</li>
+                            <li>可銜接科技大學與就業</li>
+                            <li>適合有明確職涯方向者</li>
+                        </ul>
+                        <span class="overview-card-link">查看詳情</span>
+                    </button>
+                    <button type="button" class="overview-card panel-card" data-overview-target="overview-comprehensive" aria-controls="overview-comprehensive" aria-pressed="false">
+                        <span class="card-pill">03</span>
+                        <h3 class="overview-card-title">綜合高中</h3>
+                        <p class="text-neo-muted leading-relaxed">結合普通教育與職業教育，讓學生在探索興趣時仍保有多元升學與轉銜機會。</p>
+                        <ul>
+                            <li>提供多元選修與特色課程</li>
+                            <li>適合想先探索再決定方向</li>
+                        <li>可參考各就學區特色學校</li>
+                        </ul>
+                        <span class="overview-card-link">查看詳情</span>
+                    </button>
+                </div>
+
+                <div id="overview-detail-popup" class="overview-detail-popup" role="dialog" aria-modal="true" aria-hidden="true">
+                    <div class="overview-detail-backdrop" data-popup-close></div>
+                    <div class="overview-detail-card panel-card">
+                        <div class="overview-detail-card-head">
+                            <span class="overview-popup-pill">普通高中</span>
+                            <button type="button" class="overview-popup-close" data-popup-close aria-label="關閉詳細介紹">×</button>
+                        </div>
+                        <h4 class="overview-popup-title">適合重視學科基礎，並希望保留升學選擇空間的學生</h4>
+                        <div class="overview-popup-content"></div>
+                    </div>
+                </div>
+
+                <div class="section-footer">
+                    <button type="button" data-page="admission">下一頁：入學方式 →</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-topic" data-page-section="topic" class="page-section">
+            <div class="topic-page section-panel panel-card">
+                <div class="topic-page-head">
+                    <p id="topicEyebrow" class="topic-eyebrow"></p>
+                    <h2 id="topicTitle" class="section-title"></h2>
+                    <p id="topicIntro" class="section-copy"></p>
+                </div>
+                <div id="topicPoints" class="topic-points"></div>
+                <div class="topic-page-footer">
+                    <button id="topicAction" type="button" class="ui-btn ui-btn-primary"></button>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-admission" data-page-section="admission" class="page-section">
+            <div class="section-panel panel-card">
+                <div class="mb-8">
+                    <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">入學方式</p>
+                    <h2 class="section-title">先認識管道，再決定要怎麼準備。</h2>
+                    <p class="section-copy">高中職入學通常會依所在地就學區、招生簡章、志願序與會考表現進行分發。全國各區規則會有差異，目前本平台先以基北區資料建置試算與學校清單。</p>
+                </div>
+                <div class="section-grid section-grid-3">
+                    <article class="panel-card">
+                        <span class="card-pill">主要</span>
+                        <h3 class="overview-card-title">免試入學</h3>
+                        <p class="text-neo-muted leading-relaxed">多數學生會使用的入學管道，依志願序、就近入學、多元學習表現、會考成績與同分比序等項目排序分發。</p>
+                    </article>
+                    <article class="panel-card">
+                        <span class="card-pill">特色</span>
+                        <h3 class="overview-card-title">特色招生與專班</h3>
+                        <p class="text-neo-muted leading-relaxed">部分學校或班別會另有甄選、術科、面試或特色條件。適合已有明確興趣、能力或特殊學習方向的學生。</p>
+                    </article>
+                    <article class="panel-card">
+                        <span class="card-pill">其他</span>
+                        <h3 class="overview-card-title">五專與跨區選擇</h3>
+                        <p class="text-neo-muted leading-relaxed">五專屬於全國性招生，可跨區報名；若考慮共同就學區或特殊身分，請以當年度簡章與官方公告確認。</p>
+                    </article>
+                </div>
+                <div class="panel-card mt-6">
+                    <h3 class="calc-card-title mb-3">目前開發狀態</h3>
+                    <p class="text-neo-muted leading-relaxed">基北區免試入學的積分試算、落點分析與學校查詢已先行開發；其他就學區後續可依各區簡章逐步加入不同公式、資料來源與學校清單。</p>
+                </div>
+                <div class="section-footer">
+                    <button type="button" data-page="calculator">下一頁：積分試算 →</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-calculator" data-page-section="calculator" class="page-section">
+            <div class="calculator-intro mb-6">
+                <span class="calculator-eyebrow" id="calculatorDistrictLabel">基北區免試入學</span>
+                <h2 class="section-title mb-4">高中職積分試算</h2>
+                <p class="section-copy" id="calculatorDistrictIntro">先輸入會考成績，再設定免試入學積分項目，系統會即時計算 100 制總分與 111 制比序積分。目前試算公式先套用基北區公開規則。</p>
+            </div>
+            <div class="calc-score-map" aria-label="積分試算分區">
+                <button type="button" class="calc-score-tile" data-help-title="會考積分（30）" data-help-text="會考五科依 A、B、C 等級換算為免試入學積分，每科最高 6 分，五科合計最高 30 分。作文另外納入 111 制會考比序積點。">
+                    <span class="score-tile-index">01</span>
+                    <span class="score-tile-main" id="examTileLabel">會考積分</span>
+                    <span class="score-tile-value" id="examTileValue">30 <small>分</small></span>
+                    <span class="score-tile-action">查看計分方式 <b aria-hidden="true">→</b></span>
+                </button>
+                <button type="button" class="calc-score-tile calc-score-tile-large" data-help-title="其他幾分志願序等（70）" data-help-text="除會考外，其餘 70 分包含志願序 30 分、就近入學 10 分、扶助弱勢最多 3 分，以及多元學習表現 27 分。">
+                    <span class="score-tile-index">02</span>
+                    <span class="score-tile-main" id="otherTileLabel">志願序與多元表現</span>
+                    <span class="score-tile-value" id="otherTileValue">70 <small>分</small></span>
+                    <span class="score-tile-action">查看計分方式 <b aria-hidden="true">→</b></span>
+                </button>
+            </div>
+            <div class="grid gap-6 lg:grid-cols-[1.65fr_0.85fr] items-start mt-6">
+                <div class="calc-form-stack">
+                    <div class="panel-card calc-input-card">
+                        <div class="calc-card-title-row">
+                            <h3 class="calc-card-title">志願序</h3>
+                            <button type="button" class="calc-help-toggle" aria-controls="help-prefScore" data-help-id="help-prefScore" title="查看志願序說明">
+                                <span aria-hidden="true">💡</span>
+                                <span class="sr-only">志願序說明</span>
+                            </button>
+                        </div>
+                        <div class="calc-divider"></div>
+                        <div class="calc-field-group">
+                            <select id="prefScore" class="ui-input">
+                                <option value="30">第1-10志願（30 分）</option>
+                                <option value="29">第11-20志願（29 分）</option>
+                                <option value="28">第21-50志願（28 分）</option>
+                            </select>
+                            <p class="calc-small-note">同一群組內的志願視為同一積分，建議前 10 筆放最想去的校系。</p>
+                        </div>
+                        <div class="calc-help-detail" id="help-prefScore">
+                            <p>志願序依申請順位給分。把最想錄取的校系放在前 10 筆，可取 30 分；若放在 11-20 筆，為 29 分；21-50 筆為 28 分。</p>
+                        </div>
+                    </div>
+                    <div class="panel-card calc-input-card" data-district-only="ct">
+                        <div class="calc-card-title-row">
+                            <h3 class="calc-card-title">就近入學</h3>
+                            <button type="button" class="calc-help-toggle" aria-controls="help-localScore" data-help-id="help-localScore" title="查看就近入學說明">
+                                <span aria-hidden="true">💡</span>
+                                <span class="sr-only">就近入學說明</span>
+                            </button>
+                        </div>
+                        <div class="calc-divider"></div>
+                        <div class="calc-field-group calc-option-group">
+                            <label class="calc-check-row">
+                                <input id="localScore" type="checkbox" value="10" checked>
+                                <span>符合目前開發區域免試/共同就學區（10 分）</span>
+                            </label>
+                            <p class="calc-small-note">一般條件較容易達成。</p>
+                        </div>
+                        <div class="calc-help-detail" id="help-localScore">
+                            <p>若符合目前開發區域免試入學的就學區或共同就學區，即可獲得 10 分。這是就近入學的加分項目。</p>
+                        </div>
+                    </div>
+                    <div class="panel-card calc-input-card" data-district-only="ct">
+                        <div class="calc-card-title-row">
+                            <h3 class="calc-card-title">扶助弱勢</h3>
+                            <button type="button" class="calc-help-toggle" aria-controls="help-weakScore" data-help-id="help-weakScore" title="查看扶助弱勢說明">
+                                <span aria-hidden="true">💡</span>
+                                <span class="sr-only">扶助弱勢說明</span>
+                            </button>
+                        </div>
+                        <div class="calc-divider"></div>
+                        <div class="calc-field-group">
+                            <select id="weakScore" class="ui-input">
+                                <option value="0">一般</option>
+                                <option value="1">偏鄉/中低（1 分）</option>
+                                <option value="2">低收（2 分）</option>
+                            </select>
+                            <p class="calc-small-note">依弱勢種類擇一計分，最多 3 分。</p>
+                        </div>
+                        <div class="calc-help-detail" id="help-weakScore">
+                            <p>扶助弱勢採擇一項計分。若符合偏鄉或中低收入條件，可得 1 分；若符合低收入條件，可得 2 分。系統會以最高項目計算。</p>
+                        </div>
+                    </div>
+                    <div class="panel-card calc-input-card">
+                        <div class="calc-card-title-row">
+                            <h3 class="calc-card-title">多元學習表現</h3>
+                            <button type="button" class="calc-help-toggle" aria-controls="help-multiScore" data-help-id="help-multiScore" title="查看多元學習表現說明">
+                                <span aria-hidden="true">💡</span>
+                                <span class="sr-only">多元學習表現說明</span>
+                            </button>
+                        </div>
+                        <div class="calc-divider"></div>
+                        <div class="calc-field-grid">
+                            <div class="calc-field-group calc-domain-group">
+                                <label class="block text-sm font-medium mb-2">均衡學習（四領域，合計上限 12 分）</label>
+                                <div class="calc-domain-grid">
+                                    <label class="checkbox-chip"><input type="checkbox" id="bal_domain_health"> 健體</label>
+                                    <label class="checkbox-chip"><input type="checkbox" id="bal_domain_arts"> 藝文</label>
+                                    <label class="checkbox-chip"><input type="checkbox" id="bal_domain_general"> 綜合</label>
+                                    <label class="checkbox-chip"><input type="checkbox" id="bal_domain_tech"> 科技</label>
+                                </div>
+                                <label class="checkbox-chip checkbox-chip-full"><input type="checkbox" id="bal_low_income"> 符合低收入戶（+2 分）</label>
+                                <p class="calc-small-note">每一領域符合計 3 分；四領域皆符合為 12 分，低收入戶可額外加 2 分。</p>
+                            </div>
+                            <div class="calc-field-group">
+                                <label class="block text-sm font-medium mb-2">德行表現（上限 5 分）</label>
+                                <div class="calc-field-row">
+                                    <div>
+                                        <label class="block text-sm mb-2">社團（上限 2 分）</label>
+                                        <input id="mor_club_terms" type="number" min="0" max="2" value="0" class="ui-input">
+                                        <p class="calc-small-note">每一學期 1 分，最多 2 分。</p>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm mb-2">服務學習（上限 3 分）</label>
+                                        <select id="mor_service_learning" class="ui-input">
+                                            <option value="0">無</option>
+                                            <option value="1">1 分</option>
+                                            <option value="2">2 分</option>
+                                            <option value="3">3 分</option>
+                                        </select>
+                                        <p class="calc-small-note">依服務學習表現給分。</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="calc-field-group">
+                                <label class="block text-sm font-medium mb-2">無記過紀錄（上限 6 分）</label>
+                                <select id="nod_record" class="ui-input">
+                                    <option value="6">無處分紀錄（6 分）</option>
+                                    <option value="6">銷過後無處分紀錄（6 分）</option>
+                                    <option value="3">銷過後無小過以上紀錄（3 分）</option>
+                                    <option value="0">有小過以上紀錄（0 分）</option>
+                                </select>
+                                <p class="calc-small-note">依銷過與紀錄情況給分，3 次警告折 1 次小過。</p>
+                            </div>
+                            <div class="calc-field-group">
+                                <label class="block text-sm font-medium mb-2">獎勵紀錄（上限 4 分）</label>
+                                <div class="calc-field-row">
+                                    <label class="calc-compact-label">大功<input id="awd_major" type="number" min="0" max="1" value="0" class="ui-input" title="輸入次數，每次 3 分"></label>
+                                    <label class="calc-compact-label">小功<input id="awd_minor" type="number" min="0" max="4" value="0" class="ui-input" title="輸入次數，每次 1 分"></label>
+                                    <label class="calc-compact-label">嘉獎<input id="awd_comm" type="number" min="0" max="8" value="0" class="ui-input" title="輸入次數，每次 0.5 分"></label>
+                                </div>
+                                <p class="calc-small-note">大功 3 分／次、小功 1 分／次、嘉獎 0.5 分／次；合計上限 4 分（例：大功 1 次 + 小功 1 次 = 4 分）。</p>
+                            </div>
+                        </div>
+                        <div class="calc-help-detail" id="help-multiScore">
+                            <p>多元學習表現包含均衡學習、德行表現、無記過紀錄與獎勵紀錄四項。這些加總後最多可取得 27 分。</p>
+                        </div>
+                    </div>
+                    <div class="panel-card calc-input-card">
+                        <div class="calc-card-title-row">
+                            <h3 class="calc-card-title">會考成績</h3>
+                            <button type="button" class="calc-help-toggle" aria-controls="help-examScore" data-help-id="help-examScore" title="查看會考成績說明">
+                                <span aria-hidden="true">💡</span>
+                                <span class="sr-only">會考成績說明</span>
+                            </button>
+                        </div>
+                        <div class="calc-divider"></div>
+                        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">國文</label>
+                                <select id="subj_cn" class="ui-input">
+                                    <option value="" disabled selected>請選擇</option>
+                                    <option value="21">A++ (精熟)</option>
+                                    <option value="18">A+ (精熟)</option>
+                                    <option value="15">A (精熟)</option>
+                                    <option value="12">B++ (基礎)</option>
+                                    <option value="9">B+ (基礎)</option>
+                                    <option value="6">B (基礎)</option>
+                                    <option value="3">C (待加強)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">英文</label>
+                                <select id="subj_en" class="ui-input">
+                                    <option value="" disabled selected>請選擇</option>
+                                    <option value="21">A++ (精熟)</option>
+                                    <option value="18">A+ (精熟)</option>
+                                    <option value="15">A (精熟)</option>
+                                    <option value="12">B++ (基礎)</option>
+                                    <option value="9">B+ (基礎)</option>
+                                    <option value="6">B (基礎)</option>
+                                    <option value="3">C (待加強)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">數學</label>
+                                <select id="subj_math" class="ui-input">
+                                    <option value="" disabled selected>請選擇</option>
+                                    <option value="21">A++ (精熟)</option>
+                                    <option value="18">A+ (精熟)</option>
+                                    <option value="15">A (精熟)</option>
+                                    <option value="12">B++ (基礎)</option>
+                                    <option value="9">B+ (基礎)</option>
+                                    <option value="6">B (基礎)</option>
+                                    <option value="3">C (待加強)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">自然</label>
+                                <select id="subj_sci" class="ui-input">
+                                    <option value="" disabled selected>請選擇</option>
+                                    <option value="21">A++ (精熟)</option>
+                                    <option value="18">A+ (精熟)</option>
+                                    <option value="15">A (精熟)</option>
+                                    <option value="12">B++ (基礎)</option>
+                                    <option value="9">B+ (基礎)</option>
+                                    <option value="6">B (基礎)</option>
+                                    <option value="3">C (待加強)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">社會</label>
+                                <select id="subj_soc" class="ui-input">
+                                    <option value="" disabled selected>請選擇</option>
+                                    <option value="21">A++ (精熟)</option>
+                                    <option value="18">A+ (精熟)</option>
+                                    <option value="15">A (精熟)</option>
+                                    <option value="12">B++ (基礎)</option>
+                                    <option value="9">B+ (基礎)</option>
+                                    <option value="6">B (基礎)</option>
+                                    <option value="3">C (待加強)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">作文</label>
+                                <select id="subj_write" class="ui-input">
+                                    <option value="" disabled selected>請選擇</option>
+                                    <option value="6">6 級</option>
+                                    <option value="5">5 級</option>
+                                    <option value="4">4 級</option>
+                                    <option value="3">3 級</option>
+                                    <option value="2">2 級</option>
+                                    <option value="1">1 級</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="calc-help-detail" id="help-examScore">
+                            <p>五科成績依「精熟 / 基礎 / 待加強」換算 100 制比序積點；作文等級則納入 111 制比序積分。請完整填寫後按「計算高中職積分」。</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button type="button" onclick="computeAllPoints();" class="ui-btn ui-btn-primary flex-1">計算高中職積分</button>
+                        <button type="button" onclick="resetForm()" class="ui-btn">重設</button>
+                    </div>
+                </div>
+                <aside class="result-panel">
+                    <div class="result-heading">計算結果</div>
+                    <div class="panel-card result-card result-card-primary">
+                        <p class="result-label">會考比序積點</p>
+                        <p class="stat-value" id="resPcts">0</p>
+                        <p class="result-unit" id="examResultUnit">/ 111 點</p>
+                    </div>
+                    <div class="panel-card result-card">
+                        <p class="result-label text-neo-muted">免試總積分</p>
+                        <p class="stat-value text-neo-text" id="resPoints">0</p>
+                        <p class="result-unit text-neo-muted" id="totalResultUnit">/ 100 分</p>
+                    </div>
+                    <div class="panel-card calc-breakdown-card">
+                        <h3 class="calc-breakdown-title">積分明細與備註</h3>
+                        <ul id="calcBreakdownList" class="calc-breakdown-list"></ul>
+                        <p id="calcBreakdownNote" class="calc-breakdown-note">尚未計算，請先點選「計算高中職積分」。</p>
+                    </div>
+                    <p class="result-note">*此試算僅供參考，實際錄取仍依年度名額、同分比序與當年度公告。</p>
+                </aside>
+            </div>
+            <div class="section-footer">
+                <button type="button" data-page="analysis">下一頁：落點分析 →</button>
+            </div>
+        </section>
+
+        <section id="page-analysis" data-page-section="analysis" class="page-section">
+            <div class="section-panel panel-card analysis-shell">
+                <div class="analysis-control-card panel-card">
+                    <div class="analysis-header">
+                        <div>
+                            <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">落點分析</p>
+                            <h2 class="section-title">依你的試算結果，先看哪些學校值得優先排。</h2>
+                            <p class="section-copy">這個版本以你目前的會考與免試積分，搭配學校的歷年錄取位置做估算，幫你快速抓出「穩定、適中、挑戰」三種落點。</p>
+                        </div>
+                        <div class="analysis-score-pill" id="analysisScoreBadge">目前分數：0 / 100</div>
+                    </div>
+                    <div class="analysis-filter-row">
+                        <label class="analysis-filter-group">
+                            <span>分析範圍</span>
+                            <select id="analysisScope" class="ui-input">
+                                <option value="all">全部學校</option>
+                                <option value="高中">高中</option>
+                                <option value="綜合高中">綜合高中</option>
+                                <option value="高職">高職</option>
+                            </select>
+                        </label>
+                        <label class="analysis-filter-group">
+                            <span>顯示筆數</span>
+                            <select id="analysisLimit" class="ui-input">
+                                <option value="6">前 6 所</option>
+                                <option value="10">前 10 所</option>
+                                <option value="20">前 20 所</option>
+                            </select>
+                        </label>
+                    </div>
+                    <p class="analysis-note">※ 內容僅供估算，實際錄取仍會受年度名額、同分比序與學校招生規則影響。</p>
+                </div>
+                <div id="analysisSummary" class="analysis-summary-card panel-card">先完成積分試算後，系統就會幫你整理落點。</div>
+                <div id="analysisResults" class="analysis-grid"></div>
+
+                <div class="wishlist-shell panel-card" id="wishlistShell">
+                    <div class="wishlist-header">
+                        <div>
+                            <p class="text-xs-uppercase text-neo-accent font-semibold mb-2">我的志願序</p>
+                            <h3 class="section-title">排一排你想申請的學校，每一間即時比對你的分數落點。</h3>
+                            <p class="section-copy">最多可填 50 個志願；每次新增或調整順序，都會自動計算這間學校對你而言是「穩定、適中、挑戰」哪一種。建議前段放 1–2 間挑戰、中段放 3–6 間適中、後段留 2–3 間穩定。</p>
+                        </div>
+                        <div class="wishlist-actions">
+                            <div class="wishlist-count" id="wishlistCount">0 / 50</div>
+                            <button type="button" id="wishlistClearBtn" class="ghost-btn small is-danger">清空全部</button>
+                        </div>
+                    </div>
+
+                    <div class="wishlist-add-row">
+                        <label class="wishlist-search-wrap">
+                            <span class="sr-only">搜尋學校名稱或地區</span>
+                            <input id="wishlistSearch" type="text" class="ui-input" placeholder="輸入學校名稱、地區或關鍵字（例如：台中女中、南投、高職）…" autocomplete="off">
+                        </label>
+                        <div id="wishlistSearchResults" class="wishlist-search-results" hidden></div>
+                    </div>
+
+                    <div class="wishlist-summary" id="wishlistSummary" hidden>
+                        <div class="wish-summary-item is-challenge"><span class="dot"></span>挑戰 <strong id="wishCountChallenge">0</strong></div>
+                        <div class="wish-summary-item is-balanced"><span class="dot"></span>適中 <strong id="wishCountBalanced">0</strong></div>
+                        <div class="wish-summary-item is-reachable"><span class="dot"></span>穩定 <strong id="wishCountReachable">0</strong></div>
+                        <div class="wish-summary-hint">建議：挑戰 ≦ 20% · 適中 ≧ 40% · 穩定 ≧ 20%</div>
+                    </div>
+
+                    <ol id="wishlistList" class="wishlist-list">
+                        <li class="wishlist-empty">
+                            <div class="wishlist-empty-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+                            </div>
+                            <p class="wishlist-empty-title">你還沒有加入任何志願</p>
+                            <p class="wishlist-empty-desc">先用上方搜尋框找學校，點選任一間學校就會加進來。你也可以在下方「學校查詢」頁面直接點「加入志願」。</p>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="section-footer">
+                    <button type="button" data-page="schools">下一頁：學校查詢 →</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-schools" data-page-section="schools" class="page-section">
+            <div class="section-panel panel-card">
+                <div class="mb-8">
+                    <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">學校查詢</p>
+                    <h2 class="section-title">高中職學校一覽表。</h2>
+                    <p class="section-copy">目前先整理基北區 115 學年度免試入學簡章資料，學校以錄取門檻與區域聲量概略排序；招生名額保留空白欄，之後可接正式公告或落點分析資料。</p>
+                </div>
+                <div class="school-toolbar">
+                    <div class="school-search-wrap">
+                        <label for="schoolSearch" class="sr-only">搜尋學校、科別、地址</label>
+                        <input id="schoolSearch" type="search" class="ui-input" placeholder="搜尋學校、科別、地址或縣市">
+                    </div>
+                    <div class="school-sort-wrap">
+                        <label for="schoolSort" class="sr-only">排序</label>
+                        <select id="schoolSort" class="ui-input">
+                            <option value="rank">依排名排序</option>
+                            <option value="name">依學校名稱</option>
+                            <option value="city">依縣市/區</option>
+                            <option value="quota">依簡章名額</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="school-filter-bar" aria-label="學校快速分類">
+                    <button type="button" class="school-filter active" data-school-filter="all">全部</button>
+                    <button type="button" class="school-filter" data-school-filter="公立">公立</button>
+                    <button type="button" class="school-filter" data-school-filter="私立">私立</button>
+                    <button type="button" class="school-filter" data-school-filter="高中">高中</button>
+                    <button type="button" class="school-filter" data-school-filter="高中職">高中職</button>
+                    <button type="button" class="school-filter" data-school-filter="綜合高中">綜合高中</button>
+                    <button type="button" class="school-filter" data-school-filter="進修部">進修部</button>
+                    <button type="button" class="school-filter" data-school-filter="男校">男校</button>
+                    <button type="button" class="school-filter" data-school-filter="女校">女校</button>
+                    <button type="button" class="school-filter" data-school-filter="資優">資優/特色班</button>
+                    <button type="button" class="school-filter" data-school-filter="有分數">有錄取分數</button>
+                </div>
+                <div class="school-summary" id="schoolSummary">載入學校清單中...</div>
+                <div id="schoolGrid" class="school-grid" aria-live="polite"></div>
+                <div id="schoolEmpty" class="school-empty hidden">沒有符合條件的學校，請換一個分類或關鍵字。</div>
+                <p class="school-source-note">資料來源：115 學年度基北區高級中等學校免試入學簡章；最低錄取分數以公開可取得資料先行整理，未公開或 114 年仍更新中的學校保留空白。</p>
+                <div class="section-footer">
+                    <button type="button" data-page="download">下一頁：資料下載 →</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-download" data-page-section="download" class="page-section">
+            <div class="section-panel panel-card grid gap-8 lg:grid-cols-[1.2fr_0.8fr] items-center">
+                <div>
+                    <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">報名資料與下載</p>
+                    <h2 class="section-title">常用報名資料與下載連結。</h2>
+                    <p class="section-copy mb-6">本段提供報名簡章、表單範本與官方公告連結，方便你準備高中職免試入學。</p>
+                </div>
+                <div class="space-y-4">
+                    <a href="https://ttk.entry.edu.tw" target="_blank" rel="noopener noreferrer" class="ui-btn ui-btn-primary w-full">前往官方簡章網站</a>
+                    <a id="schoolsCsvDownload" href="schools_tp.csv" download class="ui-btn w-full">下載學校清單 CSV</a>
+                </div>
+                <div class="text-neo-muted text-sm leading-relaxed lg:col-span-2">正式簡章、表單與實際招生名額請以所屬就學區免試入學委員會公告為準；目前連結先放基北區官方網站。</div>
+                <div class="section-footer">
+                    <button type="button" data-page="faq">下一頁：FAQ →</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-faq" data-page-section="faq" class="page-section">
+            <div class="section-panel panel-card">
+                <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">常見問題</p>
+                <h2 class="section-title">FAQ：快速解答高中職免試疑問。</h2>
+                <div class="space-y-4 mt-8">
+                    <details class="details-panel">
+                        <summary>高中職免試入學和五專的最大差別？</summary>
+                        <p>高中職通常依各就學區辦理地方招生，需看所屬區域與共同就學區規定；五專為全國性招生，可跨區報名。</p>
+                    </details>
+                    <details class="details-panel">
+                        <summary>我該如何確認是否符合就近入學？</summary>
+                        <p>請查閱所屬就學區與共同就學區招生辦法；目前試算先套用基北區就近入學規則。</p>
+                    </details>
+                    <details class="details-panel">
+                        <summary>試算結果能保證錄取嗎？</summary>
+                        <p>試算僅供參考，實際錄取仍依年度名額、同分比序及分發結果決定。</p>
+                    </details>
+                </div>
+                <div class="section-footer">
+                    <button type="button" data-page="home">回高中職總覽 →</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="sr-only">
+        <div id="examScoreDisplay">0</div>
+        <div id="exam111Display">0</div>
+    </div>
+    <a id="lineFloatingLink" class="line-floating-link" href="#" data-line-link aria-label="加入 LINE 官方帳號">
+        <span>LINE</span>
+        <small>加入好友</small>
+    </a>
+    <div id="calcHelpModal" class="calc-help-modal" role="dialog" aria-modal="true" aria-hidden="true">
+        <div class="calc-help-backdrop" data-calc-help-close></div>
+        <div class="calc-help-panel">
+            <button type="button" class="calc-help-close" data-calc-help-close aria-label="關閉說明">×</button>
+            <p class="calc-help-eyebrow">積分邏輯</p>
+            <h3 id="calcHelpTitle">說明</h3>
+            <div id="calcHelpBody"></div>
+        </div>
+    </div>
+    <script src="site-config.js?v=20260808-1"></script>
+    <script src="it_hs.js?v=20260808-1"></script>
+</body>
+</html>

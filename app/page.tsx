@@ -2,9 +2,7 @@
 
 export default function Home() {
   const rememberDistrict = (district: string) => {
-    const expires = new Date(Date.now() + 180 * 864e5).toUTCString();
-    document.cookie = `jshs_district=${encodeURIComponent(district)}; expires=${expires}; path=/; SameSite=Lax`;
-    window.location.href = "/jshs/jshs.html";
+    window.location.href = `/it_hs/${district}/`;
   };
 
   return (
@@ -27,7 +25,7 @@ export default function Home() {
             你目前屬於哪一個就學區？
           </h1>
           <p className="mb-6 leading-8 text-slate-600">
-            先選擇就學區，網站會先記住你的地區並留在首頁；之後進入積分試算、落點分析與學校查詢時再套用。
+            先選擇就學區，網站會直接開啟對應地區的資料頁；之後的積分試算、落點分析與學校查詢都會使用該地區資料。
           </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <button
