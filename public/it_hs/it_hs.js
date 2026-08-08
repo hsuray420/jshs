@@ -386,13 +386,6 @@ function renderAnalysis() {
 
     if (!summary || !results) return;
 
-    if (getSelectedDistrict() === 'tp') {
-        if (badge) badge.textContent = '基北區學校落點資料建置中';
-        summary.innerHTML = '基北區積分試算已可使用；學校查詢與落點分析將依基北區招生資料另行建置。';
-        results.innerHTML = '';
-        return;
-    }
-
     const { totalPoints } = getCurrentScoreSnapshot();
     const userBand = getUserAnalysisBand(totalPoints);
     if (badge) {
@@ -915,14 +908,6 @@ function renderSchools() {
     const search = document.getElementById('schoolSearch');
     const sort = document.getElementById('schoolSort');
     if (!grid || !summary || !empty) return;
-
-    if (getSelectedDistrict() === 'tp') {
-        summary.textContent = '基北區學校清單建置中，目前不顯示中投區資料。';
-        grid.innerHTML = '';
-        empty.classList.remove('hidden');
-        empty.textContent = '基北區學校資料即將加入，請先使用基北區積分試算。';
-        return;
-    }
 
     const keyword = normalizedSearchText((search?.value || '').trim());
     const sortValue = sort?.value || 'rank';
