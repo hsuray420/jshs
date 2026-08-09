@@ -34,7 +34,7 @@ function getSelectedDistrict() {
     const queryDistrict = new URLSearchParams(window.location.search).get('district');
     return DISTRICT_CODES.includes(pathDistrict)
         ? pathDistrict
-        : (DISTRICT_CODES.includes(queryDistrict) ? queryDistrict : (localStorage.getItem('jshs_district') || 'ct'));
+        : (DISTRICT_CODES.includes(queryDistrict) ? queryDistrict : '');
 }
 
 function initDistrictPicker() {
@@ -58,9 +58,7 @@ function initDistrictPicker() {
             if (!DISTRICT_CODES.includes(district)) return;
             localStorage.setItem('jshs_district', district);
             sessionStorage.setItem('jshs_district_skip_once', 'true');
-            const url = new URL(window.location.href);
-            url.searchParams.set('district', district);
-            window.location.replace(url.toString());
+            window.location.replace(`/it_hs/${encodeURIComponent(district)}/`);
         });
     });
     modal.hidden = false;
@@ -85,7 +83,7 @@ const DISTRICT_RULES = {
 };
 
 function getDistrictRules() {
-    return DISTRICT_RULES[getSelectedDistrict()] || DISTRICT_RULES.ct;
+    return DISTRICT_RULES[getSelectedDistrict()] || null;
 }
 
 const topicPages = {
@@ -521,7 +519,9 @@ function renderAnalysis() {
 }
 
 function computeMultiLearningParts() {
-    if (getSelectedDistrict() === 'tp') {
+    const district = getSelectedDistrict();
+    if (!DISTRICT_RULES[district]?.totalMax) return { bal: 0, mor: 0, nod: 0, awd: 0 };
+    if (district === 'tp') {
         const domainCount = ['bal_domain_health', 'bal_domain_arts', 'bal_domain_general']
             .map(id => document.getElementById(id))
             .filter(el => el && el.checked).length;
@@ -556,6 +556,10 @@ function computeMultiLearningParts() {
 }
 
 function getCalculationBreakdown() {
+    const district = getSelectedDistrict();
+    if (!DISTRICT_RULES[district]?.totalMax) {
+        return { pref: 0, local: 0, weak: 0, bal: 0, mor: 0, nod: 0, awd: 0, exam100: 0, pts111: 0, totalPoints: 0 };
+    }
     const pref = Number(document.getElementById('prefScore')?.value) || 0;
     const localEl = document.getElementById('localScore');
     const local = localEl?.checked ? Number(localEl.value) || 0 : 0;
@@ -659,6 +663,8 @@ function computeAllPoints() {
 }
 
 function computeExamPoints() {
+    const district = getSelectedDistrict();
+    if (!DISTRICT_RULES[district]?.totalMax) return;
     const subjIds = ['subj_cn','subj_en','subj_math','subj_sci','subj_soc'];
     let levelTotal = 0;
     let exam100 = 0;
@@ -668,7 +674,7 @@ function computeExamPoints() {
         const v = Number(el.value) || 0;
         if (v <= 0) return;
         levelTotal += v;
-        if (getSelectedDistrict() === 'tp') {
+        if (district === 'tp') {
             const points = { 21: 7, 18: 6, 15: 5, 12: 4, 9: 3, 6: 2, 3: 1 };
             exam100 += points[v] || 0;
         } else if (v >= 15) exam100 += 6;
@@ -676,7 +682,7 @@ function computeExamPoints() {
         else exam100 += 2;
     });
     const write = Number(document.getElementById('subj_write')?.value) || 0;
-    if (getSelectedDistrict() === 'tp') {
+    if (district === 'tp') {
         const writingPoints = { 6: 1, 5: 0.8, 4: 0.6, 3: 0.4, 2: 0.2, 1: 0.1 };
         exam100 = Math.min(36, exam100 + (writingPoints[write] || 0));
     } else {
@@ -743,6 +749,24 @@ function initCalculator() {
     const otherTileValue = document.getElementById('otherTileValue');
     const examResultUnit = document.getElementById('examResultUnit');
     const totalResultUnit = document.getElementById('totalResultUnit');
+    if (!selectedDistrict || !rules) {
+        if (label) label.textContent = '尚未選擇就學區';
+        if (intro) intro.textContent = '請先選擇就學區，這裡才會載入對應的積分規則。';
+        if (examTileValue) examTileValue.textContent = '—';
+        if (otherTileValue) otherTileValue.textContent = '—';
+        if (examResultUnit) examResultUnit.textContent = '';
+        if (totalResultUnit) totalResultUnit.textContent = '';
+        return;
+    }
+    if (rules.available === false) {
+        if (label) label.textContent = `${rules.label}免試入學`;
+        if (intro) intro.textContent = `${rules.label}積分試算規則與資料尚未建置，這裡暫不載入其他就學區資料。`;
+        if (examTileValue) examTileValue.textContent = '—';
+        if (otherTileValue) otherTileValue.textContent = '—';
+        if (examResultUnit) examResultUnit.textContent = '';
+        if (totalResultUnit) totalResultUnit.textContent = '';
+        return;
+    }
     if (label) label.textContent = `${rules.label}免試入學`;
     if (rules.available === false && intro) {
         intro.textContent = `${rules.label}積分試算規則正在建置中；目前先完成頁面架構，正式規則確認後會在此區開放。`;
@@ -1076,7 +1100,7 @@ function getSchoolDataConfig() {
     const district = getSelectedDistrict();
     const districtCsvPath = config.schoolsCsvPathsByDistrict?.[district];
     return {
-        csvPath: districtCsvPath || config.schoolsCsvPath || 'schools.csv',
+        csvPath: districtCsvPath || '',
         district,
         dataVar: config.schoolsDataVar || 'IT_HS_SCHOOLS'
     };
@@ -1391,7 +1415,6 @@ function initSchools() {
             renderSchools();
         })
         .catch(() => {
-            if (useEmbeddedSchoolsData()) return;
             summary.textContent = `無法載入 ${config.csvPath}，請稍後再試。`;
         });
 

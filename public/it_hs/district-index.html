@@ -9,8 +9,8 @@
     <p>正在開啟就學區資料，請稍候。</p>
     <script>
         const parts = window.location.pathname.split('/').filter(Boolean);
-        const district = parts[parts.indexOf('it_hs') + 1] || 'ct';
-        window.location.replace(`/it_hs/it_hs.html?district=${encodeURIComponent(district)}`);
+        const district = parts[parts.indexOf('it_hs') + 1] || '';
+        window.location.replace(district ? `/it_hs/it_hs.html?district=${encodeURIComponent(district)}` : '/it_hs/it_hs.html');
     </script>
 </body>
 </html>

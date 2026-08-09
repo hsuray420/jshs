@@ -9,7 +9,7 @@
     <p>正在開啟就學區資料，請稍候。</p>
     <script>
         const parts = window.location.pathname.split('/').filter(Boolean);
-        const district = parts[parts.indexOf('it_hs') + 1] || 'ct';
+        const district = parts[parts.indexOf('it_hs') + 1] || '';
         window.location.replace(`/it_hs/it_hs.html?district=${encodeURIComponent(district)}`);
     </script>
 </body>

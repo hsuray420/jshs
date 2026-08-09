@@ -105,18 +105,7 @@ function chooseDistrict(district) {
 }
 
 function initDistrictPicker() {
-    renderDistrictChoices();
-    const selected = localStorage.getItem('jshs_district') || '';
-    updateDistrictUI(selected);
-
-    document.querySelectorAll('[data-district-choice]').forEach(choice => {
-        choice.addEventListener('click', event => {
-            event.preventDefault();
-            const district = choice.dataset.districtChoice;
-            if (district) chooseDistrict(district);
-        });
-    });
-
+    // The homepage never selects or restores a district. Selection belongs to it_hs.
 }
 
 function initPathwayModal() {
