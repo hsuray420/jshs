@@ -38,11 +38,9 @@ function getSelectedDistrict() {
 }
 
 function initDistrictPicker() {
-    const pathParts = window.location.pathname.split('/').filter(Boolean);
-    const districtIndex = pathParts.indexOf('it_hs');
-    const pathDistrict = districtIndex >= 0 ? pathParts[districtIndex + 1] : '';
-    const queryDistrict = new URLSearchParams(window.location.search).get('district');
-    if (DISTRICT_CODES.includes(pathDistrict) || DISTRICT_CODES.includes(queryDistrict) || localStorage.getItem('jshs_district')) return;
+    const skipOnce = sessionStorage.getItem('jshs_district_skip_once');
+    sessionStorage.removeItem('jshs_district_skip_once');
+    if (skipOnce === 'true') return;
 
     const modal = document.getElementById('districtModal');
     const grid = modal?.querySelector('[data-district-choice-grid]');
@@ -59,6 +57,7 @@ function initDistrictPicker() {
             const district = choice.dataset.districtChoice;
             if (!DISTRICT_CODES.includes(district)) return;
             localStorage.setItem('jshs_district', district);
+            sessionStorage.setItem('jshs_district_skip_once', 'true');
             const url = new URL(window.location.href);
             url.searchParams.set('district', district);
             window.location.replace(url.toString());
