@@ -12,9 +12,9 @@ function getSelectedDistrict() {
     const districtIndex = pathParts.indexOf('it_hs');
     const pathDistrict = districtIndex >= 0 ? pathParts[districtIndex + 1] : '';
     const queryDistrict = new URLSearchParams(window.location.search).get('district');
-    return ['ct', 'tp'].includes(pathDistrict)
+    return ['ct', 'tp', 'taoyuan-lienchiang'].includes(pathDistrict)
         ? pathDistrict
-        : (['ct', 'tp'].includes(queryDistrict) ? queryDistrict : 'ct');
+        : (['ct', 'tp', 'taoyuan-lienchiang'].includes(queryDistrict) ? queryDistrict : 'ct');
 }
 
 const DISTRICT_RULES = {
