@@ -7,14 +7,64 @@ function toggleMobileMenu() {
     });
 }
 
+const DISTRICT_OPTIONS = {
+    tp: { label: '基北區', areas: '臺北市、新北市、基隆市', ready: true },
+    ilan: { label: '宜蘭區', areas: '宜蘭縣' },
+    'taoyuan-lienchiang': { label: '桃連區', areas: '桃園市、連江縣' },
+    'hsinchu-miaoli': { label: '竹苗區', areas: '新竹市、新竹縣、苗栗縣' },
+    ct: { label: '中投區', areas: '臺中市、南投縣', ready: true },
+    changhua: { label: '彰化區', areas: '彰化縣' },
+    yunlin: { label: '雲林區', areas: '雲林縣' },
+    chiayi: { label: '嘉義區', areas: '嘉義市、嘉義縣' },
+    tainan: { label: '臺南區', areas: '臺南市' },
+    kaohsiung: { label: '高雄區', areas: '高雄市' },
+    pingtung: { label: '屏東區', areas: '屏東縣' },
+    hualien: { label: '花蓮區', areas: '花蓮縣' },
+    taitung: { label: '臺東區', areas: '臺東縣' },
+    penghu: { label: '澎湖區', areas: '澎湖縣' },
+    kinmen: { label: '金門區', areas: '金門縣' }
+};
+
+const DISTRICT_CODES = Object.keys(DISTRICT_OPTIONS);
+
 function getSelectedDistrict() {
     const pathParts = window.location.pathname.split('/').filter(Boolean);
     const districtIndex = pathParts.indexOf('it_hs');
     const pathDistrict = districtIndex >= 0 ? pathParts[districtIndex + 1] : '';
     const queryDistrict = new URLSearchParams(window.location.search).get('district');
-    return ['ct', 'tp', 'taoyuan-lienchiang'].includes(pathDistrict)
+    return DISTRICT_CODES.includes(pathDistrict)
         ? pathDistrict
-        : (['ct', 'tp', 'taoyuan-lienchiang'].includes(queryDistrict) ? queryDistrict : 'ct');
+        : (DISTRICT_CODES.includes(queryDistrict) ? queryDistrict : (localStorage.getItem('jshs_district') || 'ct'));
+}
+
+function initDistrictPicker() {
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const districtIndex = pathParts.indexOf('it_hs');
+    const pathDistrict = districtIndex >= 0 ? pathParts[districtIndex + 1] : '';
+    const queryDistrict = new URLSearchParams(window.location.search).get('district');
+    if (DISTRICT_CODES.includes(pathDistrict) || DISTRICT_CODES.includes(queryDistrict) || localStorage.getItem('jshs_district')) return;
+
+    const modal = document.getElementById('districtModal');
+    const grid = modal?.querySelector('[data-district-choice-grid]');
+    if (!modal || !grid) return;
+
+    grid.innerHTML = Object.entries(DISTRICT_OPTIONS).map(([code, district]) => `
+        <button type="button" class="district-choice ${district.ready ? 'is-ready' : ''}" data-district-choice="${code}">
+            <strong>${district.label}</strong>
+            <span>${district.areas}</span>
+        </button>
+    `).join('');
+    grid.querySelectorAll('[data-district-choice]').forEach(choice => {
+        choice.addEventListener('click', () => {
+            const district = choice.dataset.districtChoice;
+            if (!DISTRICT_CODES.includes(district)) return;
+            localStorage.setItem('jshs_district', district);
+            const url = new URL(window.location.href);
+            url.searchParams.set('district', district);
+            window.location.replace(url.toString());
+        });
+    });
+    modal.hidden = false;
 }
 
 const DISTRICT_RULES = {
@@ -1361,6 +1411,7 @@ function initSchools() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+    initDistrictPicker();
     toggleMobileMenu();
     initPageRouter();
     initCalculator();

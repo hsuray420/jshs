@@ -37,6 +37,15 @@
 </head>
 <body class="font-body text-neo-text antialiased overflow-x-hidden">
 
+    <div id="districtModal" class="district-modal" role="dialog" aria-modal="true" aria-labelledby="district-modal-title" hidden>
+        <div class="district-modal-panel">
+            <p class="text-xs uppercase tracking-[0.18em] text-neo-accent font-bold mb-3">就學區選擇</p>
+            <h1 id="district-modal-title" class="text-2xl sm:text-3xl font-extrabold text-neo-text mb-3">你目前屬於哪一個就學區？</h1>
+            <p class="text-neo-muted leading-relaxed mb-6">請先選擇就學區，積分試算規則與學校資料會依照你的選擇載入。</p>
+            <div class="district-modal-grid" data-district-choice-grid></div>
+        </div>
+    </div>
+
     <header class="site-header sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-neo-blueGray/70">
         <div class="header-main max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
             <a class="brand" href="../jshs/jshs.html" aria-label="全國國中升學資訊網首頁">

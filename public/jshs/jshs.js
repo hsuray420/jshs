@@ -101,24 +101,13 @@ function closeDistrictModal() {
 }
 
 function chooseDistrict(district) {
-    if (!DISTRICTS[district]) return;
-    localStorage.setItem('jshs_district', district);
-    updateDistrictUI(district);
-    const pendingHref = sessionStorage.getItem('jshs_pending_href');
-    sessionStorage.removeItem('jshs_pending_href');
-    closeDistrictModal();
-    if (pendingHref) window.location.href = pendingHref;
+    return district;
 }
 
 function initDistrictPicker() {
     renderDistrictChoices();
     const selected = localStorage.getItem('jshs_district') || '';
     updateDistrictUI(selected);
-    const modal = document.getElementById('districtModal');
-    if (modal) {
-        modal.hidden = true;
-        modal.setAttribute('aria-hidden', 'true');
-    }
 
     document.querySelectorAll('[data-district-choice]').forEach(choice => {
         choice.addEventListener('click', event => {
@@ -128,21 +117,6 @@ function initDistrictPicker() {
         });
     });
 
-    document.querySelectorAll('[data-district-change], [data-district-open]').forEach(control => {
-        control.addEventListener('click', event => {
-            event.preventDefault();
-            openDistrictModal();
-        });
-    });
-
-    document.querySelectorAll('[data-district-link]').forEach(link => {
-        link.addEventListener('click', event => {
-            if (localStorage.getItem('jshs_district')) return;
-            event.preventDefault();
-            sessionStorage.setItem('jshs_pending_href', link.href);
-            openDistrictModal();
-        });
-    });
 }
 
 function initPathwayModal() {

@@ -2527,3 +2527,54 @@ header.site-header { background: rgba(255,255,255,.92) !important; border-bottom
     .calc-score-map { grid-template-columns: 1fr; }
     .line-floating-link { bottom: 14px; right: 14px; }
 }
+/* District selection is shown only when the generic it_hs entry first loads. */
+.district-modal[hidden] { display: none; }
+.district-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, .52);
+    backdrop-filter: blur(10px);
+}
+.district-modal-panel {
+    width: min(760px, 100%);
+    max-height: min(90vh, 760px);
+    overflow-y: auto;
+    padding: 32px;
+    border: 1px solid rgba(226, 232, 240, .9);
+    border-radius: 28px;
+    background: #fff;
+    box-shadow: 0 28px 90px rgba(15, 23, 42, .24);
+}
+.district-modal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+.district-choice {
+    display: grid;
+    gap: 6px;
+    min-height: 112px;
+    padding: 18px;
+    border: 1px solid #dbe4f0;
+    border-radius: 16px;
+    background: #f8fafc;
+    color: #64748b;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .18s ease, background .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+.district-choice strong { color: #1f2937; font-size: 1.12rem; }
+.district-choice span { font-size: .84rem; line-height: 1.5; }
+.district-choice.is-ready { border-color: #93c5fd; background: #eff6ff; }
+.district-choice:hover { border-color: #2563eb; background: #fff; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37, 99, 235, .12); }
+@media (max-width: 720px) {
+    .district-modal-panel { padding: 24px 18px; border-radius: 22px; }
+    .district-modal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 430px) {
+    .district-modal-grid { grid-template-columns: 1fr; }
+}
