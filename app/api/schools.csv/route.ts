@@ -2,7 +2,7 @@ import { getR2, getSiteSetting } from "../../../db/admin-store";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request) {
+export async function GET() {
   const setting = await getSiteSetting("schools_csv_object_key").catch(() => null);
   if (setting?.value) {
     const object = await getR2().get(setting.value);
@@ -17,5 +17,8 @@ export async function GET(request: Request) {
     }
   }
 
-  return Response.redirect(new URL("/it_hs/schools.csv", request.url), 307);
+  return Response.json(
+    { ok: false, error: "schools_csv_not_configured" },
+    { status: 404 },
+  );
 }
