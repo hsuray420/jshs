@@ -17,7 +17,7 @@
             <h2 id="district-modal-title">你目前屬於哪一個就學區？</h2>
             <p>先選擇就學區，平台會直接開啟對應地區的資料頁，之後在積分試算、落點分析與學校查詢中使用該地區資料。</p>
             <div class="district-modal-grid" data-district-choice-grid></div>
-            <p class="district-modal-foot">選完會直接開啟該就學區的資料頁。</p>
+            <p class="district-modal-foot">選完會記錄你的就學區；若你是從功能入口進入，接著會前往該功能。</p>
         </div>
     </div>
 
@@ -32,18 +32,18 @@
             <span class="brand-name">全國國中升學資訊網</span>
         </a>
         <nav class="site-nav" aria-label="主要導覽">
-            <a href="#region-picker">所屬地區</a>
-            <a href="../it_hs/it_hs.html#overview">學制介紹</a>
-            <a href="../it_hs/it_hs.html#admission">入學方式</a>
-            <a href="../it_hs/it_hs.html#calculator">試算工具</a>
+            <button type="button" data-district-open>所屬地區</button>
+            <a data-district-link href="../it_hs/it_hs.html#overview">學制介紹</a>
+            <a data-district-link href="../it_hs/it_hs.html#admission">入學方式</a>
+            <a data-district-link href="../it_hs/it_hs.html#calculator">試算工具</a>
             <button class="nav-link-button" type="button" data-pathway-open>我要讀哪裡</button>
         </nav>
-        <a class="nav-cta" href="#region-picker">選擇地區<span aria-hidden="true">→</span></a>
+        <button class="nav-cta" type="button" data-district-open>選擇地區<span aria-hidden="true">→</span></button>
     </header>
 
     <main id="top">
 
-        <section class="region-section section-shell" id="region-picker" aria-labelledby="region-title">
+        <section class="region-section section-shell" id="region-picker" aria-labelledby="region-title" hidden>
             <div class="region-panel">
                 <div class="region-copy">
                     <p class="eyebrow">全國升學服務平台</p>
@@ -97,7 +97,7 @@
                 <p class="section-sub">先了解普通高中、技術型高中、綜合高中與五專，再選一條你想投入的學習方式。</p>
             </div>
             <div class="pathway-grid">
-                <a class="pathway-card path-hs" href="../it_hs/it_hs.html#overview">
+                    <a class="pathway-card path-hs" data-district-link href="../it_hs/it_hs.html#overview">
                     <span class="pathway-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none"><path d="M3 6.8 12 3l9 3.8-9 3.8-9-3.8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M6 11v4.4c0 1.7 2.7 3.6 6 3.6s6-1.9 6-3.6V11" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </span>
@@ -105,7 +105,7 @@
                     <p>修業三年，分別偏向學科升學、專業實作或彈性探索，保留多元升學選擇。</p>
                     <span class="pathway-link">查看學制介紹<span aria-hidden="true">→</span></span>
                 </a>
-                <a class="pathway-card path-five" href="../it_5/it_5.html">
+                    <a class="pathway-card path-five" data-district-link href="../it_5/it_5.html">
                     <span class="pathway-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </span>
@@ -126,19 +126,19 @@
                     <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-4.6 7-11a7 7 0 1 0-14 0c0 6.4 7 11 7 11Z" stroke="currentColor" stroke-width="1.6"/><path d="M9.5 10.3 11.3 12l3.2-3.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                     <span class="tool-text">我要讀哪裡</span>
                 </button>
-                <a href="../it_hs/it_hs.html#admission">
+                <a data-district-link href="../it_hs/it_hs.html#admission">
                     <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 5h14v14H5z" stroke="currentColor" stroke-width="1.6"/><path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
                     <span class="tool-text">入學方式</span>
                 </a>
-                <a href="../it_hs/it_hs.html#calculator">
+                <a data-district-link href="../it_hs/it_hs.html#calculator">
                     <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 8h8M8 12h3M8 16h3M13 12h3M13 16h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
                     <span class="tool-text">積分試算</span>
                 </a>
-                <a href="../it_hs/it_hs.html#analysis">
+                <a data-district-link href="../it_hs/it_hs.html#analysis">
                     <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9M11 19V4M18 19v-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
                     <span class="tool-text">落點分析</span>
                 </a>
-                <a href="../it_hs/it_hs.html#schools">
+                <a data-district-link href="../it_hs/it_hs.html#schools">
                     <span class="tool-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.6"/><path d="m20 20-4.3-4.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
                     <span class="tool-text">學校查詢</span>
                 </a>
@@ -155,7 +155,7 @@
                 </span>
                 <span class="brand-name">全國國中升學資訊網</span>
             </a>
-            <a class="footer-link" href="../it_hs/it_hs.html">高中職完整指南<span aria-hidden="true">→</span></a>
+            <a class="footer-link" data-district-link href="../it_hs/it_hs.html">高中職完整指南<span aria-hidden="true">→</span></a>
         </div>
     </footer>
 

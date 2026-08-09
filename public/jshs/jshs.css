@@ -116,8 +116,10 @@ a { color: inherit; text-decoration: none; }
 }
 
 .site-nav a,
+.site-nav button,
 .nav-link-button { transition: color 0.2s var(--ease); }
 .site-nav a:hover,
+.site-nav button:hover,
 .nav-link-button:hover { color: var(--ink); }
 
 .nav-link-button {
@@ -128,6 +130,8 @@ a { color: inherit; text-decoration: none; }
     font: inherit;
     padding: 0;
 }
+
+.site-nav button { font-family: inherit; cursor: pointer; }
 
 .nav-cta {
     display: inline-flex;
@@ -988,13 +992,13 @@ body { background: var(--bg); color: var(--ink); letter-spacing: 0; }
 .brand-mark { color: var(--brand); }
 .brand-name { color: var(--ink); font-size: 15px; }
 .site-nav { gap: 8px; font-size: 14px; }
-.site-nav a, .nav-link-button {
+.site-nav a, .site-nav button, .nav-link-button {
     border-radius: 10px;
     color: var(--ink-soft);
     padding: 9px 12px;
     transition: background .18s var(--ease), color .18s var(--ease), transform .18s var(--ease);
 }
-.site-nav a:hover, .nav-link-button:hover { background: var(--brand-tint); color: var(--brand-deep); transform: translateY(-1px); }
+.site-nav a:hover, .site-nav button:hover, .nav-link-button:hover { background: var(--brand-tint); color: var(--brand-deep); transform: translateY(-1px); }
 .nav-cta {
     border: 1px solid #b8d2f6;
     border-radius: 12px;

@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 const DISTRICTS = [
   ["tp", "基北區", "臺北市、新北市、基隆市"],
   ["ilan", "宜蘭區", "宜蘭縣"],
@@ -19,9 +21,18 @@ const DISTRICTS = [
 ] as const;
 
 export default function Home() {
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+
+  useEffect(() => {
+    setSelectedDistrict(window.localStorage.getItem("jshs_district") || "");
+  }, []);
+
   const rememberDistrict = (district: string) => {
-    window.location.href = `/it_hs/${district}/`;
+    window.localStorage.setItem("jshs_district", district);
+    setSelectedDistrict(district);
   };
+
+  const selected = DISTRICTS.find(([code]) => code === selectedDistrict);
 
   return (
     <main className="min-h-screen bg-[#f6f8fb] text-[#172033]">
@@ -43,7 +54,10 @@ export default function Home() {
             你目前屬於哪一個就學區？
           </h1>
           <p className="mb-6 leading-8 text-slate-600">
-            先選擇就學區，網站會直接開啟對應地區的資料頁；之後的積分試算、落點分析與學校查詢都會使用該地區資料。
+            先記錄你所屬的就學區，之後進入積分試算、落點分析與學校查詢時，網站會套用對應地區資料。
+          </p>
+          <p className="mb-5 rounded-lg bg-blue-50 px-4 py-3 text-sm font-bold text-blue-700" aria-live="polite">
+            {selected ? `已記錄：${selected[1]}，你可以繼續瀏覽首頁。` : "尚未選擇就學區"}
           </p>
           <div className="grid max-h-[62vh] gap-3 overflow-y-auto pr-1 sm:grid-cols-2">
             {DISTRICTS.map(([code, label, areas]) => {
