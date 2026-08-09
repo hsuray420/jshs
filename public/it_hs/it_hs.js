@@ -94,6 +94,40 @@ function getDistrictRules() {
     return DISTRICT_RULES[getSelectedDistrict()] || null;
 }
 
+function showDistrictUnavailablePage() {
+    const districtCode = getSelectedDistrict();
+    const rules = getDistrictRules();
+    if (!districtCode || !rules || rules.available !== false) return false;
+
+    const district = DISTRICT_OPTIONS[districtCode] || { label: districtCode, areas: '' };
+    const main = document.querySelector('main');
+    const nav = document.querySelector('.header-nav-wrap');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const badge = document.querySelector('[data-current-district-label]');
+    const modal = document.getElementById('districtModal');
+
+    if (badge) badge.textContent = `目前：${district.label}`;
+    if (modal) modal.hidden = true;
+    if (nav) nav.hidden = true;
+    if (mobileMenu) mobileMenu.classList.add('hidden');
+    document.title = `${district.label}資料建置中｜全國國中升學資訊網`;
+
+    if (!main) return true;
+    main.innerHTML = `
+        <section class="section-panel panel-card max-w-3xl mx-auto my-10 text-center">
+            <p class="text-xs uppercase tracking-[0.18em] text-neo-accent font-bold mb-3">就學區資料建置中</p>
+            <h1 class="section-title">${escapeHtml(district.label)}功能尚未開放</h1>
+            <p class="section-copy mb-6">${escapeHtml(district.areas || district.label)}的免試入學規則、積分試算、落點分析與學校資料仍在整理中。目前網站先開放中投區與基北區的基本功能，其他就學區完成後會陸續上線。</p>
+            <div class="grid gap-3 sm:grid-cols-3">
+                <a class="ui-btn ui-btn-primary" href="/it_hs/ct/">查看中投區</a>
+                <a class="ui-btn" href="/it_hs/tp/">查看基北區</a>
+                <a class="ui-btn" href="/jshs/jshs.html">回首頁</a>
+            </div>
+        </section>
+    `;
+    return true;
+}
+
 const topicPages = {
     'program-general': { eyebrow: '學制介紹 / 普通高中', title: '普通高中：把學科基礎走得更穩。', intro: '普通高中以學科學習為主，適合想累積國英數、社會與自然基礎，並保留大學多元升學選擇的學生。', points: [['學習重點', '以核心學科、閱讀理解與探究能力為主要訓練。'], ['適合特質', '喜歡系統整理知識，能長期投入學科準備。'], ['下一步', '比較學校課程、特色班與通勤距離，再安排志願。']], action: '查看中投區學校', actionPage: 'schools' },
     'program-vocational': { eyebrow: '學制介紹 / 技術型高中', title: '技術型高中：在實作裡找到專業。', intro: '技術型高中強調專業科目、實作課程與證照能力，讓學生在高中階段逐步建立可延伸的技術基礎。', points: [['學習重點', '專業課程、實習、專題與技術證照並行。'], ['適合特質', '對資訊、設計、餐飲、機械或商管等領域有興趣。'], ['下一步', '從科別與校內設備開始比較，確認自己想投入的方向。']], action: '瀏覽技術型高中', actionPage: 'schools' },
@@ -1443,6 +1477,10 @@ function initSchools() {
 window.addEventListener('DOMContentLoaded', () => {
     initDistrictPicker();
     toggleMobileMenu();
+    if (showDistrictUnavailablePage()) {
+        initLineFloatingLink();
+        return;
+    }
     initPageRouter();
     initCalculator();
     initLineFloatingLink();
