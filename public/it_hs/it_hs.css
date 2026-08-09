@@ -2529,6 +2529,21 @@ header.site-header { background: rgba(255,255,255,.92) !important; border-bottom
 }
 /* District selection is shown only when the generic it_hs entry first loads. */
 .district-modal[hidden] { display: none; }
+.current-district-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #2563eb;
+    color: #fff;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .02em;
+    vertical-align: middle;
+    white-space: nowrap;
+}
 .district-modal {
     position: fixed;
     inset: 0;
@@ -2576,5 +2591,6 @@ header.site-header { background: rgba(255,255,255,.92) !important; border-bottom
     .district-modal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 430px) {
+    .current-district-badge { display: table; margin: 4px 0 0; font-size: .68rem; }
     .district-modal-grid { grid-template-columns: 1fr; }
 }

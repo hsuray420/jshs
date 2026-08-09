@@ -37,7 +37,15 @@ function getSelectedDistrict() {
         : (DISTRICT_CODES.includes(queryDistrict) ? queryDistrict : '');
 }
 
+function updateCurrentDistrictBadge() {
+    const badge = document.querySelector('[data-current-district-label]');
+    if (!badge) return;
+    const district = DISTRICT_OPTIONS[getSelectedDistrict()];
+    badge.textContent = district ? `目前：${district.label}` : '尚未選擇就學區';
+}
+
 function initDistrictPicker() {
+    updateCurrentDistrictBadge();
     const skipOnce = sessionStorage.getItem('jshs_district_skip_once');
     sessionStorage.removeItem('jshs_district_skip_once');
     if (skipOnce === 'true') return;
