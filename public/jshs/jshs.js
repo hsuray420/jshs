@@ -1,7 +1,20 @@
 const targetDate = new Date("2027-05-16T08:00:00").getTime();
 const DISTRICTS = {
-    ct: '中投區',
-    tp: '基北區'
+    tp: { label: '基北區', areas: '臺北市、新北市、基隆市', ready: true },
+    ilan: { label: '宜蘭區', areas: '宜蘭縣' },
+    'taoyuan-lienchiang': { label: '桃連區', areas: '桃園市、連江縣' },
+    'hsinchu-miaoli': { label: '竹苗區', areas: '新竹市、新竹縣、苗栗縣' },
+    ct: { label: '中投區', areas: '臺中市、南投縣', ready: true },
+    changhua: { label: '彰化區', areas: '彰化縣' },
+    yunlin: { label: '雲林區', areas: '雲林縣' },
+    chiayi: { label: '嘉義區', areas: '嘉義市、嘉義縣' },
+    tainan: { label: '臺南區', areas: '臺南市' },
+    kaohsiung: { label: '高雄區', areas: '高雄市' },
+    pingtung: { label: '屏東區', areas: '屏東縣' },
+    hualien: { label: '花蓮區', areas: '花蓮縣' },
+    taitung: { label: '臺東區', areas: '臺東縣' },
+    penghu: { label: '澎湖區', areas: '澎湖縣' },
+    kinmen: { label: '金門區', areas: '金門縣' }
 };
 
 function updateCountdown() {
@@ -36,7 +49,7 @@ updateCountdown();
 setInterval(updateCountdown, 1000);
 
 function updateDistrictUI(district) {
-    const label = DISTRICTS[district] || '';
+    const label = DISTRICTS[district]?.label || '';
     const status = document.getElementById('districtStatus');
     const mini = document.getElementById('districtMini');
     const miniLabel = document.querySelector('[data-district-mini-label]');
@@ -50,6 +63,22 @@ function updateDistrictUI(district) {
         mini.hidden = !label;
         miniLabel.textContent = label;
     }
+}
+
+function renderDistrictChoices() {
+    const entries = Object.entries(DISTRICTS);
+    const modalGrid = document.querySelector('[data-district-choice-grid]');
+    const regionGrid = document.querySelector('[data-district-region-grid]');
+    const card = (code, district, compact = false) => {
+        const ready = district.ready;
+        return `<button class="${compact ? 'region-card' : 'district-choice'} ${ready ? 'is-ready' : ''}" type="button" data-district-choice="${code}" data-district-label="${district.label}">
+            <span>${ready ? (code === 'ct' ? '您目前所在的區域' : '基本功能已開放') : '資料建置中'}</span>
+            <strong>${district.label}</strong>
+            <small>${district.areas}</small>
+        </button>`;
+    };
+    if (modalGrid) modalGrid.innerHTML = entries.map(([code, district]) => card(code, district)).join('');
+    if (regionGrid) regionGrid.innerHTML = entries.map(([code, district]) => card(code, district, true)).join('');
 }
 
 function openDistrictModal() {
@@ -77,6 +106,7 @@ function chooseDistrict(district) {
 }
 
 function initDistrictPicker() {
+    renderDistrictChoices();
     const selected = '';
     updateDistrictUI(selected);
     if (!selected) {

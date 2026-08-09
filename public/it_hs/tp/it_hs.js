@@ -19,7 +19,20 @@ function getSelectedDistrict() {
 
 const DISTRICT_RULES = {
     ct: { label: '基北區', totalMax: 100, examMax: 30, examUnit: '111 點', otherMax: 70 },
-    tp: { label: '基北區', totalMax: 108, examMax: 36, examUnit: '36 分', otherMax: 72 }
+    tp: { label: '基北區', totalMax: 108, examMax: 36, examUnit: '36 分', otherMax: 72 },
+    ilan: { label: '宜蘭區', available: false },
+    'taoyuan-lienchiang': { label: '桃連區', available: false },
+    'hsinchu-miaoli': { label: '竹苗區', available: false },
+    changhua: { label: '彰化區', available: false },
+    yunlin: { label: '雲林區', available: false },
+    chiayi: { label: '嘉義區', available: false },
+    tainan: { label: '臺南區', available: false },
+    kaohsiung: { label: '高雄區', available: false },
+    pingtung: { label: '屏東區', available: false },
+    hualien: { label: '花蓮區', available: false },
+    taitung: { label: '臺東區', available: false },
+    penghu: { label: '澎湖區', available: false },
+    kinmen: { label: '金門區', available: false }
 };
 
 function getDistrictRules() {
@@ -682,6 +695,9 @@ function initCalculator() {
     const examResultUnit = document.getElementById('examResultUnit');
     const totalResultUnit = document.getElementById('totalResultUnit');
     if (label) label.textContent = `${rules.label}免試入學`;
+    if (rules.available === false && intro) {
+        intro.textContent = `${rules.label}積分試算規則正在建置中；目前先完成頁面架構，正式規則確認後會在此區開放。`;
+    }
     if (intro && isTaipei) intro.textContent = '基北區免試入學採三大核心比序：志願序、多元學習表現、國中教育會考，總分 108 分。';
     if (examTileValue) examTileValue.innerHTML = `${rules.examMax} <small>分</small>`;
     if (otherTileValue) otherTileValue.innerHTML = `${rules.otherMax} <small>分</small>`;
@@ -1019,7 +1035,7 @@ function getSchoolDataConfig() {
 
 function useEmbeddedSchoolsData() {
     const config = getSchoolDataConfig();
-    if (config.district === 'tp') return false;
+    if (config.district !== 'ct') return false;
     const source = window[config.dataVar];
     if (!Array.isArray(source) || source.length === 0) return false;
     allSchools = source.map(school => ({ ...school }));
@@ -1308,6 +1324,10 @@ function initSchools() {
     if (!grid || !summary) return;
 
     const config = getSchoolDataConfig();
+    if (!config.csvPath) {
+        summary.textContent = `${config.district} 學校資料建置中，完成後會在此區更新。`;
+        return;
+    }
 
     const downloadLink = document.getElementById('schoolsCsvDownload');
     if (downloadLink) downloadLink.href = config.csvPath;

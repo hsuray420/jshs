@@ -1038,7 +1038,8 @@ body { background: var(--bg); color: var(--ink); letter-spacing: 0; }
 .tool-icon { background: var(--brand-tint); color: var(--brand-deep); }
 .district-modal { padding: 24px; }
 .district-modal-panel { max-width: 680px; padding: 32px; }
-.district-modal-grid { gap: 16px; }
+.district-modal-panel { max-height: 90vh; overflow-y: auto; }
+.district-modal-grid { gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .district-choice { min-height: 148px; border-radius: var(--radius-md); padding: 20px; transition: background .18s var(--ease), border-color .18s var(--ease), transform .18s var(--ease), box-shadow .18s var(--ease); }
 .district-choice.is-ready:hover { background: #f8fbff; border-color: #8ab4f8; box-shadow: 0 8px 20px rgba(26,115,232,.10); transform: translateY(-2px); }
 .pathway-modal { padding: 24px; }
@@ -1058,4 +1059,5 @@ body { background: var(--bg); color: var(--ink); letter-spacing: 0; }
     .tool-row { gap: 12px; }
     .district-mini { bottom: 82px; left: 12px; right: 12px; }
     .line-floating-link { bottom: 14px; right: 14px; }
+    .district-modal-grid { grid-template-columns: 1fr; }
 }

@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>就學區資料載入中</title>
+</head>
+<body>
+    <p>正在開啟就學區資料，請稍候。</p>
+    <script>
+        const parts = window.location.pathname.split('/').filter(Boolean);
+        const district = parts[parts.indexOf('it_hs') + 1] || 'ct';
+        window.location.replace(`/it_hs/it_hs.html?district=${encodeURIComponent(district)}`);
+    </script>
+</body>
+</html>

@@ -16,19 +16,8 @@
             <p class="eyebrow">就學區選擇</p>
             <h2 id="district-modal-title">你目前屬於哪一個就學區？</h2>
             <p>先選擇就學區，平台會直接開啟對應地區的資料頁，之後在積分試算、落點分析與學校查詢中使用該地區資料。</p>
-            <div class="district-modal-grid">
-                <button class="district-choice is-ready" type="button" data-district-choice="ct" data-district-label="中投區">
-                    <span>可使用</span>
-                    <strong>中投區</strong>
-                    <small>臺中市、南投縣與共同就學區</small>
-                </button>
-                <button class="district-choice is-ready" type="button" data-district-choice="tp" data-district-label="基北區">
-                    <span>基本功能已開放</span>
-                    <strong>基北區</strong>
-                    <small>基隆市、臺北市、新北市</small>
-                </button>
-            </div>
-            <p class="district-modal-foot">選完會先留在首頁，不會自動跳頁。</p>
+            <div class="district-modal-grid" data-district-choice-grid></div>
+            <p class="district-modal-foot">選完會直接開啟該就學區的資料頁。</p>
         </div>
     </div>
 
@@ -59,31 +48,10 @@
                 <div class="region-copy">
                     <p class="eyebrow">全國升學服務平台</p>
                     <h1 id="region-title">你目前屬於哪一個就學區？</h1>
-                    <p>先選擇所在地區，平台會記住你的就學區，後續在試算、落點與查校時套用。你仍會留在首頁，可以慢慢看完資訊再前往功能頁。</p>
+                    <p>先選擇所在地區，平台會直接開啟對應的資料頁，後續在試算、落點與查校時套用該區規則。</p>
                     <div id="districtStatus" class="district-status" aria-live="polite">尚未選擇就學區</div>
                 </div>
-                <div class="region-grid" aria-label="選擇就學區">
-                    <button class="region-card is-ready" type="button" data-district-choice="ct" data-district-label="中投區">
-                        <span class="region-status">開發中，可試用</span>
-                        <strong>中投區</strong>
-                        <span>臺中市、南投縣與共同就學區資料</span>
-                    </button>
-                    <button class="region-card is-ready" type="button" data-district-choice="tp" data-district-label="基北區">
-                        <span class="region-status">基本功能已開放</span>
-                        <strong>基北區</strong>
-                        <span>基隆市、臺北市、新北市</span>
-                    </button>
-                    <button class="region-card" type="button" disabled>
-                        <span class="region-status">即將開放</span>
-                        <strong>南部區域</strong>
-                        <span>規劃中</span>
-                    </button>
-                    <button class="region-card" type="button" disabled>
-                        <span class="region-status">即將開放</span>
-                        <strong>東部與離島</strong>
-                        <span>規劃中</span>
-                    </button>
-                </div>
+                <div class="region-grid" data-district-region-grid aria-label="選擇就學區"></div>
             </div>
         </section>
 
