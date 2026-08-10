@@ -49,8 +49,16 @@ const worker = {
     // extension-normalising router: doing so can serve an earlier cached
     // HTML/CSS/JS revision. Route it, and its shared token stylesheet,
     // straight to the versioned asset binding.
-    if (url.pathname === "/design-tokens.css" || url.pathname.startsWith("/it_hs/")) {
+    if (url.pathname === "/design-tokens.css") {
       return env.ASSETS.fetch(request);
+    }
+
+    if (url.pathname.startsWith("/it_hs/")) {
+      const assetPath = url.pathname === "/it_hs/it_hs" ? "/it_hs/it_hs.html" : (
+        url.pathname.endsWith("/") ? `${url.pathname}index.html` : url.pathname
+      );
+      const assetUrl = new URL(assetPath, request.url);
+      return env.ASSETS.fetch(new Request(assetUrl, request));
     }
 
     return handler.fetch(request, env, ctx);

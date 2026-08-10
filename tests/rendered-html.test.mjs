@@ -14,6 +14,7 @@ const globalCssUrl = new URL("../app/globals.css", import.meta.url);
 const districtCssUrl = new URL("../public/it_hs/it_hs.css", import.meta.url);
 const tokenCssUrl = new URL("../public/design-tokens.css", import.meta.url);
 const workerUrl = new URL("../worker/index.ts", import.meta.url);
+const wranglerConfigUrl = new URL("../wrangler.jsonc", import.meta.url);
 
 test("root route sends visitors to the public homepage", async () => {
   const page = await readFile(appPageUrl, "utf8");
@@ -120,10 +121,16 @@ test("homepage and district guide share one decision visual token system", async
   assert.match(districtCss, /var\(--jshs-radius-card\)/);
 });
 
-test("shared visual token stylesheet is served by the Worker asset binding", async () => {
-  const worker = await readFile(workerUrl, "utf8");
+test("shared visual token stylesheet and static guide are served by the Worker asset binding", async () => {
+  const [worker, config] = await Promise.all([
+    readFile(workerUrl, "utf8"),
+    readFile(wranglerConfigUrl, "utf8"),
+  ]);
 
   assert.match(worker, /url\.pathname === "\/design-tokens\.css"/);
   assert.match(worker, /url\.pathname\.startsWith\("\/it_hs\/"\)/);
+  assert.match(worker, /url\.pathname === "\/it_hs\/it_hs"/);
+  assert.match(worker, /new Request\(assetUrl, request\)/);
+  assert.match(config, /"run_worker_first": \["\/it_hs\/\*", "\/design-tokens\.css"\]/);
   assert.match(worker, /return env\.ASSETS\.fetch\(request\)/);
 });
