@@ -1005,6 +1005,7 @@ function schoolMatchesFilter(school, filter) {
     if (filter === '男校' || filter === '女校') return school['男女校'] === filter;
     if (filter === '資優') return Boolean(school['資優班/特色班']);
     if (filter === '有分數') return Boolean(school['最低錄取分數']);
+    if (filter === '有名額') return Number(school['招生名額'] || school['簡章招生名額']) > 0;
     if (filter === '有公開科別') return Number(school.__publicDepartmentCount) > 0;
     return true;
 }
