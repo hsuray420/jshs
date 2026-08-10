@@ -1123,9 +1123,9 @@ function renderSchools() {
             gender: item.groupName || item.levelInfo || ''
         }));
         const shownPrograms = (programs.length ? programs : webPrograms).slice(0, 24);
-        const score = school['最低錄取分數'] || '待補';
+        const score = school['最低錄取分數'] || '尚未公告（官方未提供）';
         const scoreYear = school['分數年度'] ? `${school['分數年度']}年` : '未公告';
-        const quotaBlank = school['招生名額'] || '空白保留';
+        const quotaBlank = school['招生名額'] || '尚未公告（官方未提供）';
         const publicClass = school['公私立'] === '私立' ? 'is-private' : 'is-public';
         const website = school['官網'] || '#';
         return `
