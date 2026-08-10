@@ -925,6 +925,8 @@ function initCalculator() {
 
 let allSchools = [];
 let activeSchoolFilter = 'all';
+let publicSchoolIndex = [];
+let publicSchoolIndexByKey = new Map();
 
 function parseCsv(text) {
     const rows = [];
@@ -1003,7 +1005,45 @@ function schoolMatchesFilter(school, filter) {
     if (filter === '男校' || filter === '女校') return school['男女校'] === filter;
     if (filter === '資優') return Boolean(school['資優班/特色班']);
     if (filter === '有分數') return Boolean(school['最低錄取分數']);
+    if (filter === '有公開科別') return Number(school.__publicDepartmentCount) > 0;
     return true;
+}
+
+function normalizeSchoolKey(value) {
+    return String(value || '')
+        .replace(/臺/g, '台')
+        .replace(/[（）()\s·．.、，,「」『』]/g, '')
+        .replace(/(國立|市立|縣立|財團法人|私立|高級中等學校|高級中學|高工|高商|家商|家事商業|農工|水產|海事|商工)$/g, '')
+        .toLowerCase();
+}
+
+function buildPublicSchoolIndex(records) {
+    publicSchoolIndex = Array.isArray(records) ? records : [];
+    publicSchoolIndexByKey = new Map();
+    publicSchoolIndex.forEach(record => {
+        const code = String(record.code || '').trim();
+        const nameKey = normalizeSchoolKey(record.name);
+        [code, nameKey].filter(Boolean).forEach(key => {
+            const bucket = publicSchoolIndexByKey.get(key) || [];
+            bucket.push(record);
+            publicSchoolIndexByKey.set(key, bucket);
+        });
+    });
+}
+
+function enrichSchoolsWithPublicIndex(schools) {
+    return schools.map(school => {
+        const code = String(school['學校代碼'] || '').trim();
+        const nameKey = normalizeSchoolKey(school['學校名稱']);
+        const matches = publicSchoolIndexByKey.get(code) || publicSchoolIndexByKey.get(nameKey) || [];
+        const unique = [...new Map(matches.map(item => [`${item.deptCode || ''}:${item.deptName || ''}:${item.levelInfo || ''}`, item])).values()];
+        return {
+            ...school,
+            __publicDepartmentCount: unique.length,
+            __publicDepartments: unique,
+            __publicSource: unique.length ? (window.JSHS_SITE_CONFIG?.publicSchoolIndexSource || '') : ''
+        };
+    });
 }
 
 function normalizedSearchText(value) {
@@ -1065,6 +1105,7 @@ function renderSchools() {
             school['學校名稱'], school['縣市'], school['區'], school['地址'],
             school['公私立'], school['招生區'], school['學制分類'],
             school['男女校'], school['科系與名額'], school['最低錄取分數'],
+            ...((school.__publicDepartments || []).map(item => `${item.deptName || ''} ${item.groupName || ''} ${item.levelInfo || ''}`)),
             ...schoolSearchAliases(school)
         ].map(normalizedSearchText).join(' ');
         return schoolMatchesFilter(school, activeSchoolFilter) && (!keyword || haystack.includes(keyword));
@@ -1103,7 +1144,9 @@ function renderSchools() {
                     <dt>招生名額</dt><dd>${escapeHtml(quotaBlank)}</dd>
                     <dt>錄取分數</dt><dd>${escapeHtml(score)}</dd>
                     <dt>特色班</dt><dd>${escapeHtml(school['資優班/特色班'] || '請查官網')}</dd>
+                    ${school.__publicDepartmentCount ? `<dt>公開科別</dt><dd>${school.__publicDepartmentCount} 筆（公開索引）</dd>` : ''}
                 </dl>
+                ${school.__publicDepartmentCount ? `<div class="school-public-index"><span>公開科別索引</span><p>${escapeHtml((school.__publicDepartments || []).slice(0, 8).map(item => item.deptName || item.levelInfo || '').filter(Boolean).join('、'))}${school.__publicDepartmentCount > 8 ? '…' : ''}</p><a href="${escapeHtml(school.__publicSource)}" target="_blank" rel="noopener noreferrer">查看原始資料</a></div>` : ''}
                 <div class="school-programs">
                     <button type="button" class="school-program-toggle" aria-expanded="false">
                         <span>查看科系與名額</span>
@@ -1174,7 +1217,7 @@ function useEmbeddedSchoolsData() {
     if (config.district !== 'ct') return false;
     const source = window[config.dataVar];
     if (!Array.isArray(source) || source.length === 0) return false;
-    allSchools = source.map(school => ({ ...school }));
+    allSchools = enrichSchoolsWithPublicIndex(source.map(school => ({ ...school })));
     renderSchools();
     return true;
 }
@@ -1468,13 +1511,23 @@ function initSchools() {
     const downloadLink = document.getElementById('schoolsCsvDownload');
     if (downloadLink) downloadLink.href = config.csvPath;
 
-    fetch(config.csvPath)
-        .then(response => {
+    const indexPath = window.JSHS_SITE_CONFIG?.publicSchoolIndexPath;
+    const indexPromise = indexPath
+        ? fetch(indexPath).then(response => response.ok ? response.json() : []).catch(() => [])
+        : Promise.resolve([]);
+    Promise.all([
+        fetch(config.csvPath).then(response => {
             if (!response.ok) throw new Error('CSV load failed');
             return response.text();
-        })
-        .then(text => {
-            allSchools = parseCsv(text);
+        }),
+        indexPromise
+    ])
+        .then(([text, index]) => {
+            buildPublicSchoolIndex(index);
+            allSchools = enrichSchoolsWithPublicIndex(parseCsv(text));
+            const matched = allSchools.filter(school => school.__publicDepartmentCount > 0).length;
+            const trust = document.getElementById('schoolDataTrust');
+            if (trust) trust.innerHTML = `本站校別資料 ${allSchools.length} 所，已與公開科別索引交叉比對 ${matched} 所；公開索引不含招生名額，名額與錄取分數仍以各區官方公告為準。<a href="${escapeHtml(window.JSHS_SITE_CONFIG?.publicSchoolIndexSource || '#')}" target="_blank" rel="noopener noreferrer">查看來源</a>`;
             renderSchools();
         })
         .catch(() => {
