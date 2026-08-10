@@ -124,5 +124,6 @@ test("shared visual token stylesheet is served by the Worker asset binding", asy
   const worker = await readFile(workerUrl, "utf8");
 
   assert.match(worker, /url\.pathname === "\/design-tokens\.css"/);
+  assert.match(worker, /url\.pathname\.startsWith\("\/it_hs\/"\)/);
   assert.match(worker, /return env\.ASSETS\.fetch\(request\)/);
 });

@@ -45,10 +45,11 @@ const worker = {
       }, allowedWidths);
     }
 
-    // Vinext only registers public files it discovers in the route manifest.
-    // This stylesheet is intentionally shared by the App Router and the
-    // standalone /it_hs guide, so route it directly to the static binding.
-    if (url.pathname === "/design-tokens.css") {
+    // The standalone guide is static and must not pass through Vinext's
+    // extension-normalising router: doing so can serve an earlier cached
+    // HTML/CSS/JS revision. Route it, and its shared token stylesheet,
+    // straight to the versioned asset binding.
+    if (url.pathname === "/design-tokens.css" || url.pathname.startsWith("/it_hs/")) {
       return env.ASSETS.fetch(request);
     }
 
