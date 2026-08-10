@@ -1041,6 +1041,7 @@ function enrichSchoolsWithPublicIndex(schools) {
             ...school,
             __publicDepartmentCount: unique.length,
             __publicDepartments: unique,
+            __courseDisplay: school['科系與名額'] || unique.map(item => `${item.deptName || item.levelInfo || '科別'}（網路資料）`).join('；'),
             __publicSource: unique.length ? (window.JSHS_SITE_CONFIG?.publicSchoolIndexSource || '') : ''
         };
     });
@@ -1112,11 +1113,16 @@ function renderSchools() {
     });
     const sorted = sortSchools(filtered, sortValue);
 
-    summary.textContent = `共 ${allSchools.length} 所，符合條件 ${sorted.length} 所。排序依「${sort?.selectedOptions?.[0]?.textContent || '排名'}」，錄取分數空白代表目前無穩定公開資料。`;
+    summary.textContent = `共 ${allSchools.length} 所，符合條件 ${sorted.length} 所。排序依「${sort?.selectedOptions?.[0]?.textContent || '排名'}」；未公告欄位會標示資料狀態。`;
     empty.classList.toggle('hidden', sorted.length > 0);
     grid.innerHTML = sorted.map(school => {
         const programs = programItems(school['科系與名額']);
-        const shownPrograms = programs.slice(0, 24);
+        const webPrograms = (school.__publicDepartments || []).map(item => ({
+            name: item.deptName || item.levelInfo || '科別未命名',
+            quota: '尚未公告',
+            gender: item.groupName || item.levelInfo || ''
+        }));
+        const shownPrograms = (programs.length ? programs : webPrograms).slice(0, 24);
         const score = school['最低錄取分數'] || '待補';
         const scoreYear = school['分數年度'] ? `${school['分數年度']}年` : '未公告';
         const quotaBlank = school['招生名額'] || '空白保留';
@@ -1143,10 +1149,10 @@ function renderSchools() {
                     <dt>簡章名額</dt><dd>${escapeHtml(school['簡章招生名額'] || '待公告')}</dd>
                     <dt>招生名額</dt><dd>${escapeHtml(quotaBlank)}</dd>
                     <dt>錄取分數</dt><dd>${escapeHtml(score)}</dd>
-                    <dt>特色班</dt><dd>${escapeHtml(school['資優班/特色班'] || '請查官網')}</dd>
-                    ${school.__publicDepartmentCount ? `<dt>公開科別</dt><dd>${school.__publicDepartmentCount} 筆（公開索引）</dd>` : ''}
+                    <dt>特色班</dt><dd>${escapeHtml(school['資優班/特色班'] || '尚未公告（請查官方簡章）')}</dd>
+                    ${school.__publicDepartmentCount ? `<dt>科別資料</dt><dd>${school.__publicDepartmentCount} 筆網路資料</dd>` : ''}
                 </dl>
-                ${school.__publicDepartmentCount ? `<div class="school-public-index"><span>公開科別索引</span><p>${escapeHtml((school.__publicDepartments || []).slice(0, 8).map(item => item.deptName || item.levelInfo || '').filter(Boolean).join('、'))}${school.__publicDepartmentCount > 8 ? '…' : ''}</p><a href="${escapeHtml(school.__publicSource)}" target="_blank" rel="noopener noreferrer">查看原始資料</a></div>` : ''}
+                ${school.__publicDepartmentCount ? `<div class="school-public-index"><span>科別與課程</span><p>${escapeHtml((school.__publicDepartments || []).slice(0, 8).map(item => item.deptName || item.levelInfo || '').filter(Boolean).join('、'))}${school.__publicDepartmentCount > 8 ? '…' : ''}</p><a href="${escapeHtml(school.__publicSource)}" target="_blank" rel="noopener noreferrer">查看資料來源</a></div>` : ''}
                 <div class="school-programs">
                     <button type="button" class="school-program-toggle" aria-expanded="false">
                         <span>查看科系與名額</span>
@@ -1527,7 +1533,7 @@ function initSchools() {
             allSchools = enrichSchoolsWithPublicIndex(parseCsv(text));
             const matched = allSchools.filter(school => school.__publicDepartmentCount > 0).length;
             const trust = document.getElementById('schoolDataTrust');
-            if (trust) trust.innerHTML = `本站校別資料 ${allSchools.length} 所，已與公開科別索引交叉比對 ${matched} 所；公開索引不含招生名額，名額與錄取分數仍以各區官方公告為準。<a href="${escapeHtml(window.JSHS_SITE_CONFIG?.publicSchoolIndexSource || '#')}" target="_blank" rel="noopener noreferrer">查看來源</a>`;
+            if (trust) trust.innerHTML = `本站校別資料 ${allSchools.length} 所，已與網路科別資料交叉核對 ${matched} 所；網路資料不含招生名額，名額與錄取分數仍以各區官方公告為準。<a href="${escapeHtml(window.JSHS_SITE_CONFIG?.publicSchoolIndexSource || '#')}" target="_blank" rel="noopener noreferrer">查看資料來源</a>`;
             renderSchools();
         })
         .catch(() => {
