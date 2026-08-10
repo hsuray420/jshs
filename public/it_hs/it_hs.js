@@ -59,10 +59,6 @@ function updateCurrentDistrictBadge() {
 
 function initDistrictPicker() {
     updateCurrentDistrictBadge();
-    const skipOnce = sessionStorage.getItem('jshs_district_skip_once');
-    sessionStorage.removeItem('jshs_district_skip_once');
-    if (skipOnce === 'true') return;
-
     const modal = document.getElementById('districtModal');
     const grid = modal?.querySelector('[data-district-choice-grid]');
     if (!modal || !grid) return;
@@ -82,7 +78,12 @@ function initDistrictPicker() {
             window.location.replace(`/it_hs/${encodeURIComponent(district)}/`);
         });
     });
-    modal.hidden = false;
+    const open = () => { modal.hidden = false; };
+    const close = () => { modal.hidden = true; };
+    document.querySelectorAll('[data-district-picker]').forEach(button => button.addEventListener('click', open));
+    document.querySelectorAll('[data-close-district]').forEach(button => button.addEventListener('click', close));
+    modal.addEventListener('click', event => { if (event.target === modal) close(); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && !modal.hidden) close(); });
 }
 
 const DISTRICT_RULES = {

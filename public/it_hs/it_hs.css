@@ -2529,6 +2529,27 @@ header.site-header { background: rgba(255,255,255,.92) !important; border-bottom
 }
 /* District selection is shown only when the generic it_hs entry first loads. */
 .district-modal[hidden] { display: none; }
+.district-modal-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    border: 0;
+    background: transparent;
+    color: var(--neo-muted);
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+.district-switch-button {
+    border: 1px solid var(--neo-blueGray);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--neo-text);
+    padding: .5rem .75rem;
+    font: inherit;
+    font-size: .78rem;
+    font-weight: 700;
+    cursor: pointer;
+}
 .current-district-badge {
     display: inline-flex;
     align-items: center;
@@ -2555,6 +2576,7 @@ header.site-header { background: rgba(255,255,255,.92) !important; border-bottom
     backdrop-filter: blur(10px);
 }
 .district-modal-panel {
+    position: relative;
     width: min(760px, 100%);
     max-height: min(90vh, 760px);
     overflow-y: auto;
