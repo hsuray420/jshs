@@ -2865,6 +2865,38 @@ header.site-header { background: rgba(255,255,255,.92) !important; border-bottom
     .analysis-shell .wish-item-controls { grid-column: 2; justify-content: flex-start; }
 }
 
+/* Content-restructuring components: three decision tiers and mobile comparison cards. */
+.analysis-tier {
+    border: 1px solid var(--jshs-border);
+    border-radius: var(--jshs-radius-card);
+    background: #fff;
+    padding: var(--jshs-space-6);
+}
+.analysis-tier + .analysis-tier { margin-top: var(--jshs-space-6); }
+.analysis-tier-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--jshs-space-3); align-items: start; margin-bottom: var(--jshs-space-4); }
+.analysis-tier-head h3 { color: var(--jshs-ink); font-size: 1.15rem; font-weight: 900; margin: 0; }
+.analysis-tier-head p, .analysis-tier-empty { color: var(--jshs-muted); font-size: .88rem; line-height: 1.65; margin: .2rem 0 0; }
+.analysis-tier-head > strong { color: var(--jshs-muted); font-size: .8rem; white-space: nowrap; }
+.analysis-tier-cards { display: grid; gap: var(--jshs-space-4); grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.analysis-tier .analysis-card { height: 100%; }
+.wishlist-comparison-mobile { display: none; }
+.comparison-mobile-card { border: 1px solid var(--jshs-border); border-radius: var(--jshs-radius-control); background: #fff; padding: var(--jshs-space-4); }
+.comparison-mobile-card + .comparison-mobile-card { margin-top: var(--jshs-space-3); }
+.comparison-mobile-head { align-items: start; display: flex; gap: var(--jshs-space-3); justify-content: space-between; }
+.comparison-mobile-head strong { color: var(--jshs-ink); line-height: 1.45; }
+.comparison-mobile-card > p { color: var(--jshs-muted); font-size: .84rem; line-height: 1.6; margin: var(--jshs-space-3) 0; }
+.comparison-mobile-card dl { display: grid; gap: var(--jshs-space-2); margin: 0; }
+.comparison-mobile-card dl > div { display: grid; gap: var(--jshs-space-2); grid-template-columns: 7.5rem minmax(0, 1fr); }
+.comparison-mobile-card dt { color: var(--jshs-muted); font-size: .78rem; }
+.comparison-mobile-card dd { color: var(--jshs-ink); font-size: .84rem; margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 768px) {
+    .analysis-tier { padding: var(--jshs-space-4); }
+    .analysis-tier-head { grid-template-columns: auto minmax(0, 1fr); }
+    .analysis-tier-head > strong { grid-column: 2; }
+    .wishlist-comparison-scroll { display: none; }
+    .wishlist-comparison-mobile { display: grid; gap: var(--jshs-space-3); }
+}
+
 /* Final cascade: legacy compatibility rules above may be retained, but visual
    primitives always resolve through the public JSHS token contract. */
 :root {

@@ -95,6 +95,9 @@ test("district guide persists a private local planning workspace and exposes com
   assert.match(page, /id="faqContext"/);
   assert.match(script, /function getDistrictTimeline/);
   assert.match(script, /function renderFaqContext/);
+  assert.match(script, /item\.open = item\.dataset\.faqTopic === topic/);
+  assert.match(script, /wishlist-comparison-mobile/);
+  assert.match(script, /analysis-tier/);
 });
 
 test("homepage and district guide share one decision visual token system", async () => {

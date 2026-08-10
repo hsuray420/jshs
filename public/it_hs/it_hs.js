@@ -270,8 +270,10 @@ function renderFaqContext(page) {
         analysis: '你正在看落點：先閱讀推薦風險與「不保證錄取」的說明。',
         schools: '你正在比較學校：先確認校科、名額與正式簡章資料。'
     };
-    context.textContent = copy[topic];
-    Array.from(list.querySelectorAll('[data-faq-topic]')).sort((a, b) => Number(b.dataset.faqTopic === topic) - Number(a.dataset.faqTopic === topic)).forEach(item => list.appendChild(item));
+    context.textContent = `${copy[topic]} 已預先展開最相關的一題，其餘問題維持收合。`;
+    const items = Array.from(list.querySelectorAll('[data-faq-topic]'));
+    items.sort((a, b) => Number(b.dataset.faqTopic === topic) - Number(a.dataset.faqTopic === topic)).forEach(item => list.appendChild(item));
+    items.forEach(item => { item.open = item.dataset.faqTopic === topic; });
 }
 
 function showPage(page) {
@@ -680,7 +682,22 @@ function renderAnalysis() {
 
     summary.innerHTML = `你目前的估算分數 <strong>${totalPoints} / 100</strong> 落在「${userBand.label}」區間。以下依「與你程度最接近」優先列出前 ${rankedSchools.length} 所：穩定 ${counts['穩定'] || 0} 所、適中 ${counts['適中'] || 0} 所、挑戰 ${counts['挑戰'] || 0} 所。建議志願序前段放挑戰、中段放適中、後段放穩定。`;
 
-    results.innerHTML = rankedSchools.map(({ school, tier, closeness }) => {
+    const tierOrder = ['挑戰', '適中', '穩定'];
+    const tierGuidance = {
+        挑戰: '放在前段衝刺，但不要把它當成唯一選項。',
+        適中: '作為志願中段主力，兼顧目標與可行性。',
+        穩定: '保留在後段，降低只填高風險志願的壓力。'
+    };
+    const tierGroups = { 挑戰: [], 適中: [], 穩定: [] };
+    rankedSchools.forEach(item => {
+        const recommendation = getAnalysisRecommendation(userBand, item.tier);
+        tierGroups[recommendation.status].push(item);
+    });
+
+    results.innerHTML = tierOrder.map(status => {
+        const cards = tierGroups[status];
+        const badgeClass = status === '挑戰' ? 'is-challenge' : (status === '適中' ? 'is-balanced' : 'is-reachable');
+        const cardMarkup = cards.length ? cards.map(({ school, tier, closeness }) => {
         const recommendation = getAnalysisRecommendation(userBand, tier);
         const scoreText = school['最低錄取分數'] || '暫無公開分數';
         const quotaText = school['簡章招生名額'] || school['招生名額'] || '待公告';
@@ -710,6 +727,8 @@ function renderAnalysis() {
                 </div>
             </article>
         `;
+        }).join('') : '<p class="analysis-tier-empty">目前範圍內沒有此層推薦；調整範圍或顯示筆數即可重新整理。</p>';
+        return `<section class="analysis-tier ${badgeClass}" aria-labelledby="analysisTier${status}"><header class="analysis-tier-head"><span class="analysis-badge ${badgeClass}">${status}</span><div><h3 id="analysisTier${status}">${status}志願</h3><p>${tierGuidance[status]}</p></div><strong>${cards.length} 所</strong></header><div class="analysis-tier-cards">${cardMarkup}</div></section>`;
     }).join('');
 }
 
@@ -1442,12 +1461,15 @@ function renderWishlistComparison(wishSchools) {
         target.innerHTML = '<p class="comparison-empty">加入至少一間學校後，這裡會集中比較學制、門檻、名額、行政區、通勤與風險。</p>';
         return;
     }
-    target.innerHTML = `<div class="wishlist-comparison-scroll"><table><thead><tr><th>志願</th><th>風險</th><th>學制／類型</th><th>特色／科別</th><th>門檻／名額</th><th>行政區</th><th>單趟通勤</th></tr></thead><tbody>${wishSchools.map((school, index) => {
+    const comparisonRows = wishSchools.map((school, index) => {
         const { recommendation } = getWishlistAnalysisForSchool(school);
         const commute = currentPlan().commuteMinutes[school['學校代碼']] || '—';
         const feature = school['資優班/特色班'] || (school.__publicDepartments || []).slice(0, 2).map(item => item.deptName || item.levelInfo).filter(Boolean).join('、') || school['科系與名額']?.split('；')[0] || '待公告';
-        return `<tr><td><strong>${index + 1}. ${escapeHtml(school['學校名稱'])}</strong></td><td><span class="wish-analysis-badge ${recommendation.badgeClass}">${recommendation.status}</span><br><small>${escapeHtml(recommendation.detail)}</small></td><td>${escapeHtml(school['學制分類'] || '未提供')}<br><small>${escapeHtml(school['公私立'] || '未提供')}</small></td><td>${escapeHtml(feature)}</td><td>${escapeHtml(school['最低錄取分數'] || '待公告')}<br><small>名額 ${escapeHtml(school['簡章招生名額'] || school['招生名額'] || '待公告')}</small></td><td>${escapeHtml(school['區'] || school['縣市'] || '未提供')}</td><td>${escapeHtml(commute)}${commute !== '—' ? ' 分' : ''}</td></tr>`;
-    }).join('')}</tbody></table></div>`;
+        return { school, index, recommendation, commute, feature };
+    });
+    const rows = comparisonRows.map(({ school, index, recommendation, commute, feature }) => `<tr><td><strong>${index + 1}. ${escapeHtml(school['學校名稱'])}</strong></td><td><span class="wish-analysis-badge ${recommendation.badgeClass}">${recommendation.status}</span><br><small>${escapeHtml(recommendation.detail)}</small></td><td>${escapeHtml(school['學制分類'] || '未提供')}<br><small>${escapeHtml(school['公私立'] || '未提供')}</small></td><td>${escapeHtml(feature)}</td><td>${escapeHtml(school['最低錄取分數'] || '待公告')}<br><small>名額 ${escapeHtml(school['簡章招生名額'] || school['招生名額'] || '待公告')}</small></td><td>${escapeHtml(school['區'] || school['縣市'] || '未提供')}</td><td>${escapeHtml(commute)}${commute !== '—' ? ' 分' : ''}</td></tr>`).join('');
+    const cards = comparisonRows.map(({ school, index, recommendation, commute, feature }) => `<article class="comparison-mobile-card"><div class="comparison-mobile-head"><strong>${index + 1}. ${escapeHtml(school['學校名稱'])}</strong><span class="wish-analysis-badge ${recommendation.badgeClass}">${recommendation.status}</span></div><p>${escapeHtml(recommendation.detail)}</p><dl><div><dt>學制／類型</dt><dd>${escapeHtml(school['學制分類'] || '未提供')}／${escapeHtml(school['公私立'] || '未提供')}</dd></div><div><dt>特色／科別</dt><dd>${escapeHtml(feature)}</dd></div><div><dt>門檻／名額</dt><dd>${escapeHtml(school['最低錄取分數'] || '待公告')}／${escapeHtml(school['簡章招生名額'] || school['招生名額'] || '待公告')}</dd></div><div><dt>行政區／單趟通勤</dt><dd>${escapeHtml(school['區'] || school['縣市'] || '未提供')}／${escapeHtml(commute)}${commute !== '—' ? ' 分' : ''}</dd></div></dl></article>`).join('');
+    target.innerHTML = `<div class="wishlist-comparison-scroll"><table><thead><tr><th>志願</th><th>風險</th><th>學制／類型</th><th>特色／科別</th><th>門檻／名額</th><th>行政區</th><th>單趟通勤</th></tr></thead><tbody>${rows}</tbody></table></div><div class="wishlist-comparison-mobile">${cards}</div>`;
 }
 
 function wishlistContainsSchool(school) {
