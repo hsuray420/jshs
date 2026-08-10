@@ -1,0 +1,23 @@
+:root {
+  --jshs-navy: #173D78;
+  --jshs-blue: #2868D7;
+  --jshs-stable: #147A67;
+  --jshs-challenge: #BA6B18;
+  --jshs-page: #F6F9FD;
+  --jshs-surface: #FFFFFF;
+  --jshs-ink: #14213D;
+  --jshs-muted: #60708B;
+  --jshs-border: #DBE5F2;
+  --jshs-space-1: 4px;
+  --jshs-space-2: 8px;
+  --jshs-space-3: 12px;
+  --jshs-space-4: 16px;
+  --jshs-space-5: 20px;
+  --jshs-space-6: 24px;
+  --jshs-space-8: 32px;
+  --jshs-space-12: 48px;
+  --jshs-radius-card: 24px;
+  --jshs-radius-control: 12px;
+  --jshs-shadow-card: 0 18px 48px rgba(27, 64, 120, .11);
+  --jshs-shadow-raised: 0 24px 56px rgba(23, 61, 120, .18);
+}

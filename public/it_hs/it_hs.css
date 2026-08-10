@@ -224,16 +224,16 @@ header.site-header { background: rgba(255,255,255,.92) !important; border-bottom
    升學決策儀表板 2.0
    ========================================================= */
 :root {
-    --decision-navy: #173d78;
-    --decision-blue: #2868d7;
-    --decision-mint: #147a67;
-    --decision-amber: #ba6b18;
-    --decision-page: #f6f9fd;
-    --decision-ink: #14213d;
-    --decision-muted: #60708b;
-    --decision-line: #dbe5f2;
-    --decision-radius: 24px;
-    --decision-shadow: 0 18px 48px rgba(27, 64, 120, .11);
+    --decision-navy: var(--jshs-navy);
+    --decision-blue: var(--jshs-blue);
+    --decision-mint: var(--jshs-stable);
+    --decision-amber: var(--jshs-challenge);
+    --decision-page: var(--jshs-page);
+    --decision-ink: var(--jshs-ink);
+    --decision-muted: var(--jshs-muted);
+    --decision-line: var(--jshs-border);
+    --decision-radius: var(--jshs-radius-card);
+    --decision-shadow: var(--jshs-shadow-card);
 }
 
 body { background: var(--decision-page) !important; color: var(--decision-ink) !important; }
@@ -301,17 +301,140 @@ body { background: var(--decision-page) !important; color: var(--decision-ink) !
    macOS x Material visual pass
    ========================================================= */
 :root {
-    --bg: #f7f9fc;
-    --fg: #202124;
-    --muted: #5f6368;
-    --accent: #1a73e8;
-    --accent-light: #8ab4f8;
-    --neo-line: #e4e7eb;
-    --neo-shadow: 0 8px 24px rgba(32,33,36,.07);
-    --radius-xl: 20px;
+    --bg: var(--jshs-page);
+    --fg: var(--jshs-ink);
+    --muted: var(--jshs-muted);
+    --accent: var(--jshs-blue);
+    --accent-light: #8eb8f3;
+    --neo-line: var(--jshs-border);
+    --neo-shadow: var(--jshs-shadow-card);
+    --radius-xl: var(--jshs-radius-card);
     --radius-lg: 16px;
     --radius-md: 12px;
     --transition: 180ms cubic-bezier(.2,.8,.2,1);
+}
+
+/* =========================================================
+   Shared visual system final layer
+   Keep legacy class names, but resolve every core surface to
+   the same public design tokens used by the Next.js homepage.
+   ========================================================= */
+:root {
+    --bg: var(--jshs-page);
+    --fg: var(--jshs-ink);
+    --muted: var(--jshs-muted);
+    --accent: var(--jshs-blue);
+    --accent-light: #8eb8f3;
+    --neo-line: var(--jshs-border);
+    --neo-shadow: var(--jshs-shadow-card);
+    --radius-xl: var(--jshs-radius-card);
+    --radius-md: var(--jshs-radius-control);
+}
+
+body {
+    background: var(--jshs-page) !important;
+    color: var(--jshs-ink) !important;
+}
+
+.section-panel,
+.panel-card,
+.ui-card,
+.planner-dashboard,
+.wishlist-shell,
+.details-panel,
+.school-card,
+.analysis-summary-card,
+.analysis-result-card {
+    border-color: var(--jshs-border) !important;
+    border-radius: var(--jshs-radius-card) !important;
+    box-shadow: var(--jshs-shadow-card) !important;
+}
+
+.section-title,
+.planner-dashboard-copy h2,
+.wishlist-header .section-title,
+.planner-timeline h3 {
+    color: var(--jshs-ink) !important;
+    font-family: "Noto Sans TC", "Plus Jakarta Sans", sans-serif;
+    font-weight: 900;
+    letter-spacing: -.04em;
+}
+
+.section-title { font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.2; }
+.section-subtitle,
+.section-description,
+.planner-dashboard-copy > p,
+.wishlist-empty-desc,
+.school-empty,
+.comparison-empty { color: var(--jshs-muted) !important; line-height: 1.75; }
+
+.ui-btn,
+.ui-btn-primary,
+.district-switch-button,
+.school-filter,
+.wish-item button,
+.planner-task {
+    border-radius: var(--jshs-radius-control) !important;
+}
+
+.ui-btn,
+.district-switch-button {
+    border-color: var(--jshs-border) !important;
+    color: var(--jshs-navy) !important;
+}
+
+.ui-btn-primary,
+.district-switch-button:hover {
+    background: linear-gradient(135deg, var(--jshs-navy), var(--jshs-blue)) !important;
+    border-color: transparent !important;
+    color: #fff !important;
+    box-shadow: 0 8px 20px rgba(23, 61, 120, .25) !important;
+}
+
+.ui-btn:hover,
+.school-filter:hover,
+.wish-item button:hover {
+    border-color: #8eb8f3 !important;
+    box-shadow: var(--jshs-shadow-card) !important;
+}
+
+.school-filter.active,
+.analysis-score-pill,
+.calc-note-badge {
+    background: #e9f2ff !important;
+    border-color: #b7d1fb !important;
+    color: var(--jshs-blue) !important;
+}
+
+.planner-timeline-event b,
+.planner-task.is-complete b {
+    background: #eaf7f3 !important;
+    color: var(--jshs-stable) !important;
+}
+
+.planner-timeline-event b.is-pending,
+.planner-task b,
+.risk-challenge {
+    background: #fff3e7 !important;
+    color: var(--jshs-challenge) !important;
+}
+
+.wishlist-empty,
+.school-empty,
+.comparison-empty {
+    background: #fff !important;
+    border: 1px dashed #b7cbe5 !important;
+    border-radius: var(--jshs-radius-card) !important;
+    padding: var(--jshs-space-6) !important;
+}
+
+.ui-btn:focus-visible,
+.district-switch-button:focus-visible,
+.school-filter:focus-visible,
+.planner-task:focus-within,
+details > summary:focus-visible {
+    outline: 3px solid rgba(40, 104, 215, .28);
+    outline-offset: 3px;
 }
 
 body { background: var(--bg); color: var(--fg); letter-spacing: 0; }
@@ -2740,4 +2863,42 @@ header.site-header { background: rgba(255,255,255,.92) !important; border-bottom
     .analysis-shell .wishlist-comparison-scroll { max-width: 100%; min-width: 0; }
     .analysis-shell .wish-item { grid-template-columns: 44px minmax(0, 1fr) !important; }
     .analysis-shell .wish-item-controls { grid-column: 2; justify-content: flex-start; }
+}
+
+/* Final cascade: legacy compatibility rules above may be retained, but visual
+   primitives always resolve through the public JSHS token contract. */
+:root {
+    --bg: var(--jshs-page);
+    --fg: var(--jshs-ink);
+    --muted: var(--jshs-muted);
+    --accent: var(--jshs-blue);
+    --neo-line: var(--jshs-border);
+    --neo-shadow: var(--jshs-shadow-card);
+    --radius-xl: var(--jshs-radius-card);
+    --radius-md: var(--jshs-radius-control);
+}
+
+body { background: var(--jshs-page) !important; color: var(--jshs-ink) !important; }
+.section-panel, .panel-card, .ui-card, .planner-dashboard, .wishlist-shell, .details-panel, .school-card, .analysis-summary-card, .analysis-result-card {
+    border-color: var(--jshs-border) !important;
+    border-radius: var(--jshs-radius-card) !important;
+    box-shadow: var(--jshs-shadow-card) !important;
+}
+.ui-btn, .ui-btn-primary, .district-switch-button, .school-filter, .wish-item button, .planner-task { border-radius: var(--jshs-radius-control) !important; }
+.ui-btn-primary, .district-switch-button:hover {
+    background: linear-gradient(135deg, var(--jshs-navy), var(--jshs-blue)) !important;
+    border-color: transparent !important;
+    color: #fff !important;
+    box-shadow: 0 8px 20px rgba(23, 61, 120, .25) !important;
+}
+.ui-btn, .district-switch-button { border-color: var(--jshs-border) !important; color: var(--jshs-navy) !important; }
+.school-filter.active, .analysis-score-pill, .calc-note-badge { background: #e9f2ff !important; border-color: #b7d1fb !important; color: var(--jshs-blue) !important; }
+.planner-timeline-event b, .planner-task.is-complete b { background: #eaf7f3 !important; color: var(--jshs-stable) !important; }
+.planner-timeline-event b.is-pending, .planner-task b, .risk-challenge { background: #fff3e7 !important; color: var(--jshs-challenge) !important; }
+.wishlist-empty, .school-empty, .comparison-empty {
+    background: #fff !important;
+    border: 1px dashed #b7cbe5 !important;
+    border-radius: var(--jshs-radius-card) !important;
+    color: var(--jshs-muted) !important;
+    padding: var(--jshs-space-6) !important;
 }

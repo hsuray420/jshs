@@ -10,6 +10,9 @@ const districtScriptUrl = new URL("../public/it_hs/it_hs.js", import.meta.url);
 const districtIndexUrl = new URL("../public/it_hs/ilan/index.html", import.meta.url);
 const districtMetadataUrl = new URL("../public/it_hs/district-metadata.json", import.meta.url);
 const districtGuideUrl = new URL("../public/it_hs/it_hs.html", import.meta.url);
+const globalCssUrl = new URL("../app/globals.css", import.meta.url);
+const districtCssUrl = new URL("../public/it_hs/it_hs.css", import.meta.url);
+const tokenCssUrl = new URL("../public/design-tokens.css", import.meta.url);
 
 test("root route sends visitors to the public homepage", async () => {
   const page = await readFile(appPageUrl, "utf8");
@@ -91,4 +94,24 @@ test("district guide persists a private local planning workspace and exposes com
   assert.match(page, /id="faqContext"/);
   assert.match(script, /function getDistrictTimeline/);
   assert.match(script, /function renderFaqContext/);
+});
+
+test("homepage and district guide share one decision visual token system", async () => {
+  const [globalCss, districtGuide, districtCss, tokens] = await Promise.all([
+    readFile(globalCssUrl, "utf8"),
+    readFile(districtGuideUrl, "utf8"),
+    readFile(districtCssUrl, "utf8"),
+    readFile(tokenCssUrl, "utf8"),
+  ]);
+
+  assert.match(tokens, /--jshs-navy:\s*#173D78/i);
+  assert.match(tokens, /--jshs-blue:\s*#2868D7/i);
+  assert.match(tokens, /--jshs-stable:\s*#147A67/i);
+  assert.match(tokens, /--jshs-challenge:\s*#BA6B18/i);
+  assert.match(tokens, /--jshs-space-1:\s*4px/i);
+  assert.match(tokens, /--jshs-radius-card:\s*24px/i);
+  assert.match(globalCss, /@import url\("\/design-tokens\.css"\)/);
+  assert.match(districtGuide, /href="\/design-tokens\.css"/);
+  assert.match(districtCss, /Shared visual system final layer/);
+  assert.match(districtCss, /var\(--jshs-radius-card\)/);
 });
