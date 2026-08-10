@@ -6,12 +6,12 @@ const appPageUrl = new URL("../app/page.tsx", import.meta.url);
 const jshsPageUrl = new URL("../app/jshs/page.tsx", import.meta.url);
 const legacyJshsPageUrl = new URL("../app/jshs/jshs/page.tsx", import.meta.url);
 const legacyJshsHtmlUrl = new URL("../public/jshs/jshs.html", import.meta.url);
-const districtScriptUrl = new URL("../public/it_hs/it_hs.js", import.meta.url);
+const districtScriptUrl = new URL("../public/it_hs/guide.js", import.meta.url);
 const districtIndexUrl = new URL("../public/it_hs/ilan/index.html", import.meta.url);
 const districtMetadataUrl = new URL("../public/it_hs/district-metadata.json", import.meta.url);
-const districtGuideUrl = new URL("../public/it_hs/it_hs.html", import.meta.url);
+const districtGuideUrl = new URL("../public/it_hs/guide.htm", import.meta.url);
 const globalCssUrl = new URL("../app/globals.css", import.meta.url);
-const districtCssUrl = new URL("../public/it_hs/it_hs.css", import.meta.url);
+const districtCssUrl = new URL("../public/it_hs/guide.css", import.meta.url);
 const tokenCssUrl = new URL("../public/design-tokens.css", import.meta.url);
 const workerUrl = new URL("../worker/index.ts", import.meta.url);
 const wranglerConfigUrl = new URL("../wrangler.jsonc", import.meta.url);
@@ -59,7 +59,7 @@ test("unavailable districts show a clear construction page", async () => {
 test("districts with a school CSV open school search without scoring tools", async () => {
   const [script, page] = await Promise.all([
     readFile(districtScriptUrl, "utf8"),
-    readFile(new URL("../public/it_hs/it_hs.html", import.meta.url), "utf8"),
+    readFile(new URL("../public/it_hs/guide.htm", import.meta.url), "utf8"),
   ]);
 
   assert.match(script, /function isSchoolQueryOnlyMode\(\)/);
@@ -117,6 +117,7 @@ test("homepage and district guide share one decision visual token system", async
   assert.match(tokens, /--jshs-radius-card:\s*24px/i);
   assert.match(globalCss, /@import url\("\/design-tokens\.css"\)/);
   assert.match(districtGuide, /href="\/design-tokens\.css"/);
+  assert.match(districtGuide, /href="guide\.css\?v=20260810-1"/);
   assert.match(districtCss, /Shared visual system final layer/);
   assert.match(districtCss, /var\(--jshs-radius-card\)/);
 });
@@ -129,7 +130,7 @@ test("shared visual token stylesheet and static guide are served by the Worker a
 
   assert.match(worker, /url\.pathname === "\/design-tokens\.css"/);
   assert.match(worker, /url\.pathname\.startsWith\("\/it_hs\/"\)/);
-  assert.match(worker, /url\.pathname === "\/it_hs\/it_hs"/);
+  assert.match(worker, /url\.pathname !== "\/it_hs\/it_hs"/);
   assert.match(worker, /new Request\(assetUrl, request\)/);
   assert.match(config, /"html_handling": "none"/);
   assert.match(config, /"run_worker_first": true/);

@@ -53,10 +53,8 @@ const worker = {
       return env.ASSETS.fetch(request);
     }
 
-    if (url.pathname.startsWith("/it_hs/")) {
-      const assetPath = url.pathname === "/it_hs/it_hs" ? "/it_hs/it_hs.html" : (
-        url.pathname.endsWith("/") ? `${url.pathname}index.html` : url.pathname
-      );
+    if (url.pathname.startsWith("/it_hs/") && url.pathname !== "/it_hs/it_hs") {
+      const assetPath = url.pathname.endsWith("/") ? `${url.pathname}index.html` : url.pathname;
       const assetUrl = new URL(assetPath, request.url);
       return env.ASSETS.fetch(new Request(assetUrl, request));
     }
