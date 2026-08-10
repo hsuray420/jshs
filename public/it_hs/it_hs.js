@@ -7,7 +7,7 @@ function toggleMobileMenu() {
     });
 }
 
-const DISTRICT_OPTIONS = {
+let DISTRICT_OPTIONS = {
     tp: { label: '基北區', areas: '臺北市、新北市、基隆市', ready: true },
     ilan: { label: '宜蘭區', areas: '宜蘭縣' },
     'taoyuan-lienchiang': { label: '桃連區', areas: '桃園市、連江縣' },
@@ -26,6 +26,8 @@ const DISTRICT_OPTIONS = {
 };
 
 const DISTRICT_CODES = Object.keys(DISTRICT_OPTIONS);
+
+let districtMetadata = { version: '', updatedAt: '', disclaimer: '', districts: {} };
 
 function getSelectedDistrict() {
     const pathParts = window.location.pathname.split('/').filter(Boolean);
@@ -86,7 +88,7 @@ function initDistrictPicker() {
     document.addEventListener('keydown', event => { if (event.key === 'Escape' && !modal.hidden) close(); });
 }
 
-const DISTRICT_RULES = {
+let DISTRICT_RULES = {
     ct: { label: '中投區', totalMax: 100, examMax: 30, examUnit: '111 點', otherMax: 70 },
     tp: { label: '基北區', totalMax: 108, examMax: 36, examUnit: '36 分', otherMax: 72 },
     ilan: { label: '宜蘭區', available: false },
@@ -106,6 +108,85 @@ const DISTRICT_RULES = {
 
 function getDistrictRules() {
     return DISTRICT_RULES[getSelectedDistrict()] || null;
+}
+
+function getDistrictMetadata(code = getSelectedDistrict()) {
+    return districtMetadata.districts?.[code] || null;
+}
+
+async function loadDistrictMetadata() {
+    try {
+        const response = await fetch('/it_hs/district-metadata.json', { headers: { accept: 'application/json' } });
+        if (!response.ok) return;
+        districtMetadata = await response.json();
+        Object.entries(districtMetadata.districts || {}).forEach(([code, item]) => {
+            if (!DISTRICT_OPTIONS[code]) return;
+            DISTRICT_OPTIONS[code] = { ...DISTRICT_OPTIONS[code], label: item.label, areas: item.areas, ready: Boolean(item.calculator) };
+            if (item.calculator === false) {
+                DISTRICT_RULES[code] = { ...DISTRICT_RULES[code], label: item.label, available: false };
+            }
+        });
+    } catch {
+        // The existing hard-coded configuration is a safe fallback for offline use.
+    }
+}
+
+function renderDistrictDataStatus() {
+    const district = getDistrictMetadata();
+    const target = document.getElementById('districtDataStatus');
+    if (!target || !district) return;
+    const source = district.sourceUrl
+        ? `<a href="${escapeHtml(district.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(district.sourceName)}</a>`
+        : escapeHtml(district.sourceName || '各區免試入學委員會最新公告');
+    const features = [district.schools && '學校查詢', district.calculator && '積分試算', district.analysis && '落點分析'].filter(Boolean).join('、') || '學校資料建置中';
+    target.innerHTML = `目前可用：${features}。資料年度：${escapeHtml(district.academicYear || '—')}；更新：${escapeHtml(districtMetadata.updatedAt || '—')}；來源：${source}。`;
+}
+
+const PLANNER_STORAGE_KEY = 'jshs:planner:v1';
+let plannerStore = { version: 1, plans: {} };
+
+function loadPlannerStore() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(PLANNER_STORAGE_KEY) || '{}');
+        if (saved && saved.version === 1 && saved.plans && typeof saved.plans === 'object') plannerStore = saved;
+    } catch {
+        plannerStore = { version: 1, plans: {} };
+    }
+}
+
+function currentPlan() {
+    const district = getSelectedDistrict() || 'unselected';
+    if (!plannerStore.plans[district]) {
+        plannerStore.plans[district] = { calculator: {}, wishSchoolCodes: [], commuteMinutes: {}, tasks: {}, updatedAt: '' };
+    }
+    return plannerStore.plans[district];
+}
+
+function persistPlanner() {
+    const plan = currentPlan();
+    plan.updatedAt = new Date().toISOString();
+    try { localStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify(plannerStore)); } catch {}
+}
+
+function captureCalculatorInputs() {
+    const plan = currentPlan();
+    const fields = document.querySelectorAll('#page-calculator input, #page-calculator select');
+    plan.calculator = Array.from(fields).reduce((values, field) => {
+        if (!field.id) return values;
+        values[field.id] = field.type === 'checkbox' ? field.checked : field.value;
+        return values;
+    }, {});
+    persistPlanner();
+}
+
+function restoreCalculatorInputs() {
+    const values = currentPlan().calculator || {};
+    Object.entries(values).forEach(([id, value]) => {
+        const field = document.getElementById(id);
+        if (!field) return;
+        if (field.type === 'checkbox') field.checked = Boolean(value);
+        else field.value = String(value);
+    });
 }
 
 function showDistrictUnavailablePage() {
@@ -745,6 +826,7 @@ function computeAllPoints() {
         panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
     renderAnalysis();
+    captureCalculatorInputs();
     renderWishlist();
 }
 
@@ -822,6 +904,7 @@ function resetForm() {
     if (breakdownList) breakdownList.innerHTML = '';
     if (breakdownNote) breakdownNote.innerText = '尚未計算，請先點選「計算高中職積分」。';
     // 不在此自動計算，僅在使用者按下「計算」按鈕時執行
+    captureCalculatorInputs();
     renderWishlist();
 }
 
@@ -1256,6 +1339,65 @@ let wishlistState = [];
 const WISHLIST_MAX = 50;
 let wishlistSearchTimer = null;
 
+function saveWishlistState() {
+    currentPlan().wishSchoolCodes = [...wishlistState];
+    persistPlanner();
+}
+
+function renderPlannerDashboard() {
+    const district = getDistrictMetadata();
+    const title = document.getElementById('plannerDistrictTitle');
+    const score = document.getElementById('plannerScoreValue');
+    const scoreHint = document.getElementById('plannerScoreHint');
+    const source = document.getElementById('plannerSource');
+    if (!district) return;
+    const { totalPoints } = getCurrentScoreSnapshot();
+    if (title) title.textContent = `${district.label}升學決策儀表板`;
+    if (score) score.textContent = totalPoints > 0 ? String(totalPoints) : '—';
+    if (scoreHint) scoreHint.textContent = totalPoints > 0
+        ? `已建立積分資料，接著比較你的 ${wishlistState.length} 個志願。`
+        : district.calculator ? '完成積分試算後，這裡會整理你的志願風險。' : '此區積分規則建置中，先從學校資料開始比較。';
+    if (source) {
+        const sourceLink = district.sourceUrl
+            ? `<a href="${escapeHtml(district.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(district.sourceName)}</a>`
+            : escapeHtml(district.sourceName || '各區免試入學委員會最新公告');
+        source.innerHTML = `${escapeHtml(district.academicYear || '—')} 學年度 · 更新 ${escapeHtml(districtMetadata.updatedAt || '—')} · ${sourceLink}`;
+    }
+}
+
+function renderPlannerTimeline() {
+    const list = document.getElementById('plannerTaskList');
+    const note = document.getElementById('plannerTimelineNote');
+    const district = getDistrictMetadata();
+    if (!list || !district) return;
+    const plan = currentPlan();
+    list.innerHTML = (district.tasks || []).map((task, index) => {
+        const key = `task-${index}`;
+        const checked = Boolean(plan.tasks[key]);
+        return `<label class="planner-task ${checked ? 'is-complete' : ''}"><input type="checkbox" data-planner-task="${key}" ${checked ? 'checked' : ''}><span>${escapeHtml(task)}</span><b>${checked ? '已完成' : '待處理'}</b></label>`;
+    }).join('');
+    if (note) note.textContent = districtMetadata.disclaimer || '實際時程請以所屬就學區最新公告為準。';
+    list.querySelectorAll('[data-planner-task]').forEach(input => input.addEventListener('change', () => {
+        plan.tasks[input.dataset.plannerTask] = input.checked;
+        persistPlanner();
+        renderPlannerTimeline();
+    }));
+}
+
+function renderWishlistComparison(wishSchools) {
+    const target = document.getElementById('wishlistComparison');
+    if (!target) return;
+    if (!wishSchools.length) {
+        target.innerHTML = '<p class="comparison-empty">加入至少一間學校後，這裡會集中比較學制、門檻、名額、行政區、通勤與風險。</p>';
+        return;
+    }
+    target.innerHTML = `<div class="wishlist-comparison-scroll"><table><thead><tr><th>志願</th><th>風險</th><th>學制／類型</th><th>門檻／名額</th><th>行政區</th><th>單趟通勤</th></tr></thead><tbody>${wishSchools.map((school, index) => {
+        const { recommendation } = getWishlistAnalysisForSchool(school);
+        const commute = currentPlan().commuteMinutes[school['學校代碼']] || '—';
+        return `<tr><td><strong>${index + 1}. ${escapeHtml(school['學校名稱'])}</strong></td><td><span class="wish-analysis-badge ${recommendation.badgeClass}">${recommendation.status}</span></td><td>${escapeHtml(school['學制分類'] || '未提供')}<br><small>${escapeHtml(school['公私立'] || '未提供')}</small></td><td>${escapeHtml(school['最低錄取分數'] || '待公告')}<br><small>名額 ${escapeHtml(school['簡章招生名額'] || school['招生名額'] || '待公告')}</small></td><td>${escapeHtml(school['區'] || school['縣市'] || '未提供')}</td><td>${escapeHtml(commute)}${commute !== '—' ? ' 分' : ''}</td></tr>`;
+    }).join('')}</tbody></table></div>`;
+}
+
 function wishlistContainsSchool(school) {
     if (!school) return false;
     return wishlistState.includes(school['學校代碼']);
@@ -1269,6 +1411,7 @@ function addSchoolToWishlist(school) {
         return false;
     }
     wishlistState.push(school['學校代碼']);
+    saveWishlistState();
     renderWishlist();
     return true;
 }
@@ -1276,6 +1419,7 @@ function addSchoolToWishlist(school) {
 function removeWishlistAt(index) {
     if (index < 0 || index >= wishlistState.length) return;
     wishlistState.splice(index, 1);
+    saveWishlistState();
     renderWishlist();
     renderSchools();
 }
@@ -1287,6 +1431,7 @@ function moveWishlist(index, direction) {
     const temp = wishlistState[index];
     wishlistState[index] = wishlistState[target];
     wishlistState[target] = temp;
+    saveWishlistState();
     renderWishlist();
 }
 
@@ -1294,6 +1439,7 @@ function clearWishlist() {
     if (!wishlistState.length) return;
     if (!confirm('確定要清空所有志願嗎？')) return;
     wishlistState = [];
+    saveWishlistState();
     renderWishlist();
     renderSchools();
 }
@@ -1315,6 +1461,7 @@ function renderWishlist() {
     const countReachable = document.getElementById('wishCountReachable');
 
     if (countEl) countEl.textContent = `${wishlistState.length} / ${WISHLIST_MAX}`;
+    renderPlannerDashboard();
 
     if (!listEl) return;
 
@@ -1329,6 +1476,7 @@ function renderWishlist() {
             </li>
         `;
         if (summaryEl) summaryEl.hidden = true;
+        renderWishlistComparison([]);
         return;
     }
 
@@ -1357,6 +1505,7 @@ function renderWishlist() {
         const scoreText = school['最低錄取分數'] || '暫無分數';
         const quotaText = school['簡章招生名額'] || school['招生名額'] || '待公告';
         const rank = school['排名'] || '-';
+        const commute = currentPlan().commuteMinutes[school['學校代碼']] || '';
         return `
             <li class="wish-item ${recommendation.badgeClass}" data-wish-index="${index}">
                 <div class="wish-rank" aria-label="第 ${index + 1} 志願">
@@ -1382,6 +1531,7 @@ function renderWishlist() {
                             <span>錄取分數：${escapeHtml(scoreText)}</span>
                             <span>名額：${escapeHtml(quotaText)}</span>
                         </div>
+                        <label class="wish-commute-field">單趟通勤估計 <input type="number" min="0" max="180" step="1" inputmode="numeric" value="${escapeHtml(commute)}" data-wish-commute="${escapeHtml(school['學校代碼'])}" aria-label="${escapeHtml(school['學校名稱'])} 單趟通勤分鐘數"> <span>分鐘</span></label>
                     </div>
                 </div>
                 <div class="wish-item-controls">
@@ -1409,6 +1559,14 @@ function renderWishlist() {
             removeWishlistAt(idx);
         });
     });
+    listEl.querySelectorAll('[data-wish-commute]').forEach(input => input.addEventListener('change', () => {
+        const minutes = Math.min(180, Math.max(0, Number(input.value) || 0));
+        const code = input.dataset.wishCommute;
+        if (code) currentPlan().commuteMinutes[code] = minutes || '';
+        persistPlanner();
+        renderWishlistComparison(wishSchools);
+    }));
+    renderWishlistComparison(wishSchools);
 }
 
 function renderWishlistSearchResults(keyword) {
@@ -1555,10 +1713,12 @@ function initSchools() {
         .then(([text, index]) => {
             buildPublicSchoolIndex(index);
             allSchools = enrichSchoolsWithPublicIndex(parseCsv(text));
+            wishlistState = currentPlan().wishSchoolCodes.filter(code => allSchools.some(school => school['學校代碼'] === code));
             const matched = allSchools.filter(school => school.__publicDepartmentCount > 0).length;
             const trust = document.getElementById('schoolDataTrust');
             if (trust) trust.innerHTML = `本站校別資料 ${allSchools.length} 所，已與網路科別資料交叉核對 ${matched} 所；網路資料不含招生名額，名額與錄取分數仍以各區官方公告為準。<a href="${escapeHtml(window.JSHS_SITE_CONFIG?.publicSchoolIndexSource || '#')}" target="_blank" rel="noopener noreferrer">查看資料來源</a>`;
             renderSchools();
+            renderWishlist();
         })
         .catch(() => {
             summary.textContent = `無法載入 ${config.csvPath}，請稍後再試。`;
@@ -1578,7 +1738,9 @@ function initSchools() {
     document.getElementById('schoolSort')?.addEventListener('change', renderSchools);
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+    loadPlannerStore();
+    await loadDistrictMetadata();
     initDistrictPicker();
     toggleMobileMenu();
     if (showDistrictUnavailablePage()) {
@@ -1587,13 +1749,22 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     initPageRouter();
     initSchoolQueryOnlyMode();
-    if (!isSchoolQueryOnlyMode()) initCalculator();
+    renderDistrictDataStatus();
+    if (!isSchoolQueryOnlyMode()) {
+        initCalculator();
+        restoreCalculatorInputs();
+        if (Object.keys(currentPlan().calculator || {}).length) {
+            computeExamPoints();
+            calculateScore();
+        }
+    }
     initLineFloatingLink();
     if (!isSchoolQueryOnlyMode()) initAnalysisControls();
     initSchools();
     if (!isSchoolQueryOnlyMode()) {
         renderAnalysis();
         renderWishlist();
+        renderPlannerTimeline();
     }
 });
 

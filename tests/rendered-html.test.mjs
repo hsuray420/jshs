@@ -8,6 +8,8 @@ const legacyJshsPageUrl = new URL("../app/jshs/jshs/page.tsx", import.meta.url);
 const legacyJshsHtmlUrl = new URL("../public/jshs/jshs.html", import.meta.url);
 const districtScriptUrl = new URL("../public/it_hs/it_hs.js", import.meta.url);
 const districtIndexUrl = new URL("../public/it_hs/ilan/index.html", import.meta.url);
+const districtMetadataUrl = new URL("../public/it_hs/district-metadata.json", import.meta.url);
+const districtGuideUrl = new URL("../public/it_hs/it_hs.html", import.meta.url);
 
 test("root route sends visitors to the public homepage", async () => {
   const page = await readFile(appPageUrl, "utf8");
@@ -59,4 +61,28 @@ test("districts with a school CSV open school search without scoring tools", asy
   assert.match(script, /\? 'schools' : 'overview'/);
   assert.match(script, /\['calculator', 'analysis'\]/);
   assert.match(page, /data-scoring-feature/);
+});
+
+test("district metadata exposes feature availability and authoritative context", async () => {
+  const metadata = JSON.parse(await readFile(districtMetadataUrl, "utf8"));
+
+  assert.equal(metadata.version, "2026.08.10");
+  assert.equal(metadata.districts.ct.schools, true);
+  assert.equal(metadata.districts.ct.calculator, true);
+  assert.equal(metadata.districts.tp.analysis, true);
+  assert.equal(metadata.districts.ilan.calculator, false);
+  assert.match(metadata.disclaimer, /最新公告/);
+});
+
+test("district guide persists a private local planning workspace and exposes comparisons", async () => {
+  const [script, page] = await Promise.all([
+    readFile(districtScriptUrl, "utf8"),
+    readFile(districtGuideUrl, "utf8"),
+  ]);
+
+  assert.match(script, /jshs:planner:v1/);
+  assert.match(script, /localStorage\.setItem\(PLANNER_STORAGE_KEY/);
+  assert.match(script, /data-wish-commute/);
+  assert.match(page, /id="wishlistComparison"/);
+  assert.match(page, /id="plannerTaskList"/);
 });

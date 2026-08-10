@@ -55,7 +55,7 @@
                 </span>
                 <span class="brand-copy">
                     <span class="brand-name">全國國中升學資訊網 <strong class="current-district-badge" data-current-district-label>尚未選擇就學區</strong></span>
-                    <span class="brand-subtitle">高中職完整指南 · 目前開發中投區資料</span>
+                    <span class="brand-subtitle">高中職完整指南 · 全區學校查詢已開放</span>
                 </span>
             </a>
             <div class="header-actions">
@@ -126,11 +126,10 @@
         <section id="page-home" data-page-section="home" class="page-section active rounded-[32px] bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)] border border-blueGray/70 overflow-hidden">
             <div class="grid grid-cols-1 lg:grid-cols-[1.35fr_0.9fr] gap-8 p-8 lg:p-12">
                 <div>
-                    <p class="inline-flex items-center gap-2 uppercase tracking-[0.3em] text-xs text-neo-accent font-semibold mb-4">目前開發中投區</p>
-                    <h2 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-[2.75rem] text-neo-text leading-[1.25] tracking-[-0.015em] mb-6">選擇高中職，是把自己帶往下一段成長的開始。</h2>
-                    <p class="text-base text-neo-muted leading-relaxed mb-5">會考與志願選填常常讓學生緊張，也讓家長擔心。但升學不是只看一次分數，而是把孩子的興趣、學習節奏、生活距離與未來方向放在一起思考。只要一步一步整理資訊，就能把不確定感變成可以討論、可以準備的選擇。</p>
-                    <p class="text-base text-neo-muted leading-relaxed mb-5">高中、技術型高中與綜合高中各有不同的學習樣貌。有人適合在普通高中累積學科基礎，有人會在實作課程中看見自己的亮點，也有人需要多一點時間探索方向。每一條路都值得被認真理解，也都可能走出很好的未來。</p>
-                    <p class="text-base text-neo-muted leading-relaxed">請把這個網站當成升學討論的起點：先理解制度，再試算積分，接著觀察落點與學校特色。學生不用一次就做出完美答案，家長也不必獨自承擔焦慮；穩穩地看清楚每一步，就已經是在替未來鋪路。全國版本會逐步擴充各就學區，目前先以中投區資料試行。</p>
+                    <p class="inline-flex items-center gap-2 uppercase tracking-[0.3em] text-xs text-neo-accent font-semibold mb-4">升學決策起點</p>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-[2.75rem] text-neo-text leading-[1.25] tracking-[-0.015em] mb-6">不是只看分數，而是看清每一個選擇。</h2>
+                    <p class="text-base text-neo-muted leading-relaxed mb-5">先選擇就學區，再依資料狀態查詢校科、建立積分、比較志願與完成送出前檢核。每個步驟都只回答一個問題，讓學生與家長能一起做出有依據的選擇。</p>
+                    <p id="districtDataStatus" class="district-data-status">正在確認目前就學區的資料狀態…</p>
                     <div id="roleToggle" class="mt-8 flex gap-3">
                         <button type="button" data-role-btn="parent" class="px-5 py-2 rounded-full border border-neo-accent text-neo-accent font-medium hover:bg-neo-accent hover:text-white transition-colors">家長視圖</button>
                         <button type="button" data-role-btn="student" class="px-5 py-2 rounded-full border border-neo-accent text-neo-accent font-medium hover:bg-neo-accent hover:text-white transition-colors">學生視圖</button>
@@ -571,6 +570,19 @@
 
         <section id="page-analysis" data-page-section="analysis" data-scoring-feature class="page-section">
             <div class="section-panel panel-card analysis-shell">
+                <section class="planner-dashboard" aria-labelledby="plannerDistrictTitle">
+                    <div class="planner-dashboard-copy">
+                        <p class="text-xs-uppercase planner-eyebrow">我的升學規劃</p>
+                        <h2 id="plannerDistrictTitle">升學決策儀表板</h2>
+                        <p id="plannerScoreHint">完成積分試算後，這裡會整理你的志願風險。</p>
+                        <small id="plannerSource">資料載入中…</small>
+                    </div>
+                    <div class="planner-score-card" aria-label="目前預估積分">
+                        <span>目前預估積分</span>
+                        <strong id="plannerScoreValue">—</strong>
+                        <small>僅供志願規劃參考</small>
+                    </div>
+                </section>
                 <div class="analysis-control-card panel-card">
                     <div class="analysis-header">
                         <div>
@@ -632,6 +644,11 @@
                         <div class="wish-summary-hint">建議：挑戰 ≦ 20% · 適中 ≧ 40% · 穩定 ≧ 20%</div>
                     </div>
 
+                    <section class="wishlist-comparison" aria-labelledby="wishlistComparisonTitle">
+                        <div class="wishlist-comparison-head"><div><p class="text-xs-uppercase text-neo-accent font-semibold mb-2">一次比較</p><h4 id="wishlistComparisonTitle">把條件放在同一張表，再決定順序。</h4></div><span>通勤為自行輸入的單趟估計，不蒐集住址。</span></div>
+                        <div id="wishlistComparison"><p class="comparison-empty">加入至少一間學校後，這裡會集中比較學制、門檻、名額、行政區、通勤與風險。</p></div>
+                    </section>
+
                     <ol id="wishlistList" class="wishlist-list">
                         <li class="wishlist-empty">
                             <div class="wishlist-empty-icon" aria-hidden="true">
@@ -642,6 +659,12 @@
                         </li>
                     </ol>
                 </div>
+
+                <section class="planner-timeline panel-card" aria-labelledby="plannerTimelineTitle">
+                    <div><p class="text-xs-uppercase text-neo-accent font-semibold mb-2">送出前待辦</p><h3 id="plannerTimelineTitle">把重要確認留在正確的時間點。</h3></div>
+                    <div id="plannerTaskList" class="planner-task-list" aria-live="polite"></div>
+                    <p id="plannerTimelineNote" class="planner-timeline-note">實際時程請以所屬就學區最新公告為準。</p>
+                </section>
 
                 <div class="section-footer">
                     <button type="button" data-page="schools">下一頁：學校查詢 →</button>
@@ -757,7 +780,7 @@
             <div id="calcHelpBody"></div>
         </div>
     </div>
-    <script src="site-config.js?v=20260810-6"></script>
-    <script src="it_hs.js?v=20260810-6"></script>
+    <script src="site-config.js?v=20260810-7"></script>
+    <script src="it_hs.js?v=20260810-7"></script>
 </body>
 </html>
