@@ -46,8 +46,8 @@ test("unavailable districts show a clear construction page", async () => {
 
   assert.match(script, /function showDistrictUnavailablePage\(\)/);
   assert.match(script, /功能尚未開放/);
-  assert.match(script, /查看中投區/);
-  assert.match(script, /查看基北區/);
+  assert.match(script, /查看可用學校資料/);
+  assert.match(script, /查看基北區資料/);
   assert.match(districtIndex, /district=\$\{encodeURIComponent\(district\)\}/);
 });
 
@@ -71,6 +71,8 @@ test("district metadata exposes feature availability and authoritative context",
   assert.equal(metadata.districts.ct.calculator, true);
   assert.equal(metadata.districts.tp.analysis, true);
   assert.equal(metadata.districts.ilan.calculator, false);
+  assert.match(metadata.officialDirectory.url, /^https:\/\//);
+  assert.ok(metadata.timelineDefaults.ready.every((item) => item.date && item.status));
   assert.match(metadata.disclaimer, /最新公告/);
 });
 
@@ -85,4 +87,8 @@ test("district guide persists a private local planning workspace and exposes com
   assert.match(script, /data-wish-commute/);
   assert.match(page, /id="wishlistComparison"/);
   assert.match(page, /id="plannerTaskList"/);
+  assert.match(page, /id="plannerTimelineList"/);
+  assert.match(page, /id="faqContext"/);
+  assert.match(script, /function getDistrictTimeline/);
+  assert.match(script, /function renderFaqContext/);
 });

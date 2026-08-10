@@ -85,7 +85,7 @@
                         <button type="button" class="mega-menu-trigger" aria-expanded="false">入學管道及規則 <span aria-hidden="true">⌄</span></button>
                         <div class="mega-menu-panel">
                             <button type="button" data-page="admission"><b>管道總覽</b><small>先認識適合的方式</small></button>
-                            <button type="button" data-page="admission-exempt"><b>免試入學</b><small>中投區主要升學管道</small></button>
+                            <button type="button" data-page="admission-exempt"><b>免試入學</b><small>依所屬就學區確認規則</small></button>
                             <button type="button" data-page="admission-special"><b>特殊選才</b><small>依招生條件個別申請</small></button>
                             <button type="button" data-page="admission-direct"><b>獨招與直升</b><small>其他可評估的選擇</small></button>
                         </div>
@@ -268,7 +268,7 @@
                 <div class="mb-8">
                     <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">入學方式</p>
                     <h2 class="section-title">先認識管道，再決定要怎麼準備。</h2>
-                    <p class="section-copy">高中職入學通常會依所在地就學區、招生簡章、志願序與會考表現進行分發。全國各區規則會有差異，目前本平台先以中投區資料建置試算與學校清單。</p>
+                    <p class="section-copy">高中職入學通常會依所在地就學區、招生簡章、志願序與會考表現進行分發。全區皆可查詢學校資料；已公告並完成規則建置的地區，會再開放積分試算與落點分析。</p>
                 </div>
                 <div class="section-grid section-grid-3">
                     <article class="panel-card">
@@ -289,7 +289,7 @@
                 </div>
                 <div class="panel-card mt-6">
                     <h3 class="calc-card-title mb-3">目前開發狀態</h3>
-                    <p class="text-neo-muted leading-relaxed">中投區免試入學的積分試算、落點分析與學校查詢已先行開發；其他就學區後續可依各區簡章逐步加入不同公式、資料來源與學校清單。</p>
+                    <p class="text-neo-muted leading-relaxed">各就學區的積分規則與招生資料可能不同；請先確認目前地區的可用功能、資料年度與官方來源，再開始規劃。</p>
                 </div>
                 <div class="section-footer">
                     <button type="button" data-page="calculator">下一頁：積分試算 →</button>
@@ -301,7 +301,7 @@
             <div class="calculator-intro mb-6">
                 <span class="calculator-eyebrow" id="calculatorDistrictLabel">中投區免試入學</span>
                 <h2 class="section-title mb-4">高中職積分試算</h2>
-                <p class="section-copy" id="calculatorDistrictIntro">先輸入會考成績，再設定免試入學積分項目，系統會即時計算 100 制總分與 111 制比序積分。目前試算公式先套用中投區公開規則。</p>
+                <p class="section-copy" id="calculatorDistrictIntro">先輸入會考成績，再設定免試入學積分項目，系統會依目前就學區的已建置規則整理總分與比序積分。</p>
             </div>
             <div class="calc-score-map" aria-label="積分試算分區">
                 <button type="button" class="calc-score-tile" data-help-title="會考積分（30）" data-help-text="會考五科依 A、B、C 等級換算為免試入學積分，每科最高 6 分，五科合計最高 30 分。作文另外納入 111 制會考比序積點。">
@@ -575,6 +575,8 @@
                         <p class="text-xs-uppercase planner-eyebrow">我的升學規劃</p>
                         <h2 id="plannerDistrictTitle">升學決策儀表板</h2>
                         <p id="plannerScoreHint">完成積分試算後，這裡會整理你的志願風險。</p>
+                        <p id="plannerRule" class="planner-rule">適用規則載入中…</p>
+                        <p id="plannerNextAction" class="planner-next-action">下一步：完成積分試算。</p>
                         <small id="plannerSource">資料載入中…</small>
                     </div>
                     <div class="planner-score-card" aria-label="目前預估積分">
@@ -662,6 +664,7 @@
 
                 <section class="planner-timeline panel-card" aria-labelledby="plannerTimelineTitle">
                     <div><p class="text-xs-uppercase text-neo-accent font-semibold mb-2">送出前待辦</p><h3 id="plannerTimelineTitle">把重要確認留在正確的時間點。</h3></div>
+                    <div id="plannerTimelineList" class="planner-timeline-list" aria-live="polite"></div>
                     <div id="plannerTaskList" class="planner-task-list" aria-live="polite"></div>
                     <p id="plannerTimelineNote" class="planner-timeline-note">實際時程請以所屬就學區最新公告為準。</p>
                 </section>
@@ -677,7 +680,7 @@
                 <div class="mb-8">
                     <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">學校查詢</p>
                     <h2 class="section-title">高中職學校一覽表。</h2>
-                    <p class="section-copy">目前先整理中投區 115 學年度免試入學簡章資料，學校以錄取門檻與區域聲量概略排序；招生名額保留空白欄，之後可接正式公告或落點分析資料。</p>
+                    <p class="section-copy">全區學校資料可依學制、地區與特色篩選。門檻、名額與科別會依各校已提供欄位呈現；未公告的資訊會明確標示為待公告。</p>
                 </div>
                 <div class="school-toolbar">
                     <div class="school-search-wrap">
@@ -728,10 +731,10 @@
                     <p class="section-copy mb-6">本段提供報名簡章、表單範本與官方公告連結，方便你準備高中職免試入學。</p>
                 </div>
                 <div class="space-y-4">
-                    <a href="https://ct.entry.edu.tw" target="_blank" rel="noopener noreferrer" class="ui-btn ui-btn-primary w-full">前往官方簡章網站</a>
+                    <a id="officialAdmissionLink" href="https://shs.k12ea.gov.tw/site/adapt-k12ea" target="_blank" rel="noopener noreferrer" class="ui-btn ui-btn-primary w-full">前往官方簡章網站</a>
                     <a id="schoolsCsvDownload" href="schools.csv" download class="ui-btn w-full">下載學校清單 CSV</a>
                 </div>
-                <div class="text-neo-muted text-sm leading-relaxed lg:col-span-2">正式簡章、表單與實際招生名額請以所屬就學區免試入學委員會公告為準；目前連結先放中投區官方網站。</div>
+                <div class="text-neo-muted text-sm leading-relaxed lg:col-span-2">正式簡章、表單與實際招生名額請以所屬就學區免試入學委員會公告為準；官方連結會依目前就學區的資料狀態顯示。</div>
                 <div class="section-footer">
                     <button type="button" data-page="faq">下一頁：FAQ →</button>
                 </div>
@@ -742,16 +745,17 @@
             <div class="section-panel panel-card">
                 <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">常見問題</p>
                 <h2 class="section-title">FAQ：快速解答高中職免試疑問。</h2>
-                <div class="space-y-4 mt-8">
-                    <details class="details-panel">
+                <p id="faqContext" class="faq-context">依你目前所在的流程，優先閱讀相關問題；所有內容預設收合。</p>
+                <div id="faqList" class="space-y-4 mt-8">
+                    <details class="details-panel" data-faq-topic="schools">
                         <summary>高中職免試入學和五專的最大差別？</summary>
                         <p>高中職通常依各就學區辦理地方招生，需看所屬區域與共同就學區規定；五專為全國性招生，可跨區報名。</p>
                     </details>
-                    <details class="details-panel">
+                    <details class="details-panel" data-faq-topic="calculator">
                         <summary>我該如何確認是否符合就近入學？</summary>
-                        <p>請查閱所屬就學區與共同就學區招生辦法；目前試算先套用中投區就近入學規則。</p>
+                        <p>請查閱所屬就學區與共同就學區招生辦法；只有顯示「積分試算可用」的地區才會套用已建置規則。</p>
                     </details>
-                    <details class="details-panel">
+                    <details class="details-panel" data-faq-topic="analysis">
                         <summary>試算結果能保證錄取嗎？</summary>
                         <p>試算僅供參考，實際錄取仍依年度名額、同分比序及分發結果決定。</p>
                     </details>

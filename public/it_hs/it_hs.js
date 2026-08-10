@@ -135,11 +135,21 @@ function renderDistrictDataStatus() {
     const district = getDistrictMetadata();
     const target = document.getElementById('districtDataStatus');
     if (!target || !district) return;
-    const source = district.sourceUrl
-        ? `<a href="${escapeHtml(district.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(district.sourceName)}</a>`
-        : escapeHtml(district.sourceName || '各區免試入學委員會最新公告');
+    const sourceUrl = district.sourceUrl || districtMetadata.officialDirectory?.url;
+    const sourceName = district.sourceUrl ? district.sourceName : (districtMetadata.officialDirectory?.name || district.sourceName || '各區免試入學委員會最新公告');
+    const source = sourceUrl
+        ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceName)}</a>`
+        : escapeHtml(sourceName);
     const features = [district.schools && '學校查詢', district.calculator && '積分試算', district.analysis && '落點分析'].filter(Boolean).join('、') || '學校資料建置中';
-    target.innerHTML = `目前可用：${features}。資料年度：${escapeHtml(district.academicYear || '—')}；更新：${escapeHtml(districtMetadata.updatedAt || '—')}；來源：${source}。`;
+    target.innerHTML = `目前可用：${features}。資料年度：${escapeHtml(district.academicYear || '—')}；更新：${escapeHtml(district.updatedAt || districtMetadata.updatedAt || '—')}；來源：${source}。`;
+}
+
+function renderDistrictOfficialLink() {
+    const link = document.getElementById('officialAdmissionLink');
+    const district = getDistrictMetadata();
+    if (!link || !district) return;
+    link.href = district.sourceUrl || districtMetadata.officialDirectory?.url || link.href;
+    link.textContent = `前往${district.label}官方簡章／公告`;
 }
 
 const PLANNER_STORAGE_KEY = 'jshs:planner:v1';
@@ -218,10 +228,10 @@ function showDistrictUnavailablePage() {
         <section class="section-panel panel-card max-w-3xl mx-auto my-10 text-center">
             <p class="text-xs uppercase tracking-[0.18em] text-neo-accent font-bold mb-3">就學區資料建置中</p>
             <h1 class="section-title">${escapeHtml(district.label)}功能尚未開放</h1>
-            <p class="section-copy mb-6">${escapeHtml(district.areas || district.label)}的免試入學規則、積分試算、落點分析與學校資料仍在整理中。目前網站先開放中投區與基北區的基本功能，其他就學區完成後會陸續上線。</p>
+            <p class="section-copy mb-6">${escapeHtml(district.areas || district.label)}的學校資料、免試入學規則與時程正在依官方公告整理。請回首頁選擇可用地區，或於官方來源確認最新進度。</p>
             <div class="grid gap-3 sm:grid-cols-3">
-                <a class="ui-btn ui-btn-primary" href="/it_hs/ct/">查看中投區</a>
-                <a class="ui-btn" href="/it_hs/tp/">查看基北區</a>
+                <a class="ui-btn ui-btn-primary" href="/it_hs/it_hs.html?district=ct#schools">查看可用學校資料</a>
+                <a class="ui-btn" href="/it_hs/it_hs.html?district=tp#schools">查看基北區資料</a>
                 <a class="ui-btn" href="/jshs/home">回首頁</a>
             </div>
         </section>
@@ -250,6 +260,20 @@ function renderTopic(page) {
     action.dataset.page = topic.actionPage;
 }
 
+function renderFaqContext(page) {
+    const context = document.getElementById('faqContext');
+    const list = document.getElementById('faqList');
+    if (!context || !list) return;
+    const topic = page === 'analysis' ? 'analysis' : (page === 'calculator' ? 'calculator' : 'schools');
+    const copy = {
+        calculator: '你正在建立積分：先確認適用就學區與比序規則，再閱讀試算限制。',
+        analysis: '你正在看落點：先閱讀推薦風險與「不保證錄取」的說明。',
+        schools: '你正在比較學校：先確認校科、名額與正式簡章資料。'
+    };
+    context.textContent = copy[topic];
+    Array.from(list.querySelectorAll('[data-faq-topic]')).sort((a, b) => Number(b.dataset.faqTopic === topic) - Number(a.dataset.faqTopic === topic)).forEach(item => list.appendChild(item));
+}
+
 function showPage(page) {
     const sections = document.querySelectorAll('[data-page-section]');
     const routeControls = document.querySelectorAll('[data-page]');
@@ -271,6 +295,7 @@ function showPage(page) {
     if (mobileMenu) mobileMenu.classList.add('hidden');
     history.replaceState(null, '', `#${targetPage}`);
     if (isTopic) history.replaceState(null, '', `#${page}`);
+    renderFaqContext(targetPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -655,7 +680,7 @@ function renderAnalysis() {
 
     summary.innerHTML = `你目前的估算分數 <strong>${totalPoints} / 100</strong> 落在「${userBand.label}」區間。以下依「與你程度最接近」優先列出前 ${rankedSchools.length} 所：穩定 ${counts['穩定'] || 0} 所、適中 ${counts['適中'] || 0} 所、挑戰 ${counts['挑戰'] || 0} 所。建議志願序前段放挑戰、中段放適中、後段放穩定。`;
 
-    results.innerHTML = rankedSchools.map(({ school, tier }) => {
+    results.innerHTML = rankedSchools.map(({ school, tier, closeness }) => {
         const recommendation = getAnalysisRecommendation(userBand, tier);
         const scoreText = school['最低錄取分數'] || '暫無公開分數';
         const quotaText = school['簡章招生名額'] || school['招生名額'] || '待公告';
@@ -677,7 +702,10 @@ function renderAnalysis() {
                 <p>${recommendation.detail}</p>
                 <div class="analysis-foot">
                     <span>錄取分數：${escapeHtml(scoreText)}</span>
+                    <span>估算位階差：${escapeHtml(String(closeness))} 級</span>
+                    <span>可比對分數差：待公告／依官方格式</span>
                     <span>簡章名額：${escapeHtml(quotaText)}</span>
+                    <span>資料年度：${escapeHtml(school['分數年度'] ? `${school['分數年度']} 年` : '待公告')}</span>
                     <span>區域：${schoolArea}</span>
                 </div>
             </article>
@@ -1349,6 +1377,8 @@ function renderPlannerDashboard() {
     const title = document.getElementById('plannerDistrictTitle');
     const score = document.getElementById('plannerScoreValue');
     const scoreHint = document.getElementById('plannerScoreHint');
+    const rule = document.getElementById('plannerRule');
+    const nextAction = document.getElementById('plannerNextAction');
     const source = document.getElementById('plannerSource');
     if (!district) return;
     const { totalPoints } = getCurrentScoreSnapshot();
@@ -1357,20 +1387,41 @@ function renderPlannerDashboard() {
     if (scoreHint) scoreHint.textContent = totalPoints > 0
         ? `已建立積分資料，接著比較你的 ${wishlistState.length} 個志願。`
         : district.calculator ? '完成積分試算後，這裡會整理你的志願風險。' : '此區積分規則建置中，先從學校資料開始比較。';
+    if (rule) rule.textContent = district.calculator
+        ? `適用規則：${district.label} ${district.academicYear || '—'} 學年度已建置試算規則。`
+        : `適用規則：${district.label}積分試算建置中，暫不產生落點推薦。`;
+    if (nextAction) nextAction.textContent = totalPoints > 0
+        ? (wishlistState.length ? '下一步：檢查三層志願比例、通勤與送出前待辦。' : '下一步：從學校查詢加入志願，再比較風險與通勤。')
+        : (district.calculator ? '下一步：完成試算，再查看穩定、適中、挑戰三層志願。' : '下一步：先查詢學校、加入志願，等待本區正式規則公告。');
     if (source) {
-        const sourceLink = district.sourceUrl
-            ? `<a href="${escapeHtml(district.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(district.sourceName)}</a>`
-            : escapeHtml(district.sourceName || '各區免試入學委員會最新公告');
-        source.innerHTML = `${escapeHtml(district.academicYear || '—')} 學年度 · 更新 ${escapeHtml(districtMetadata.updatedAt || '—')} · ${sourceLink}`;
+        const sourceUrl = district.sourceUrl || districtMetadata.officialDirectory?.url;
+        const sourceName = district.sourceUrl ? district.sourceName : (districtMetadata.officialDirectory?.name || district.sourceName || '各區免試入學委員會最新公告');
+        const sourceLink = sourceUrl
+            ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(sourceName)}</a>`
+            : escapeHtml(sourceName);
+        source.innerHTML = `${escapeHtml(district.academicYear || '—')} 學年度 · 更新 ${escapeHtml(district.updatedAt || districtMetadata.updatedAt || '—')} · ${sourceLink}`;
     }
 }
 
+function getDistrictTimeline(district) {
+    return district.timeline || districtMetadata.timelineDefaults?.[district.timelineKey || (district.calculator ? 'ready' : 'building')] || [];
+}
+
 function renderPlannerTimeline() {
+    const timelineList = document.getElementById('plannerTimelineList');
     const list = document.getElementById('plannerTaskList');
     const note = document.getElementById('plannerTimelineNote');
     const district = getDistrictMetadata();
     if (!list || !district) return;
     const plan = currentPlan();
+    const timeline = getDistrictTimeline(district);
+    if (timelineList) timelineList.innerHTML = timeline.map(item => `
+        <article class="planner-timeline-event">
+            <span>${escapeHtml(item.date || '待公告')}</span>
+            <div><strong>${escapeHtml(item.title || '重要時程')}</strong><p>${escapeHtml(item.detail || '請以官方公告為準。')}</p></div>
+            <b class="${item.status === '待公告' ? 'is-pending' : ''}">${escapeHtml(item.status || '待公告')}</b>
+        </article>
+    `).join('');
     list.innerHTML = (district.tasks || []).map((task, index) => {
         const key = `task-${index}`;
         const checked = Boolean(plan.tasks[key]);
@@ -1391,10 +1442,11 @@ function renderWishlistComparison(wishSchools) {
         target.innerHTML = '<p class="comparison-empty">加入至少一間學校後，這裡會集中比較學制、門檻、名額、行政區、通勤與風險。</p>';
         return;
     }
-    target.innerHTML = `<div class="wishlist-comparison-scroll"><table><thead><tr><th>志願</th><th>風險</th><th>學制／類型</th><th>門檻／名額</th><th>行政區</th><th>單趟通勤</th></tr></thead><tbody>${wishSchools.map((school, index) => {
+    target.innerHTML = `<div class="wishlist-comparison-scroll"><table><thead><tr><th>志願</th><th>風險</th><th>學制／類型</th><th>特色／科別</th><th>門檻／名額</th><th>行政區</th><th>單趟通勤</th></tr></thead><tbody>${wishSchools.map((school, index) => {
         const { recommendation } = getWishlistAnalysisForSchool(school);
         const commute = currentPlan().commuteMinutes[school['學校代碼']] || '—';
-        return `<tr><td><strong>${index + 1}. ${escapeHtml(school['學校名稱'])}</strong></td><td><span class="wish-analysis-badge ${recommendation.badgeClass}">${recommendation.status}</span></td><td>${escapeHtml(school['學制分類'] || '未提供')}<br><small>${escapeHtml(school['公私立'] || '未提供')}</small></td><td>${escapeHtml(school['最低錄取分數'] || '待公告')}<br><small>名額 ${escapeHtml(school['簡章招生名額'] || school['招生名額'] || '待公告')}</small></td><td>${escapeHtml(school['區'] || school['縣市'] || '未提供')}</td><td>${escapeHtml(commute)}${commute !== '—' ? ' 分' : ''}</td></tr>`;
+        const feature = school['資優班/特色班'] || (school.__publicDepartments || []).slice(0, 2).map(item => item.deptName || item.levelInfo).filter(Boolean).join('、') || school['科系與名額']?.split('；')[0] || '待公告';
+        return `<tr><td><strong>${index + 1}. ${escapeHtml(school['學校名稱'])}</strong></td><td><span class="wish-analysis-badge ${recommendation.badgeClass}">${recommendation.status}</span><br><small>${escapeHtml(recommendation.detail)}</small></td><td>${escapeHtml(school['學制分類'] || '未提供')}<br><small>${escapeHtml(school['公私立'] || '未提供')}</small></td><td>${escapeHtml(feature)}</td><td>${escapeHtml(school['最低錄取分數'] || '待公告')}<br><small>名額 ${escapeHtml(school['簡章招生名額'] || school['招生名額'] || '待公告')}</small></td><td>${escapeHtml(school['區'] || school['縣市'] || '未提供')}</td><td>${escapeHtml(commute)}${commute !== '—' ? ' 分' : ''}</td></tr>`;
     }).join('')}</tbody></table></div>`;
 }
 
@@ -1750,6 +1802,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     initPageRouter();
     initSchoolQueryOnlyMode();
     renderDistrictDataStatus();
+    renderDistrictOfficialLink();
     if (!isSchoolQueryOnlyMode()) {
         initCalculator();
         restoreCalculatorInputs();
