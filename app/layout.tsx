@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "全國國中升學資訊網",
-  description: "提供全國國中升學資訊、高中職與五專路徑、積分試算、落點參考與學校查詢。目前先開發中投區資料。",
+  description: "全國國中升學資訊：全區學校查詢、積分試算、志願分析與高中職、五專升學路徑。",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

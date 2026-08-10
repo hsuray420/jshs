@@ -37,11 +37,24 @@ function getSelectedDistrict() {
         : (DISTRICT_CODES.includes(queryDistrict) ? queryDistrict : '');
 }
 
+function isSchoolQueryOnlyMode() {
+    const district = getSelectedDistrict();
+    // Every district can expose its school search.  Only districts whose
+    // admission rules are not yet configured should hide scoring tools.
+    return Boolean(district && DISTRICT_RULES[district]?.available === false);
+}
+
+function initSchoolQueryOnlyMode() {
+    if (!isSchoolQueryOnlyMode()) return;
+    document.querySelectorAll('[data-scoring-feature]').forEach(element => { element.hidden = true; });
+}
+
 function updateCurrentDistrictBadge() {
     const badge = document.querySelector('[data-current-district-label]');
     if (!badge) return;
     const district = DISTRICT_OPTIONS[getSelectedDistrict()];
     badge.textContent = district ? `目前：${district.label}` : '尚未選擇就學區';
+    if (district) document.title = `${district.label}｜全國國中升學資訊網`;
 }
 
 function initDistrictPicker() {
@@ -99,6 +112,12 @@ function showDistrictUnavailablePage() {
     const rules = getDistrictRules();
     if (!districtCode || !rules || rules.available !== false) return false;
 
+    // A district may have its verified school CSV ready before its calculator
+    // rules are published.  Keep the school search and CSV download usable in
+    // that case; initCalculator() will still clearly mark scoring as unavailable.
+    const schoolCsvPath = window.JSHS_SITE_CONFIG?.schoolsCsvPathsByDistrict?.[districtCode];
+    if (schoolCsvPath) return false;
+
     const district = DISTRICT_OPTIONS[districtCode] || { label: districtCode, areas: '' };
     const main = document.querySelector('main');
     const nav = document.querySelector('.header-nav-wrap');
@@ -154,7 +173,8 @@ function showPage(page) {
     const routeControls = document.querySelectorAll('[data-page]');
     const pages = Array.from(sections).map(section => section.dataset.pageSection);
     const isTopic = Boolean(topicPages[page]);
-    const targetPage = isTopic ? 'topic' : (pages.includes(page) ? page : 'overview');
+    const requestedPage = isSchoolQueryOnlyMode() && ['calculator', 'analysis'].includes(page) ? 'schools' : page;
+    const targetPage = isTopic ? 'topic' : (pages.includes(requestedPage) ? requestedPage : 'overview');
     if (isTopic) renderTopic(page);
 
     sections.forEach(section => {
@@ -388,7 +408,7 @@ function initPageRouter() {
     initHomeSections();
     initMegaMenus();
 
-    const initialPage = window.location.hash.replace('#', '') || 'overview';
+    const initialPage = window.location.hash.replace('#', '') || (isSchoolQueryOnlyMode() ? 'schools' : 'overview');
     showPage(initialPage);
 }
 
@@ -1482,12 +1502,15 @@ window.addEventListener('DOMContentLoaded', () => {
         return;
     }
     initPageRouter();
-    initCalculator();
+    initSchoolQueryOnlyMode();
+    if (!isSchoolQueryOnlyMode()) initCalculator();
     initLineFloatingLink();
-    initAnalysisControls();
+    if (!isSchoolQueryOnlyMode()) initAnalysisControls();
     initSchools();
-    renderAnalysis();
-    renderWishlist();
+    if (!isSchoolQueryOnlyMode()) {
+        renderAnalysis();
+        renderWishlist();
+    }
 });
 
 

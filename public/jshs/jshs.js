@@ -1,167 +1,92 @@
-const targetDate = new Date("2027-05-16T08:00:00").getTime();
-const DISTRICTS = {
-    tp: { label: '基北區', areas: '臺北市、新北市、基隆市', ready: true },
-    ilan: { label: '宜蘭區', areas: '宜蘭縣' },
-    'taoyuan-lienchiang': { label: '桃連區', areas: '桃園市、連江縣' },
-    'hsinchu-miaoli': { label: '竹苗區', areas: '新竹市、新竹縣、苗栗縣' },
-    ct: { label: '中投區', areas: '臺中市、南投縣', ready: true },
-    changhua: { label: '彰化區', areas: '彰化縣' },
-    yunlin: { label: '雲林區', areas: '雲林縣' },
-    chiayi: { label: '嘉義區', areas: '嘉義市、嘉義縣' },
-    tainan: { label: '臺南區', areas: '臺南市' },
-    kaohsiung: { label: '高雄區', areas: '高雄市' },
-    pingtung: { label: '屏東區', areas: '屏東縣' },
-    hualien: { label: '花蓮區', areas: '花蓮縣' },
-    taitung: { label: '臺東區', areas: '臺東縣' },
-    penghu: { label: '澎湖區', areas: '澎湖縣' },
-    kinmen: { label: '金門區', areas: '金門縣' }
-};
+const DISTRICTS = [
+    ['tp', '基北區', '臺北市、新北市、基隆市', 'north'], ['ilan', '宜蘭區', '宜蘭縣', 'east'],
+    ['taoyuan-lienchiang', '桃連區', '桃園市、連江縣', 'north'], ['hsinchu-miaoli', '竹苗區', '新竹市、新竹縣、苗栗縣', 'north'],
+    ['ct', '中投區', '臺中市、南投縣', 'central'], ['changhua', '彰化區', '彰化縣', 'central'],
+    ['yunlin', '雲林區', '雲林縣', 'south'], ['chiayi', '嘉義區', '嘉義市、嘉義縣', 'south'], ['tainan', '臺南區', '臺南市', 'south'],
+    ['kaohsiung', '高雄區', '高雄市', 'south'], ['pingtung', '屏東區', '屏東縣', 'south'], ['hualien', '花蓮區', '花蓮縣', 'east'],
+    ['taitung', '臺東區', '臺東縣', 'east'], ['penghu', '澎湖區', '澎湖縣', 'east'], ['kinmen', '金門區', '金門縣', 'east']
+].map(([code, label, areas, region]) => ({ code, label, areas, region }));
 
-function updateCountdown() {
-    const daysEl = document.getElementById("days");
-    const hoursEl = document.getElementById("hours");
-    const minutesEl = document.getElementById("minutes");
-    const secondsEl = document.getElementById("seconds");
-    if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
-    const now = new Date().getTime();
-    const distance = targetDate - now;
+let activeFilter = 'all';
+let requestedTarget = 'schools';
+const districtMap = Object.fromEntries(DISTRICTS.map(district => [district.code, district]));
 
-    if (distance < 0) {
-        daysEl.innerText = "00";
-        hoursEl.innerText = "00";
-        minutesEl.innerText = "00";
-        secondsEl.innerText = "00";
-        return;
-    }
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    daysEl.innerText = days.toString().padStart(2, '0');
-    hoursEl.innerText = hours.toString().padStart(2, '0');
-    minutesEl.innerText = minutes.toString().padStart(2, '0');
-    secondsEl.innerText = seconds.toString().padStart(2, '0');
+function districtButton(district, compact = false) {
+    return `<button type="button" class="district-card ${compact ? 'compact' : ''}" data-select-district="${district.code}">
+        <span class="district-card-top">${district.region === 'east' ? '東部與離島' : district.region === 'central' ? '中部' : district.region === 'south' ? '南部' : '北部'} <i>全區查詢</i></span>
+        <strong>${district.label}</strong><small>${district.areas}</small><b>${compact ? '選擇此區' : '查詢學校'} <em>→</em></b>
+    </button>`;
 }
 
-updateCountdown();
-setInterval(updateCountdown, 1000);
-
-function updateDistrictUI(district) {
-    const label = DISTRICTS[district]?.label || '';
-    const status = document.getElementById('districtStatus');
-    const mini = document.getElementById('districtMini');
-    const miniLabel = document.querySelector('[data-district-mini-label]');
-    document.querySelectorAll('[data-district-choice]').forEach(choice => {
-        choice.classList.toggle('is-selected', choice.dataset.districtChoice === district);
-    });
-    if (status) {
-        status.textContent = label ? `目前已選擇：${label}` : '尚未選擇就學區';
-    }
-    if (mini && miniLabel) {
-        mini.hidden = !label;
-        miniLabel.textContent = label;
-    }
+function renderDistricts() {
+    const grid = document.getElementById('districtGrid');
+    const search = document.getElementById('districtSearch')?.value.trim().toLowerCase() || '';
+    if (!grid) return;
+    const results = DISTRICTS.filter(district => (activeFilter === 'all' || district.region === activeFilter) && `${district.label}${district.areas}`.toLowerCase().includes(search));
+    grid.innerHTML = results.length ? results.map(district => districtButton(district)).join('') : '<p class="empty-state">找不到相符的就學區，請改用區域名稱或縣市搜尋。</p>';
+    bindDistrictButtons(grid);
 }
 
-function renderDistrictChoices() {
-    const entries = Object.entries(DISTRICTS);
-    const modalGrid = document.querySelector('[data-district-choice-grid]');
-    const regionGrid = document.querySelector('[data-district-region-grid]');
-    const card = (code, district, compact = false) => {
-        const ready = district.ready;
-        return `<button class="${compact ? 'region-card' : 'district-choice'} ${ready ? 'is-ready' : ''}" type="button" data-district-choice="${code}" data-district-label="${district.label}">
-            <span>${ready ? (code === 'ct' ? '您目前所在的區域' : '基本功能已開放') : '資料建置中'}</span>
-            <strong>${district.label}</strong>
-            <small>${district.areas}</small>
-        </button>`;
-    };
-    if (modalGrid) modalGrid.innerHTML = entries.map(([code, district]) => card(code, district)).join('');
-    if (regionGrid) regionGrid.innerHTML = entries.map(([code, district]) => card(code, district, true)).join('');
+function bindDistrictButtons(container) {
+    container.querySelectorAll('[data-select-district]').forEach(button => button.addEventListener('click', () => chooseDistrict(button.dataset.selectDistrict)));
 }
 
-function openDistrictModal() {
+function updateSelectionStatus() {
+    const selected = districtMap[localStorage.getItem('jshs_district')];
+    const status = document.getElementById('selectionStatus');
+    if (status) status.textContent = selected ? `目前選擇：${selected.label}，可隨時重新選擇。` : '尚未選擇就學區';
+}
+
+function openDistrictModal(target = 'schools') {
+    requestedTarget = target;
     const modal = document.getElementById('districtModal');
+    const intro = document.getElementById('modalIntro');
+    const targetLabels = { schools: '學校查詢', calculator: '積分試算', analysis: '志願分析' };
     if (!modal) return;
+    if (intro) intro.textContent = `選擇後會直接開啟該區的${targetLabels[target]}。`;
+    document.getElementById('modalDistricts').innerHTML = DISTRICTS.map(district => districtButton(district, true)).join('');
+    bindDistrictButtons(document.getElementById('modalDistricts'));
     modal.hidden = false;
-    modal.classList.remove('is-minimizing');
-    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    modal.querySelector('.modal-close').focus();
 }
 
 function closeDistrictModal() {
-    const modal = document.getElementById('districtModal');
-    if (!modal) return;
-    modal.classList.add('is-minimizing');
-    modal.setAttribute('aria-hidden', 'true');
-    window.setTimeout(() => {
-        modal.hidden = true;
-        modal.classList.remove('is-minimizing');
-    }, 240);
+    document.getElementById('districtModal').hidden = true;
+    document.body.classList.remove('modal-open');
 }
 
-function chooseDistrict(district) {
-    return district;
+function chooseDistrict(code) {
+    if (!districtMap[code]) return;
+    localStorage.setItem('jshs_district', code);
+    const hash = requestedTarget === 'schools' ? 'schools' : requestedTarget;
+    window.location.assign(`/it_hs/it_hs.html?district=${encodeURIComponent(code)}#${hash}`);
 }
 
-function initDistrictPicker() {
-    // The homepage never selects or restores a district. Selection belongs to it_hs.
+function initInteractions() {
+    document.querySelectorAll('[data-open-district]').forEach(button => button.addEventListener('click', () => openDistrictModal(button.dataset.target)));
+    document.querySelectorAll('[data-close-district]').forEach(button => button.addEventListener('click', closeDistrictModal));
+    document.getElementById('districtSearch')?.addEventListener('input', renderDistricts);
+    document.querySelectorAll('[data-region-filter]').forEach(button => button.addEventListener('click', () => {
+        activeFilter = button.dataset.regionFilter;
+        document.querySelectorAll('[data-region-filter]').forEach(item => item.classList.toggle('active', item === button));
+        renderDistricts();
+    }));
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && !document.getElementById('districtModal').hidden) closeDistrictModal(); });
 }
 
-function initPathwayModal() {
-    const modal = document.getElementById('pathwayModal');
-    const body = document.getElementById('pathwayModalBody');
-    if (!modal || !body) return;
-
-    const open = async () => {
-        modal.classList.add('active');
-        modal.setAttribute('aria-hidden', 'false');
-        try {
-            const response = await fetch('/api/site-config/', { headers: { accept: 'application/json' } });
-            const config = response.ok ? await response.json() : {};
-            if (config.pathway_form_url && !body.querySelector('iframe')) {
-                body.innerHTML = `<iframe title="我要讀哪裡表單" src="${config.pathway_form_url}" loading="lazy"></iframe>`;
-            }
-        } catch (_) {}
-    };
-
-    const close = () => {
-        modal.classList.remove('active');
-        modal.setAttribute('aria-hidden', 'true');
-    };
-
-    document.querySelectorAll('[data-pathway-open]').forEach(control => {
-        control.addEventListener('click', open);
-    });
-    document.querySelectorAll('[data-pathway-close]').forEach(control => {
-        control.addEventListener('click', close);
-    });
-    document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') close();
-    });
-}
-
-async function initLineFloatingLink() {
+async function initLineLink() {
     const link = document.getElementById('lineFloatingLink');
     if (!link) return;
     try {
         const response = await fetch('/api/site-config/', { headers: { accept: 'application/json' } });
-        if (response.ok) {
-            const config = await response.json();
-            if (config.official_line_url) {
-                link.href = config.official_line_url;
-                link.target = '_blank';
-                link.rel = 'noopener noreferrer';
-                return;
-            }
-        }
+        const config = response.ok ? await response.json() : {};
+        if (config.official_line_url) { link.href = config.official_line_url; link.target = '_blank'; link.rel = 'noopener noreferrer'; return; }
     } catch (_) {}
-    link.addEventListener('click', (event) => {
-        event.preventDefault();
-        alert('後台尚未設定 LINE 官方帳號連結。');
-    });
+    link.hidden = true;
 }
 
-initLineFloatingLink();
-initDistrictPicker();
-initPathwayModal();
+renderDistricts();
+updateSelectionStatus();
+initInteractions();
+initLineLink();

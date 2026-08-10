@@ -9,7 +9,7 @@ const districtIndexUrl = new URL("../public/it_hs/ilan/index.html", import.meta.
 test("root route sends visitors to the public homepage", async () => {
   const page = await readFile(appPageUrl, "utf8");
 
-  assert.match(page, /redirect\("\/jshs\/jshs\.html"\)/);
+  assert.match(page, /redirect\("\/jshs\/home"\)/);
   assert.doesNotMatch(page, /localStorage|role="dialog"|setSelectedDistrict/);
 });
 
@@ -31,4 +31,16 @@ test("unavailable districts show a clear construction page", async () => {
   assert.match(script, /查看中投區/);
   assert.match(script, /查看基北區/);
   assert.match(districtIndex, /district=\$\{encodeURIComponent\(district\)\}/);
+});
+
+test("districts with a school CSV open school search without scoring tools", async () => {
+  const [script, page] = await Promise.all([
+    readFile(districtScriptUrl, "utf8"),
+    readFile(new URL("../public/it_hs/it_hs.html", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(script, /function isSchoolQueryOnlyMode\(\)/);
+  assert.match(script, /\? 'schools' : 'overview'/);
+  assert.match(script, /\['calculator', 'analysis'\]/);
+  assert.match(page, /data-scoring-feature/);
 });
