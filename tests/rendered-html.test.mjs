@@ -13,6 +13,7 @@ const districtGuideUrl = new URL("../public/it_hs/it_hs.html", import.meta.url);
 const globalCssUrl = new URL("../app/globals.css", import.meta.url);
 const districtCssUrl = new URL("../public/it_hs/it_hs.css", import.meta.url);
 const tokenCssUrl = new URL("../public/design-tokens.css", import.meta.url);
+const workerUrl = new URL("../worker/index.ts", import.meta.url);
 
 test("root route sends visitors to the public homepage", async () => {
   const page = await readFile(appPageUrl, "utf8");
@@ -114,4 +115,11 @@ test("homepage and district guide share one decision visual token system", async
   assert.match(districtGuide, /href="\/design-tokens\.css"/);
   assert.match(districtCss, /Shared visual system final layer/);
   assert.match(districtCss, /var\(--jshs-radius-card\)/);
+});
+
+test("shared visual token stylesheet is served by the Worker asset binding", async () => {
+  const worker = await readFile(workerUrl, "utf8");
+
+  assert.match(worker, /url\.pathname === "\/design-tokens\.css"/);
+  assert.match(worker, /return env\.ASSETS\.fetch\(request\)/);
 });
