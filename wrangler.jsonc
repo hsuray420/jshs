@@ -27,11 +27,5 @@
       "database_name": "jshs-db",
       "database_id": "ab07d794-b69b-44bf-bd20-8854870c7bd7"
     }
-  ],
-  "r2_buckets": [
-    {
-      "binding": "FILES",
-      "bucket_name": "jshs-files"
-    }
   ]
 }
