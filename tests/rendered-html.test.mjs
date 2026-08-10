@@ -131,6 +131,7 @@ test("shared visual token stylesheet and static guide are served by the Worker a
   assert.match(worker, /url\.pathname\.startsWith\("\/it_hs\/"\)/);
   assert.match(worker, /url\.pathname === "\/it_hs\/it_hs"/);
   assert.match(worker, /new Request\(assetUrl, request\)/);
+  assert.match(config, /"html_handling": "none"/);
   assert.match(config, /"run_worker_first": \["\/it_hs\/\*", "\/design-tokens\.css"\]/);
   assert.match(worker, /return env\.ASSETS\.fetch\(request\)/);
 });
