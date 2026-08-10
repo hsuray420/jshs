@@ -3,6 +3,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const appPageUrl = new URL("../app/page.tsx", import.meta.url);
+const jshsPageUrl = new URL("../app/jshs/page.tsx", import.meta.url);
+const legacyJshsPageUrl = new URL("../app/jshs/jshs/page.tsx", import.meta.url);
+const legacyJshsHtmlUrl = new URL("../public/jshs/jshs.html", import.meta.url);
 const districtScriptUrl = new URL("../public/it_hs/it_hs.js", import.meta.url);
 const districtIndexUrl = new URL("../public/it_hs/ilan/index.html", import.meta.url);
 
@@ -11,6 +14,19 @@ test("root route sends visitors to the public homepage", async () => {
 
   assert.match(page, /redirect\("\/jshs\/home"\)/);
   assert.doesNotMatch(page, /localStorage|role="dialog"|setSelectedDistrict/);
+});
+
+test("legacy jshs entry points resolve to the single public homepage", async () => {
+  const [jshsPage, legacyJshsPage, legacyHtml] = await Promise.all([
+    readFile(jshsPageUrl, "utf8"),
+    readFile(legacyJshsPageUrl, "utf8"),
+    readFile(legacyJshsHtmlUrl, "utf8"),
+  ]);
+
+  assert.match(jshsPage, /redirect\("\/jshs\/home"\)/);
+  assert.match(legacyJshsPage, /redirect\("\/jshs\/home"\)/);
+  assert.match(legacyHtml, /url=\/jshs\/home/);
+  assert.match(legacyHtml, /window\.location\.replace\('\/jshs\/home'\)/);
 });
 
 test("district picker routes choices to district URLs", async () => {

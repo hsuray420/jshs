@@ -39,7 +39,7 @@ export default async function AdminLoginPage({
             LINE_LOGIN_CHANNEL_SECRET。
           </p>
         )}
-        <a className="admin-plain-link" href="/jshs/jshs.html">
+        <a className="admin-plain-link" href="/jshs/home">
           回前台
         </a>
       </section>

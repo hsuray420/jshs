@@ -141,7 +141,7 @@ function showDistrictUnavailablePage() {
             <div class="grid gap-3 sm:grid-cols-3">
                 <a class="ui-btn ui-btn-primary" href="/it_hs/ct/">查看中投區</a>
                 <a class="ui-btn" href="/it_hs/tp/">查看基北區</a>
-                <a class="ui-btn" href="/jshs/jshs.html">回首頁</a>
+                <a class="ui-btn" href="/jshs/home">回首頁</a>
             </div>
         </section>
     `;
