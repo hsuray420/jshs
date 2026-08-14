@@ -12,12 +12,8 @@
   },
   "routes": [
     {
-      "pattern": "jshs.cc",
-      "custom_domain": true
-    },
-    {
-      "pattern": "www.jshs.cc",
-      "custom_domain": true
+      "pattern": "jshs.cc/*",
+      "zone_id": "2700357d9e2674d41286c7d39452e50e"
     }
   ],
   "observability": {
