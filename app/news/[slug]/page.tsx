@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
 import {
   formatNewsDate,
   getNewsArticle,
@@ -72,7 +74,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "首頁", item: "https://jshs.cc/jshs/home" },
+      { "@type": "ListItem", position: 1, name: "首頁", item: "https://jshs.cc/" },
       { "@type": "ListItem", position: 2, name: "升學情報", item: "https://jshs.cc/news" },
       { "@type": "ListItem", position: 3, name: article.title, item: canonicalUrl },
     ],
@@ -82,13 +84,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
     <main className="bg-[#f5f8fc] text-[#14213d]">
       <JsonLd data={articleSchema} />
       <JsonLd data={breadcrumbSchema} />
-      <ArticleHeader />
+      <SiteHeader activeHref="/news" />
 
       <article>
         <header className="border-y border-blue-100 bg-[radial-gradient(circle_at_85%_0%,#dcecff,transparent_32%),linear-gradient(135deg,#fff,#edf5ff)]">
           <div className="mx-auto w-[min(980px,calc(100%-32px))] py-14 md:py-20">
             <nav aria-label="麵包屑" className="flex flex-wrap items-center gap-2 text-sm font-bold text-slate-500">
-              <a href="/jshs/home">首頁</a><span aria-hidden="true">/</span><Link href="/news">升學情報</Link><span aria-hidden="true">/</span><span className="text-[#2868d7]">{article.category}</span>
+              <Link href="/">首頁</Link><span aria-hidden="true">/</span><Link href="/news">升學情報</Link><span aria-hidden="true">/</span><span className="text-[#2868d7]">{article.category}</span>
             </nav>
             <p className="mt-10 text-xs font-black tracking-[.18em] text-[#ba6b18]">{article.kicker}</p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black leading-[1.16] tracking-[-.055em] md:text-6xl">{article.title}</h1>
@@ -176,25 +178,13 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
       </article>
 
       <RelatedArticles articles={relatedNews} />
-      <ArticleFooter />
+      <SiteFooter />
     </main>
   );
 }
 
 function JsonLd({ data }: { data: Record<string, unknown> }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
-}
-
-function ArticleHeader() {
-  return (
-    <header className="bg-white">
-      <div className="mx-auto flex w-[min(1180px,calc(100%-32px))] items-center justify-between gap-4 py-5">
-        <a className="flex items-center gap-2.5 font-black tracking-tight" href="/jshs/home"><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#173d78] text-lg text-white">↗</span><span>全國國中升學資訊網</span></a>
-        <nav aria-label="主要導覽" className="hidden items-center gap-6 text-sm font-bold text-slate-500 md:flex"><Link className="text-[#173d78]" href="/news">升學情報</Link><a href="/jshs/home#districts">選擇就學區</a><a href="/jshs/home#tools">升學工具</a></nav>
-        <a className="rounded-xl bg-[#173d78] px-4 py-2.5 text-sm font-extrabold text-white" href="/it_hs/it_hs.html">開始查校</a>
-      </div>
-    </header>
-  );
 }
 
 function RelatedArticles({ articles }: { articles: readonly NewsArticle[] }) {
@@ -213,17 +203,5 @@ function RelatedArticles({ articles }: { articles: readonly NewsArticle[] }) {
         </div>
       </div>
     </section>
-  );
-}
-
-function ArticleFooter() {
-  return (
-    <footer className="border-t border-slate-200 bg-[#f7fafc] py-9">
-      <div className="mx-auto flex w-[min(1120px,calc(100%-32px))] flex-col justify-between gap-4 text-sm text-slate-500 md:flex-row md:items-center">
-        <b className="text-[#14213d]">全國國中升學資訊網</b>
-        <div className="flex gap-5 font-bold"><Link href="/news">升學情報</Link><a href="/jshs/home#districts">就學區</a><a href="/it_hs/it_hs.html">校科查詢</a></div>
-        <span>招生資訊請以各主管機關最新公告為準。</span>
-      </div>
-    </footer>
   );
 }

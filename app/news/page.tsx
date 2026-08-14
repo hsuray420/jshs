@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
 import {
   formatNewsDate,
   getFeaturedNews,
@@ -8,6 +10,7 @@ import {
   newsUpdatedAt,
   type NewsArticle,
 } from "@/lib/news";
+import { newsCategories } from "@/lib/site-map";
 
 const pageTitle = "升學情報中心｜會考時程、規則解讀與志願策略";
 const pageDescription = "以官方資料為底，整理國中教育會考、高中職免試入學、就學區、志願選填與五專升學的可執行指南。";
@@ -60,7 +63,7 @@ export default function NewsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema).replace(/</g, "\\u003c") }}
       />
-      <SiteHeader />
+      <SiteHeader activeHref="/news" />
 
       <section className="overflow-hidden border-y border-blue-100 bg-[#102f60] text-white">
         <div className="relative mx-auto grid w-[min(1180px,calc(100%-32px))] gap-12 py-16 lg:grid-cols-[1.18fr_.82fr] lg:items-end lg:py-24">
@@ -89,10 +92,10 @@ export default function NewsPage() {
       <nav aria-label="文章分類" className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex w-[min(1180px,calc(100%-32px))] gap-2 overflow-x-auto py-4">
           <a className="shrink-0 rounded-full bg-[#173d78] px-4 py-2 text-sm font-extrabold text-white" href="#latest">最新指南</a>
-          {categories.map((category, index) => (
-            <a key={category} className="shrink-0 rounded-full border border-slate-200 px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-blue-300 hover:text-[#173d78]" href={`#category-${index}`}>
-              {category}
-            </a>
+          {newsCategories.map((category) => (
+            <Link key={category.slug} className="shrink-0 rounded-full border border-slate-200 px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-blue-300 hover:text-[#173d78]" href={category.href}>
+              {category.title}
+            </Link>
           ))}
         </div>
       </nav>
@@ -164,25 +167,6 @@ export default function NewsPage() {
   );
 }
 
-function SiteHeader() {
-  return (
-    <header className="bg-white">
-      <div className="mx-auto flex w-[min(1180px,calc(100%-32px))] items-center justify-between gap-4 py-5">
-        <a className="flex items-center gap-2.5 font-black tracking-tight" href="/jshs/home">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#173d78] text-lg text-white">↗</span>
-          <span>全國國中升學資訊網</span>
-        </a>
-        <nav aria-label="主要導覽" className="hidden items-center gap-6 text-sm font-bold text-slate-500 md:flex">
-          <Link className="text-[#173d78]" href="/news">升學情報</Link>
-          <a href="/jshs/home#districts">選擇就學區</a>
-          <a href="/jshs/home#tools">升學工具</a>
-        </nav>
-        <a className="rounded-xl bg-[#173d78] px-4 py-2.5 text-sm font-extrabold text-white" href="/it_hs/it_hs.html">開始查校</a>
-      </div>
-    </header>
-  );
-}
-
 function SectionHeading({ id, eyebrow, title, body }: { id: string; eyebrow: string; title: string; body: string }) {
   return (
     <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
@@ -237,17 +221,5 @@ function TrustPoint({ number, title, body }: { number: string; title: string; bo
       <h2 className="mt-5 text-xl font-black">{title}</h2>
       <p className="mt-2 text-sm leading-7 text-slate-500">{body}</p>
     </article>
-  );
-}
-
-function SiteFooter() {
-  return (
-    <footer className="border-t border-slate-200 bg-white py-9">
-      <div className="mx-auto flex w-[min(1180px,calc(100%-32px))] flex-col justify-between gap-4 text-sm text-slate-500 md:flex-row md:items-center">
-        <b className="text-[#14213d]">全國國中升學資訊網</b>
-        <div className="flex gap-5 font-bold"><Link href="/news">升學情報</Link><a href="/jshs/home#districts">就學區</a><a href="/it_hs/it_hs.html">校科查詢</a></div>
-        <span>招生資訊請以各主管機關最新公告為準。</span>
-      </div>
-    </footer>
   );
 }
