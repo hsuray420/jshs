@@ -327,6 +327,8 @@ function showPage(page) {
 
     const mobileMenu = document.getElementById('mobileMenu');
     if (mobileMenu) mobileMenu.classList.add('hidden');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    mobileMenuBtn?.setAttribute('aria-expanded', 'false');
     history.replaceState(null, '', `#${targetPage}`);
     if (isTopic) history.replaceState(null, '', `#${page}`);
     renderFaqContext(targetPage);
