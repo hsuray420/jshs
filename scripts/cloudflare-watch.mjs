@@ -3,6 +3,7 @@ import { watch } from "node:fs";
 
 const profile = process.env.JSHS_CLOUDFLARE_PROFILE || "jshs-production";
 const debounceMs = Number(process.env.JSHS_DEPLOY_DEBOUNCE_MS || 3000);
+const pnpmCli = process.env.JSHS_PNPM_CLI || process.env.npm_execpath;
 const ignoredRoots = new Set([".git", ".next", ".wrangler", "backups", "dist", "node_modules", "tmp"]);
 const watchedRoots = new Set(["app", "components", "content", "db", "lib", "public", "scripts", "tests", "worker"]);
 const watchedFiles = new Set(["package.json", "pnpm-lock.yaml", "next.config.ts", "tsconfig.json", "wrangler.jsonc"]);
@@ -27,9 +28,9 @@ async function deployPending() {
   running = true;
   const startedAt = new Date().toISOString();
   console.log(`[jshs] ${startedAt} change settled; running tests before deploy.`);
-  const tested = await run("pnpm", ["test"]);
+  const tested = await runPnpm(["test"]);
   if (tested) {
-    await run("pnpm", ["exec", "wrangler", "deploy", "--profile", profile, "--keep-vars"]);
+    await runPnpm(["exec", "wrangler", "deploy", "--profile", profile, "--keep-vars"]);
   } else {
     console.error("[jshs] Tests failed. Production was not changed.");
   }
@@ -56,6 +57,11 @@ function run(command, args) {
     child.on("error", (error) => { console.error(`[jshs] ${command} failed to start`, error); resolve(false); });
     child.on("exit", (code) => resolve(code === 0));
   });
+}
+
+function runPnpm(args) {
+  if (pnpmCli) return run(process.execPath, [pnpmCli, ...args]);
+  return run("pnpm", args);
 }
 
 for (const signal of ["SIGINT", "SIGTERM"]) {
