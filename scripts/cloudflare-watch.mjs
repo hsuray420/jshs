@@ -1,9 +1,10 @@
 import { spawn } from "node:child_process";
-import { watch } from "node:fs";
+import { readdirSync, watch } from "node:fs";
+import { resolve } from "node:path";
 
 const profile = process.env.JSHS_CLOUDFLARE_PROFILE || "jshs-production";
 const debounceMs = Number(process.env.JSHS_DEPLOY_DEBOUNCE_MS || 3000);
-const pnpmCli = process.env.JSHS_PNPM_CLI || process.env.npm_execpath;
+const projectRoot = process.cwd();
 const ignoredRoots = new Set([".git", ".next", ".wrangler", "backups", "dist", "node_modules", "tmp"]);
 const watchedRoots = new Set(["app", "components", "content", "db", "lib", "public", "scripts", "tests", "worker"]);
 const watchedFiles = new Set(["package.json", "pnpm-lock.yaml", "next.config.ts", "tsconfig.json", "wrangler.jsonc"]);
@@ -28,9 +29,15 @@ async function deployPending() {
   running = true;
   const startedAt = new Date().toISOString();
   console.log(`[jshs] ${startedAt} change settled; running tests before deploy.`);
-  const tested = await runPnpm(["test"]);
+  const tested = await runVerification();
   if (tested) {
-    await runPnpm(["exec", "wrangler", "deploy", "--profile", profile, "--keep-vars"]);
+    await runNode([
+      "node_modules/wrangler/bin/wrangler.js",
+      "deploy",
+      "--profile",
+      profile,
+      "--keep-vars",
+    ]);
   } else {
     console.error("[jshs] Tests failed. Production was not changed.");
   }
@@ -51,17 +58,39 @@ function shouldDeploy(filename) {
   return watchedRoots.has(root) && !normalized.endsWith(".log");
 }
 
-function run(command, args) {
+async function runVerification() {
+  const testFiles = readdirSync(resolve(projectRoot, "tests"))
+    .filter((name) => name.endsWith(".test.mjs"))
+    .sort()
+    .map((name) => resolve(projectRoot, "tests", name));
+  const steps = [
+    ["scripts/validate-content-trust.mjs"],
+    ["node_modules/typescript/bin/tsc", "--noEmit", "--incremental", "false"],
+    ["scripts/generate-source-snapshot.mjs"],
+    ["node_modules/vinext/dist/cli.js", "build"],
+    ["--test", ...testFiles],
+  ];
+  for (const args of steps) {
+    const env = args[0].includes("vinext") ? { WRANGLER_LOG_PATH: ".wrangler/wrangler.log" } : {};
+    if (!(await runNode(args, env))) return false;
+  }
+  return true;
+}
+
+function runNode(args, extraEnv = {}) {
+  return run(process.execPath, args, extraEnv);
+}
+
+function run(command, args, extraEnv = {}) {
   return new Promise((resolve) => {
-    const child = spawn(command, args, { cwd: process.cwd(), env: process.env, stdio: "inherit" });
+    const child = spawn(command, args, {
+      cwd: projectRoot,
+      env: { ...process.env, ...extraEnv },
+      stdio: "inherit",
+    });
     child.on("error", (error) => { console.error(`[jshs] ${command} failed to start`, error); resolve(false); });
     child.on("exit", (code) => resolve(code === 0));
   });
-}
-
-function runPnpm(args) {
-  if (pnpmCli) return run(process.execPath, [pnpmCli, ...args]);
-  return run("pnpm", args);
 }
 
 for (const signal of ["SIGINT", "SIGTERM"]) {

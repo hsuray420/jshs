@@ -58,8 +58,9 @@ test("local source changes are gated and deployed directly to Cloudflare", async
 
   assert.match(pkg, /"cloudflare:watch"/);
   assert.match(pkg, /"cloudflare:deploy:direct"/);
-  assert.match(watcher, /pnpm/);
   assert.match(watcher, /process\.execPath/);
+  assert.match(watcher, /typescript\/bin\/tsc/);
+  assert.match(watcher, /vinext\/dist\/cli\.js/);
   assert.match(watcher, /test/);
   assert.match(watcher, /wrangler/);
   assert.match(watcher, /deploy/);
