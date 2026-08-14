@@ -51,3 +51,15 @@ test("routing from the mobile menu closes both its visual and accessible state",
   assert.match(script, /mobileMenu\.classList\.add\('hidden'\)/);
   assert.match(script, /mobileMenuBtn\?\.setAttribute\('aria-expanded', 'false'\)/);
 });
+
+test("deep links render their requested tool before Cloudflare state finishes loading", async () => {
+  const script = await readFile(guideScriptUrl, "utf8");
+  const start = script.indexOf("window.addEventListener('DOMContentLoaded'");
+  const boot = script.slice(start, start + 1800);
+  const routerIndex = boot.indexOf("initPageRouter();");
+  const dataIndex = boot.indexOf("await Promise.all([loadPlannerStore(), loadDistrictMetadata()]);");
+
+  assert.ok(routerIndex >= 0, "the router must initialize during boot");
+  assert.ok(dataIndex >= 0, "Cloudflare state and metadata should load in parallel");
+  assert.ok(routerIndex < dataIndex, "the requested hash must render before network state completes");
+});
