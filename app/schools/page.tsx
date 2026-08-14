@@ -19,13 +19,13 @@ const districtOptions = Object.entries(districtMetadata.districts).map(([code, d
   label: district.label,
 }));
 
-export default async function SchoolsPage({ searchParams }: { searchParams: Promise<{ district?: string }> }) {
+export default async function SchoolsPage({ searchParams }: { searchParams: Promise<{ district?: string; q?: string }> }) {
   const params = await searchParams;
   const initialDistrict = districtOptions.some((item) => item.code === params.district) ? params.district! : "ct";
   return (
     <main className="min-h-screen bg-[#f5f8fc] text-[#14213d]">
       <SiteHeader activeHref="/schools" />
-      <SchoolExplorer districtOptions={districtOptions} initialDistrict={initialDistrict} />
+      <SchoolExplorer districtOptions={districtOptions} initialDistrict={initialDistrict} initialQuery={params.q?.slice(0, 100) || ""} />
       <SiteFooter />
     </main>
   );

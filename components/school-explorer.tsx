@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 type DistrictOption = { code: string; label: string };
@@ -19,12 +20,14 @@ type School = {
 export function SchoolExplorer({
   districtOptions,
   initialDistrict,
+  initialQuery = "",
 }: {
   districtOptions: DistrictOption[];
   initialDistrict: string;
+  initialQuery?: string;
 }) {
   const [district, setDistrict] = useState(initialDistrict);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const [schools, setSchools] = useState<School[]>([]);
   const [status, setStatus] = useState("loading");
   const [savedCode, setSavedCode] = useState("");
@@ -88,7 +91,7 @@ export function SchoolExplorer({
         <div className="mx-auto w-[min(1120px,calc(100%-32px))] py-16 md:py-24">
           <p className="text-xs font-black tracking-[.18em] text-[#2868d7]">CLOUDFLARE SCHOOL DIRECTORY</p>
           <h1 className="mt-5 max-w-4xl text-5xl font-black leading-[1.08] tracking-[-.055em] md:text-7xl">全國校科查詢，<br />現在就是新功能。</h1>
-          <p className="mt-7 max-w-3xl text-lg leading-8 text-slate-600">直接在 JSHS 查找與收藏，不再跳轉舊系統。學校 CSV 隨網站版本存放在 Cloudflare Assets，收藏寫入 Cloudflare D1。</p>
+          <p className="mt-7 max-w-3xl text-lg leading-8 text-slate-600">直接在全國國中升學資訊網查找與收藏，不再跳轉舊系統。學校 CSV 隨網站版本存放在 Cloudflare Assets，收藏寫入 Cloudflare D1。</p>
         </div>
       </section>
 
@@ -121,6 +124,7 @@ export function SchoolExplorer({
               <p className="mt-3 text-sm leading-6 text-slate-500">{[school.city, school.area, school.address].filter(Boolean).join(" · ")}</p>
               <p className="mt-4 rounded-2xl bg-blue-50 p-4 text-sm leading-7 text-[#173d78]">{school.departments || "科別與招生名額請核對當年度正式簡章。"}</p>
               <div className="mt-auto flex flex-wrap gap-3 pt-5">
+                {district === "ct" && school.code ? <Link className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-black text-[#173d78]" href={`/schools/${district}/${school.code}`}>查看完整資料</Link> : null}
                 <button type="button" onClick={() => saveSchool(school)} className="rounded-xl bg-[#173d78] px-4 py-3 text-sm font-black text-white">{savedCode === school.code ? "已存入 Cloudflare" : "加入我的規劃"}</button>
                 {school.website ? <a className="rounded-xl border border-slate-300 px-4 py-3 text-sm font-black text-[#173d78]" href={school.website} target="_blank" rel="noreferrer">學校官網</a> : null}
               </div>

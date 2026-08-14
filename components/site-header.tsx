@@ -138,8 +138,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
         <div className="mx-auto flex min-h-18 w-[min(1180px,calc(100%-32px))] items-center gap-4">
           <Link className="flex min-w-0 shrink-0 items-center gap-2.5 font-black tracking-tight text-[#14213d]" href="/">
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#173d78] text-lg text-white">↗</span>
-            <span className="hidden truncate sm:block">全國國中升學資訊網</span>
-            <span className="truncate sm:hidden">JSHS</span>
+            <span className="truncate text-xs sm:text-base">全國國中升學資訊網</span>
           </Link>
 
           <nav aria-label="主要導覽" className="ml-auto hidden h-18 items-stretch lg:flex">
@@ -186,7 +185,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
         <div className="fixed inset-0 z-[80] bg-[#f5f8fc]" role="dialog" aria-modal="true" aria-label="全站導覽">
           <div className="mx-auto flex h-full w-[min(760px,100%)] flex-col bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4 sm:px-8">
-              <div><p className="text-xs font-black tracking-[.16em] text-[#2868d7]">JSHS NAVIGATION</p><b className="mt-1 block text-lg text-[#14213d]">找到現在需要的下一步</b></div>
+              <div><p className="text-xs font-black tracking-[.16em] text-[#2868d7]">全站導覽</p><b className="mt-1 block text-lg text-[#14213d]">找到現在需要的下一步</b></div>
               <button type="button" onClick={closeDrawer} aria-label="關閉選單" className="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 text-2xl text-[#173d78]">×</button>
             </div>
 
