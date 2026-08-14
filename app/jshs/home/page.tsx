@@ -1,4 +1,27 @@
+import type { Metadata } from "next";
 import districtMetadata from "../../../public/it_hs/district-metadata.json";
+
+const homeTitle = "全國國中升學資訊網｜校科查詢、積分試算與志願規劃";
+const homeDescription = "整合全台就學區學校資料、積分試算、落點分析與志願規劃；每筆規則標示資料年度、更新日與官方來源。";
+
+export const metadata: Metadata = {
+  title: homeTitle,
+  description: homeDescription,
+  alternates: { canonical: "/jshs/home" },
+  openGraph: {
+    type: "website",
+    locale: "zh_TW",
+    url: "/jshs/home",
+    siteName: "全國國中升學資訊網",
+    title: homeTitle,
+    description: homeDescription,
+  },
+  twitter: {
+    card: "summary",
+    title: homeTitle,
+    description: homeDescription,
+  },
+};
 
 type District = (typeof districtMetadata.districts)[keyof typeof districtMetadata.districts];
 

@@ -71,7 +71,7 @@ test("districts with a school CSV open school search without scoring tools", asy
 test("district metadata exposes feature availability and authoritative context", async () => {
   const metadata = JSON.parse(await readFile(districtMetadataUrl, "utf8"));
 
-  assert.equal(metadata.version, "2026.08.10");
+  assert.equal(metadata.version, "2026.08.14");
   assert.equal(metadata.districts.ct.schools, true);
   assert.equal(metadata.districts.ct.calculator, true);
   assert.equal(metadata.districts.tp.analysis, true);
