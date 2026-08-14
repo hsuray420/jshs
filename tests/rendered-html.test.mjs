@@ -148,3 +148,13 @@ test("trust-critical static files bypass stale asset caches", async () => {
   assert.match(worker, /url\.pathname === "\/sitemap\.xml"/);
   assert.match(worker, /"cache-control": "no-store"/);
 });
+
+test("worker serves built assets and preserves the legacy district entry URL", async () => {
+  const worker = await readFile(workerUrl, "utf8");
+
+  assert.match(worker, /url\.pathname\.startsWith\("\/assets\/"\)/);
+  assert.match(worker, /url\.pathname === "\/it_hs\/it_hs\.html"/);
+  assert.match(worker, /appUrl\.pathname = "\/it_hs\/it_hs"/);
+  assert.match(worker, /url\.pathname\.startsWith\("\/jshs\/"\)/);
+  assert.match(worker, /url\.pathname\.startsWith\("\/it_5\/"\)/);
+});
