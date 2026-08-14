@@ -163,3 +163,15 @@ test("worker serves built assets and preserves the legacy district entry URL", a
   assert.match(worker, /url\.pathname\.startsWith\("\/jshs\/"\)/);
   assert.match(worker, /url\.pathname\.startsWith\("\/it_5\/"\)/);
 });
+
+test("production Worker route takes over the existing jshs.cc zone without R2", async () => {
+  const config = JSON.parse(await readFile(wranglerConfigUrl, "utf8"));
+
+  assert.deepEqual(config.routes, [
+    {
+      pattern: "jshs.cc/*",
+      zone_id: "2700357d9e2674d41286c7d39452e50e",
+    },
+  ]);
+  assert.equal("r2_buckets" in config, false);
+});
