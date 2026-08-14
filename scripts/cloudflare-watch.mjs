@@ -6,7 +6,7 @@ const profile = process.env.JSHS_CLOUDFLARE_PROFILE || "jshs-production";
 const debounceMs = Number(process.env.JSHS_DEPLOY_DEBOUNCE_MS || 3000);
 const projectRoot = process.cwd();
 const ignoredRoots = new Set([".git", ".next", ".wrangler", "backups", "dist", "node_modules", "tmp"]);
-const watchedRoots = new Set(["app", "components", "content", "db", "lib", "public", "scripts", "tests", "worker"]);
+const watchedRoots = new Set(["app", "components", "content", "db", "lib", "public", "scripts", "styles", "tests", "worker"]);
 const watchedFiles = new Set(["package.json", "pnpm-lock.yaml", "next.config.ts", "tsconfig.json", "wrangler.jsonc"]);
 
 let timer;
@@ -52,6 +52,7 @@ function shouldDeploy(filename) {
   if (!filename) return false;
   const normalized = filename.replaceAll("\\", "/");
   if (normalized === "lib/source-code.ts") return false;
+  if (normalized === "public/it_hs/guide-tailwind.css") return false;
   const root = normalized.split("/")[0];
   if (ignoredRoots.has(root)) return false;
   if (watchedFiles.has(normalized)) return true;
@@ -66,6 +67,7 @@ async function runVerification() {
   const steps = [
     ["scripts/validate-content-trust.mjs"],
     ["node_modules/typescript/bin/tsc", "--noEmit", "--incremental", "false"],
+    ["scripts/generate-guide-tailwind.mjs"],
     ["scripts/generate-source-snapshot.mjs"],
     ["node_modules/vinext/dist/cli.js", "build"],
     ["--test", ...testFiles],

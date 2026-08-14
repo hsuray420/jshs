@@ -5,32 +5,40 @@ import test from "node:test";
 const readSource = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 test("production UI has no third-party runtime scripts or remote data fallback", async () => {
-  const [layout, fiveYear, siteConfig] = await Promise.all([
+  const [layout, fiveYear, guide, siteConfig] = await Promise.all([
     readSource("app/layout.tsx"),
     readSource("public/it_5/it_5.html"),
+    readSource("public/it_hs/guide.htm"),
     readSource("public/it_hs/site-config.js"),
   ]);
 
-  for (const source of [layout, fiveYear]) {
-    assert.doesNotMatch(source, /googlesyndication|fonts\.googleapis|fonts\.gstatic/);
+  for (const source of [layout, fiveYear, guide]) {
+    assert.doesNotMatch(source, /googlesyndication|fonts\.googleapis|fonts\.gstatic|cdn\.tailwindcss/);
   }
+  assert.match(guide, /href="guide-tailwind\.css/);
   assert.doesNotMatch(siteConfig, /tyctw\.github\.io|publicSchoolIndexSource/);
 });
 
 test("school and planner data are served by Cloudflare Assets and D1", async () => {
-  const [schoolRoute, plannerStore, plannerRoute, workerConfig] = await Promise.all([
+  const [schoolRoute, plannerStore, plannerRoute, plannerStateRoute, legacyGuide, workerConfig] = await Promise.all([
     readSource("app/api/schools.csv/route.ts"),
     readSource("db/planner-store.ts"),
     readSource("app/api/planner/route.ts"),
+    readSource("app/api/planner/state/route.ts"),
+    readSource("public/it_hs/guide.js"),
     readSource("wrangler.jsonc"),
   ]);
 
   assert.match(schoolRoute, /env\.ASSETS\.fetch/);
   assert.match(schoolRoute, /district/);
   assert.match(plannerStore, /CREATE TABLE IF NOT EXISTS planner_items/);
+  assert.match(plannerStore, /CREATE TABLE IF NOT EXISTS planner_states/);
   assert.match(plannerStore, /\.prepare\(/);
   assert.match(plannerStore, /\.bind\(/);
   assert.match(plannerRoute, /HttpOnly/);
+  assert.match(plannerStateRoute, /export async function PUT/);
+  assert.match(legacyGuide, /fetch\('\/api\/planner\/state'/);
+  assert.match(legacyGuide, /await loadPlannerStore\(\)/);
   assert.match(workerConfig, /"binding": "ASSETS"/);
   assert.match(workerConfig, /"binding": "DB"/);
 });

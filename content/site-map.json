@@ -1,11 +1,11 @@
 {
   "updatedAt": "2026-08-14",
   "primaryNavigation": [
-    { "label": "升學情報", "href": "/news", "activeHref": "/news" },
-    { "label": "找學校", "href": "/schools", "activeHref": "/schools" },
-    { "label": "升學工具", "href": "/tools", "activeHref": "/tools" },
-    { "label": "就學區", "href": "/districts", "activeHref": "/districts" },
-    { "label": "我的規劃", "href": "/planner", "activeHref": "/planner" }
+    { "label": "升學情報", "href": "/news#latest", "activeHref": "/news" },
+    { "label": "找學校", "href": "/it_hs/guide.htm#schools", "activeHref": "/schools" },
+    { "label": "升學工具", "href": "/it_hs/guide.htm#calculator", "activeHref": "/tools" },
+    { "label": "就學區", "href": "/it_hs/guide.htm#home", "activeHref": "/districts" },
+    { "label": "我的規劃", "href": "/it_hs/guide.htm#analysis", "activeHref": "/planner" }
   ],
   "newsCategories": [
     {

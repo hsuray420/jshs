@@ -154,13 +154,25 @@ function renderDistrictOfficialLink() {
 
 const PLANNER_STORAGE_KEY = 'jshs:planner:v1';
 let plannerStore = { version: 1, plans: {} };
+let plannerCloudSaveTimer = null;
 
-function loadPlannerStore() {
+async function loadPlannerStore() {
     try {
         const saved = JSON.parse(localStorage.getItem(PLANNER_STORAGE_KEY) || '{}');
         if (saved && saved.version === 1 && saved.plans && typeof saved.plans === 'object') plannerStore = saved;
     } catch {
         plannerStore = { version: 1, plans: {} };
+    }
+    try {
+        const response = await fetch('/api/planner/state', { headers: { accept: 'application/json' } });
+        const payload = await response.json();
+        const state = payload?.state;
+        if (response.ok && state?.version === 1 && state.plans && typeof state.plans === 'object') {
+            plannerStore = state;
+            localStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify(plannerStore));
+        }
+    } catch {
+        // Cloudflare 暫時無法連線時，保留本機快取，恢復連線後再同步。
     }
 }
 
@@ -176,6 +188,15 @@ function persistPlanner() {
     const plan = currentPlan();
     plan.updatedAt = new Date().toISOString();
     try { localStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify(plannerStore)); } catch {}
+    clearTimeout(plannerCloudSaveTimer);
+    plannerCloudSaveTimer = setTimeout(() => {
+        fetch('/api/planner/state', {
+            method: 'PUT',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ state: plannerStore }),
+            keepalive: true
+        }).catch(() => {});
+    }, 500);
 }
 
 function captureCalculatorInputs() {
@@ -1813,7 +1834,7 @@ function initSchools() {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-    loadPlannerStore();
+    await loadPlannerStore();
     await loadDistrictMetadata();
     initDistrictPicker();
     toggleMobileMenu();

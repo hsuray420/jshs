@@ -9,11 +9,11 @@ const sitemapUrl = new URL("../public/sitemap.xml", import.meta.url);
 const articlePageUrl = new URL("../app/news/[slug]/page.tsx", import.meta.url);
 
 const expectedNavigation = [
-  ["升學情報", "/news"],
-  ["找學校", "/schools"],
-  ["升學工具", "/tools"],
-  ["就學區", "/districts"],
-  ["我的規劃", "/planner"],
+  ["升學情報", "/news#latest"],
+  ["找學校", "/it_hs/guide.htm#schools"],
+  ["升學工具", "/it_hs/guide.htm#calculator"],
+  ["就學區", "/it_hs/guide.htm#home"],
+  ["我的規劃", "/it_hs/guide.htm#analysis"],
 ];
 
 const expectedCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
@@ -69,6 +69,22 @@ test("tools, schools, districts, and private planner each have a real landing pa
   const planner = await readFile(new URL("../app/planner/page.tsx", import.meta.url), "utf8");
   assert.match(planner, /index:\s*false/);
   assert.match(planner, /follow:\s*false/);
+});
+
+test("primary navigation lands on an interactive surface instead of an introductory hero", async () => {
+  const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
+  const guide = await readFile(new URL("../public/it_hs/guide.htm", import.meta.url), "utf8");
+  const news = await readFile(new URL("../app/news/page.tsx", import.meta.url), "utf8");
+
+  for (const { href } of siteMap.primaryNavigation) {
+    const [path, anchor] = href.split("#");
+    assert.ok(anchor, `${path} must link directly to its useful content`);
+    if (path === "/news") assert.match(news, new RegExp(`id=["']${anchor}["']`));
+    else {
+      assert.equal(path, "/it_hs/guide.htm");
+      assert.match(guide, new RegExp(`data-page-section=["']${anchor}["']`));
+    }
+  }
 });
 
 test("sitemap exposes canonical hubs and excludes redirect-only legacy homepage", async () => {

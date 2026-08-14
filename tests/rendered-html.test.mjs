@@ -154,12 +154,13 @@ test("trust-critical static files bypass stale asset caches", async () => {
   assert.match(worker, /"cache-control": "no-store"/);
 });
 
-test("worker serves built assets and redirects the legacy district entry URL", async () => {
+test("worker serves the original admission app and redirects its alias back to the functional guide", async () => {
   const worker = await readFile(workerUrl, "utf8");
 
   assert.match(worker, /url\.pathname\.startsWith\("\/assets\/"\)/);
   assert.match(worker, /url\.pathname === "\/it_hs\/it_hs\.html"/);
-  assert.match(worker, /Response\.redirect\(new URL\("\/schools"/);
+  assert.match(worker, /new URL\("\/it_hs\/guide\.htm"/);
+  assert.doesNotMatch(worker, /url\.pathname === "\/it_hs\/guide\.htm"[^}]+Response\.redirect/s);
   assert.match(worker, /url\.pathname\.startsWith\("\/jshs\/"\)/);
   assert.match(worker, /url\.pathname\.startsWith\("\/it_5\/"\)/);
 });

@@ -87,14 +87,10 @@ const worker = {
     }
 
     if (url.pathname === "/it_hs/it_hs.html") {
-      const destination = new URL("/schools", request.url);
+      const destination = new URL("/it_hs/guide.htm", request.url);
       const district = url.searchParams.get("district");
       if (district && /^[a-z-]{2,30}$/.test(district)) destination.searchParams.set("district", district);
       return Response.redirect(destination, 301);
-    }
-
-    if (url.pathname === "/it_hs/guide.htm" || url.pathname === "/it_hs/it_hs") {
-      return Response.redirect(new URL("/schools", request.url), 301);
     }
 
     const isStaticAsset =

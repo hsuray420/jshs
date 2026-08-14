@@ -25,6 +25,11 @@ export async function ensurePlannerSchema() {
     )`),
     getD1().prepare(`CREATE INDEX IF NOT EXISTS idx_planner_items_owner_created
       ON planner_items(planner_id, created_at)`),
+    getD1().prepare(`CREATE TABLE IF NOT EXISTS planner_states (
+      planner_id TEXT PRIMARY KEY,
+      state_json TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    )`),
   ]);
 }
 
@@ -52,4 +57,24 @@ export async function deletePlannerItem(plannerId: string, itemId: string) {
   await ensurePlannerSchema();
   await getD1().prepare(`DELETE FROM planner_items WHERE id = ? AND planner_id = ?`)
     .bind(itemId, plannerId).run();
+}
+
+export async function getPlannerState(plannerId: string) {
+  await ensurePlannerSchema();
+  const result = await getD1().prepare(`SELECT state_json FROM planner_states
+    WHERE planner_id = ? LIMIT 1`).bind(plannerId).first<{ state_json: string }>();
+  return result?.state_json ?? null;
+}
+
+export async function savePlannerState(plannerId: string, stateJson: string) {
+  await ensurePlannerSchema();
+  await getD1().prepare(`INSERT INTO planner_states (planner_id, state_json, updated_at)
+    VALUES (?, ?, ?)
+    ON CONFLICT(planner_id) DO UPDATE SET
+      state_json = excluded.state_json,
+      updated_at = excluded.updated_at`).bind(
+    plannerId,
+    stateJson,
+    new Date().toISOString(),
+  ).run();
 }

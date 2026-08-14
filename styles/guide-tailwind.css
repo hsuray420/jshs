@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@source "../public/it_hs/guide.htm";
+
+@theme {
+  --color-neo-bg: #f5f7fb;
+  --color-neo-text: #1f2937;
+  --color-neo-muted: #6b7280;
+  --color-neo-accent: #2563eb;
+  --color-neo-accentLight: #60a5fa;
+  --color-neo-blueGray: #e2e8f0;
+  --color-neo-surface: #ffffff;
+  --font-display: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
