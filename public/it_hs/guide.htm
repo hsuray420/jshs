@@ -318,7 +318,7 @@
                         </div>
                         <div class="calc-divider"></div>
                         <div class="calc-field-group">
-                            <select id="prefScore" class="ui-input">
+                            <select id="prefScore" aria-label="志願序積分" class="ui-input">
                                 <option value="30">第1-10志願（30 分）</option>
                                 <option value="29">第11-20志願（29 分）</option>
                                 <option value="28">第21-50志願（28 分）</option>
@@ -359,7 +359,7 @@
                         </div>
                         <div class="calc-divider"></div>
                         <div class="calc-field-group">
-                            <select id="weakScore" class="ui-input">
+                            <select id="weakScore" aria-label="扶助弱勢" class="ui-input">
                                 <option value="0">一般</option>
                                 <option value="1">偏鄉/中低（1 分）</option>
                                 <option value="2">低收（2 分）</option>
@@ -396,12 +396,12 @@
                                 <div class="calc-field-row">
                                     <div>
                                         <label class="block text-sm mb-2">社團（上限 2 分）</label>
-                                        <input id="mor_club_terms" type="number" min="0" max="2" value="0" class="ui-input">
+                                        <input id="mor_club_terms" aria-label="社團參與學期數" type="number" min="0" max="2" value="0" class="ui-input">
                                         <p class="calc-small-note">每一學期 1 分，最多 2 分。</p>
                                     </div>
                                     <div>
                                         <label class="block text-sm mb-2">服務學習（上限 3 分）</label>
-                                        <select id="mor_service_learning" class="ui-input">
+                                        <select id="mor_service_learning" aria-label="服務學習積分" class="ui-input">
                                             <option value="0">無</option>
                                             <option value="1">1 分</option>
                                             <option value="2">2 分</option>
@@ -413,7 +413,7 @@
                             </div>
                             <div class="calc-field-group">
                                 <label class="block text-sm font-medium mb-2">無記過紀錄（上限 6 分）</label>
-                                <select id="nod_record" class="ui-input">
+                                <select id="nod_record" aria-label="獎懲紀錄" class="ui-input">
                                     <option value="6">無處分紀錄（6 分）</option>
                                     <option value="6">銷過後無處分紀錄（6 分）</option>
                                     <option value="3">銷過後無小過以上紀錄（3 分）</option>
@@ -447,7 +447,7 @@
                         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                             <div>
                                 <label class="block text-sm font-medium mb-2">國文</label>
-                                <select id="subj_cn" class="ui-input">
+                                <select id="subj_cn" aria-label="國文會考成績" class="ui-input">
                                     <option value="" disabled selected>請選擇</option>
                                     <option value="21">A++ (精熟)</option>
                                     <option value="18">A+ (精熟)</option>
@@ -460,7 +460,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">英文</label>
-                                <select id="subj_en" class="ui-input">
+                                <select id="subj_en" aria-label="英文會考成績" class="ui-input">
                                     <option value="" disabled selected>請選擇</option>
                                     <option value="21">A++ (精熟)</option>
                                     <option value="18">A+ (精熟)</option>
@@ -473,7 +473,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">數學</label>
-                                <select id="subj_math" class="ui-input">
+                                <select id="subj_math" aria-label="數學會考成績" class="ui-input">
                                     <option value="" disabled selected>請選擇</option>
                                     <option value="21">A++ (精熟)</option>
                                     <option value="18">A+ (精熟)</option>
@@ -486,7 +486,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">自然</label>
-                                <select id="subj_sci" class="ui-input">
+                                <select id="subj_sci" aria-label="自然會考成績" class="ui-input">
                                     <option value="" disabled selected>請選擇</option>
                                     <option value="21">A++ (精熟)</option>
                                     <option value="18">A+ (精熟)</option>
@@ -499,7 +499,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">社會</label>
-                                <select id="subj_soc" class="ui-input">
+                                <select id="subj_soc" aria-label="社會會考成績" class="ui-input">
                                     <option value="" disabled selected>請選擇</option>
                                     <option value="21">A++ (精熟)</option>
                                     <option value="18">A+ (精熟)</option>
@@ -512,7 +512,7 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">作文</label>
-                                <select id="subj_write" class="ui-input">
+                                <select id="subj_write" aria-label="作文級分" class="ui-input">
                                     <option value="" disabled selected>請選擇</option>
                                     <option value="6">6 級</option>
                                     <option value="5">5 級</option>
