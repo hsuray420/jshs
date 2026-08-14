@@ -40,6 +40,13 @@ function trustResponse(body: BodyInit, contentType: string): Response {
   });
 }
 
+const rootStaticAssets = new Set([
+  "/favicon.svg",
+  "/file.svg",
+  "/globe.svg",
+  "/window.svg",
+]);
+
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
@@ -77,6 +84,22 @@ const worker = {
     // HTML/CSS/JS revision. Route it, and its shared token stylesheet,
     // straight to the versioned asset binding.
     if (url.pathname === "/design-tokens.css") {
+      return env.ASSETS.fetch(request);
+    }
+
+    if (url.pathname === "/it_hs/it_hs.html") {
+      const appUrl = new URL(request.url);
+      appUrl.pathname = "/it_hs/it_hs";
+      return handler.fetch(new Request(appUrl, request), env, ctx);
+    }
+
+    const isStaticAsset =
+      url.pathname.startsWith("/assets/") ||
+      url.pathname.startsWith("/it_5/") ||
+      rootStaticAssets.has(url.pathname) ||
+      (url.pathname.startsWith("/jshs/") && /\.[a-z0-9]+$/i.test(url.pathname));
+
+    if (isStaticAsset) {
       return env.ASSETS.fetch(request);
     }
 
