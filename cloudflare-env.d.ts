@@ -5,3 +5,8 @@ declare namespace Cloudflare {
     FILES?: R2Bucket;
   }
 }
+
+declare module "*?raw" {
+  const content: string;
+  export default content;
+}

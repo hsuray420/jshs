@@ -1,6 +1,9 @@
 /** Cloudflare Worker entry point for the vinext-starter template. */
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
+import districtMetadata from "../public/it_hs/district-metadata.json";
+import robotsText from "../public/robots.txt?raw";
+import sitemapXml from "../public/sitemap.xml?raw";
 
 interface Env {
   ASSETS: Fetcher;
@@ -26,9 +29,32 @@ interface ExecutionContext {
 // dangerouslyAllowSVG: true in next.config.js and uncomment below:
 // const imageConfig: ImageConfig = { dangerouslyAllowSVG: true };
 
+function trustResponse(body: BodyInit, contentType: string): Response {
+  return new Response(body, {
+    headers: {
+      "cache-control": "no-store",
+      "content-type": contentType,
+      "x-content-type-options": "nosniff",
+      "x-jshs-release": "2026.08.14-p0",
+    },
+  });
+}
+
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
+
+    if (url.pathname === "/it_hs/district-metadata.json") {
+      return trustResponse(JSON.stringify(districtMetadata), "application/json; charset=utf-8");
+    }
+
+    if (url.pathname === "/robots.txt") {
+      return trustResponse(robotsText, "text/plain; charset=utf-8");
+    }
+
+    if (url.pathname === "/sitemap.xml") {
+      return trustResponse(sitemapXml, "application/xml; charset=utf-8");
+    }
 
     if (url.pathname === "/_vinext/image") {
       const imageBinding = env.IMAGES;
