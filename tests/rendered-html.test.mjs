@@ -136,3 +136,15 @@ test("shared visual token stylesheet and static guide are served by the Worker a
   assert.match(config, /"run_worker_first": true/);
   assert.match(worker, /return env\.ASSETS\.fetch\(request\)/);
 });
+
+test("trust-critical static files bypass stale asset caches", async () => {
+  const worker = await readFile(workerUrl, "utf8");
+
+  assert.match(worker, /import districtMetadata from "\.\.\/public\/it_hs\/district-metadata\.json"/);
+  assert.match(worker, /import robotsText from "\.\.\/public\/robots\.txt\?raw"/);
+  assert.match(worker, /import sitemapXml from "\.\.\/public\/sitemap\.xml\?raw"/);
+  assert.match(worker, /url\.pathname === "\/it_hs\/district-metadata\.json"/);
+  assert.match(worker, /url\.pathname === "\/robots\.txt"/);
+  assert.match(worker, /url\.pathname === "\/sitemap\.xml"/);
+  assert.match(worker, /"cache-control": "no-store"/);
+});
