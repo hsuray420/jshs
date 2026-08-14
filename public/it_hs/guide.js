@@ -4,6 +4,7 @@ function toggleMobileMenu() {
     if (!mobileMenuBtn || !mobileMenu) return;
     mobileMenuBtn.addEventListener('click', () => {
         mobileMenu.classList.toggle('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', String(!mobileMenu.classList.contains('hidden')));
     });
 }
 
@@ -562,7 +563,8 @@ function initHomeSections() {
 function initPageRouter() {
     const routeControls = document.querySelectorAll('[data-page]');
     routeControls.forEach(control => {
-        control.addEventListener('click', () => {
+        control.addEventListener('click', event => {
+            event.preventDefault();
             showPage(control.dataset.page);
         });
     });

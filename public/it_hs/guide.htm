@@ -6,9 +6,9 @@
     <title>高中職升學完整指南｜全國國中升學資訊網</title>
     <link rel="stylesheet" href="guide-tailwind.css?v=20260814-1">
     <link rel="stylesheet" href="/design-tokens.css">
-    <link rel="stylesheet" href="guide.css?v=20260810-1">
+    <link rel="stylesheet" href="guide.css?v=20260814-3">
 </head>
-<body class="font-body text-neo-text antialiased overflow-x-hidden">
+<body class="font-body text-neo-text antialiased overflow-x-hidden" data-guide-shell="unified-2026">
 
     <div id="districtModal" class="district-modal" role="dialog" aria-modal="true" aria-labelledby="district-modal-title" hidden>
         <div class="district-modal-panel">
@@ -20,31 +20,41 @@
         </div>
     </div>
 
-    <header class="site-header sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-neo-blueGray/70">
-        <div class="header-main max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
-            <a class="brand" href="/" aria-label="全國國中升學資訊網首頁">
-                <span class="brand-mark" aria-hidden="true">
-                    <svg viewBox="0 0 32 32" fill="none"><path d="M6 24 L14 12 L20 18 L26 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="8" r="2.4" fill="currentColor"/></svg>
-                </span>
-                <span class="brand-copy">
-                    <span class="brand-name">全國國中升學資訊網 <strong class="current-district-badge" data-current-district-label>尚未選擇就學區</strong></span>
-                    <span class="brand-subtitle">高中職完整指南 · 全區學校查詢已開放</span>
-                </span>
-            </a>
-            <div class="header-actions">
-                <button type="button" class="district-switch-button" data-district-picker>選擇／切換就學區</button>
-                <a class="line-header-link" href="#" data-line-link aria-label="加入 LINE 官方帳號">
-                    <span class="line-dot" aria-hidden="true">LINE</span>
-                    <span>加入官方帳號</span>
+    <header class="site-header">
+        <div class="guide-primary-bar">
+            <div class="guide-primary-inner">
+                <a class="brand" href="/" aria-label="全國國中升學資訊網首頁">
+                    <span class="brand-mark" aria-hidden="true">↗</span>
+                    <span class="brand-name">全國國中升學資訊網</span>
                 </a>
-                <button id="mobileMenuBtn" class="md:hidden w-11 h-11 rounded-2xl bg-white shadow-md flex items-center justify-center text-neo-text border border-neo-blueGray/70" aria-label="開啟選單">
-                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path></svg>
+                <nav class="guide-primary-nav" aria-label="主要導覽">
+                    <a href="/news#latest">升學情報</a>
+                    <a href="#schools" data-page="schools">找學校</a>
+                    <a href="#calculator" data-page="calculator" data-scoring-feature>升學工具</a>
+                    <a href="#home" data-page="home" data-district-picker>就學區</a>
+                    <a href="#analysis" data-page="analysis" data-scoring-feature>我的規劃</a>
+                </nav>
+                <button id="mobileMenuBtn" class="guide-mobile-menu-button" type="button" aria-label="開啟選單" aria-controls="mobileMenu" aria-expanded="false">
+                    <span></span><span></span><span></span>
                 </button>
             </div>
         </div>
-        <div class="header-nav-wrap border-t border-neo-blueGray bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <nav class="section-nav menu-board hidden md:flex" aria-label="高中職功能選單">
+
+        <div class="guide-workspace-bar">
+            <div class="guide-workspace-inner">
+                <div class="guide-workspace-copy">
+                    <span>升學決策工作台</span>
+                    <strong data-current-district-label>尚未選擇就學區</strong>
+                </div>
+                <div class="guide-workspace-actions">
+                    <button type="button" class="district-switch-button" data-district-picker>選擇／切換就學區</button>
+                    <a class="line-header-link" href="#" data-line-link aria-label="加入 LINE 官方帳號">
+                        <span class="line-dot" aria-hidden="true">LINE</span><span>加入官方帳號</span>
+                    </a>
+                </div>
+            </div>
+            <div class="header-nav-wrap">
+                <nav class="section-nav menu-board" aria-label="工作台功能選單">
                     <div class="mega-menu">
                         <button type="button" class="mega-menu-trigger" aria-expanded="false">高中職學制介紹 <span aria-hidden="true">⌄</span></button>
                         <div class="mega-menu-panel">
@@ -80,13 +90,19 @@
                         </div>
                     </div>
                 </nav>
-                </div>
             </div>
         </div>
-        <div id="mobileMenu" class="hidden border-t border-neo-blueGray/70 bg-white">
+
+        <div id="mobileMenu" class="hidden guide-mobile-menu">
             <div class="mobile-menu-stack">
-                <a href="/" class="mobile-home-link">回首頁</a>
-                <a href="#" class="mobile-line-link" data-line-link>加入 LINE 官方帳號</a>
+                <nav class="guide-mobile-primary-nav" aria-label="行動版主要導覽">
+                    <a href="/news#latest">升學情報</a>
+                    <a href="#schools" data-page="schools">找學校</a>
+                    <a href="#calculator" data-page="calculator" data-scoring-feature>升學工具</a>
+                    <a href="#home" data-page="home" data-district-picker>就學區</a>
+                    <a href="#analysis" data-page="analysis" data-scoring-feature>我的規劃</a>
+                </nav>
+                <p class="guide-mobile-menu-label">工作台功能</p>
                 <details class="mobile-menu-group"><summary>高中職學制介紹</summary><button type="button" data-page="overview">學制總覽</button><button type="button" data-page="program-general">普通高中</button><button type="button" data-page="program-vocational">技術型高中</button><button type="button" data-page="program-comprehensive">綜合高中</button></details>
                 <details class="mobile-menu-group"><summary>入學管道及規則</summary><button type="button" data-page="admission">管道總覽</button><button type="button" data-page="admission-exempt">免試入學</button><button type="button" data-page="admission-special">特殊選才</button><button type="button" data-page="admission-direct">獨招與直升</button></details>
                 <details class="mobile-menu-group" data-scoring-feature><summary>免試入學積分試算</summary><button type="button" data-page="calculator">100 分積分試算</button><button type="button" data-page="calculator">111 會考積點</button><button type="button" data-page="analysis">落點分析</button></details>
@@ -740,6 +756,20 @@
         </section>
     </main>
 
+    <footer class="guide-footer">
+        <div class="guide-footer-inner">
+            <b>JSHS 全國國中升學資訊網</b>
+            <nav aria-label="頁尾導覽">
+                <a href="/news#latest">升學情報</a>
+                <a href="#schools" data-page="schools">找學校</a>
+                <a href="#calculator" data-page="calculator" data-scoring-feature>升學工具</a>
+                <a href="#home" data-page="home" data-district-picker>就學區</a>
+                <a href="#analysis" data-page="analysis" data-scoring-feature>我的規劃</a>
+            </nav>
+            <span>招生資訊請以各主管機關最新公告為準。</span>
+        </div>
+    </footer>
+
     <div class="sr-only">
         <div id="examScoreDisplay">0</div>
         <div id="exam111Display">0</div>
@@ -758,6 +788,6 @@
         </div>
     </div>
     <script src="site-config.js?v=20260810-7"></script>
-    <script src="guide.js?v=20260814-2"></script>
+    <script src="guide.js?v=20260814-3"></script>
 </body>
 </html>
