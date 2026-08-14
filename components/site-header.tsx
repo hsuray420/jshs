@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { primaryNavigation } from "@/lib/site-map";
 
 type NavigationLink = Readonly<{ label: string; href: string; description: string }>;
@@ -62,6 +62,16 @@ const districtLabels: Readonly<Record<string, string>> = {
   kaohsiung: "高雄區", pingtung: "屏東區", hualien: "花蓮區", taitung: "臺東區", penghu: "澎湖區", kinmen: "金門區",
 };
 
+function subscribeToDistrict(callback: () => void) {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+}
+
+function getDistrictLabel() {
+  const savedDistrict = localStorage.getItem("jshs_district") || "";
+  return districtLabels[savedDistrict] ? `目前：${districtLabels[savedDistrict]}` : "選擇就學區";
+}
+
 const searchItems = primaryNavigation.flatMap((item) => [
   { label: item.label, href: item.href, description: navigationDetails[item.activeHref]?.description || "" },
   ...(navigationDetails[item.activeHref]?.links || []),
@@ -71,7 +81,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [query, setQuery] = useState("");
-  const [districtLabel, setDistrictLabel] = useState("選擇就學區");
+  const districtLabel = useSyncExternalStore(subscribeToDistrict, getDistrictLabel, () => "選擇就學區");
   const headerRef = useRef<HTMLElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -85,11 +95,6 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
     });
     return [...unique.values()].slice(0, 12);
   }, [query]);
-
-  useEffect(() => {
-    const savedDistrict = localStorage.getItem("jshs_district") || "";
-    if (districtLabels[savedDistrict]) setDistrictLabel(`目前：${districtLabels[savedDistrict]}`);
-  }, []);
 
   useEffect(() => {
     document.body.classList.toggle("jshs-nav-open", drawerOpen);
