@@ -12,7 +12,7 @@ const metadataUrl = new URL("../public/it_hs/district-metadata.json", import.met
 const sitemapUrl = new URL("../public/sitemap.xml", import.meta.url);
 const robotsUrl = new URL("../public/robots.txt", import.meta.url);
 const layoutUrl = new URL("../app/layout.tsx", import.meta.url);
-const homePageUrl = new URL("../app/jshs/home/page.tsx", import.meta.url);
+const homePageUrl = new URL("../app/page.tsx", import.meta.url);
 const fiveYearPageUrl = new URL("../public/it_5/it_5.html", import.meta.url);
 const guideScriptUrl = new URL("../public/it_hs/guide.js", import.meta.url);
 const centralScriptUrl = new URL("../public/it_hs/ct/it_hs.js", import.meta.url);
@@ -35,7 +35,8 @@ test("sitemap and robots expose absolute canonical URLs", async () => {
   ]);
 
   assert.deepEqual(validateSitemap(sitemap, metadata.canonicalOrigin), []);
-  assert.match(sitemap, /<loc>https:\/\/jshs\.cc\/jshs\/home<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/jshs\.cc\/<\/loc>/);
+  assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/jshs\/home<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/jshs\.cc\/it_hs\/guide\.htm<\/loc>/);
   assert.match(robots, /Sitemap: https:\/\/jshs\.cc\/sitemap\.xml/);
 });
@@ -62,7 +63,7 @@ test("root metadata declares canonical and social discovery fields", async () =>
   ]);
 
   assert.match(layout, /metadataBase:\s*new URL\("https:\/\/jshs\.cc"\)/);
-  assert.match(homePage, /canonical:\s*"\/jshs\/home"/);
+  assert.match(homePage, /canonical:\s*"\/"/);
   assert.match(homePage, /openGraph:/);
   assert.match(homePage, /twitter:/);
 });

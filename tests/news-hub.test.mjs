@@ -6,7 +6,7 @@ const catalogUrl = new URL("../content/news.json", import.meta.url);
 const hubPageUrl = new URL("../app/news/page.tsx", import.meta.url);
 const articlePageUrl = new URL("../app/news/[slug]/page.tsx", import.meta.url);
 const newsLibraryUrl = new URL("../lib/news.ts", import.meta.url);
-const homePageUrl = new URL("../app/jshs/home/page.tsx", import.meta.url);
+const homePageUrl = new URL("../app/page.tsx", import.meta.url);
 const sitemapUrl = new URL("../public/sitemap.xml", import.meta.url);
 
 test("news catalog contains six useful, source-backed guides", async () => {

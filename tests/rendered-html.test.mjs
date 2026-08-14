@@ -5,6 +5,7 @@ import test from "node:test";
 const appPageUrl = new URL("../app/page.tsx", import.meta.url);
 const jshsPageUrl = new URL("../app/jshs/page.tsx", import.meta.url);
 const legacyJshsPageUrl = new URL("../app/jshs/jshs/page.tsx", import.meta.url);
+const legacyHomePageUrl = new URL("../app/jshs/home/page.tsx", import.meta.url);
 const legacyJshsHtmlUrl = new URL("../public/jshs/jshs.html", import.meta.url);
 const districtScriptUrl = new URL("../public/it_hs/guide.js", import.meta.url);
 const districtIndexUrl = new URL("../public/it_hs/ilan/index.html", import.meta.url);
@@ -16,24 +17,28 @@ const tokenCssUrl = new URL("../public/design-tokens.css", import.meta.url);
 const workerUrl = new URL("../worker/index.ts", import.meta.url);
 const wranglerConfigUrl = new URL("../wrangler.jsonc", import.meta.url);
 
-test("root route sends visitors to the public homepage", async () => {
+test("root route is the canonical public homepage", async () => {
   const page = await readFile(appPageUrl, "utf8");
 
-  assert.match(page, /redirect\("\/jshs\/home"\)/);
+  assert.match(page, /canonical:\s*"\/"/);
+  assert.match(page, /全國升學決策服務平台/);
+  assert.doesNotMatch(page, /redirect\(/);
   assert.doesNotMatch(page, /localStorage|role="dialog"|setSelectedDistrict/);
 });
 
 test("legacy jshs entry points resolve to the single public homepage", async () => {
-  const [jshsPage, legacyJshsPage, legacyHtml] = await Promise.all([
+  const [jshsPage, legacyJshsPage, legacyHomePage, legacyHtml] = await Promise.all([
     readFile(jshsPageUrl, "utf8"),
     readFile(legacyJshsPageUrl, "utf8"),
+    readFile(legacyHomePageUrl, "utf8"),
     readFile(legacyJshsHtmlUrl, "utf8"),
   ]);
 
-  assert.match(jshsPage, /redirect\("\/jshs\/home"\)/);
-  assert.match(legacyJshsPage, /redirect\("\/jshs\/home"\)/);
-  assert.match(legacyHtml, /url=\/jshs\/home/);
-  assert.match(legacyHtml, /window\.location\.replace\('\/jshs\/home'\)/);
+  assert.match(jshsPage, /permanentRedirect\("\/"\)/);
+  assert.match(legacyJshsPage, /permanentRedirect\("\/"\)/);
+  assert.match(legacyHomePage, /permanentRedirect\("\/"\)/);
+  assert.match(legacyHtml, /url=\//);
+  assert.match(legacyHtml, /window\.location\.replace\('\/'\)/);
 });
 
 test("district picker routes choices to district URLs", async () => {
