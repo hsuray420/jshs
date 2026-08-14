@@ -63,3 +63,12 @@ test("deep links render their requested tool before Cloudflare state finishes lo
   assert.ok(dataIndex >= 0, "Cloudflare state and metadata should load in parallel");
   assert.ok(routerIndex < dataIndex, "the requested hash must render before network state completes");
 });
+
+test("calculator controls expose programmatic labels", async () => {
+  const guide = await readFile(guideUrl, "utf8");
+  const controls = ["prefScore", "weakScore", "mor_club_terms", "mor_service_learning", "nod_record", "subj_cn", "subj_en", "subj_math", "subj_sci", "subj_soc", "subj_write"];
+
+  for (const id of controls) {
+    assert.match(guide, new RegExp(`id=["']${id}["'][^>]+aria-label=["'][^"']+["']`));
+  }
+});
