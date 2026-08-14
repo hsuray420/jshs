@@ -2,7 +2,7 @@
   "updatedAt": "2026-08-14",
   "primaryNavigation": [
     { "label": "升學指南", "href": "/news#latest", "activeHref": "/news" },
-    { "label": "找校科", "href": "/it_hs/guide.htm#schools", "activeHref": "/schools" },
+    { "label": "找校科", "href": "/schools?district=ct", "activeHref": "/schools" },
     { "label": "試算工具", "href": "/it_hs/guide.htm#calculator", "activeHref": "/tools" },
     { "label": "我的規劃", "href": "/it_hs/guide.htm#analysis", "activeHref": "/planner" }
   ],

@@ -51,7 +51,7 @@ export default function HomePage() {
 
       <section aria-labelledby="start-title" className="mx-auto w-[min(1160px,calc(100%-32px))] py-16 md:py-20">
         <SectionHeading eyebrow="我現在該做什麼" id="start-title" title="從目前最卡住的問題開始" body="首頁不塞滿所有內容，只提供四條清楚路徑，讓你快速進入真正需要的資訊。" />
-        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4"><StartCard number="01" title="還不懂規則" body="先看會考、免試入學與志願策略。" href="/news#latest" action="閱讀升學情報" /><StartCard number="02" title="想找學校" body="從地區、校科與五專路徑開始探索。" href="/it_hs/guide.htm#schools" action="直接查學校" /><StartCard number="03" title="需要試算比較" body="查看積分、落點與比較工具。" href="/it_hs/guide.htm#calculator" action="直接開始試算" /><StartCard number="04" title="已經有候選清單" body="整理收藏、志願、日期與待辦。" href="/it_hs/guide.htm#analysis" action="直接打開規劃" /></div>
+        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4"><StartCard number="01" title="還不懂規則" body="先看會考、免試入學與志願策略。" href="/news#latest" action="閱讀升學情報" /><StartCard number="02" title="想找學校" body="從中投區 96 所學校與校科資料開始探索。" href="/schools?district=ct" action="直接查學校" /><StartCard number="03" title="需要試算比較" body="查看積分、落點與比較工具。" href="/it_hs/guide.htm#calculator" action="直接開始試算" /><StartCard number="04" title="已經有候選清單" body="整理收藏、志願、日期與待辦。" href="/it_hs/guide.htm#analysis" action="直接打開規劃" /></div>
       </section>
 
       <section aria-labelledby="news-preview-title" className="border-y border-slate-200 bg-white py-16 md:py-20">
@@ -65,7 +65,7 @@ export default function HomePage() {
       </section>
 
       <section id="tools" aria-labelledby="tools-title" className="border-y border-slate-200 bg-white py-16 md:py-20">
-        <div className="mx-auto w-[min(1160px,calc(100%-32px))]"><SectionHeading eyebrow="熱門升學工具" id="tools-title" title="把查到的資料，變成可以比較的選項。" body="工具不替你保證錄取；它協助整理積分、風險、通勤與志願結構。" /><div className="mt-8 grid gap-4 lg:grid-cols-3"><ToolCard title="積分與落點" body="依正確就學區和學年度使用完整試算功能。" href="/it_hs/guide.htm#calculator" /><ToolCard title="校科比較" body="直接進入學校查詢，整理候選校科。" href="/it_hs/guide.htm#schools" /><ToolCard title="志願與待辦" body="開啟你原有的志願排序、比較與待辦功能。" href="/it_hs/guide.htm#analysis" /></div></div>
+        <div className="mx-auto w-[min(1160px,calc(100%-32px))]"><SectionHeading eyebrow="熱門升學工具" id="tools-title" title="把查到的資料，變成可以比較的選項。" body="工具不替你保證錄取；它協助整理積分、風險、通勤與志願結構。" /><div className="mt-8 grid gap-4 lg:grid-cols-3"><ToolCard title="積分與落點" body="依正確就學區和學年度使用完整試算功能。" href="/it_hs/guide.htm#calculator" /><ToolCard title="校科比較" body="直接進入中投區學校目錄，整理候選校科。" href="/schools?district=ct" /><ToolCard title="志願與待辦" body="開啟你原有的志願排序、比較與待辦功能。" href="/it_hs/guide.htm#analysis" /></div></div>
       </section>
 
       <section id="districts" aria-labelledby="districts-title" className="mx-auto w-[min(1160px,calc(100%-32px))] py-16 md:py-20">

@@ -21,7 +21,8 @@ const navigationDetails: Readonly<Record<string, Readonly<{ eyebrow: string; des
     eyebrow: "把校名變成可比較的選項",
     description: "依就學區、學制、校科與生活條件探索適合的方向。",
     links: [
-      { label: "全國校科查詢", href: "/it_hs/guide.htm#schools", description: "搜尋學校、科別、名額與地址" },
+      { label: "中投區學校資料", href: "/schools?district=ct", description: "搜尋 96 所學校並查看完整資料頁" },
+      { label: "原校科查詢", href: "/it_hs/guide.htm#schools", description: "保留原有學校、科別、名額與地址查詢" },
       { label: "高中職學制", href: "/it_hs/guide.htm#overview", description: "比較普高、技高與綜合高中" },
       { label: "校科探索指南", href: "/news/schools", description: "十五群科、五專與學校比較" },
       { label: "選擇就學區", href: "/districts?target=schools", description: "切換地區並保留查校任務" },
@@ -50,7 +51,7 @@ const navigationDetails: Readonly<Record<string, Readonly<{ eyebrow: string; des
 };
 
 const quickActions = [
-  { label: "查校科", href: "/it_hs/guide.htm#schools", icon: "校" },
+  { label: "查校科", href: "/schools?district=ct", icon: "校" },
   { label: "算積分", href: "/it_hs/guide.htm#calculator", icon: "算" },
   { label: "看時程", href: "/news/exam", icon: "日" },
   { label: "排志願", href: "/it_hs/guide.htm#analysis", icon: "排" },
@@ -242,7 +243,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
         {[
           { label: "首頁", href: "/", icon: "⌂", active: !activeHref },
           { label: "指南", href: "/news#latest", icon: "讀", active: activeHref === "/news" },
-          { label: "找校科", href: "/it_hs/guide.htm#schools", icon: "校", active: activeHref === "/schools" },
+          { label: "找校科", href: "/schools?district=ct", icon: "校", active: activeHref === "/schools" },
           { label: "工具", href: "/it_hs/guide.htm#calculator", icon: "算", active: activeHref === "/tools" },
           { label: "規劃", href: "/it_hs/guide.htm#analysis", icon: "存", active: activeHref === "/planner" },
         ].map((item) => <Link key={item.label} aria-current={item.active ? "page" : undefined} href={item.href} className={`flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-xl text-[11px] font-black ${item.active ? "bg-blue-50 text-[#173d78]" : "text-slate-500"}`}><span className="text-base" aria-hidden="true">{item.icon}</span>{item.label}</Link>)}

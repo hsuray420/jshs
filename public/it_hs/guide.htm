@@ -39,10 +39,11 @@
                         </div>
                     </div>
                     <div class="mega-menu guide-nav-cluster">
-                        <a href="#schools" data-page="schools">找校科</a>
+                        <a href="/schools?district=ct">找校科</a>
                         <button type="button" class="mega-menu-trigger" aria-label="展開找校科" aria-expanded="false"><span aria-hidden="true">⌄</span></button>
                         <div class="mega-menu-panel guide-nav-panel">
-                            <button type="button" data-page="schools"><b>全國校科查詢</b><small>搜尋學校、科別、名額與地址</small></button>
+                            <a href="/schools?district=ct"><b>中投區學校資料</b><small>搜尋 96 所學校並查看完整資料頁</small></a>
+                            <button type="button" data-page="schools"><b>全國校科查詢</b><small>保留原有學校、科別、名額與地址查詢</small></button>
                             <button type="button" data-page="overview"><b>高中職學制</b><small>比較普高、技高與綜合高中</small></button>
                             <a href="/news/schools"><b>校科探索指南</b><small>十五群科、五專與學校比較</small></a>
                             <button type="button" data-page="download"><b>招生資料</b><small>官方來源與資料下載</small></button>
@@ -105,7 +106,7 @@
                     <section class="guide-quick-section" data-guide-quick-section>
                         <h2>你現在想做什麼？</h2>
                         <div class="guide-quick-actions">
-                            <button type="button" data-page="schools" data-nav-search-item="查校科 學校 科別"><span>校</span><b>查校科</b></button>
+                            <a href="/schools?district=ct" data-nav-search-item="查校科 中投區 學校 科別"><span>校</span><b>查校科</b></a>
                             <button type="button" data-page="calculator" data-scoring-feature data-nav-search-item="算積分 會考 試算"><span>算</span><b>算積分</b></button>
                             <a href="/news/exam" data-nav-search-item="看時程 會考 日期"><span>日</span><b>看時程</b></a>
                             <button type="button" data-page="analysis" data-scoring-feature data-nav-search-item="排志願 規劃 落點"><span>排</span><b>排志願</b></button>
@@ -114,7 +115,7 @@
                     <nav class="guide-mobile-directory" aria-label="瀏覽所有內容">
                         <h2>瀏覽所有內容</h2>
                         <details class="mobile-menu-group"><summary>升學指南<small>會考、規則、策略與生涯選擇</small></summary><a href="/news/exam" data-nav-search-item="會考準備 時程 應試">會考準備</a><a href="/news/rules" data-nav-search-item="入學規則 免試 比序">入學規則</a><a href="/news/strategy" data-nav-search-item="志願策略 排序">志願策略</a><a href="/news/career" data-nav-search-item="生涯選擇 家長">生涯與家長</a></details>
-                        <details class="mobile-menu-group"><summary>找校科<small>學校、科別、學制與招生資料</small></summary><button type="button" data-page="schools" data-nav-search-item="全國校科查詢 學校 科別">全國校科查詢</button><button type="button" data-page="overview" data-nav-search-item="高中職學制 普高 技高 綜高">高中職學制</button><a href="/news/schools" data-nav-search-item="校科探索 十五群科 五專">校科探索指南</a><button type="button" data-page="download" data-nav-search-item="招生資料 下載">招生資料</button></details>
+                        <details class="mobile-menu-group"><summary>找校科<small>學校、科別、學制與招生資料</small></summary><a href="/schools?district=ct" data-nav-search-item="中投區學校資料 96 所學校">中投區學校資料</a><button type="button" data-page="schools" data-nav-search-item="全國校科查詢 學校 科別">全國校科查詢</button><button type="button" data-page="overview" data-nav-search-item="高中職學制 普高 技高 綜高">高中職學制</button><a href="/news/schools" data-nav-search-item="校科探索 十五群科 五專">校科探索指南</a><button type="button" data-page="download" data-nav-search-item="招生資料 下載">招生資料</button></details>
                         <details class="mobile-menu-group" data-scoring-feature><summary>試算工具<small>積分、落點與時程提醒</small></summary><button type="button" data-page="calculator" data-nav-search-item="積分試算 會考">積分試算</button><button type="button" data-page="analysis" data-nav-search-item="落點分析 風險">落點分析</button><button type="button" data-page="faq" data-nav-search-item="工具說明 常見問題">工具使用說明</button></details>
                         <details class="mobile-menu-group" data-scoring-feature><summary>我的規劃<small>收藏、比較、排序與待辦</small></summary><button type="button" data-page="analysis" data-nav-search-item="志願規劃 比較 排序">志願規劃台</button><a href="/planner" data-nav-search-item="Cloudflare 收藏 校科">Cloudflare 收藏</a><button type="button" data-page="schools" data-nav-search-item="繼續找校科">繼續找校科</button></details>
                     </nav>
@@ -126,7 +127,7 @@
     <nav class="guide-mobile-bottom-nav" aria-label="行動版快速導覽">
         <a href="/"><span aria-hidden="true">⌂</span>首頁</a>
         <a href="/news#latest"><span aria-hidden="true">讀</span>指南</a>
-        <a href="#schools" data-page="schools"><span aria-hidden="true">校</span>找校科</a>
+        <a href="/schools?district=ct"><span aria-hidden="true">校</span>找校科</a>
         <a href="#calculator" data-page="calculator" data-scoring-feature><span aria-hidden="true">算</span>工具</a>
         <a href="#analysis" data-page="analysis" data-scoring-feature><span aria-hidden="true">存</span>規劃</a>
     </nav>
@@ -781,7 +782,7 @@
             <b>JSHS 全國國中升學資訊網</b>
             <nav aria-label="頁尾導覽">
                 <a href="/news#latest">升學指南</a>
-                <a href="#schools" data-page="schools">找校科</a>
+                <a href="/schools?district=ct">找校科</a>
                 <a href="#calculator" data-page="calculator" data-scoring-feature>試算工具</a>
                 <a href="#analysis" data-page="analysis" data-scoring-feature>我的規劃</a>
                 <button type="button" data-district-picker>切換就學區</button>

@@ -10,7 +10,7 @@ const articlePageUrl = new URL("../app/news/[slug]/page.tsx", import.meta.url);
 
 const expectedNavigation = [
   ["升學指南", "/news#latest"],
-  ["找校科", "/it_hs/guide.htm#schools"],
+  ["找校科", "/schools?district=ct"],
   ["試算工具", "/it_hs/guide.htm#calculator"],
   ["我的規劃", "/it_hs/guide.htm#analysis"],
 ];
@@ -82,8 +82,15 @@ test("primary navigation lands on an interactive surface instead of an introduct
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
   const guide = await readFile(new URL("../public/it_hs/guide.htm", import.meta.url), "utf8");
   const news = await readFile(new URL("../app/news/page.tsx", import.meta.url), "utf8");
+  const schools = await readFile(new URL("../app/schools/page.tsx", import.meta.url), "utf8");
 
   for (const { href } of siteMap.primaryNavigation) {
+    const url = new URL(href, "https://jshs.cc");
+    if (url.pathname === "/schools") {
+      assert.equal(url.searchParams.get("district"), "ct");
+      assert.match(schools, /<SchoolExplorer/);
+      continue;
+    }
     const [path, anchor] = href.split("#");
     assert.ok(anchor, `${path} must link directly to its useful content`);
     if (path === "/news") assert.match(news, new RegExp(`id=["']${anchor}["']`));
