@@ -125,7 +125,7 @@ test("homepage and district guide share one decision visual token system", async
   assert.match(tokens, /--jshs-radius-card:\s*24px/i);
   assert.match(globalCss, /@import url\("\/design-tokens\.css"\)/);
   assert.match(districtGuide, /href="\/design-tokens\.css"/);
-  assert.match(districtGuide, /href="guide\.css\?v=20260814-3"/);
+  assert.match(districtGuide, /href="guide\.css\?v=20260814-4"/);
   assert.match(districtCss, /Shared visual system final layer/);
   assert.match(districtCss, /var\(--jshs-radius-card\)/);
 });
