@@ -5,7 +5,10 @@ function setMobileMenuOpen(open) {
     mobileMenu.classList.toggle('hidden', !open);
     mobileMenuBtn?.setAttribute('aria-expanded', String(open));
     document.body.classList.toggle('guide-nav-open', open);
-    if (!open) return;
+}
+
+function openMobileSearch() {
+    setMobileMenuOpen(true);
     window.setTimeout(() => document.getElementById('guideMenuSearch')?.focus(), 80);
 }
 
@@ -16,7 +19,7 @@ function toggleMobileMenu() {
     mobileMenuBtn.addEventListener('click', () => {
         setMobileMenuOpen(mobileMenu.classList.contains('hidden'));
     });
-    document.querySelectorAll('[data-open-guide-search]').forEach(button => button.addEventListener('click', () => setMobileMenuOpen(true)));
+    document.querySelectorAll('[data-open-guide-search]').forEach(button => button.addEventListener('click', openMobileSearch));
     document.querySelectorAll('[data-close-mobile-menu]').forEach(button => button.addEventListener('click', () => setMobileMenuOpen(false)));
     document.addEventListener('keydown', event => { if (event.key === 'Escape') setMobileMenuOpen(false); });
 }

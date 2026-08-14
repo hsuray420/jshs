@@ -84,6 +84,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
   const districtLabel = useSyncExternalStore(subscribeToDistrict, getDistrictLabel, () => "選擇就學區");
   const headerRef = useRef<HTMLElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const shouldFocusSearchRef = useRef(false);
 
   const results = useMemo(() => {
     const normalized = query.trim().toLocaleLowerCase("zh-TW");
@@ -98,7 +99,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
 
   useEffect(() => {
     document.body.classList.toggle("jshs-nav-open", drawerOpen);
-    if (drawerOpen) window.setTimeout(() => searchRef.current?.focus(), 80);
+    if (drawerOpen && shouldFocusSearchRef.current) window.setTimeout(() => searchRef.current?.focus(), 80);
     return () => document.body.classList.remove("jshs-nav-open");
   }, [drawerOpen]);
 
@@ -119,12 +120,14 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
     };
   }, []);
 
-  function openDrawer() {
+  function openDrawer(focusSearch = false) {
+    shouldFocusSearchRef.current = focusSearch;
     setOpenGroup(null);
     setDrawerOpen(true);
   }
 
   function closeDrawer() {
+    shouldFocusSearchRef.current = false;
     setDrawerOpen(false);
     setQuery("");
   }
@@ -173,8 +176,8 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
 
           <div className="ml-auto flex items-center gap-2 lg:ml-3">
             <Link href="/districts" className="hidden rounded-xl border border-blue-100 bg-blue-50 px-3 py-2 text-xs font-black text-[#173d78] md:block">{districtLabel} ▾</Link>
-            <button type="button" onClick={openDrawer} aria-label="搜尋內容與功能" className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-[#173d78]">⌕</button>
-            <button type="button" onClick={openDrawer} aria-label="開啟完整選單" aria-expanded={drawerOpen} className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-[#173d78] lg:hidden"><span className="text-lg" aria-hidden="true">☰</span></button>
+            <button type="button" onClick={() => openDrawer(true)} aria-label="搜尋內容與功能" className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-[#173d78]">⌕</button>
+            <button type="button" onClick={() => openDrawer()} aria-label="開啟完整選單" aria-expanded={drawerOpen} className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-[#173d78] lg:hidden"><span className="text-lg" aria-hidden="true">☰</span></button>
           </div>
         </div>
       </header>
