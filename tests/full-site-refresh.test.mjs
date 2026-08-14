@@ -4,6 +4,7 @@ import test from "node:test";
 
 const guideUrl = new URL("../public/it_hs/guide.htm", import.meta.url);
 const guideCssUrl = new URL("../public/it_hs/guide.css", import.meta.url);
+const guideScriptUrl = new URL("../public/it_hs/guide.js", import.meta.url);
 
 test("the original admission app uses the unified JSHS public shell", async () => {
   const guide = await readFile(guideUrl, "utf8");
@@ -42,4 +43,11 @@ test("the guide stylesheet inherits the homepage design system at desktop and mo
   assert.match(css, /@media \(max-width:\s*768px\)/);
   assert.match(css, /var\(--jshs-navy\)/);
   assert.match(css, /var\(--jshs-blue\)/);
+});
+
+test("routing from the mobile menu closes both its visual and accessible state", async () => {
+  const script = await readFile(guideScriptUrl, "utf8");
+
+  assert.match(script, /mobileMenu\.classList\.add\('hidden'\)/);
+  assert.match(script, /mobileMenuBtn\?\.setAttribute\('aria-expanded', 'false'\)/);
 });
