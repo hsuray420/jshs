@@ -1,10 +1,52 @@
+function setMobileMenuOpen(open) {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (!mobileMenu) return;
+    mobileMenu.classList.toggle('hidden', !open);
+    mobileMenuBtn?.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('guide-nav-open', open);
+    if (!open) return;
+    window.setTimeout(() => document.getElementById('guideMenuSearch')?.focus(), 80);
+}
+
 function toggleMobileMenu() {
     const mobileMenuBtn = document.getElementById('mobileMenuBtn');
     const mobileMenu = document.getElementById('mobileMenu');
     if (!mobileMenuBtn || !mobileMenu) return;
     mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-        mobileMenuBtn.setAttribute('aria-expanded', String(!mobileMenu.classList.contains('hidden')));
+        setMobileMenuOpen(mobileMenu.classList.contains('hidden'));
+    });
+    document.querySelectorAll('[data-open-guide-search]').forEach(button => button.addEventListener('click', () => setMobileMenuOpen(true)));
+    document.querySelectorAll('[data-close-mobile-menu]').forEach(button => button.addEventListener('click', () => setMobileMenuOpen(false)));
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') setMobileMenuOpen(false); });
+}
+
+function initNavigationSearch() {
+    const input = document.getElementById('guideMenuSearch');
+    const quickSection = document.querySelector('[data-guide-quick-section]');
+    const directory = document.querySelector('.guide-mobile-directory');
+    const empty = document.querySelector('[data-guide-search-empty]');
+    if (!input || !directory) return;
+    const groups = Array.from(directory.querySelectorAll('.mobile-menu-group'));
+    const items = Array.from(directory.querySelectorAll('[data-nav-search-item]'));
+
+    input.addEventListener('input', () => {
+        const query = input.value.trim().toLocaleLowerCase('zh-TW');
+        let matchCount = 0;
+        quickSection?.toggleAttribute('hidden', Boolean(query));
+        items.forEach(item => {
+            const matches = !query || (item.dataset.navSearchItem || '').toLocaleLowerCase('zh-TW').includes(query);
+            const scoringUnavailable = item.hasAttribute('data-scoring-feature') && isSchoolQueryOnlyMode();
+            item.hidden = !matches || scoringUnavailable;
+            if (query && matches && !scoringUnavailable) matchCount += 1;
+        });
+        groups.forEach(group => {
+            const visibleItems = Array.from(group.querySelectorAll('[data-nav-search-item]')).filter(item => !item.hidden);
+            const scoringUnavailable = group.hasAttribute('data-scoring-feature') && isSchoolQueryOnlyMode();
+            group.hidden = scoringUnavailable || Boolean(query && !visibleItems.length);
+            group.open = Boolean(query && visibleItems.length);
+        });
+        if (empty) empty.hidden = !query || matchCount > 0;
     });
 }
 
@@ -90,7 +132,7 @@ function initDistrictPicker() {
             window.location.replace(`/it_hs/guide.htm?district=${encodeURIComponent(district)}#${encodeURIComponent(targetPage)}`);
         });
     });
-    const open = () => { modal.hidden = false; };
+    const open = () => { setMobileMenuOpen(false); modal.hidden = false; };
     const close = () => { modal.hidden = true; };
     document.querySelectorAll('[data-district-picker]').forEach(button => button.addEventListener('click', open));
     document.querySelectorAll('[data-close-district]').forEach(button => button.addEventListener('click', close));
@@ -252,7 +294,7 @@ function showDistrictUnavailablePage() {
     if (badge) badge.textContent = `目前：${district.label}`;
     if (modal) modal.hidden = true;
     if (nav) nav.hidden = true;
-    if (mobileMenu) mobileMenu.classList.add('hidden');
+    if (mobileMenu) setMobileMenuOpen(false);
     document.title = `${district.label}資料建置中｜全國國中升學資訊網`;
 
     if (!main) return true;
@@ -325,10 +367,7 @@ function showPage(page) {
         control.classList.toggle('active', control.dataset.page === targetPage);
     });
 
-    const mobileMenu = document.getElementById('mobileMenu');
-    if (mobileMenu) mobileMenu.classList.add('hidden');
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    mobileMenuBtn?.setAttribute('aria-expanded', 'false');
+    setMobileMenuOpen(false);
     history.replaceState(null, '', `#${targetPage}`);
     if (isTopic) history.replaceState(null, '', `#${page}`);
     renderFaqContext(targetPage);
@@ -1854,6 +1893,7 @@ function initSchools() {
 window.addEventListener('DOMContentLoaded', async () => {
     initDistrictPicker();
     toggleMobileMenu();
+    initNavigationSearch();
     initPageRouter();
     await Promise.all([loadPlannerStore(), loadDistrictMetadata()]);
     updateCurrentDistrictBadge();

@@ -6,7 +6,7 @@
     <title>高中職升學完整指南｜全國國中升學資訊網</title>
     <link rel="stylesheet" href="guide-tailwind.css?v=20260814-1">
     <link rel="stylesheet" href="/design-tokens.css">
-    <link rel="stylesheet" href="guide.css?v=20260814-3">
+    <link rel="stylesheet" href="guide.css?v=20260814-4">
 </head>
 <body class="font-body text-neo-text antialiased overflow-x-hidden" data-guide-shell="unified-2026">
 
@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    <header class="site-header">
+    <header class="site-header guide-site-header">
         <div class="guide-primary-bar">
             <div class="guide-primary-inner">
                 <a class="brand" href="/" aria-label="全國國中升學資訊網首頁">
@@ -28,88 +28,108 @@
                     <span class="brand-name">全國國中升學資訊網</span>
                 </a>
                 <nav class="guide-primary-nav" aria-label="主要導覽">
-                    <a href="/news#latest">升學情報</a>
-                    <a href="#schools" data-page="schools">找學校</a>
-                    <a href="#calculator" data-page="calculator" data-scoring-feature>升學工具</a>
-                    <a href="#home" data-page="home" data-district-picker>就學區</a>
-                    <a href="#analysis" data-page="analysis" data-scoring-feature>我的規劃</a>
+                    <div class="mega-menu guide-nav-cluster">
+                        <a href="/news#latest">升學指南</a>
+                        <button type="button" class="mega-menu-trigger" aria-label="展開升學指南" aria-expanded="false"><span aria-hidden="true">⌄</span></button>
+                        <div class="mega-menu-panel guide-nav-panel">
+                            <a href="/news/exam"><b>會考準備</b><small>重要時程、各科準備與應試提醒</small></a>
+                            <a href="/news/rules"><b>入學規則</b><small>免試入學、比序與跨區資格</small></a>
+                            <a href="/news/strategy"><b>志願策略</b><small>挑戰、適中與穩定三層規劃</small></a>
+                            <a href="/news/career"><b>生涯與家長</b><small>學制方向與家庭討論</small></a>
+                        </div>
+                    </div>
+                    <div class="mega-menu guide-nav-cluster">
+                        <a href="#schools" data-page="schools">找校科</a>
+                        <button type="button" class="mega-menu-trigger" aria-label="展開找校科" aria-expanded="false"><span aria-hidden="true">⌄</span></button>
+                        <div class="mega-menu-panel guide-nav-panel">
+                            <button type="button" data-page="schools"><b>全國校科查詢</b><small>搜尋學校、科別、名額與地址</small></button>
+                            <button type="button" data-page="overview"><b>高中職學制</b><small>比較普高、技高與綜合高中</small></button>
+                            <a href="/news/schools"><b>校科探索指南</b><small>十五群科、五專與學校比較</small></a>
+                            <button type="button" data-page="download"><b>招生資料</b><small>官方來源與資料下載</small></button>
+                        </div>
+                    </div>
+                    <div class="mega-menu guide-nav-cluster" data-scoring-feature>
+                        <a href="#calculator" data-page="calculator">試算工具</a>
+                        <button type="button" class="mega-menu-trigger" aria-label="展開試算工具" aria-expanded="false"><span aria-hidden="true">⌄</span></button>
+                        <div class="mega-menu-panel guide-nav-panel">
+                            <button type="button" data-page="calculator"><b>積分試算</b><small>輸入會考與免試入學積分</small></button>
+                            <button type="button" data-page="analysis"><b>落點分析</b><small>整理穩定、適中與挑戰選項</small></button>
+                            <a href="/news/exam"><b>重要時程</b><small>查看會考與升學階段提醒</small></a>
+                            <button type="button" data-page="faq"><b>工具使用說明</b><small>限制、資料狀態與常見問題</small></button>
+                        </div>
+                    </div>
+                    <div class="mega-menu guide-nav-cluster" data-scoring-feature>
+                        <a href="#analysis" data-page="analysis">我的規劃</a>
+                        <button type="button" class="mega-menu-trigger" aria-label="展開我的規劃" aria-expanded="false"><span aria-hidden="true">⌄</span></button>
+                        <div class="mega-menu-panel guide-nav-panel guide-nav-panel-end">
+                            <button type="button" data-page="analysis"><b>志願規劃台</b><small>比較、排序與檢查志願清單</small></button>
+                            <button type="button" data-page="schools"><b>繼續找校科</b><small>新增候選學校與科別</small></button>
+                            <a href="/planner"><b>Cloudflare 收藏</b><small>查看已同步的收藏校科</small></a>
+                            <a href="/news/strategy"><b>志願策略指南</b><small>理解排序方法與常見錯誤</small></a>
+                        </div>
+                    </div>
                 </nav>
-                <button id="mobileMenuBtn" class="guide-mobile-menu-button" type="button" aria-label="開啟選單" aria-controls="mobileMenu" aria-expanded="false">
-                    <span></span><span></span><span></span>
-                </button>
+                <div class="guide-header-actions">
+                    <button type="button" class="guide-search-button" data-open-guide-search aria-label="搜尋內容與功能">⌕</button>
+                    <button id="mobileMenuBtn" class="guide-mobile-menu-button" type="button" aria-label="開啟完整選單" aria-controls="mobileMenu" aria-expanded="false">
+                        <span></span><span></span><span></span>
+                    </button>
+                </div>
             </div>
         </div>
 
         <div class="guide-workspace-bar">
             <div class="guide-workspace-inner">
                 <div class="guide-workspace-copy">
-                    <span>升學決策工作台</span>
-                    <strong data-current-district-label>尚未選擇就學區</strong>
+                    <span>全站使用情境</span>
+                    <button type="button" class="guide-district-context" data-district-picker><strong data-current-district-label>尚未選擇就學區</strong><span aria-hidden="true">切換 →</span></button>
                 </div>
                 <div class="guide-workspace-actions">
-                    <button type="button" class="district-switch-button" data-district-picker>選擇／切換就學區</button>
                     <a class="line-header-link" href="#" data-line-link aria-label="加入 LINE 官方帳號">
                         <span class="line-dot" aria-hidden="true">LINE</span><span>加入官方帳號</span>
                     </a>
                 </div>
             </div>
-            <div class="header-nav-wrap">
-                <nav class="section-nav menu-board" aria-label="工作台功能選單">
-                    <div class="mega-menu">
-                        <button type="button" class="mega-menu-trigger" aria-expanded="false">高中職學制介紹 <span aria-hidden="true">⌄</span></button>
-                        <div class="mega-menu-panel">
-                            <button type="button" data-page="overview"><b>學制總覽</b><small>三種學制一次比較</small></button>
-                            <button type="button" data-page="program-general"><b>普通高中</b><small>學科基礎與升學規劃</small></button>
-                            <button type="button" data-page="program-vocational"><b>技術型高中</b><small>專業技能與實作學習</small></button>
-                            <button type="button" data-page="program-comprehensive"><b>綜合高中</b><small>先探索，再選擇方向</small></button>
-                        </div>
-                    </div>
-                    <div class="mega-menu">
-                        <button type="button" class="mega-menu-trigger" aria-expanded="false">入學管道及規則 <span aria-hidden="true">⌄</span></button>
-                        <div class="mega-menu-panel">
-                            <button type="button" data-page="admission"><b>管道總覽</b><small>先認識適合的方式</small></button>
-                            <button type="button" data-page="admission-exempt"><b>免試入學</b><small>依所屬就學區確認規則</small></button>
-                            <button type="button" data-page="admission-special"><b>特殊選才</b><small>依招生條件個別申請</small></button>
-                            <button type="button" data-page="admission-direct"><b>獨招與直升</b><small>其他可評估的選擇</small></button>
-                        </div>
-                    </div>
-                    <div class="mega-menu" data-scoring-feature>
-                        <button type="button" class="mega-menu-trigger" aria-expanded="false">免試入學積分試算 <span aria-hidden="true">⌄</span></button>
-                        <div class="mega-menu-panel mega-menu-panel-tools">
-                            <button type="button" data-page="calculator"><b>100 分積分試算</b><small>志願序、多元表現與會考</small></button>
-                            <button type="button" data-page="calculator"><b>111 會考積點</b><small>查看會考成績換算</small></button>
-                            <button type="button" data-page="analysis"><b>落點分析</b><small>整理你的志願可能性</small></button>
-                        </div>
-                    </div>
-                    <div class="mega-menu mega-menu-end">
-                        <button type="button" class="mega-menu-trigger" aria-expanded="false">學校查詢 <span aria-hidden="true">⌄</span></button>
-                        <div class="mega-menu-panel">
-                            <button type="button" data-page="schools"><b>學校清單</b><small>依地區與學制篩選</small></button>
-                            <button type="button" data-page="download"><b>資料下載</b><small>招生與學校資料</small></button>
-                            <button type="button" data-page="faq"><b>常見問題</b><small>快速找到解答</small></button>
-                        </div>
-                    </div>
-                </nav>
-            </div>
         </div>
 
-        <div id="mobileMenu" class="hidden guide-mobile-menu">
-            <div class="mobile-menu-stack">
-                <nav class="guide-mobile-primary-nav" aria-label="行動版主要導覽">
-                    <a href="/news#latest">升學情報</a>
-                    <a href="#schools" data-page="schools">找學校</a>
-                    <a href="#calculator" data-page="calculator" data-scoring-feature>升學工具</a>
-                    <a href="#home" data-page="home" data-district-picker>就學區</a>
-                    <a href="#analysis" data-page="analysis" data-scoring-feature>我的規劃</a>
-                </nav>
-                <p class="guide-mobile-menu-label">工作台功能</p>
-                <details class="mobile-menu-group"><summary>高中職學制介紹</summary><button type="button" data-page="overview">學制總覽</button><button type="button" data-page="program-general">普通高中</button><button type="button" data-page="program-vocational">技術型高中</button><button type="button" data-page="program-comprehensive">綜合高中</button></details>
-                <details class="mobile-menu-group"><summary>入學管道及規則</summary><button type="button" data-page="admission">管道總覽</button><button type="button" data-page="admission-exempt">免試入學</button><button type="button" data-page="admission-special">特殊選才</button><button type="button" data-page="admission-direct">獨招與直升</button></details>
-                <details class="mobile-menu-group" data-scoring-feature><summary>免試入學積分試算</summary><button type="button" data-page="calculator">100 分積分試算</button><button type="button" data-page="calculator">111 會考積點</button><button type="button" data-page="analysis">落點分析</button></details>
-                <details class="mobile-menu-group"><summary>學校查詢</summary><button type="button" data-page="schools">學校清單</button><button type="button" data-page="download">資料下載</button><button type="button" data-page="faq">常見問題</button></details>
+        <div id="mobileMenu" class="hidden guide-mobile-menu" role="dialog" aria-modal="true" aria-label="全站導覽">
+            <div class="guide-mobile-drawer">
+                <div class="guide-mobile-drawer-head">
+                    <div><small>JSHS NAVIGATION</small><b>找到現在需要的下一步</b></div>
+                    <button type="button" data-close-mobile-menu aria-label="關閉選單">×</button>
+                </div>
+                <div class="mobile-menu-stack">
+                    <button type="button" class="guide-mobile-district" data-district-picker><span><small>全站使用情境</small><b data-current-district-label>尚未選擇就學區</b></span><span>切換 →</span></button>
+                    <label class="guide-menu-search"><span class="sr-only">搜尋內容與功能</span><input id="guideMenuSearch" type="search" placeholder="搜尋內容與功能" autocomplete="off"></label>
+                    <section class="guide-quick-section" data-guide-quick-section>
+                        <h2>你現在想做什麼？</h2>
+                        <div class="guide-quick-actions">
+                            <button type="button" data-page="schools" data-nav-search-item="查校科 學校 科別"><span>校</span><b>查校科</b></button>
+                            <button type="button" data-page="calculator" data-scoring-feature data-nav-search-item="算積分 會考 試算"><span>算</span><b>算積分</b></button>
+                            <a href="/news/exam" data-nav-search-item="看時程 會考 日期"><span>日</span><b>看時程</b></a>
+                            <button type="button" data-page="analysis" data-scoring-feature data-nav-search-item="排志願 規劃 落點"><span>排</span><b>排志願</b></button>
+                        </div>
+                    </section>
+                    <nav class="guide-mobile-directory" aria-label="瀏覽所有內容">
+                        <h2>瀏覽所有內容</h2>
+                        <details class="mobile-menu-group"><summary>升學指南<small>會考、規則、策略與生涯選擇</small></summary><a href="/news/exam" data-nav-search-item="會考準備 時程 應試">會考準備</a><a href="/news/rules" data-nav-search-item="入學規則 免試 比序">入學規則</a><a href="/news/strategy" data-nav-search-item="志願策略 排序">志願策略</a><a href="/news/career" data-nav-search-item="生涯選擇 家長">生涯與家長</a></details>
+                        <details class="mobile-menu-group"><summary>找校科<small>學校、科別、學制與招生資料</small></summary><button type="button" data-page="schools" data-nav-search-item="全國校科查詢 學校 科別">全國校科查詢</button><button type="button" data-page="overview" data-nav-search-item="高中職學制 普高 技高 綜高">高中職學制</button><a href="/news/schools" data-nav-search-item="校科探索 十五群科 五專">校科探索指南</a><button type="button" data-page="download" data-nav-search-item="招生資料 下載">招生資料</button></details>
+                        <details class="mobile-menu-group" data-scoring-feature><summary>試算工具<small>積分、落點與時程提醒</small></summary><button type="button" data-page="calculator" data-nav-search-item="積分試算 會考">積分試算</button><button type="button" data-page="analysis" data-nav-search-item="落點分析 風險">落點分析</button><button type="button" data-page="faq" data-nav-search-item="工具說明 常見問題">工具使用說明</button></details>
+                        <details class="mobile-menu-group" data-scoring-feature><summary>我的規劃<small>收藏、比較、排序與待辦</small></summary><button type="button" data-page="analysis" data-nav-search-item="志願規劃 比較 排序">志願規劃台</button><a href="/planner" data-nav-search-item="Cloudflare 收藏 校科">Cloudflare 收藏</a><button type="button" data-page="schools" data-nav-search-item="繼續找校科">繼續找校科</button></details>
+                    </nav>
+                    <p class="guide-menu-search-empty" data-guide-search-empty hidden>目前沒有符合的入口。可以搜尋「會考」、「學校」、「積分」或「志願」。</p>
+                </div>
             </div>
         </div>
     </header>
+
+    <nav class="guide-mobile-bottom-nav" aria-label="行動版快速導覽">
+        <a href="/"><span aria-hidden="true">⌂</span>首頁</a>
+        <a href="/news#latest"><span aria-hidden="true">讀</span>指南</a>
+        <a href="#schools" data-page="schools"><span aria-hidden="true">校</span>找校科</a>
+        <a href="#calculator" data-page="calculator" data-scoring-feature><span aria-hidden="true">算</span>工具</a>
+        <a href="#analysis" data-page="analysis" data-scoring-feature><span aria-hidden="true">存</span>規劃</a>
+    </nav>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
         <section id="page-home" data-page-section="home" class="page-section active rounded-[32px] bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)] border border-blueGray/70 overflow-hidden">
@@ -760,11 +780,11 @@
         <div class="guide-footer-inner">
             <b>JSHS 全國國中升學資訊網</b>
             <nav aria-label="頁尾導覽">
-                <a href="/news#latest">升學情報</a>
-                <a href="#schools" data-page="schools">找學校</a>
-                <a href="#calculator" data-page="calculator" data-scoring-feature>升學工具</a>
-                <a href="#home" data-page="home" data-district-picker>就學區</a>
+                <a href="/news#latest">升學指南</a>
+                <a href="#schools" data-page="schools">找校科</a>
+                <a href="#calculator" data-page="calculator" data-scoring-feature>試算工具</a>
                 <a href="#analysis" data-page="analysis" data-scoring-feature>我的規劃</a>
+                <button type="button" data-district-picker>切換就學區</button>
             </nav>
             <span>招生資訊請以各主管機關最新公告為準。</span>
         </div>
@@ -788,6 +808,6 @@
         </div>
     </div>
     <script src="site-config.js?v=20260810-7"></script>
-    <script src="guide.js?v=20260814-5"></script>
+    <script src="guide.js?v=20260814-6"></script>
 </body>
 </html>
