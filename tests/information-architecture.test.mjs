@@ -9,30 +9,30 @@ const sitemapUrl = new URL("../public/sitemap.xml", import.meta.url);
 const articlePageUrl = new URL("../app/news/[slug]/page.tsx", import.meta.url);
 
 const expectedNavigation = [
-  ["升學情報", "/news#latest"],
-  ["找學校", "/it_hs/guide.htm#schools"],
-  ["升學工具", "/it_hs/guide.htm#calculator"],
-  ["就學區", "/it_hs/guide.htm#home"],
+  ["升學指南", "/news#latest"],
+  ["找校科", "/it_hs/guide.htm#schools"],
+  ["試算工具", "/it_hs/guide.htm#calculator"],
   ["我的規劃", "/it_hs/guide.htm#analysis"],
 ];
 
 const expectedCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
 
-test("the information architecture has exactly five stable primary navigation items", async () => {
+test("the information architecture keeps four task hubs and treats district as context", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
 
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ label, href }) => [label, href]),
     expectedNavigation,
   );
-  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 5);
+  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 4);
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ activeHref }) => activeHref),
-    ["/news", "/schools", "/tools", "/districts", "/planner"],
+    ["/news", "/schools", "/tools", "/planner"],
   );
+  assert.equal(siteMap.primaryNavigation.some(({ label }) => label === "就學區"), false);
 });
 
-test("shared header and footer render the same navigation on every app surface", async () => {
+test("shared header exposes scalable desktop, drawer, and mobile bottom navigation", async () => {
   const [header, footer] = await Promise.all([
     readFile(headerUrl, "utf8"),
     readFile(footerUrl, "utf8"),
@@ -40,7 +40,12 @@ test("shared header and footer render the same navigation on every app surface",
 
   assert.match(header, /primaryNavigation\.map/);
   assert.match(header, /aria-label="主要導覽"/);
-  assert.match(header, /<details/);
+  assert.match(header, /role="dialog"/);
+  assert.match(header, /aria-modal="true"/);
+  assert.match(header, /搜尋內容與功能/);
+  assert.match(header, /mobile-bottom-nav/);
+  assert.match(header, /jshs-nav-open/);
+  assert.doesNotMatch(header, />導覽選單</);
   assert.match(footer, /primaryNavigation\.map/);
 });
 

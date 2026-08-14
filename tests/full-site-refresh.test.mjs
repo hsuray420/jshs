@@ -11,13 +11,24 @@ test("the original admission app uses the unified JSHS public shell", async () =
 
   assert.match(guide, /data-guide-shell="unified-2026"/);
   assert.match(guide, /<nav class="guide-primary-nav" aria-label="主要導覽">/);
-  assert.match(guide, /href="\/news#latest"[^>]*>升學情報/);
-  assert.match(guide, /href="#schools"[^>]*data-page="schools"[^>]*>找學校/);
-  assert.match(guide, /href="#calculator"[^>]*data-page="calculator"[^>]*>升學工具/);
-  assert.match(guide, /href="#home"[^>]*data-page="home"[^>]*data-district-picker[^>]*>就學區/);
+  assert.match(guide, />升學指南</);
+  assert.match(guide, />找校科</);
+  assert.match(guide, />試算工具</);
   assert.match(guide, /href="#analysis"[^>]*data-page="analysis"[^>]*>我的規劃/);
+  const primaryNavigation = guide.match(/<nav class="guide-primary-nav"[\s\S]*?<\/nav>/)?.[0] || "";
+  assert.doesNotMatch(primaryNavigation, />就學區</);
   assert.match(guide, /class="guide-workspace-bar"/);
   assert.match(guide, /class="guide-footer"/);
+});
+
+test("the guide mobile drawer prioritizes search and four quick tasks without the duplicate workbench menu", async () => {
+  const guide = await readFile(guideUrl, "utf8");
+
+  assert.match(guide, /id="mobileMenu"[^>]+role="dialog"[^>]+aria-modal="true"/);
+  assert.match(guide, /id="guideMenuSearch"[^>]+placeholder="搜尋內容與功能"/);
+  for (const label of ["查校科", "算積分", "看時程", "排志願"]) assert.match(guide, new RegExp(`>${label}<`));
+  assert.match(guide, /class="guide-mobile-bottom-nav"/);
+  assert.doesNotMatch(guide, />工作台功能</);
 });
 
 test("the unified shell keeps every original interactive destination", async () => {
@@ -39,6 +50,8 @@ test("the guide stylesheet inherits the homepage design system at desktop and mo
   assert.match(css, /\.guide-primary-nav/);
   assert.match(css, /\.guide-workspace-bar/);
   assert.match(css, /\.guide-footer/);
+  assert.match(css, /\.guide-mobile-drawer/);
+  assert.match(css, /\.guide-mobile-bottom-nav/);
   assert.match(css, /\.line-header-link:not\(\.is-ready\)/);
   assert.match(css, /@media \(max-width:\s*768px\)/);
   assert.match(css, /var\(--jshs-navy\)/);
@@ -48,8 +61,9 @@ test("the guide stylesheet inherits the homepage design system at desktop and mo
 test("routing from the mobile menu closes both its visual and accessible state", async () => {
   const script = await readFile(guideScriptUrl, "utf8");
 
-  assert.match(script, /mobileMenu\.classList\.add\('hidden'\)/);
-  assert.match(script, /mobileMenuBtn\?\.setAttribute\('aria-expanded', 'false'\)/);
+  assert.match(script, /function setMobileMenuOpen\(open\)/);
+  assert.match(script, /document\.body\.classList\.toggle\('guide-nav-open', open\)/);
+  assert.match(script, /setMobileMenuOpen\(false\)/);
 });
 
 test("deep links render their requested tool before Cloudflare state finishes loading", async () => {
