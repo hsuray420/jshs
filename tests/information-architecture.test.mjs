@@ -10,10 +10,10 @@ const articlePageUrl = new URL("../app/news/[slug]/page.tsx", import.meta.url);
 
 const expectedNavigation = [
   ["升學情報", "/news"],
-  ["找學校", "/districts?target=schools"],
-  ["升學工具", "/districts?target=calculator"],
+  ["找學校", "/schools"],
+  ["升學工具", "/tools"],
   ["就學區", "/districts"],
-  ["我的規劃", "/districts?target=analysis"],
+  ["我的規劃", "/planner"],
 ];
 
 const expectedCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
@@ -96,10 +96,6 @@ test("article breadcrumbs point back to the canonical homepage", async () => {
   assert.match(articlePage, /href="\/"/);
 });
 
-test("legacy school tools remain available during the staged migration", async () => {
-  await Promise.all([
-    access(new URL("../public/it_hs/guide.htm", import.meta.url)),
-    access(new URL("../public/it_hs/guide.js", import.meta.url)),
-    access(new URL("../public/it_hs/district-metadata.json", import.meta.url)),
-  ]);
+test("district metadata remains the Cloudflare-hosted source catalog", async () => {
+  await access(new URL("../public/it_hs/district-metadata.json", import.meta.url));
 });

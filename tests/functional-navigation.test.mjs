@@ -4,7 +4,7 @@ import test from "node:test";
 
 const readSource = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("task hubs route users back into the existing working admission system", async () => {
+test("task hubs route users into the new first-party admission surfaces", async () => {
   const [tools, schools, planner, home] = await Promise.all([
     readSource("app/tools/page.tsx"),
     readSource("app/schools/page.tsx"),
@@ -12,35 +12,42 @@ test("task hubs route users back into the existing working admission system", as
     readSource("app/page.tsx"),
   ]);
 
-  assert.match(tools, /\/districts\?target=calculator/);
-  assert.match(tools, /\/districts\?target=analysis/);
-  assert.match(schools, /\/districts\?target=schools/);
-  assert.match(schools, /\/districts\?target=analysis/);
-  assert.match(planner, /\/districts\?target=analysis/);
-  assert.match(home, /\/districts\?target=schools/);
-  assert.match(home, /\/districts\?target=calculator/);
-  assert.match(home, /\/districts\?target=analysis/);
+  assert.match(tools, /AdmissionCalculator/);
+  assert.match(schools, /SchoolExplorer/);
+  assert.match(planner, /PlannerWorkspace/);
+  assert.match(home, /href="\/schools"/);
+  assert.match(home, /href="\/tools"/);
+  assert.match(home, /href="\/planner"/);
+
+  for (const source of [tools, schools, planner, home]) {
+    assert.doesNotMatch(source, /\/it_hs\/it_hs\.html/);
+    assert.doesNotMatch(source, /原有功能|原有規劃|原有比較/);
+  }
 });
 
-test("district selection preserves the requested tool and falls back to school search", async () => {
+test("district selection preserves the requested tool on first-party routes", async () => {
   const districts = await readSource("app/districts/page.tsx");
 
   assert.match(districts, /searchParams/);
   assert.match(districts, /target\?: string/);
   assert.match(districts, /target === "calculator" && !district\.calculator/);
   assert.match(districts, /target === "analysis" && !district\.analysis/);
-  assert.match(districts, /\/it_hs\/it_hs\.html\?district=\$\{code\}#\$\{resolvedTarget\}/);
+  assert.match(districts, /destinationFor\(resolvedTarget, code\)/);
+  assert.match(districts, /`\/schools\?district=\$\{code\}`/);
+  assert.match(districts, /`\/tools\?district=\$\{code\}`/);
+  assert.match(districts, /`\/planner\?district=\$\{code\}`/);
+  assert.doesNotMatch(districts, /\/it_hs\/it_hs\.html/);
 });
 
-test("the original system still owns every functional destination", async () => {
-  const [guide, script] = await Promise.all([
-    readSource("public/it_hs/guide.htm"),
-    readSource("public/it_hs/guide.js"),
+test("new school, calculator, and planner clients own the functional destinations", async () => {
+  const [schools, calculator, planner] = await Promise.all([
+    readSource("components/school-explorer.tsx"),
+    readSource("components/admission-calculator.tsx"),
+    readSource("components/planner-workspace.tsx"),
   ]);
 
-  for (const target of ["schools", "calculator", "analysis"]) {
-    assert.match(guide, new RegExp(`data-page-section=\\"${target}\\"`));
-  }
-  assert.match(script, /const initialPage = window\.location\.hash\.replace/);
-  assert.match(script, /showPage\(initialPage\)/);
+  assert.match(schools, /\/api\/schools\.csv\?district=/);
+  assert.match(schools, /\/api\/planner/);
+  assert.match(calculator, /\/api\/admission\/calculate/);
+  assert.match(planner, /\/api\/planner/);
 });
