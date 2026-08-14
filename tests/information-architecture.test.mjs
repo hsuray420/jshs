@@ -45,6 +45,8 @@ test("shared header exposes scalable desktop, drawer, and mobile bottom navigati
   assert.match(header, /搜尋內容與功能/);
   assert.match(header, /mobile-bottom-nav/);
   assert.match(header, /jshs-nav-open/);
+  assert.match(header, /function openDrawer\(focusSearch = false\)/);
+  assert.match(header, /onClick=\{\(\) => openDrawer\(true\)\}/);
   assert.doesNotMatch(header, />導覽選單</);
   assert.match(footer, /primaryNavigation\.map/);
 });

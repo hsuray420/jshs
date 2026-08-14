@@ -62,6 +62,7 @@ test("routing from the mobile menu closes both its visual and accessible state",
   const script = await readFile(guideScriptUrl, "utf8");
 
   assert.match(script, /function setMobileMenuOpen\(open\)/);
+  assert.match(script, /function openMobileSearch\(\)/);
   assert.match(script, /document\.body\.classList\.toggle\('guide-nav-open', open\)/);
   assert.match(script, /setMobileMenuOpen\(false\)/);
 });
