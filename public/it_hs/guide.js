@@ -105,10 +105,9 @@ function initSchoolQueryOnlyMode() {
 }
 
 function updateCurrentDistrictBadge() {
-    const badge = document.querySelector('[data-current-district-label]');
-    if (!badge) return;
     const district = DISTRICT_OPTIONS[getSelectedDistrict()];
-    badge.textContent = district ? `目前：${district.label}` : '尚未選擇就學區';
+    const label = district ? `目前：${district.label}` : '尚未選擇就學區';
+    document.querySelectorAll('[data-current-district-label]').forEach(badge => { badge.textContent = label; });
     if (district) document.title = `${district.label}｜全國國中升學資訊網`;
 }
 
@@ -291,10 +290,9 @@ function showDistrictUnavailablePage() {
     const main = document.querySelector('main');
     const nav = document.querySelector('.header-nav-wrap');
     const mobileMenu = document.getElementById('mobileMenu');
-    const badge = document.querySelector('[data-current-district-label]');
     const modal = document.getElementById('districtModal');
 
-    if (badge) badge.textContent = `目前：${district.label}`;
+    document.querySelectorAll('[data-current-district-label]').forEach(badge => { badge.textContent = `目前：${district.label}`; });
     if (modal) modal.hidden = true;
     if (nav) nav.hidden = true;
     if (mobileMenu) setMobileMenuOpen(false);
