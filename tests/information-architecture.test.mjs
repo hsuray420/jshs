@@ -10,10 +10,10 @@ const articlePageUrl = new URL("../app/news/[slug]/page.tsx", import.meta.url);
 
 const expectedNavigation = [
   ["升學情報", "/news"],
-  ["找學校", "/schools"],
-  ["升學工具", "/tools"],
+  ["找學校", "/districts?target=schools"],
+  ["升學工具", "/districts?target=calculator"],
   ["就學區", "/districts"],
-  ["我的規劃", "/planner"],
+  ["我的規劃", "/districts?target=analysis"],
 ];
 
 const expectedCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
@@ -26,6 +26,10 @@ test("the information architecture has exactly five stable primary navigation it
     expectedNavigation,
   );
   assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 5);
+  assert.deepEqual(
+    siteMap.primaryNavigation.map(({ activeHref }) => activeHref),
+    ["/news", "/schools", "/tools", "/districts", "/planner"],
+  );
 });
 
 test("shared header and footer render the same navigation on every app surface", async () => {
