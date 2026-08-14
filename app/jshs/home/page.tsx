@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import districtMetadata from "../../../public/it_hs/district-metadata.json";
 import { getFeaturedNews, type NewsArticle } from "@/lib/news";
 
@@ -38,7 +39,7 @@ export default function HomePage() {
   return <main className="min-h-screen bg-[#f6f9fd] text-[#14213d]">
     <header className="mx-auto flex w-[min(1160px,calc(100%-32px))] items-center justify-between gap-4 py-5">
       <a className="flex items-center gap-2 font-extrabold tracking-tight" href="#top"><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#173d78] text-lg text-white">↗</span>全國國中升學資訊網</a>
-      <nav className="hidden gap-6 text-sm font-bold text-slate-500 md:flex"><a href="/news">升學情報</a><a href="#districts">選擇就學區</a><a href="#journey">規劃流程</a><a href="#tools">升學工具</a></nav>
+      <nav className="hidden gap-6 text-sm font-bold text-slate-500 md:flex"><Link href="/news">升學情報</Link><a href="#districts">選擇就學區</a><a href="#journey">規劃流程</a><a href="#tools">升學工具</a></nav>
       <a className="rounded-xl bg-[#173d78] px-4 py-2.5 text-sm font-extrabold text-white shadow-lg shadow-blue-950/15" href="#districts">開始規劃</a>
     </header>
 
@@ -59,7 +60,7 @@ export default function HomePage() {
     </section>
 
     <section aria-labelledby="news-preview-title" className="mx-auto w-[min(1160px,calc(100%-32px))] py-16 md:py-20">
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><p className="text-xs font-extrabold tracking-[.16em] text-[#ba6b18]">最新升學情報</p><h2 id="news-preview-title" className="mt-3 text-4xl font-black tracking-[-.05em]">先把規則讀懂，再開始規劃。</h2></div><div className="max-w-md"><p className="leading-7 text-slate-500">以官方資料為底，整理會考時程、就學區與志願策略；每篇都有更新日期與可執行的下一步。</p><a className="mt-3 inline-block text-sm font-black text-[#173d78]" href="/news">前往升學情報中心 →</a></div></div>
+      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><p className="text-xs font-extrabold tracking-[.16em] text-[#ba6b18]">最新升學情報</p><h2 id="news-preview-title" className="mt-3 text-4xl font-black tracking-[-.05em]">先把規則讀懂，再開始規劃。</h2></div><div className="max-w-md"><p className="leading-7 text-slate-500">以官方資料為底，整理會考時程、就學區與志願策略；每篇都有更新日期與可執行的下一步。</p><Link className="mt-3 inline-block text-sm font-black text-[#173d78]" href="/news">前往升學情報中心 →</Link></div></div>
       <div className="mt-8 grid gap-4 lg:grid-cols-3">{latestNews.map((article) => <NewsPreview key={article.slug} article={article}/>)}</div>
     </section>
 
@@ -81,10 +82,10 @@ export default function HomePage() {
 
     <section id="tools" className="mx-auto w-[min(1160px,calc(100%-32px))] py-16 md:py-20"><p className="text-xs font-extrabold tracking-[.16em] text-[#2868d7]">依任務開始</p><h2 className="mt-3 text-4xl font-black tracking-[-.05em]">現在，你想先完成哪一件事？</h2><div className="mt-8 grid gap-4 lg:grid-cols-3"><Tool title="查詢並比較學校" tag="全區資料" body="以學校、科別、地區與特色篩選，將有興趣的校科加入志願。" href="#districts" primary/><Tool title="建立我的積分" tag="依區規則" body="已建置規則的地區，可輸入會考與多元表現查看積分組成。" href="#districts"/><Tool title="整理志願與待辦" tag="本機保存" body="保留志願排序、通勤估計與送出前待辦，不需登入或提供個資。" href="#districts"/></div></section>
 
-    <footer className="border-t border-slate-200 bg-white py-8"><div className="mx-auto flex w-[min(1160px,calc(100%-32px))] flex-col justify-between gap-4 text-sm text-slate-500 md:flex-row"><b className="text-[#14213d]">全國國中升學資訊網</b><a className="font-bold text-[#173d78]" href="/news">升學情報中心</a><span>{districtMetadata.disclaimer}</span></div></footer>
+    <footer className="border-t border-slate-200 bg-white py-8"><div className="mx-auto flex w-[min(1160px,calc(100%-32px))] flex-col justify-between gap-4 text-sm text-slate-500 md:flex-row"><b className="text-[#14213d]">全國國中升學資訊網</b><Link className="font-bold text-[#173d78]" href="/news">升學情報中心</Link><span>{districtMetadata.disclaimer}</span></div></footer>
   </main>;
 }
 
 function Journey({number, title, body}:{number:string; title:string; body:string}) { return <article className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"><span className="text-sm font-black text-[#2868d7]">{number}</span><h3 className="mt-5 text-lg font-extrabold">{title}</h3><p className="mt-1 text-sm leading-6 text-slate-500">{body}</p></article>; }
-function NewsPreview({article}:{article:NewsArticle}) { return <a href={`/news/${article.slug}`} className="group flex min-h-72 flex-col rounded-3xl border border-slate-200 bg-white p-7 transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-950/10"><div className="flex items-center justify-between gap-3 text-xs font-black"><span className="text-[#2868d7]">{article.category}</span><span className="text-slate-400">{article.readMinutes} 分鐘</span></div><h3 className="mt-5 text-2xl font-black leading-snug tracking-[-.04em]">{article.title}</h3><p className="mt-3 line-clamp-2 text-sm leading-7 text-slate-500">{article.description}</p><b className="mt-auto pt-8 text-sm text-[#173d78]">閱讀完整指南 <span className="inline-block transition group-hover:translate-x-1">→</span></b></a>; }
+function NewsPreview({article}:{article:NewsArticle}) { return <Link href={`/news/${article.slug}`} className="group flex min-h-72 flex-col rounded-3xl border border-slate-200 bg-white p-7 transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-950/10"><div className="flex items-center justify-between gap-3 text-xs font-black"><span className="text-[#2868d7]">{article.category}</span><span className="text-slate-400">{article.readMinutes} 分鐘</span></div><h3 className="mt-5 text-2xl font-black leading-snug tracking-[-.04em]">{article.title}</h3><p className="mt-3 line-clamp-2 text-sm leading-7 text-slate-500">{article.description}</p><b className="mt-auto pt-8 text-sm text-[#173d78]">閱讀完整指南 <span className="inline-block transition group-hover:translate-x-1">→</span></b></Link>; }
 function Tool({title,tag,body,href,primary=false}:{title:string;tag:string;body:string;href:string;primary?:boolean}) { return <a href={href} className={`min-h-64 rounded-3xl border p-7 transition hover:-translate-y-1 ${primary ? "border-[#173d78] bg-[#173d78] text-white shadow-xl shadow-blue-950/15" : "border-slate-200 bg-white hover:border-blue-200 hover:shadow-xl hover:shadow-blue-950/10"}`}><p className={`text-xs font-extrabold tracking-[.12em] ${primary ? "text-blue-200" : "text-[#2868d7]"}`}>{tag}</p><h3 className="mt-4 text-2xl font-black tracking-[-.04em]">{title}</h3><p className={`mt-3 text-sm leading-7 ${primary ? "text-blue-100" : "text-slate-500"}`}>{body}</p><b className={`mt-12 block text-sm ${primary ? "text-white" : "text-[#2868d7]"}`}>選擇就學區 →</b></a>; }

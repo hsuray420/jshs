@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
   formatNewsDate,
   getFeaturedNews,
@@ -172,7 +173,7 @@ function SiteHeader() {
           <span>全國國中升學資訊網</span>
         </a>
         <nav aria-label="主要導覽" className="hidden items-center gap-6 text-sm font-bold text-slate-500 md:flex">
-          <a className="text-[#173d78]" href="/news">升學情報</a>
+          <Link className="text-[#173d78]" href="/news">升學情報</Link>
           <a href="/jshs/home#districts">選擇就學區</a>
           <a href="/jshs/home#tools">升學工具</a>
         </nav>
@@ -244,7 +245,7 @@ function SiteFooter() {
     <footer className="border-t border-slate-200 bg-white py-9">
       <div className="mx-auto flex w-[min(1180px,calc(100%-32px))] flex-col justify-between gap-4 text-sm text-slate-500 md:flex-row md:items-center">
         <b className="text-[#14213d]">全國國中升學資訊網</b>
-        <div className="flex gap-5 font-bold"><a href="/news">升學情報</a><a href="/jshs/home#districts">就學區</a><a href="/it_hs/it_hs.html">校科查詢</a></div>
+        <div className="flex gap-5 font-bold"><Link href="/news">升學情報</Link><a href="/jshs/home#districts">就學區</a><a href="/it_hs/it_hs.html">校科查詢</a></div>
         <span>招生資訊請以各主管機關最新公告為準。</span>
       </div>
     </footer>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   formatNewsDate,
@@ -87,7 +88,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
         <header className="border-y border-blue-100 bg-[radial-gradient(circle_at_85%_0%,#dcecff,transparent_32%),linear-gradient(135deg,#fff,#edf5ff)]">
           <div className="mx-auto w-[min(980px,calc(100%-32px))] py-14 md:py-20">
             <nav aria-label="麵包屑" className="flex flex-wrap items-center gap-2 text-sm font-bold text-slate-500">
-              <a href="/jshs/home">首頁</a><span aria-hidden="true">/</span><a href="/news">升學情報</a><span aria-hidden="true">/</span><span className="text-[#2868d7]">{article.category}</span>
+              <a href="/jshs/home">首頁</a><span aria-hidden="true">/</span><Link href="/news">升學情報</Link><span aria-hidden="true">/</span><span className="text-[#2868d7]">{article.category}</span>
             </nav>
             <p className="mt-10 text-xs font-black tracking-[.18em] text-[#ba6b18]">{article.kicker}</p>
             <h1 className="mt-4 max-w-4xl text-4xl font-black leading-[1.16] tracking-[-.055em] md:text-6xl">{article.title}</h1>
@@ -189,7 +190,7 @@ function ArticleHeader() {
     <header className="bg-white">
       <div className="mx-auto flex w-[min(1180px,calc(100%-32px))] items-center justify-between gap-4 py-5">
         <a className="flex items-center gap-2.5 font-black tracking-tight" href="/jshs/home"><span className="grid h-9 w-9 place-items-center rounded-xl bg-[#173d78] text-lg text-white">↗</span><span>全國國中升學資訊網</span></a>
-        <nav aria-label="主要導覽" className="hidden items-center gap-6 text-sm font-bold text-slate-500 md:flex"><a className="text-[#173d78]" href="/news">升學情報</a><a href="/jshs/home#districts">選擇就學區</a><a href="/jshs/home#tools">升學工具</a></nav>
+        <nav aria-label="主要導覽" className="hidden items-center gap-6 text-sm font-bold text-slate-500 md:flex"><Link className="text-[#173d78]" href="/news">升學情報</Link><a href="/jshs/home#districts">選擇就學區</a><a href="/jshs/home#tools">升學工具</a></nav>
         <a className="rounded-xl bg-[#173d78] px-4 py-2.5 text-sm font-extrabold text-white" href="/it_hs/it_hs.html">開始查校</a>
       </div>
     </header>
@@ -200,7 +201,7 @@ function RelatedArticles({ articles }: { articles: readonly NewsArticle[] }) {
   return (
     <section className="border-t border-slate-200 bg-white py-16 md:py-20">
       <div className="mx-auto w-[min(1120px,calc(100%-32px))]">
-        <div className="flex items-end justify-between gap-4"><div><p className="text-xs font-black tracking-[.16em] text-[#2868d7]">接著讀</p><h2 className="mt-3 text-3xl font-black tracking-[-.045em]">把下一個問題也弄懂</h2></div><a className="hidden text-sm font-black text-[#173d78] md:block" href="/news">全部指南 →</a></div>
+        <div className="flex items-end justify-between gap-4"><div><p className="text-xs font-black tracking-[.16em] text-[#2868d7]">接著讀</p><h2 className="mt-3 text-3xl font-black tracking-[-.045em]">把下一個問題也弄懂</h2></div><Link className="hidden text-sm font-black text-[#173d78] md:block" href="/news">全部指南 →</Link></div>
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {articles.map((article) => (
             <a key={article.slug} href={`/news/${article.slug}`} className="group rounded-3xl border border-slate-200 bg-[#fbfdff] p-6 transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-950/10">
@@ -220,7 +221,7 @@ function ArticleFooter() {
     <footer className="border-t border-slate-200 bg-[#f7fafc] py-9">
       <div className="mx-auto flex w-[min(1120px,calc(100%-32px))] flex-col justify-between gap-4 text-sm text-slate-500 md:flex-row md:items-center">
         <b className="text-[#14213d]">全國國中升學資訊網</b>
-        <div className="flex gap-5 font-bold"><a href="/news">升學情報</a><a href="/jshs/home#districts">就學區</a><a href="/it_hs/it_hs.html">校科查詢</a></div>
+        <div className="flex gap-5 font-bold"><Link href="/news">升學情報</Link><a href="/jshs/home#districts">就學區</a><a href="/it_hs/it_hs.html">校科查詢</a></div>
         <span>招生資訊請以各主管機關最新公告為準。</span>
       </div>
     </footer>
