@@ -25,6 +25,7 @@ test("the guide mobile drawer prioritizes search and four quick tasks without th
   const guide = await readFile(guideUrl, "utf8");
 
   assert.match(guide, /id="mobileMenu"[^>]+role="dialog"[^>]+aria-modal="true"/);
+  assert.match(guide, /<\/header>\s*<div id="mobileMenu"/);
   assert.match(guide, /id="guideMenuSearch"[^>]+placeholder="搜尋內容與功能"/);
   for (const label of ["查校科", "算積分", "看時程", "排志願"]) assert.match(guide, new RegExp(`>${label}<`));
   assert.match(guide, /class="guide-mobile-bottom-nav"/);
