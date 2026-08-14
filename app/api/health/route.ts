@@ -5,18 +5,21 @@ export async function GET() {
   const checks = {
     database,
     storage: database,
+  };
+  const integrations = {
     line_login: Boolean(process.env.LINE_LOGIN_CHANNEL_ID && process.env.LINE_LOGIN_CHANNEL_SECRET),
     line_push: Boolean(process.env.LINE_CHANNEL_ACCESS_TOKEN),
   };
-  const ok = Object.values(checks).every(Boolean);
+  const coreOk = database;
 
   return Response.json({
-    ok,
+    ok: coreOk,
     service: "jshs-admission-site",
     phase: "cloudflare-native",
     checks,
+    integrations,
     checked_at: new Date().toISOString(),
-  }, { status: ok ? 200 : 503 });
+  }, { status: coreOk ? 200 : 503 });
 }
 
 async function checkDatabase() {

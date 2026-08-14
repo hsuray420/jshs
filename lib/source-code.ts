@@ -75,7 +75,7 @@ export const SOURCE_FILES: SourceFile[] = [
   },
   {
     "path": "app/api/health/route.ts",
-    "content": "import { ensureAdminSchema } from \"../../../db/admin-store\";\n\nexport async function GET() {\n  const database = await checkDatabase();\n  const checks = {\n    database,\n    storage: database,\n    line_login: Boolean(process.env.LINE_LOGIN_CHANNEL_ID && process.env.LINE_LOGIN_CHANNEL_SECRET),\n    line_push: Boolean(process.env.LINE_CHANNEL_ACCESS_TOKEN),\n  };\n  const ok = Object.values(checks).every(Boolean);\n\n  return Response.json({\n    ok,\n    service: \"jshs-admission-site\",\n    phase: \"cloudflare-native\",\n    checks,\n    checked_at: new Date().toISOString(),\n  }, { status: ok ? 200 : 503 });\n}\n\nasync function checkDatabase() {\n  try {\n    await ensureAdminSchema();\n    return true;\n  } catch {\n    return false;\n  }\n}\n"
+    "content": "import { ensureAdminSchema } from \"../../../db/admin-store\";\n\nexport async function GET() {\n  const database = await checkDatabase();\n  const checks = {\n    database,\n    storage: database,\n  };\n  const integrations = {\n    line_login: Boolean(process.env.LINE_LOGIN_CHANNEL_ID && process.env.LINE_LOGIN_CHANNEL_SECRET),\n    line_push: Boolean(process.env.LINE_CHANNEL_ACCESS_TOKEN),\n  };\n  const coreOk = database;\n\n  return Response.json({\n    ok: coreOk,\n    service: \"jshs-admission-site\",\n    phase: \"cloudflare-native\",\n    checks,\n    integrations,\n    checked_at: new Date().toISOString(),\n  }, { status: coreOk ? 200 : 503 });\n}\n\nasync function checkDatabase() {\n  try {\n    await ensureAdminSchema();\n    return true;\n  } catch {\n    return false;\n  }\n}\n"
   },
   {
     "path": "app/api/line/webhook/route.ts",

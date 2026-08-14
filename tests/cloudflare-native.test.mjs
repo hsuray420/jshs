@@ -66,3 +66,11 @@ test("local source changes are gated and deployed directly to Cloudflare", async
   assert.match(watcher, /jshs-production/);
   assert.match(watcher, /setTimeout/);
 });
+
+test("health status follows Cloudflare core services, not optional LINE integrations", async () => {
+  const healthRoute = await readSource("app/api/health/route.ts");
+
+  assert.match(healthRoute, /const coreOk = database/);
+  assert.match(healthRoute, /status: coreOk \? 200 : 503/);
+  assert.match(healthRoute, /integrations/);
+});
