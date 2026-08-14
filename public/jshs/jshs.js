@@ -60,7 +60,8 @@ function chooseDistrict(code) {
     if (!districtMap[code]) return;
     localStorage.setItem('jshs_district', code);
     const hash = requestedTarget === 'schools' ? 'schools' : requestedTarget;
-    window.location.assign(`/it_hs/it_hs.html?district=${encodeURIComponent(code)}#${hash}`);
+    const destination = hash === 'calculator' ? '/tools' : hash === 'analysis' ? '/planner' : '/schools';
+    window.location.assign(`${destination}?district=${encodeURIComponent(code)}`);
 }
 
 function initInteractions() {

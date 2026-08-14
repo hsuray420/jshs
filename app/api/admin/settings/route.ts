@@ -17,28 +17,8 @@ export async function POST(request: Request) {
     admin.user.displayName,
   );
   await upsertSiteSetting(
-    "pathway_form_url",
-    String(formData.get("pathway_form_url") || "").trim().slice(0, 1000),
-    admin.user.displayName,
-  );
-  await upsertSiteSetting(
     "official_line_url",
     String(formData.get("official_line_url") || "").trim().slice(0, 1000),
-    admin.user.displayName,
-  );
-  await upsertSiteSetting(
-    "google_ads_enabled",
-    formData.get("google_ads_enabled") === "on" ? "1" : "0",
-    admin.user.displayName,
-  );
-  await upsertSiteSetting(
-    "google_ads_client",
-    String(formData.get("google_ads_client") || "").trim().slice(0, 200),
-    admin.user.displayName,
-  );
-  await upsertSiteSetting(
-    "google_ads_slot",
-    String(formData.get("google_ads_slot") || "").trim().slice(0, 100),
     admin.user.displayName,
   );
   await upsertSiteSetting(

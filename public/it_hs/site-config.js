@@ -19,7 +19,6 @@ window.JSHS_SITE_CONFIG = {
         kinmen: '/it_hs/kinmen/schools.csv'
     },
     publicSchoolIndexPath: '/it_hs/data/volunteer_schools.json',
-    publicSchoolIndexSource: 'https://tyctw.github.io/spare/data/volunteer_schools.json',
     publicSchoolIndexRetrieved: '2026-08-10',
     schoolsDataVar: 'IT_HS_SCHOOLS'
 };

@@ -77,7 +77,7 @@
       ],
       "cta": {
         "label": "先確認我的就學區",
-        "href": "/it_hs/it_hs.html",
+        "href": "/schools",
         "detail": "從所在地區進入校科查詢，建立第一版升學觀察清單。"
       },
       "relatedSlugs": ["how-to-confirm-enrollment-district", "wish-list-three-tiers", "score-ranking-placement-difference"]
@@ -143,7 +143,7 @@
       ],
       "cta": {
         "label": "開啟全國就學區入口",
-        "href": "/it_hs/it_hs.html",
+        "href": "/schools",
         "detail": "選擇地區後查看可用校科資料、積分功能與官方來源。"
       },
       "relatedSlugs": ["116-junior-high-exam-roadmap", "score-ranking-placement-difference", "parent-student-admission-meeting"]
@@ -209,7 +209,7 @@
       ],
       "cta": {
         "label": "選區後查看可用試算",
-        "href": "/it_hs/it_hs.html",
+        "href": "/tools",
         "detail": "系統會標示各區目前可用功能、資料年度與來源。"
       },
       "relatedSlugs": ["wish-list-three-tiers", "how-to-confirm-enrollment-district", "parent-student-admission-meeting"]
@@ -280,7 +280,7 @@
       ],
       "cta": {
         "label": "開始建立校科候選池",
-        "href": "/it_hs/it_hs.html",
+        "href": "/planner",
         "detail": "先選就學區，再比較校科並整理自己的志願清單。"
       },
       "relatedSlugs": ["score-ranking-placement-difference", "general-vocational-five-year-choice", "parent-student-admission-meeting"]
@@ -416,13 +416,13 @@
         },
         {
           "label": "JSHS 全國就學區與校科資料",
-          "url": "https://jshs.cc/it_hs/it_hs.html",
+          "url": "https://jshs.cc/schools",
           "note": "整理候選校科、資料年度與來源。"
         }
       ],
       "cta": {
         "label": "開啟親子共同查看的校科清單",
-        "href": "/it_hs/it_hs.html",
+        "href": "/schools",
         "detail": "先用同一份資料討論，再把未知事項變成可完成的待辦。"
       },
       "relatedSlugs": ["wish-list-three-tiers", "general-vocational-five-year-choice", "116-junior-high-exam-roadmap"]

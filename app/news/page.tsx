@@ -158,7 +158,7 @@ export default function NewsPage() {
             <h2 className="mt-3 text-3xl font-black tracking-[-.045em] text-white">知道怎麼做了，就從自己的就學區開始。</h2>
             <p className="mt-3 max-w-2xl leading-7 text-blue-100">查看校科、資料年度與目前可用的積分功能，把文章方法套到自己的選項。</p>
           </div>
-          <a className="shrink-0 rounded-xl bg-white px-5 py-3.5 text-sm font-black text-[#173d78] shadow-lg" href="/it_hs/it_hs.html">選擇就學區 →</a>
+          <a className="shrink-0 rounded-xl bg-white px-5 py-3.5 text-sm font-black text-[#173d78] shadow-lg" href="/districts">選擇就學區 →</a>
         </div>
       </section>
 

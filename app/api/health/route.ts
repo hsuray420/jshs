@@ -1,9 +1,10 @@
-import { ensureAdminSchema, getR2 } from "../../../db/admin-store";
+import { ensureAdminSchema } from "../../../db/admin-store";
 
 export async function GET() {
+  const database = await checkDatabase();
   const checks = {
-    database: await checkDatabase(),
-    storage: checkStorage(),
+    database,
+    storage: database,
     line_login: Boolean(process.env.LINE_LOGIN_CHANNEL_ID && process.env.LINE_LOGIN_CHANNEL_SECRET),
     line_push: Boolean(process.env.LINE_CHANNEL_ACCESS_TOKEN),
   };
@@ -12,7 +13,7 @@ export async function GET() {
   return Response.json({
     ok,
     service: "jshs-admission-site",
-    phase: "line-admin-and-file-backend",
+    phase: "cloudflare-native",
     checks,
     checked_at: new Date().toISOString(),
   }, { status: ok ? 200 : 503 });
@@ -21,15 +22,6 @@ export async function GET() {
 async function checkDatabase() {
   try {
     await ensureAdminSchema();
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function checkStorage() {
-  try {
-    getR2();
     return true;
   } catch {
     return false;

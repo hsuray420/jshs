@@ -13,6 +13,8 @@ export type AdminFile = {
   created_at: string;
 };
 
+export type AdminFileWithBlob = AdminFile & { file_blob: ArrayBuffer };
+
 export type SiteSetting = {
   key: string;
   value: string;
@@ -34,11 +36,6 @@ export function getD1() {
   return env.DB;
 }
 
-export function getR2() {
-  if (!env.FILES) throw new Error("R2 binding FILES is not available.");
-  return env.FILES;
-}
-
 export async function ensureAdminSchema() {
   const db = getD1();
   await db.batch([
@@ -52,7 +49,8 @@ export async function ensureAdminSchema() {
       visibility TEXT NOT NULL DEFAULT 'public',
       description TEXT NOT NULL DEFAULT '',
       uploaded_by TEXT NOT NULL,
-      created_at TEXT NOT NULL
+      created_at TEXT NOT NULL,
+      file_blob BLOB
     )`),
     db.prepare(`CREATE TABLE IF NOT EXISTS site_settings (
       key TEXT PRIMARY KEY,
@@ -75,12 +73,18 @@ export async function ensureAdminSchema() {
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_line_users_last_seen_at
       ON line_users(last_seen_at)`),
   ]);
+  const columns = await db.prepare(`PRAGMA table_info(admin_files)`).all<{ name: string }>();
+  if (!(columns.results ?? []).some((column) => column.name === "file_blob")) {
+    await db.prepare(`ALTER TABLE admin_files ADD COLUMN file_blob BLOB`).run();
+  }
 }
 
 export async function listAdminFiles() {
   await ensureAdminSchema();
   const result = await getD1()
-    .prepare(`SELECT * FROM admin_files ORDER BY created_at DESC LIMIT 100`)
+    .prepare(`SELECT id, object_key, file_name, content_type, size, category,
+      visibility, description, uploaded_by, created_at
+      FROM admin_files ORDER BY created_at DESC LIMIT 100`)
     .all<AdminFile>();
   return result.results ?? [];
 }
@@ -88,18 +92,27 @@ export async function listAdminFiles() {
 export async function getAdminFile(id: string) {
   await ensureAdminSchema();
   return getD1()
-    .prepare(`SELECT * FROM admin_files WHERE id = ? LIMIT 1`)
+    .prepare(`SELECT id, object_key, file_name, content_type, size, category,
+      visibility, description, uploaded_by, created_at
+      FROM admin_files WHERE id = ? LIMIT 1`)
     .bind(id)
     .first<AdminFile>();
 }
 
-export async function createAdminFile(input: AdminFile) {
+export async function getAdminFileBlob(id: string) {
+  await ensureAdminSchema();
+  return getD1().prepare(`SELECT id, object_key, file_name, content_type, size,
+    category, visibility, description, uploaded_by, created_at, file_blob
+    FROM admin_files WHERE id = ? LIMIT 1`).bind(id).first<AdminFileWithBlob>();
+}
+
+export async function createAdminFile(input: AdminFileWithBlob) {
   await ensureAdminSchema();
   await getD1()
     .prepare(`INSERT INTO admin_files (
       id, object_key, file_name, content_type, size, category, visibility,
-      description, uploaded_by, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+      description, uploaded_by, created_at, file_blob
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
     .bind(
       input.id,
       input.object_key,
@@ -111,17 +124,15 @@ export async function createAdminFile(input: AdminFile) {
       input.description,
       input.uploaded_by,
       input.created_at,
+      input.file_blob,
     )
     .run();
 }
 
 export async function deleteAdminFile(id: string) {
   await ensureAdminSchema();
-  const file = await getAdminFile(id);
-  if (!file) return false;
-  await getR2().delete(file.object_key);
-  await getD1().prepare(`DELETE FROM admin_files WHERE id = ?`).bind(id).run();
-  return true;
+  const result = await getD1().prepare(`DELETE FROM admin_files WHERE id = ?`).bind(id).run();
+  return (result.meta.changes ?? 0) > 0;
 }
 
 export async function listSiteSettings() {
@@ -227,11 +238,7 @@ export async function removeExtraAdminLineUserId(lineUserId: string, updatedBy: 
 }
 
 export const PUBLIC_SETTING_KEYS = new Set([
-  "pathway_form_url",
   "official_line_url",
-  "google_ads_enabled",
-  "google_ads_client",
-  "google_ads_slot",
 ]);
 
 export async function listPublicSiteSettings() {

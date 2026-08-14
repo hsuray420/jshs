@@ -36,6 +36,12 @@ function resolveDistrictTarget(target: FunctionalTarget | undefined, district: D
   return target || (district.calculator ? "overview" : "schools");
 }
 
+function destinationFor(target: FunctionalTarget, code: string) {
+  if (target === "calculator") return `/tools?district=${code}`;
+  if (target === "analysis") return `/planner?district=${code}`;
+  return `/schools?district=${code}`;
+}
+
 function Feature({ enabled, children }: { enabled: boolean; children: string }) {
   return <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${enabled ? "bg-emerald-50 text-[#147a67]" : "bg-slate-100 text-slate-500"}`}>{enabled ? children : `${children}建置中`}</span>;
 }
@@ -57,7 +63,7 @@ export default async function DistrictsPage({
         <div className="mx-auto w-[min(1120px,calc(100%-32px))] py-16 md:py-24">
           <p className="text-xs font-black tracking-[.18em] text-[#2868d7]">15 ADMISSION DISTRICTS</p>
           <h1 className="mt-5 max-w-4xl text-5xl font-black leading-[1.08] tracking-[-.055em] md:text-7xl">先選對就學區，<br />直接進入{requestedLabel}。</h1>
-          <p className="mt-7 max-w-3xl text-lg leading-8 text-slate-600">{target ? `選擇地區後會直接開啟你原本已完成的${requestedLabel}；若該區尚未開放此功能，會改進入可用的學校查詢。` : description}</p>
+          <p className="mt-7 max-w-3xl text-lg leading-8 text-slate-600">{target ? `選擇地區後會直接開啟新版${requestedLabel}；若該區規則尚未完成校核，會先進入可用的學校查詢。` : description}</p>
         </div>
       </section>
 
@@ -69,7 +75,7 @@ export default async function DistrictsPage({
             const destinationLabel = targetLabels[resolvedTarget];
             const fellBackToSchools = Boolean(target && resolvedTarget !== target);
             return (
-            <a key={code} href={`/it_hs/it_hs.html?district=${code}#${resolvedTarget}`} className="group rounded-3xl border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-950/10">
+            <a key={code} href={destinationFor(resolvedTarget, code)} className="group rounded-3xl border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-950/10">
               <div className="flex items-start justify-between gap-3"><span className="text-xs font-black tracking-[.13em] text-[#2868d7]">{code.toUpperCase()}</span><span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-500">{district.academicYear} 學年度</span></div>
               <h2 className="mt-5 text-2xl font-black">{district.label}</h2>
               <p className="mt-2 min-h-12 text-sm leading-6 text-slate-500">{district.areas}</p>

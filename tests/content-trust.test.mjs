@@ -37,7 +37,7 @@ test("sitemap and robots expose absolute canonical URLs", async () => {
   assert.deepEqual(validateSitemap(sitemap, metadata.canonicalOrigin), []);
   assert.match(sitemap, /<loc>https:\/\/jshs\.cc\/<\/loc>/);
   assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/jshs\/home<\/loc>/);
-  assert.match(sitemap, /<loc>https:\/\/jshs\.cc\/it_hs\/guide\.htm<\/loc>/);
+  assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/it_hs\//);
   assert.match(robots, /Sitemap: https:\/\/jshs\.cc\/sitemap\.xml/);
 });
 

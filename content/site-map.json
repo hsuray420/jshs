@@ -2,10 +2,10 @@
   "updatedAt": "2026-08-14",
   "primaryNavigation": [
     { "label": "升學情報", "href": "/news", "activeHref": "/news" },
-    { "label": "找學校", "href": "/districts?target=schools", "activeHref": "/schools" },
-    { "label": "升學工具", "href": "/districts?target=calculator", "activeHref": "/tools" },
+    { "label": "找學校", "href": "/schools", "activeHref": "/schools" },
+    { "label": "升學工具", "href": "/tools", "activeHref": "/tools" },
     { "label": "就學區", "href": "/districts", "activeHref": "/districts" },
-    { "label": "我的規劃", "href": "/districts?target=analysis", "activeHref": "/planner" }
+    { "label": "我的規劃", "href": "/planner", "activeHref": "/planner" }
   ],
   "newsCategories": [
     {
@@ -16,7 +16,7 @@
       "description": "整理國中教育會考重要時程、各科準備、考前衝刺與應試提醒，先掌握已公告資訊，再安排每一階段的行動。",
       "topics": ["重要時程", "各科準備", "考前衝刺", "應試提醒"],
       "articleSlugs": ["116-junior-high-exam-roadmap"],
-      "nextHref": "/districts?target=calculator",
+      "nextHref": "/tools",
       "nextLabel": "查看升學工具"
     },
     {
@@ -38,7 +38,7 @@
       "description": "從候選校科、風險分層到正式排序，協助學生用挑戰、適中與穩定三層結構，建立真正願意就讀的志願清單。",
       "topics": ["三層志願", "志願排序", "落點判讀", "常見錯誤"],
       "articleSlugs": ["wish-list-three-tiers", "score-ranking-placement-difference"],
-      "nextHref": "/districts?target=analysis",
+      "nextHref": "/planner",
       "nextLabel": "建立我的規劃"
     },
     {
@@ -49,7 +49,7 @@
       "description": "從學校、群科、五專與課程方向理解不同選項，不只看校名或分數，還把通勤、學習內容與未來路徑一起比較。",
       "topics": ["高中職校科", "十五群科", "五專", "學校比較"],
       "articleSlugs": ["general-vocational-five-year-choice"],
-      "nextHref": "/districts?target=schools",
+      "nextHref": "/schools",
       "nextLabel": "開始找學校"
     },
     {
@@ -60,7 +60,7 @@
       "description": "比較普通高中、技術型高中與五專的學習方式和後續路徑，從自己的興趣與生活條件出發，而不是只追逐單一排名。",
       "topics": ["普通高中", "技術型高中", "五專路徑", "適性選擇"],
       "articleSlugs": ["general-vocational-five-year-choice"],
-      "nextHref": "/districts?target=schools",
+      "nextHref": "/schools",
       "nextLabel": "比較學校與校科"
     },
     {
@@ -71,7 +71,7 @@
       "description": "提供家長與新生共同討論升學選擇的方法、會議清單與入學準備，讓家庭支持決策，而不是代替學生做決定。",
       "topics": ["親子討論", "升學會議", "新生準備", "家庭支持"],
       "articleSlugs": ["parent-student-admission-meeting"],
-      "nextHref": "/districts?target=analysis",
+      "nextHref": "/planner",
       "nextLabel": "整理家庭待辦"
     }
   ]

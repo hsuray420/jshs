@@ -58,7 +58,7 @@ export default async function AdminPage({
         </div>
         <div className="admin-actions">
           <Link href="/">看前台</Link>
-          <a href="/it_hs/it_hs.html#schools">看學校資料</a>
+          <a href="/schools">看學校資料</a>
           <a href="/admin/code/">看程式碼</a>
           <a href={admin.signOutPath}>登出</a>
         </div>
@@ -247,13 +247,13 @@ export default async function AdminPage({
           </div>
           <dl className="admin-kv">
             <dt>網站程式</dt>
-            <dd>Cloudflare Sites / Pages 部署版本 + 本機 Git 專案</dd>
+            <dd>Cloudflare Workers 部署版本 + 本機自動部署來源</dd>
             <dt>資料庫</dt>
-            <dd>Cloudflare D1：後台檔案紀錄、網站設定</dd>
+            <dd>Cloudflare D1：規劃、後台檔案、網站設定</dd>
             <dt>檔案空間</dt>
-            <dd>Cloudflare R2：後台上傳檔案、學校 CSV</dd>
+            <dd>Cloudflare Assets：學校 CSV 與靜態資料；D1：後台小型檔案</dd>
             <dt>目前備份</dt>
-            <dd>Git commit + Sites 部署版本；D1/R2 尚未做自動排程備份</dd>
+            <dd>Workers 版本可回復；D1 由 Cloudflare Time Travel 保護</dd>
           </dl>
         </section>
 
@@ -271,9 +271,9 @@ export default async function AdminPage({
             <a href="/api/health">伺服器健康檢查</a>
             <a href="/api/admission/calculate">後端試算 API</a>
             <a href="/api/schools.csv">學校 CSV</a>
-            <a href="/it_hs/it_hs.html#calculator">積分試算</a>
-            <a href="/it_hs/it_hs.html#analysis">落點分析</a>
-            <a href="/it_hs/it_hs.html#wishlist">志願清單</a>
+            <a href="/tools">積分試算</a>
+            <a href="/schools">學校查詢</a>
+            <a href="/planner">志願清單</a>
           </div>
           <p className="admin-muted">LINE 密鑰、管理員名單與告警接收者使用環境變數保護。</p>
         </section>
@@ -328,7 +328,7 @@ export default async function AdminPage({
         >
           <p className="admin-eyebrow">Files</p>
           <h2>檔案與下載管理</h2>
-          <p className="admin-muted">要上傳程式碼，請在分類選「程式碼備份」。上傳後會保存到後台檔案庫，不會直接執行；正式網站程式仍需更新版本後重新部署。</p>
+          <p className="admin-muted">750 KB 以下檔案直接保存在 Cloudflare D1，不經任何外部檔案服務。</p>
           <label>
             檔案
             <input name="file" type="file" required />
@@ -361,7 +361,7 @@ export default async function AdminPage({
 
         <form className="admin-panel" action="/api/admin/settings" method="post">
           <p className="admin-eyebrow">Settings</p>
-          <h2>網站內容、表單與廣告</h2>
+          <h2>網站內容與 LINE</h2>
           <label>
             首頁公告
             <textarea
@@ -379,15 +379,6 @@ export default async function AdminPage({
             />
           </label>
           <label>
-            「我要讀哪裡？」第三方表單網址
-            <input
-              name="pathway_form_url"
-              type="url"
-              placeholder="https://forms.google.com/..."
-              defaultValue={settingsMap.get("pathway_form_url") ?? ""}
-            />
-          </label>
-          <label>
             LINE 官方帳號連結
             <input
               name="official_line_url"
@@ -396,38 +387,10 @@ export default async function AdminPage({
               defaultValue={settingsMap.get("official_line_url") ?? ""}
             />
           </label>
-          <p className="admin-muted">可使用 Google 表單、Microsoft Forms、Tally 等可嵌入表單。</p>
-          <fieldset className="admin-fieldset">
-            <legend>Google AdSense</legend>
-            <label className="admin-check-label">
-              <input
-                name="google_ads_enabled"
-                type="checkbox"
-                defaultChecked={settingsMap.get("google_ads_enabled") === "1"}
-              />
-              啟用頁面廣告區塊
-            </label>
-            <label>
-              Publisher ID（例如 ca-pub-xxxxxxxx）
-              <input
-                name="google_ads_client"
-                placeholder="ca-pub-xxxxxxxxxxxxxxxx"
-                defaultValue={settingsMap.get("google_ads_client") ?? ""}
-              />
-            </label>
-            <label>
-              Ad Slot ID
-              <input
-                name="google_ads_slot"
-                placeholder="1234567890"
-                defaultValue={settingsMap.get("google_ads_slot") ?? ""}
-              />
-            </label>
-          </fieldset>
           <button className="admin-button" type="submit">
             儲存設定
           </button>
-          <p className="admin-muted">使用方式：先在 AdSense 建立廣告單元，填入 Publisher ID 與 Slot ID，再勾選啟用。申請核准前不會顯示收益廣告。</p>
+          <p className="admin-muted">LINE 保留為你已指定的通知整合；網站程式與核心資料仍只放 Cloudflare。</p>
         </form>
       </section>
 

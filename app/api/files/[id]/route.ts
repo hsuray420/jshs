@@ -1,4 +1,4 @@
-import { getAdminFile, getR2 } from "../../../../db/admin-store";
+import { getAdminFileBlob } from "../../../../db/admin-store";
 import { getAdminSession } from "../../../admin/auth";
 
 export const dynamic = "force-dynamic";
@@ -8,7 +8,7 @@ export async function GET(
   context: { params: Promise<{ id: string }> },
 ) {
   const { id } = await context.params;
-  const file = await getAdminFile(id);
+  const file = await getAdminFileBlob(id);
   if (!file) return new Response("Not found", { status: 404 });
 
   if (file.visibility !== "public") {
@@ -18,8 +18,7 @@ export async function GET(
     }
   }
 
-  const object = await getR2().get(file.object_key);
-  if (!object) return new Response("Not found", { status: 404 });
+  if (!file.file_blob) return new Response("Not found", { status: 404 });
 
   const headers = new Headers();
   headers.set("content-type", file.content_type);
@@ -28,5 +27,5 @@ export async function GET(
     `attachment; filename*=UTF-8''${encodeURIComponent(file.file_name)}`,
   );
 
-  return new Response(object.body, { headers });
+  return new Response(file.file_blob, { headers });
 }

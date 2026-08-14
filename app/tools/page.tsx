@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { HubPage, type HubCard } from "@/components/hub-page";
+import { AdmissionCalculator } from "@/components/admission-calculator";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
 
 const title = "升學工具｜從積分試算到志願清單";
 const description = "集中使用積分試算、落點分析、志願清單、校科比較、通勤比較與升學時程，讓每次查資料都能留下可執行的結果。";
@@ -11,15 +13,13 @@ export const metadata: Metadata = {
   openGraph: { type: "website", locale: "zh_TW", url: "/tools", siteName: "全國國中升學資訊網", title, description },
 };
 
-const cards: readonly HubCard[] = [
-  { eyebrow: "SCORE", title: "積分試算", description: "依就學區與學年度規則整理會考、多元表現與其他採計項目，清楚看見積分組成。", href: "/districts?target=calculator", action: "選區後直接試算", status: "依區開放" },
-  { eyebrow: "PLACEMENT", title: "落點分析", description: "把目前資料轉成挑戰、適中與穩定區間，用來討論風險，而不是宣稱保證錄取。", href: "/districts?target=analysis", action: "選區後直接分析", status: "依區開放" },
-  { eyebrow: "WISH LIST", title: "志願清單", description: "收藏願意就讀的校科、安排順序並記錄待確認問題，讓志願不是只剩一串校名。", href: "/districts?target=analysis", action: "開啟原有志願規劃", status: "本機保存" },
-  { eyebrow: "COMPARE", title: "校科比較", description: "把科別、名額、通勤與備註放在同一張比較表，降低在多個網頁來回切換的負擔。", href: "/districts?target=analysis", action: "開啟原有比較工具", status: "全區資料" },
-  { eyebrow: "COMMUTE", title: "通勤比較", description: "用可長期承受的每日移動時間檢查候選選項，將生活條件納入升學決策。", href: "/districts?target=analysis", action: "整理原有候選清單", status: "本機保存" },
-  { eyebrow: "TIMELINE", title: "升學時程表", description: "分開呈現已公告日期與待公告事項，不拿上一學年度日期冒充本年度正式時程。", href: "/news/exam", action: "查看會考準備", status: "持續更新" }
-];
-
-export default function ToolsPage() {
-  return <HubPage activeHref="/tools" eyebrow="ADMISSION TOOLKIT" title="工具不是答案，是把選擇做清楚。" description={description} cards={cards} closingTitle="先確認就學區，再使用正確版本的工具。" closingDescription="不同就學區的採計方式與功能開放狀態不同；選區後會直接開啟你原本已完成的試算工具。" closingHref="/districts?target=calculator" closingAction="選區並開始試算" />;
+export default async function ToolsPage({ searchParams }: { searchParams: Promise<{ district?: string }> }) {
+  const params = await searchParams;
+  return (
+    <main className="min-h-screen bg-[#f5f8fc] text-[#14213d]">
+      <SiteHeader activeHref="/tools" />
+      <AdmissionCalculator initialDistrict={params.district === "tp" ? "tp" : "ct"} />
+      <SiteFooter />
+    </main>
+  );
 }

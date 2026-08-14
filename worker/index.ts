@@ -8,7 +8,6 @@ import sitemapXml from "../public/sitemap.xml?raw";
 interface Env {
   ASSETS: Fetcher;
   DB: D1Database;
-  FILES?: R2Bucket;
   IMAGES?: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -88,9 +87,14 @@ const worker = {
     }
 
     if (url.pathname === "/it_hs/it_hs.html") {
-      const appUrl = new URL(request.url);
-      appUrl.pathname = "/it_hs/it_hs";
-      return handler.fetch(new Request(appUrl, request), env, ctx);
+      const destination = new URL("/schools", request.url);
+      const district = url.searchParams.get("district");
+      if (district && /^[a-z-]{2,30}$/.test(district)) destination.searchParams.set("district", district);
+      return Response.redirect(destination, 301);
+    }
+
+    if (url.pathname === "/it_hs/guide.htm" || url.pathname === "/it_hs/it_hs") {
+      return Response.redirect(new URL("/schools", request.url), 301);
     }
 
     const isStaticAsset =

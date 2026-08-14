@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
-import { createAdminFile, getR2 } from "../../../../db/admin-store";
+import { createAdminFile } from "../../../../db/admin-store";
 import { requireAdmin } from "../../../admin/auth";
 
 export const dynamic = "force-dynamic";
 
 const ALLOWED_EXTENSIONS = /\.(zip|tar|tgz|gz|js|ts|tsx|html|css|json|md)$/i;
+const MAX_D1_FILE_BYTES = 750_000;
 
 export async function POST(request: Request) {
   const admin = await requireAdmin();
@@ -23,6 +24,9 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
+  if (upload.size > MAX_D1_FILE_BYTES) {
+    return Response.json({ ok: false, error: "file_too_large", maxBytes: MAX_D1_FILE_BYTES }, { status: 413 });
+  }
 
   const runNote = String(formData.get("run_note") || "").slice(0, 700);
   const id = crypto.randomUUID();
@@ -34,9 +38,6 @@ export async function POST(request: Request) {
     runNote ? `修改說明：${runNote}` : "",
   ].filter(Boolean).join(" ");
 
-  await getR2().put(objectKey, upload.stream(), {
-    httpMetadata: { contentType: upload.type || "application/octet-stream" },
-  });
   await createAdminFile({
     id,
     object_key: objectKey,
@@ -48,6 +49,7 @@ export async function POST(request: Request) {
     description,
     uploaded_by: admin.user.displayName,
     created_at: createdAt,
+    file_blob: await upload.arrayBuffer(),
   });
 
   redirect("/admin?updated=code_upload");
