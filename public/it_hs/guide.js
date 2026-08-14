@@ -1852,15 +1852,15 @@ function initSchools() {
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
-    await loadPlannerStore();
-    await loadDistrictMetadata();
     initDistrictPicker();
     toggleMobileMenu();
+    initPageRouter();
+    await Promise.all([loadPlannerStore(), loadDistrictMetadata()]);
+    updateCurrentDistrictBadge();
     if (showDistrictUnavailablePage()) {
         initLineFloatingLink();
         return;
     }
-    initPageRouter();
     initSchoolQueryOnlyMode();
     renderDistrictDataStatus();
     renderDistrictOfficialLink();
