@@ -38,7 +38,7 @@ test("school and planner data are served by Cloudflare Assets and D1", async () 
   assert.match(plannerRoute, /HttpOnly/);
   assert.match(plannerStateRoute, /export async function PUT/);
   assert.match(legacyGuide, /fetch\('\/api\/planner\/state'/);
-  assert.match(legacyGuide, /await loadPlannerStore\(\)/);
+  assert.match(legacyGuide, /await Promise\.all\(\[loadPlannerStore\(\), loadDistrictMetadata\(\)\]\)/);
   assert.match(workerConfig, /"binding": "ASSETS"/);
   assert.match(workerConfig, /"binding": "DB"/);
 });

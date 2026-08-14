@@ -13,7 +13,7 @@
     "test:unit": "node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit --incremental false",
     "validate:content": "node scripts/validate-content-trust.mjs",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .wrangler",
     "generate:source-snapshot": "node scripts/generate-source-snapshot.mjs",
     "generate:guide-css": "node scripts/generate-guide-tailwind.mjs",
     "db:generate": "drizzle-kit generate",
