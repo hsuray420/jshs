@@ -41,10 +41,13 @@ test("legacy jshs entry points resolve to the single public homepage", async () 
   assert.match(legacyHtml, /window\.location\.replace\('\/'\)/);
 });
 
-test("district picker routes choices to district URLs", async () => {
+test("district picker restores the last district and preserves the requested tool", async () => {
   const script = await readFile(districtScriptUrl, "utf8");
 
-  assert.match(script, /window\.location\.replace\(`\/it_hs\/\$\{encodeURIComponent\(district\)\}\/`\)/);
+  assert.match(script, /localStorage\.getItem\('jshs_district'\)/);
+  assert.match(script, /requestedPage === 'home' \? 'overview' : requestedPage/);
+  assert.match(script, /window\.location\.replace\(`\/it_hs\/guide\.htm\?district=\$\{encodeURIComponent\(district\)\}#\$\{encodeURIComponent\(targetPage\)\}`\)/);
+  assert.match(script, /if \(!getSelectedDistrict\(\) && \['home', 'schools', 'calculator', 'analysis'\]\.includes\(requestedPage\)\) open\(\)/);
   assert.match(script, /localStorage\.setItem\('jshs_district', district\)/);
 });
 

@@ -34,9 +34,16 @@ function getSelectedDistrict() {
     const districtIndex = pathParts.indexOf('it_hs');
     const pathDistrict = districtIndex >= 0 ? pathParts[districtIndex + 1] : '';
     const queryDistrict = new URLSearchParams(window.location.search).get('district');
-    return DISTRICT_CODES.includes(pathDistrict)
+    const explicitDistrict = DISTRICT_CODES.includes(pathDistrict)
         ? pathDistrict
         : (DISTRICT_CODES.includes(queryDistrict) ? queryDistrict : '');
+    if (explicitDistrict) return explicitDistrict;
+    try {
+        const storedDistrict = localStorage.getItem('jshs_district');
+        return DISTRICT_CODES.includes(storedDistrict) ? storedDistrict : '';
+    } catch {
+        return '';
+    }
 }
 
 function isSchoolQueryOnlyMode() {
@@ -64,6 +71,7 @@ function initDistrictPicker() {
     const modal = document.getElementById('districtModal');
     const grid = modal?.querySelector('[data-district-choice-grid]');
     if (!modal || !grid) return;
+    const requestedPage = window.location.hash.replace('#', '') || 'overview';
 
     grid.innerHTML = Object.entries(DISTRICT_OPTIONS).map(([code, district]) => `
         <button type="button" class="district-choice ${district.ready ? 'is-ready' : ''}" data-district-choice="${code}">
@@ -77,7 +85,8 @@ function initDistrictPicker() {
             if (!DISTRICT_CODES.includes(district)) return;
             localStorage.setItem('jshs_district', district);
             sessionStorage.setItem('jshs_district_skip_once', 'true');
-            window.location.replace(`/it_hs/${encodeURIComponent(district)}/`);
+            const targetPage = requestedPage === 'home' ? 'overview' : requestedPage;
+            window.location.replace(`/it_hs/guide.htm?district=${encodeURIComponent(district)}#${encodeURIComponent(targetPage)}`);
         });
     });
     const open = () => { modal.hidden = false; };
@@ -86,6 +95,7 @@ function initDistrictPicker() {
     document.querySelectorAll('[data-close-district]').forEach(button => button.addEventListener('click', close));
     modal.addEventListener('click', event => { if (event.target === modal) close(); });
     document.addEventListener('keydown', event => { if (event.key === 'Escape' && !modal.hidden) close(); });
+    if (!getSelectedDistrict() && ['home', 'schools', 'calculator', 'analysis'].includes(requestedPage)) open();
 }
 
 let DISTRICT_RULES = {
@@ -563,6 +573,10 @@ function initPageRouter() {
 
     const initialPage = window.location.hash.replace('#', '') || (isSchoolQueryOnlyMode() ? 'schools' : 'overview');
     showPage(initialPage);
+    window.addEventListener('hashchange', () => {
+        const nextPage = window.location.hash.replace('#', '') || (isSchoolQueryOnlyMode() ? 'schools' : 'overview');
+        showPage(nextPage);
+    });
 }
 
 async function initLineFloatingLink() {
