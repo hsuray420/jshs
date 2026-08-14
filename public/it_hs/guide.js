@@ -232,7 +232,7 @@ function showDistrictUnavailablePage() {
             <div class="grid gap-3 sm:grid-cols-3">
                 <a class="ui-btn ui-btn-primary" href="/it_hs/it_hs.html?district=ct#schools">查看可用學校資料</a>
                 <a class="ui-btn" href="/it_hs/it_hs.html?district=tp#schools">查看基北區資料</a>
-                <a class="ui-btn" href="/jshs/home">回首頁</a>
+                <a class="ui-btn" href="/">回首頁</a>
             </div>
         </section>
     `;

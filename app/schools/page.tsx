@@ -19,5 +19,5 @@ const cards: readonly HubCard[] = [
 ];
 
 export default function SchoolsPage() {
-  return <HubPage activeHref="/schools" eyebrow="SCHOOL EXPLORATION" title="找的不是校名，\n是適合你的學習環境。" description={description} cards={cards} closingTitle="找到候選校科後，把它們放進同一份規劃。" closingDescription="收藏、比較、記錄疑問與通勤條件，之後再搭配正式規則與成績調整志願。" closingHref="/planner" closingAction="開啟我的規劃" />;
+  return <HubPage activeHref="/schools" eyebrow="SCHOOL EXPLORATION" title="找的不是校名，是適合你的學習環境。" description={description} cards={cards} closingTitle="找到候選校科後，把它們放進同一份規劃。" closingDescription="收藏、比較、記錄疑問與通勤條件，之後再搭配正式規則與成績調整志願。" closingHref="/planner" closingAction="開啟我的規劃" />;
 }

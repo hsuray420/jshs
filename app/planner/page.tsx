@@ -19,5 +19,5 @@ const cards: readonly HubCard[] = [
 ];
 
 export default function PlannerPage() {
-  return <HubPage activeHref="/planner" eyebrow="PRIVATE PLANNING" title="把查過的資料，\n變成自己的下一步。" description={description} cards={cards} closingTitle="還沒有候選校科？先從就學區開始。" closingDescription="確認適用地區後再查學校、使用工具與建立清單，能避免把不同區域的規則混在一起。" closingHref="/districts" closingAction="選擇就學區" />;
+  return <HubPage activeHref="/planner" eyebrow="PRIVATE PLANNING" title="把查過的資料，變成自己的下一步。" description={description} cards={cards} closingTitle="還沒有候選校科？先從就學區開始。" closingDescription="確認適用地區後再查學校、使用工具與建立清單，能避免把不同區域的規則混在一起。" closingHref="/districts" closingAction="選擇就學區" />;
 }

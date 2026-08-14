@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
-const root = new URL("../", import.meta.url);
 const siteMapUrl = new URL("../content/site-map.json", import.meta.url);
 const headerUrl = new URL("../components/site-header.tsx", import.meta.url);
 const footerUrl = new URL("../components/site-footer.tsx", import.meta.url);

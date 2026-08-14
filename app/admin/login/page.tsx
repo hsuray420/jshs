@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { hasLineLoginConfigured } from "../../../lib/line";
 import "../styles.css";
 
@@ -39,9 +40,9 @@ export default async function AdminLoginPage({
             LINE_LOGIN_CHANNEL_SECRET。
           </p>
         )}
-        <a className="admin-plain-link" href="/jshs/home">
+        <Link className="admin-plain-link" href="/">
           回前台
-        </a>
+        </Link>
       </section>
     </main>
   );

@@ -21,5 +21,5 @@ const cards: readonly HubCard[] = [
 ];
 
 export default function ToolsPage() {
-  return <HubPage activeHref="/tools" eyebrow="ADMISSION TOOLKIT" title="工具不是答案，\n是把選擇做清楚。" description={description} cards={cards} closingTitle="先確認就學區，再使用正確版本的工具。" closingDescription="不同就學區的採計方式與功能開放狀態不同；從地區入口開始，系統會標示可使用的項目。" closingHref="/districts" closingAction="選擇就學區" />;
+  return <HubPage activeHref="/tools" eyebrow="ADMISSION TOOLKIT" title="工具不是答案，是把選擇做清楚。" description={description} cards={cards} closingTitle="先確認就學區，再使用正確版本的工具。" closingDescription="不同就學區的採計方式與功能開放狀態不同；從地區入口開始，系統會標示可使用的項目。" closingHref="/districts" closingAction="選擇就學區" />;
 }
