@@ -12,7 +12,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
 
         <nav aria-label="主要導覽" className="hidden items-center gap-1 lg:flex">
           {primaryNavigation.map((item) => {
-            const active = item.href === activeHref;
+            const active = item.activeHref === activeHref;
             return (
               <Link
                 key={item.href}
@@ -35,8 +35,8 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
               <Link
                 key={item.href}
                 href={item.href}
-                aria-current={item.href === activeHref ? "page" : undefined}
-                className={`rounded-xl px-4 py-3 text-sm font-extrabold ${item.href === activeHref ? "bg-blue-50 text-[#173d78]" : "text-slate-600 hover:bg-slate-50"}`}
+                aria-current={item.activeHref === activeHref ? "page" : undefined}
+                className={`rounded-xl px-4 py-3 text-sm font-extrabold ${item.activeHref === activeHref ? "bg-blue-50 text-[#173d78]" : "text-slate-600 hover:bg-slate-50"}`}
               >
                 {item.label}
               </Link>

@@ -3,6 +3,7 @@ import siteMapCatalog from "@/content/site-map.json";
 export type PrimaryNavigationItem = Readonly<{
   label: string;
   href: string;
+  activeHref: string;
 }>;
 
 export type NewsCategoryHub = Readonly<{
