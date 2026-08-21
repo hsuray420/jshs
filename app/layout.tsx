@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const googleTagId = "G-Y9298RKYMZ";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://jshs.cc"),
   title: "全國國中升學資訊網",
@@ -18,6 +20,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-TW">
+      <head>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleTagId}`} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${googleTagId}');
+            `,
+          }}
+        />
+      </head>
       <body>
         {children}
       </body>

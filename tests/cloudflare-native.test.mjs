@@ -1,10 +1,27 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 const readSource = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
+const googleTagId = "G-Y9298RKYMZ";
 
-test("production UI has no third-party runtime scripts or remote data fallback", async () => {
+async function listPublicHtmlFiles(dir = new URL("../public/", import.meta.url), prefix = "public/") {
+  const entries = await readdir(dir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const childPrefix = `${prefix}${entry.name}`;
+    if (entry.isDirectory()) {
+      files.push(...await listPublicHtmlFiles(new URL(`${entry.name}/`, dir), `${childPrefix}/`));
+      continue;
+    }
+    if (/\.(html|htm)$/i.test(entry.name)) files.push(childPrefix);
+  }
+
+  return files;
+}
+
+test("production UI has only the approved Google tag runtime script and no remote data fallback", async () => {
   const [layout, fiveYear, guide, siteConfig] = await Promise.all([
     readSource("app/layout.tsx"),
     readSource("public/it_5/it_5.html"),
@@ -15,8 +32,24 @@ test("production UI has no third-party runtime scripts or remote data fallback",
   for (const source of [layout, fiveYear, guide]) {
     assert.doesNotMatch(source, /googlesyndication|fonts\.googleapis|fonts\.gstatic|cdn\.tailwindcss/);
   }
+  assert.match(layout, /googletagmanager\.com\/gtag\/js\?id=\$\{googleTagId\}/);
+  assert.match(layout, new RegExp(`gtag\\('config', '\\$\\{googleTagId\\}'\\)`));
+  assert.match(fiveYear, new RegExp(`googletagmanager\\.com/gtag/js\\?id=${googleTagId}`));
+  assert.match(guide, new RegExp(`gtag\\('config', '${googleTagId}'\\)`));
   assert.match(guide, /href="guide-tailwind\.css/);
   assert.doesNotMatch(siteConfig, /tyctw\.github\.io|publicSchoolIndexSource/);
+});
+
+test("all static HTML entry points include exactly one Google tag", async () => {
+  const htmlFiles = await listPublicHtmlFiles();
+  assert.ok(htmlFiles.length >= 20);
+
+  for (const path of htmlFiles) {
+    const source = await readSource(path);
+    assert.equal((source.match(/googletagmanager\.com\/gtag\/js/g) || []).length, 1, path);
+    assert.equal((source.match(new RegExp(googleTagId, "g")) || []).length, 2, path);
+    assert.match(source, /<head>\s*<!-- Google tag \(gtag\.js\) -->/i, path);
+  }
 });
 
 test("school and planner data are served by Cloudflare Assets and D1", async () => {

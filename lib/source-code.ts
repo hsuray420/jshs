@@ -127,7 +127,7 @@ export const SOURCE_FILES: SourceFile[] = [
   },
   {
     "path": "app/layout.tsx",
-    "content": "import type { Metadata } from \"next\";\nimport \"./globals.css\";\n\nexport const metadata: Metadata = {\n  metadataBase: new URL(\"https://jshs.cc\"),\n  title: \"全國國中升學資訊網\",\n  description: \"全國國中升學資訊：全區學校查詢、積分試算、志願分析與高中職、五專升學路徑。\",\n  icons: {\n    icon: \"/favicon.svg\",\n    shortcut: \"/favicon.svg\",\n  },\n};\n\nexport default function RootLayout({\n  children,\n}: Readonly<{\n  children: React.ReactNode;\n}>) {\n  return (\n    <html lang=\"zh-TW\">\n      <body>\n        {children}\n      </body>\n    </html>\n  );\n}\n"
+    "content": "import type { Metadata } from \"next\";\nimport \"./globals.css\";\n\nconst googleTagId = \"G-Y9298RKYMZ\";\n\nexport const metadata: Metadata = {\n  metadataBase: new URL(\"https://jshs.cc\"),\n  title: \"全國國中升學資訊網\",\n  description: \"全國國中升學資訊：全區學校查詢、積分試算、志願分析與高中職、五專升學路徑。\",\n  icons: {\n    icon: \"/favicon.svg\",\n    shortcut: \"/favicon.svg\",\n  },\n};\n\nexport default function RootLayout({\n  children,\n}: Readonly<{\n  children: React.ReactNode;\n}>) {\n  return (\n    <html lang=\"zh-TW\">\n      <head>\n        <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleTagId}`} />\n        <script\n          dangerouslySetInnerHTML={{\n            __html: `\n              window.dataLayer = window.dataLayer || [];\n              function gtag(){dataLayer.push(arguments);}\n              gtag('js', new Date());\n              gtag('config', '${googleTagId}');\n            `,\n          }}\n        />\n      </head>\n      <body>\n        {children}\n      </body>\n    </html>\n  );\n}\n"
   },
   {
     "path": "app/news/[slug]/page.tsx",
