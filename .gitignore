@@ -13,6 +13,11 @@
 # testing
 /coverage
 
+# local generated files and one-off backups
+/backups/
+/tmp/
+*.tar.gz
+
 # next.js
 /.next/
 /.vinext/
