@@ -123,6 +123,8 @@ test("homepage and district guide share one Apple Notion design token system", a
   assert.match(tokens, /--text-primary:\s*#1D1D1F/i);
   assert.match(tokens, /--text-secondary:\s*#6E6E73/i);
   assert.match(tokens, /--border-light:\s*#E5E5E7/i);
+  assert.match(tokens, /--brand-primary:\s*#0066CC/i);
+  assert.match(tokens, /--brand-tint:\s*#F2F7FF/i);
   assert.match(tokens, /--jshs-space-1:\s*4px/i);
   assert.match(tokens, /--radius-lg:\s*16px/i);
   assert.doesNotMatch(tokens, /organic-radius|#FDFCF8|#5D7052|#C18C5D/i);
@@ -146,6 +148,7 @@ test("shared visual token stylesheet and static guide are served by the Worker a
   ]);
 
   assert.match(worker, /url\.pathname === "\/design-tokens\.css"/);
+  assert.match(worker, /url\.pathname === "\/app\/globals\.css"/);
   assert.match(worker, /url\.pathname\.startsWith\("\/it_hs\/"\)/);
   assert.match(worker, /url\.pathname !== "\/it_hs\/it_hs"/);
   assert.match(worker, /new Request\(assetUrl, request\)/);

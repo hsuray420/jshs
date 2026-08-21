@@ -3712,7 +3712,9 @@ body[data-guide-shell="unified-2026"] {
     --jshs-muted: #6E6E73;
     --jshs-tertiary: #86868B;
     --jshs-navy: #1D1D1F;
-    --jshs-blue: #173D78;
+    --jshs-blue: #0066CC;
+    --jshs-tint: #F2F7FF;
+    --jshs-tint-strong: #D7E8FF;
     --jshs-border: #E5E5E7;
     --jshs-radius-card: 16px;
     --jshs-radius-control: 12px;
@@ -3796,8 +3798,8 @@ body[data-guide-shell="unified-2026"] .ui-btn-primary,
 body[data-guide-shell="unified-2026"] .section-nav button.active,
 body[data-guide-shell="unified-2026"] .mobile-route.active,
 body[data-guide-shell="unified-2026"] .guide-mobile-bottom-nav a.active {
-    background: #173D78 !important;
-    border-color: #173D78 !important;
+    background: #0066CC !important;
+    border-color: #0066CC !important;
     color: #FFFFFF !important;
 }
 
@@ -3806,8 +3808,8 @@ body[data-guide-shell="unified-2026"] .section-nav a:hover,
 body[data-guide-shell="unified-2026"] .section-nav button:hover,
 body[data-guide-shell="unified-2026"] .mobile-route:hover,
 body[data-guide-shell="unified-2026"] .school-link:hover {
-    background: #F5F5F7 !important;
-    border-color: #D2D2D7 !important;
+    background: #F2F7FF !important;
+    border-color: #D7E8FF !important;
     transform: translateY(-1px);
 }
 
@@ -3828,8 +3830,8 @@ body[data-guide-shell="unified-2026"] input:focus,
 body[data-guide-shell="unified-2026"] select:focus,
 body[data-guide-shell="unified-2026"] textarea:focus,
 body[data-guide-shell="unified-2026"] .guide-menu-search input:focus {
-    border-color: #173D78 !important;
-    box-shadow: 0 0 0 4px rgba(23, 61, 120, .12) !important;
+    border-color: #0066CC !important;
+    box-shadow: 0 0 0 4px rgba(0, 102, 204, .14) !important;
     outline: none !important;
 }
 
@@ -3839,9 +3841,9 @@ body[data-guide-shell="unified-2026"] .analysis-score-pill,
 body[data-guide-shell="unified-2026"] .calc-note-badge,
 body[data-guide-shell="unified-2026"] .school-filter.active,
 body[data-guide-shell="unified-2026"] .checkbox-chip {
-    background: #F5F5F7 !important;
-    border-color: #E5E5E7 !important;
-    color: #1D1D1F !important;
+    background: #F2F7FF !important;
+    border-color: #D7E8FF !important;
+    color: #0066CC !important;
 }
 
 body[data-guide-shell="unified-2026"] .calc-guide-table-wrapper,

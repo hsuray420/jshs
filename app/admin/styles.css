@@ -396,9 +396,10 @@
   --admin-surface: #FFFFFF;
   --admin-ink: #1D1D1F;
   --admin-muted: #6E6E73;
-  --admin-primary: #173D78;
+  --admin-primary: #0066CC;
   --admin-secondary: #1D1D1F;
   --admin-border: #E5E5E7;
+  --admin-tint: #F2F7FF;
   --admin-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 8px 24px rgba(0, 0, 0, .05);
   --admin-shadow-hover: 0 2px 4px rgba(0, 0, 0, .05), 0 14px 32px rgba(0, 0, 0, .07);
 }
@@ -448,9 +449,9 @@
   color: var(--admin-ink);
   transition: border-color 180ms ease, box-shadow 180ms ease;
 }
-.admin-panel input:focus, .admin-panel select:focus, .admin-panel textarea:focus { border-color: var(--admin-primary); box-shadow: 0 0 0 4px rgba(23, 61, 120, .12); outline: none; }
+.admin-panel input:focus, .admin-panel select:focus, .admin-panel textarea:focus { border-color: var(--admin-primary); box-shadow: 0 0 0 4px rgba(0, 102, 204, .14); outline: none; }
 .admin-link-grid a, .admin-code-list a { border: 1px solid var(--admin-border); border-radius: 12px; background: var(--admin-subtle); color: var(--admin-ink); transition: background 180ms ease, border-color 180ms ease, transform 180ms ease; }
-.admin-link-grid a:hover, .admin-code-list a:hover { border-color: #D2D2D7; background: #fff; transform: translateY(-1px); }
+.admin-link-grid a:hover, .admin-code-list a:hover { border-color: #D7E8FF; background: var(--admin-tint); transform: translateY(-1px); }
 .admin-badge { border-radius: 999px; }
 .admin-table-wrap th, .admin-table-wrap td { border-bottom-color: var(--admin-border); }
 .admin-code-file pre { border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(148,163,184,.18); }

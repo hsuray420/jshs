@@ -4,6 +4,7 @@ import test from "node:test";
 
 const tokenCssUrl = new URL("../public/design-tokens.css", import.meta.url);
 const globalCssUrl = new URL("../app/globals.css", import.meta.url);
+const publicAppCssUrl = new URL("../public/app/globals.css", import.meta.url);
 const adminCssUrl = new URL("../app/admin/styles.css", import.meta.url);
 const guideCssUrl = new URL("../public/it_hs/guide.css", import.meta.url);
 const guideTailwindSourceUrl = new URL("../styles/guide-tailwind.css", import.meta.url);
@@ -24,6 +25,8 @@ test("design tokens define the Apple Notion visual system", async () => {
   assert.match(tokens, /--text-primary:\s*#1D1D1F/i);
   assert.match(tokens, /--text-secondary:\s*#6E6E73/i);
   assert.match(tokens, /--border-light:\s*#E5E5E7/i);
+  assert.match(tokens, /--brand-primary:\s*#0066CC/i);
+  assert.match(tokens, /--brand-tint:\s*#F2F7FF/i);
   assert.match(tokens, /--radius-sm:\s*8px/i);
   assert.match(tokens, /--radius-md:\s*12px/i);
   assert.match(tokens, /--radius-lg:\s*16px/i);
@@ -34,7 +37,10 @@ test("design tokens define the Apple Notion visual system", async () => {
 });
 
 test("global app stylesheet uses system typography and shared component primitives", async () => {
-  const globalCss = await readFile(globalCssUrl, "utf8");
+  const [globalCss, publicAppCss] = await Promise.all([
+    readFile(globalCssUrl, "utf8"),
+    readFile(publicAppCssUrl, "utf8"),
+  ]);
 
   assert.match(globalCss, /-apple-system,\s*BlinkMacSystemFont/);
   assert.match(globalCss, /\.jshs-page-shell/);
@@ -44,6 +50,9 @@ test("global app stylesheet uses system typography and shared component primitiv
   assert.match(globalCss, /\.jshs-table/);
   assert.match(globalCss, /Apple Notion design system/);
   assert.doesNotMatch(globalCss, /fonts\.googleapis|Fraunces|Nunito|body::before|mix-blend-mode|organic/i);
+  assert.match(publicAppCss, /tailwindcss v4/);
+  assert.match(publicAppCss, /@import url\("\/design-tokens\.css"\)/);
+  assert.match(publicAppCss, /\.jshs-surface-card/);
 });
 
 test("admin and legacy guide inherit the same Apple Notion system", async () => {

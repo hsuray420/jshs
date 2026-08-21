@@ -91,7 +91,7 @@ main :where(a) { color: var(--brand-primary); text-decoration-thickness: 1px; te
 }
 
 .jshs-surface-card:hover {
-  border-color: var(--border-strong) !important;
+  border-color: var(--brand-tint-strong) !important;
   box-shadow: var(--shadow-card);
   transform: translateY(-1px);
 }
@@ -156,7 +156,7 @@ main :where(input, select, textarea) {
 .jshs-input:focus,
 main :where(input, select, textarea):focus {
   border-color: var(--brand-primary) !important;
-  box-shadow: 0 0 0 3px rgba(23, 61, 120, .12) !important;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, .14) !important;
 }
 
 .jshs-table,
@@ -189,7 +189,7 @@ main table th {
 }
 
 .jshs-eyebrow {
-  color: var(--text-tertiary);
+  color: var(--brand-primary);
   font-size: .76rem;
   font-weight: 800;
   letter-spacing: .14em;
@@ -200,8 +200,8 @@ main table th {
 
 .jshs-chip {
   border-radius: var(--radius-full);
-  background: var(--bg-subtle);
-  color: var(--text-secondary);
+  background: var(--brand-tint);
+  color: var(--brand-primary);
   display: inline-flex;
   font-size: .78rem;
   font-weight: 700;

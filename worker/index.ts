@@ -82,7 +82,7 @@ const worker = {
     // extension-normalising router: doing so can serve an earlier cached
     // HTML/CSS/JS revision. Route it, and its shared token stylesheet,
     // straight to the versioned asset binding.
-    if (url.pathname === "/design-tokens.css") {
+    if (url.pathname === "/design-tokens.css" || url.pathname === "/app/globals.css") {
       return env.ASSETS.fetch(request);
     }
 
