@@ -2,13 +2,14 @@
 @source "../public/it_hs/guide.htm";
 
 @theme {
-  --color-neo-bg: #f5f7fb;
-  --color-neo-text: #1f2937;
-  --color-neo-muted: #6b7280;
-  --color-neo-accent: #2563eb;
-  --color-neo-accentLight: #60a5fa;
-  --color-neo-blueGray: #e2e8f0;
-  --color-neo-surface: #ffffff;
-  --font-display: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --color-neo-bg: #FFFFFF;
+  --color-neo-subtle: #F5F5F7;
+  --color-neo-text: #1D1D1F;
+  --color-neo-muted: #6E6E73;
+  --color-neo-accent: #173D78;
+  --color-neo-accentLight: #EAF1FF;
+  --color-neo-blueGray: #E5E5E7;
+  --color-neo-surface: #FFFFFF;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang TC", "PingFang SC", "Noto Sans TC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang TC", "PingFang SC", "Noto Sans TC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
 }

@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export default async function ToolsPage({ searchParams }: { searchParams: Promise<{ district?: string }> }) {
   const params = await searchParams;
   return (
-    <main className="min-h-screen bg-[#f5f8fc] text-[#14213d]">
+    <main className="min-h-screen jshs-page-shell">
       <SiteHeader activeHref="/tools" />
       <AdmissionCalculator initialDistrict={params.district === "tp" ? "tp" : "ct"} />
       <SiteFooter />

@@ -23,7 +23,7 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
   const params = await searchParams;
   const initialDistrict = districtOptions.some((item) => item.code === params.district) ? params.district! : "ct";
   return (
-    <main className="min-h-screen bg-[#f5f8fc] text-[#14213d]">
+    <main className="min-h-screen jshs-page-shell">
       <SiteHeader activeHref="/schools" />
       <SchoolExplorer districtOptions={districtOptions} initialDistrict={initialDistrict} initialQuery={params.q?.slice(0, 100) || ""} />
       <SiteFooter />

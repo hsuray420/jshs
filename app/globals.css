@@ -1,183 +1,262 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600..800&family=Nunito:wght@400;600;700;800;900&display=swap");
 @import url("/design-tokens.css");
 @import "tailwindcss";
 
 :root {
-  --background: var(--jshs-page);
-  --foreground: var(--jshs-ink);
+  --background: var(--bg-page);
+  --foreground: var(--text-primary);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-jshs-navy: var(--jshs-navy);
-  --color-jshs-blue: var(--jshs-blue);
-  --color-jshs-stable: var(--jshs-stable);
-  --color-jshs-challenge: var(--jshs-challenge);
+  --color-jshs-navy: var(--brand-primary);
+  --color-jshs-blue: var(--brand-primary);
+  --color-jshs-stable: var(--success);
+  --color-jshs-challenge: var(--warning);
+}
+
+/* Apple Notion design system for every App Router surface. */
+/* System stack: -apple-system, BlinkMacSystemFont, SF Pro, PingFang, Noto Sans, Helvetica Neue, Arial, sans-serif. */
+* { box-sizing: border-box; }
+
+html {
+  background: var(--bg-page);
+  color: var(--text-primary);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: "Nunito", "Noto Sans TC", system-ui, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-system);
+  font-size: 16px;
+  line-height: 1.55;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Shared app surfaces for every jshs.cc App Router page. */
-:root {
-  --jshs-bg: var(--jshs-page);
-  --jshs-primary: var(--jshs-blue);
-  --jshs-secondary: var(--jshs-navy);
-  --jshs-card-shadow: var(--jshs-shadow-card);
-  --jshs-hover-shadow: var(--jshs-shadow-raised);
-}
-
-body { background: var(--jshs-bg); color: var(--jshs-ink); }
 body.jshs-nav-open { overflow: hidden; }
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: .035;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
-}
-
-h1, h2, h3, .jshs-display {
-  font-family: "Fraunces", "Noto Serif TC", serif;
-  font-variation-settings: "SOFT" 80, "WONK" 1;
-}
 
 @media (max-width: 1023px) {
   body { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
 }
 
-main.min-h-screen {
-  background: var(--jshs-bg) !important;
-  color: var(--jshs-ink) !important;
+main {
+  background: var(--bg-page) !important;
+  color: var(--text-primary) !important;
 }
 
-main.min-h-screen > section {
-  padding-top: 40px !important;
-  padding-bottom: 40px !important;
+main :where(h1, h2, h3) {
+  color: var(--text-primary);
+  font-family: var(--font-system);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.16;
 }
 
-.jshs-hero-band {
-  position: relative;
-  overflow: hidden;
-  border-color: color-mix(in srgb, var(--jshs-border) 72%, transparent) !important;
-  background:
-    radial-gradient(circle at 12% 12%, rgba(193, 140, 93, .16), transparent 28%),
-    radial-gradient(circle at 88% 8%, rgba(93, 112, 82, .16), transparent 32%),
-    linear-gradient(135deg, rgba(253, 252, 248, .98), rgba(240, 235, 229, .68));
+main h1 { font-size: clamp(2.25rem, 4.6vw, 3rem); }
+main h2 { font-size: clamp(1.45rem, 2.6vw, 2rem); }
+main h3 { font-size: clamp(1.06rem, 1.6vw, 1.25rem); }
+main :where(p, small, dd, li) { color: var(--text-secondary); }
+main :where(a) { color: var(--brand-primary); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+.jshs-page-shell {
+  min-height: 100vh;
+  background: var(--bg-page) !important;
+  color: var(--text-primary) !important;
 }
 
-.jshs-hero-band::after {
-  content: "";
-  position: absolute;
-  right: max(24px, calc((100vw - 1180px) / 2));
-  top: 22px;
-  width: clamp(96px, 13vw, 172px);
-  aspect-ratio: 1;
-  border-radius: var(--jshs-organic-radius);
-  background: rgba(230, 220, 205, .72);
-  box-shadow: var(--jshs-shadow-card);
+.jshs-container {
+  margin-inline: auto;
+  width: min(1180px, calc(100% - 32px));
 }
 
-.jshs-organic-card {
-  border: 1px solid color-mix(in srgb, var(--jshs-border) 72%, transparent) !important;
-  border-radius: var(--jshs-radius-card) !important;
-  background: color-mix(in srgb, var(--jshs-surface) 92%, white) !important;
-  box-shadow: var(--jshs-shadow-card);
-  transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease, background 260ms ease;
+.jshs-hero-section {
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-page) !important;
 }
 
-.jshs-organic-card:hover {
-  border-color: color-mix(in srgb, var(--jshs-primary) 45%, var(--jshs-border)) !important;
-  box-shadow: var(--jshs-shadow-raised);
-  transform: translateY(-2px);
+.jshs-section {
+  background: var(--bg-page) !important;
+  padding-block: var(--space-12);
 }
 
-.jshs-pill-button {
+.jshs-section-subtle { background: var(--bg-subtle) !important; }
+
+.jshs-surface-card {
+  border: 1px solid var(--border-light) !important;
+  border-radius: var(--radius-lg) !important;
+  background: var(--bg-elevated) !important;
+  box-shadow: var(--shadow-subtle);
+  transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.jshs-surface-card:hover {
+  border-color: var(--border-strong) !important;
+  box-shadow: var(--shadow-card);
+  transform: translateY(-1px);
+}
+
+.jshs-button,
+.jshs-button-primary,
+.jshs-button-secondary,
+.jshs-button-ghost,
+.jshs-danger-button {
+  align-items: center;
+  border-radius: var(--radius-md) !important;
+  display: inline-flex;
+  font-weight: 700;
+  justify-content: center;
   min-height: 44px;
-  border-radius: var(--jshs-radius-control) !important;
-  font-weight: 900;
-  transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease, border-color 220ms ease;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease, opacity 180ms ease, transform 180ms ease;
 }
 
-.jshs-pill-button:hover {
-  transform: translateY(-1px) scale(1.015);
+.jshs-button-primary {
+  background: var(--brand-primary) !important;
+  border: 1px solid var(--brand-primary) !important;
+  color: #fff !important;
 }
 
-.jshs-primary-action {
-  background: var(--jshs-primary) !important;
-  color: var(--jshs-primary-foreground) !important;
-  box-shadow: 0 4px 20px -2px rgba(93,112,82,.22);
+.jshs-button-primary:hover {
+  background: var(--brand-primary-hover) !important;
+  transform: translateY(-1px);
 }
 
-.jshs-secondary-action {
-  border: 2px solid color-mix(in srgb, var(--jshs-secondary) 74%, white) !important;
-  color: var(--jshs-secondary) !important;
-  background: rgba(253,252,248,.55) !important;
+.jshs-button-secondary {
+  background: #fff !important;
+  border: 1px solid var(--border-light) !important;
+  color: var(--text-primary) !important;
+}
+
+.jshs-button-ghost {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: var(--text-secondary) !important;
+}
+
+.jshs-button-ghost:hover,
+.jshs-button-secondary:hover { background: var(--bg-subtle) !important; }
+
+.jshs-danger-button {
+  background: #fff !important;
+  border: 1px solid rgba(180, 35, 24, .22) !important;
+  color: var(--danger) !important;
+}
+
+.jshs-input,
+main :where(input, select, textarea) {
+  background: #fff !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--text-primary) !important;
+  min-height: 44px;
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.jshs-input:focus,
+main :where(input, select, textarea):focus {
+  border-color: var(--brand-primary) !important;
+  box-shadow: 0 0 0 3px rgba(23, 61, 120, .12) !important;
+}
+
+.jshs-table,
+main table {
+  border-collapse: collapse;
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.jshs-table :where(th, td),
+main table :where(th, td) {
+  border-bottom: 1px solid var(--border-light);
+  padding: 12px 14px;
+}
+
+.jshs-table th,
+main table th {
+  color: var(--text-secondary);
+  font-size: .82rem;
+  font-weight: 700;
+  text-align: left;
 }
 
 .jshs-floating-nav {
-  border: 1px solid color-mix(in srgb, var(--jshs-border) 68%, transparent);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, .72);
-  box-shadow: var(--jshs-shadow-card);
-  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, .84);
+  backdrop-filter: blur(18px);
+  box-shadow: none;
 }
 
 .jshs-eyebrow {
-  color: var(--jshs-primary);
-  font-size: .75rem;
-  font-weight: 900;
-  letter-spacing: .16em;
+  color: var(--text-tertiary);
+  font-size: .76rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
 }
 
-.jshs-muted-copy {
-  color: var(--jshs-muted) !important;
+.jshs-muted-copy { color: var(--text-secondary) !important; }
+
+.jshs-chip {
+  border-radius: var(--radius-full);
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  display: inline-flex;
+  font-size: .78rem;
+  font-weight: 700;
+  padding: 4px 10px;
 }
 
-.jshs-organic-fill {
-  border-radius: var(--jshs-organic-radius-alt);
-  background: color-mix(in srgb, var(--jshs-accent) 62%, white);
+main :where(section, header)[class*="gradient"],
+main :where(section, header)[class*="bg-[#102f60]"],
+main :where(section, header)[class*="bg-[#eaf3ff]"],
+main :where(section, header)[class*="bg-[#f5f8fc]"] {
+  background: var(--bg-page) !important;
+}
+
+main :where([class*="shadow-xl"], [class*="shadow-2xl"], [class*="shadow-blue"], [class*="shadow-lg"]) {
+  box-shadow: var(--shadow-subtle) !important;
+}
+
+main :where([class*="rounded-3xl"], [class*="rounded-[2rem]"]) {
+  border-radius: var(--radius-lg) !important;
+}
+
+main :where(.bg-blue-50, .bg-slate-50, .bg-[#fbfdff], .bg-[#f7fbff]) {
+  background: var(--bg-subtle) !important;
+}
+
+main.min-h-screen > section {
+  padding-top: var(--space-12) !important;
+  padding-bottom: var(--space-12) !important;
 }
 
 main.min-h-screen > section > div[role="dialog"] {
-  border: 1px solid var(--jshs-border) !important;
-  border-radius: var(--jshs-radius-card) !important;
-  background: rgba(255,255,255,.96) !important;
-  box-shadow: var(--jshs-hover-shadow) !important;
-  padding: 32px !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: var(--radius-xl) !important;
+  background: #fff !important;
+  box-shadow: var(--shadow-card) !important;
+  padding: var(--space-8) !important;
 }
 
 main.min-h-screen > section > div[aria-hidden="true"] {
-  background: rgba(15,23,42,.42) !important;
+  background: rgba(0, 0, 0, .32) !important;
 }
-
-main.min-h-screen h1 {
-  color: var(--jshs-ink) !important;
-  letter-spacing: 0;
-  line-height: 1.15;
-}
-
-main.min-h-screen p { color: var(--jshs-muted); }
 
 main.min-h-screen button {
-  min-height: 48px;
-  border-radius: var(--jshs-radius-control) !important;
-  border-color: var(--jshs-border) !important;
-  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  min-height: 44px;
+  border-radius: var(--radius-md) !important;
+  transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
 }
 
-main.min-h-screen button:disabled { cursor: not-allowed; opacity: .66; }
+main.min-h-screen button:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
 
 @media (max-width: 640px) {
-  main.min-h-screen > section { padding: 24px 16px !important; }
-  main.min-h-screen > section > div[role="dialog"] { padding: 24px 20px !important; }
-  main.min-h-screen h1 { font-size: 2rem !important; }
+  main.min-h-screen > section { padding: var(--space-8) var(--space-4) !important; }
+  main.min-h-screen > section > div[role="dialog"] { padding: var(--space-6) 20px !important; }
+  main h1 { font-size: 2.25rem !important; }
 }

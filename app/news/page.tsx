@@ -58,31 +58,30 @@ const collectionSchema = {
 
 export default function NewsPage() {
   return (
-    <main className="bg-[#f5f8fc] text-[#14213d]">
+    <main className="jshs-page-shell">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema).replace(/</g, "\\u003c") }}
       />
       <SiteHeader activeHref="/news" />
 
-      <section className="overflow-hidden border-y border-blue-100 bg-[#102f60] text-white">
+      <section className="jshs-hero-section">
         <div className="relative mx-auto grid w-[min(1180px,calc(100%-32px))] gap-12 py-16 lg:grid-cols-[1.18fr_.82fr] lg:items-end lg:py-24">
-          <div className="pointer-events-none absolute -right-32 -top-48 h-[520px] w-[520px] rounded-full bg-[#3b82f6]/25 blur-3xl" />
           <div className="relative">
-            <p className="text-xs font-black tracking-[.2em] text-[#9bc6ff]">JSHS 升學情報中心</p>
-            <h1 className="mt-5 max-w-4xl text-5xl font-black leading-[1.08] tracking-[-.055em] text-white md:text-7xl">
+            <p className="jshs-eyebrow">JSHS 升學情報中心</p>
+            <h1 className="mt-5 max-w-4xl text-5xl font-black leading-[1.08] tracking-[-.055em] md:text-7xl">
               先讀懂規則，<br />再做關鍵選擇。
             </h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-blue-100">
+            <p className="mt-7 max-w-2xl text-lg leading-8 jshs-muted-copy">
               不追逐來路不明的分數線。從官方公告出發，把會考、就學區、積分與志願整理成現在就能完成的下一步。
             </p>
           </div>
-          <aside className="relative rounded-3xl border border-white/15 bg-white/10 p-7 backdrop-blur md:p-8">
-            <span className="inline-flex rounded-full bg-[#ffeadf] px-3 py-1 text-xs font-black text-[#a94718]">本期重點</span>
-            <p className="mt-5 text-sm font-bold text-blue-200">已確認官方資訊</p>
-            <strong className="mt-2 block text-3xl font-black tracking-[-.04em] text-white">116 會考日期</strong>
-            <p className="mt-2 text-lg font-bold text-[#ffd2bb]">2027 年 5 月 15、16 日</p>
-            <p className="mt-5 border-t border-white/15 pt-5 text-sm leading-6 text-blue-100">
+          <aside className="relative p-7 md:p-8 jshs-surface-card">
+            <span className="jshs-chip">本期重點</span>
+            <p className="mt-5 text-sm font-bold text-[var(--jshs-primary)]">已確認官方資訊</p>
+            <strong className="mt-2 block text-3xl font-black tracking-[-.04em]">116 會考日期</strong>
+            <p className="mt-2 text-lg font-bold text-[var(--jshs-primary)]">2027 年 5 月 15、16 日</p>
+            <p className="mt-5 border-t border-[var(--jshs-border)] pt-5 text-sm leading-6 jshs-muted-copy">
               各區免試入學時程與規則仍以後續簡章為準；文章會明確區分「已公告」與「待公告」。
             </p>
           </aside>
@@ -91,9 +90,9 @@ export default function NewsPage() {
 
       <nav aria-label="文章分類" className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex w-[min(1180px,calc(100%-32px))] gap-2 overflow-x-auto py-4">
-          <a className="shrink-0 rounded-full bg-[#173d78] px-4 py-2 text-sm font-extrabold text-white" href="#latest">最新指南</a>
+          <a className="shrink-0 px-4 py-2 text-sm jshs-button-primary" href="#latest">最新指南</a>
           {newsCategories.map((category) => (
-            <Link key={category.slug} className="shrink-0 rounded-full border border-slate-200 px-4 py-2 text-sm font-extrabold text-slate-600 hover:border-blue-300 hover:text-[#173d78]" href={category.href}>
+            <Link key={category.slug} className="shrink-0 px-4 py-2 text-sm jshs-button-secondary" href={category.href}>
               {category.title}
             </Link>
           ))}
@@ -151,14 +150,14 @@ export default function NewsPage() {
         </div>
       </section>
 
-      <section className="bg-[#eaf3ff] py-16">
-        <div className="mx-auto flex w-[min(1180px,calc(100%-32px))] flex-col justify-between gap-7 rounded-[2rem] bg-[#173d78] p-8 text-white shadow-2xl shadow-blue-950/15 md:flex-row md:items-center md:p-12">
+      <section className="jshs-section-subtle py-16">
+        <div className="mx-auto flex w-[min(1180px,calc(100%-32px))] flex-col justify-between gap-7 p-8 md:flex-row md:items-center md:p-12 jshs-surface-card">
           <div>
-            <p className="text-xs font-black tracking-[.18em] text-blue-200">從閱讀進入規劃</p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-.045em] text-white">知道怎麼做了，就從自己的就學區開始。</h2>
-            <p className="mt-3 max-w-2xl leading-7 text-blue-100">查看校科、資料年度與目前可用的積分功能，把文章方法套到自己的選項。</p>
+            <p className="jshs-eyebrow">從閱讀進入規劃</p>
+            <h2 className="mt-3 text-3xl font-black tracking-[-.045em]">知道怎麼做了，就從自己的就學區開始。</h2>
+            <p className="mt-3 max-w-2xl leading-7 jshs-muted-copy">查看校科、資料年度與目前可用的積分功能，把文章方法套到自己的選項。</p>
           </div>
-          <a className="shrink-0 rounded-xl bg-white px-5 py-3.5 text-sm font-black text-[#173d78] shadow-lg" href="/districts">選擇就學區 →</a>
+          <a className="shrink-0 px-5 py-3.5 text-sm jshs-button-primary" href="/districts">選擇就學區 →</a>
         </div>
       </section>
 
@@ -171,7 +170,7 @@ function SectionHeading({ id, eyebrow, title, body }: { id: string; eyebrow: str
   return (
     <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
       <div>
-        <p className="text-xs font-black tracking-[.18em] text-[#2868d7]">{eyebrow}</p>
+        <p className="jshs-eyebrow">{eyebrow}</p>
         <h2 id={id} className="mt-3 text-4xl font-black tracking-[-.05em] md:text-5xl">{title}</h2>
       </div>
       <p className="max-w-lg leading-7 text-slate-500">{body}</p>
@@ -183,32 +182,32 @@ function FeaturedCard({ article, primary }: { article: NewsArticle; primary: boo
   return (
     <a
       href={`/news/${article.slug}`}
-      className={`group flex min-h-[360px] flex-col rounded-[1.75rem] border p-7 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-950/10 ${primary ? "border-[#173d78] bg-[#173d78] text-white" : "border-slate-200 bg-white"}`}
+      className={`group flex min-h-[360px] flex-col p-7 jshs-surface-card ${primary ? "ring-1 ring-[var(--jshs-primary)]" : ""}`}
     >
       <div className="flex items-center justify-between gap-3">
-        <span className={`rounded-full px-3 py-1 text-xs font-black ${primary ? "bg-white/12 text-blue-100" : "bg-blue-50 text-[#2868d7]"}`}>{article.category}</span>
-        <span className={`text-xs font-bold ${primary ? "text-blue-200" : "text-slate-400"}`}>{article.readMinutes} 分鐘閱讀</span>
+        <span className="jshs-chip">{article.category}</span>
+        <span className="text-xs font-bold text-[var(--jshs-muted)]">{article.readMinutes} 分鐘閱讀</span>
       </div>
-      <p className={`mt-8 text-xs font-black tracking-[.14em] ${primary ? "text-[#ffd2bb]" : "text-[#ba6b18]"}`}>{article.kicker}</p>
-      <h2 className={`mt-3 text-2xl font-black leading-snug tracking-[-.04em] ${primary ? "text-white" : "text-[#14213d]"}`}>{article.title}</h2>
-      <p className={`mt-4 line-clamp-3 text-sm leading-7 ${primary ? "text-blue-100" : "text-slate-500"}`}>{article.description}</p>
-      <span className={`mt-auto pt-8 text-sm font-black ${primary ? "text-white" : "text-[#2868d7]"}`}>讀完整指南 <span className="inline-block transition group-hover:translate-x-1">→</span></span>
+      <p className="mt-8 text-xs font-black tracking-[.14em] text-[var(--jshs-primary)]">{article.kicker}</p>
+      <h2 className="mt-3 text-2xl font-black leading-snug tracking-[-.04em]">{article.title}</h2>
+      <p className="mt-4 line-clamp-3 text-sm leading-7 jshs-muted-copy">{article.description}</p>
+      <span className="mt-auto pt-8 text-sm font-black text-[var(--jshs-primary)]">讀完整指南 <span className="inline-block transition group-hover:translate-x-1">→</span></span>
     </a>
   );
 }
 
 function ArticleCard({ article }: { article: NewsArticle }) {
   return (
-    <a href={`/news/${article.slug}`} className="group rounded-3xl border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-950/10 md:p-7">
+    <a href={`/news/${article.slug}`} className="group p-6 md:p-7 jshs-surface-card">
       <div className="flex items-center justify-between gap-3 text-xs font-bold text-slate-400">
-        <span className="text-[#2868d7]">{article.kicker}</span>
+        <span className="text-[var(--jshs-primary)]">{article.kicker}</span>
         <span>{article.readMinutes} 分鐘</span>
       </div>
-      <h3 className="mt-4 text-xl font-black leading-snug tracking-[-.035em] group-hover:text-[#173d78]">{article.title}</h3>
-      <p className="mt-3 line-clamp-2 text-sm leading-7 text-slate-500">{article.description}</p>
+      <h3 className="mt-4 text-xl font-black leading-snug tracking-[-.035em] group-hover:text-[var(--jshs-primary)]">{article.title}</h3>
+      <p className="mt-3 line-clamp-2 text-sm leading-7 jshs-muted-copy">{article.description}</p>
       <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4 text-xs font-bold text-slate-400">
         <time dateTime={article.updatedAt}>更新 {formatNewsDate(article.updatedAt)}</time>
-        <span className="text-[#2868d7]">閱讀 →</span>
+        <span className="text-[var(--jshs-primary)]">閱讀 →</span>
       </div>
     </a>
   );
@@ -216,10 +215,10 @@ function ArticleCard({ article }: { article: NewsArticle }) {
 
 function TrustPoint({ number, title, body }: { number: string; title: string; body: string }) {
   return (
-    <article className="rounded-3xl border border-slate-200 bg-[#fbfdff] p-6">
-      <span className="text-xs font-black tracking-[.14em] text-[#ba6b18]">{number}</span>
+    <article className="p-6 jshs-surface-card">
+      <span className="text-xs font-black tracking-[.14em] text-[var(--jshs-primary)]">{number}</span>
       <h2 className="mt-5 text-xl font-black">{title}</h2>
-      <p className="mt-2 text-sm leading-7 text-slate-500">{body}</p>
+      <p className="mt-2 text-sm leading-7 jshs-muted-copy">{body}</p>
     </article>
   );
 }

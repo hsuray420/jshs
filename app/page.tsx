@@ -30,10 +30,10 @@ const latestNews = getFeaturedNews(3);
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-[var(--jshs-background)] text-[var(--jshs-ink)]">
+    <main className="min-h-screen jshs-page-shell">
       <SiteHeader />
 
-      <section className="border-b jshs-hero-band">
+      <section className="border-b jshs-hero-section">
         <div className="mx-auto grid w-[min(1160px,calc(100%-32px))] gap-8 py-10 md:grid-cols-[1fr_360px] md:py-14">
           <div>
             <p className="jshs-eyebrow">先選一件事完成</p>
@@ -46,7 +46,7 @@ export default function HomePage() {
               <TaskCard title="我的規劃" body="整理候選校科、志願與待辦。" href="/it_hs/guide.htm#analysis" action="打開規劃" />
             </div>
           </div>
-          <aside className="p-5 jshs-organic-card">
+          <aside className="p-5 jshs-surface-card">
             <h2 className="text-lg font-black">目前資料狀態</h2>
             <dl className="mt-5 grid gap-4 text-sm">
               <StatusItem label="就學區" value={`${districts.length} 區`} />
@@ -66,17 +66,17 @@ export default function HomePage() {
         <Link className="mt-5 inline-block text-sm font-black text-[var(--jshs-primary)]" href="/news">前往全部升學情報 →</Link>
       </section>
 
-      <section aria-labelledby="timeline-title" className="border-y border-[var(--jshs-border)] bg-[var(--jshs-muted-surface)]/50 py-10 md:py-12">
+      <section aria-labelledby="timeline-title" className="border-y border-[var(--jshs-border)] py-10 jshs-section-subtle md:py-12">
         <div className="mx-auto w-[min(1160px,calc(100%-32px))]">
           <SectionHeading eyebrow="重要時程" id="timeline-title" title="只看已標示狀態的日期。" body="各區正式日期仍以招生單位最新公告為準。" />
-          <div className="mt-6 grid gap-3 md:grid-cols-2">{keyTimeline.map((item) => <article key={item.title} className="p-5 jshs-organic-card"><span className="text-sm font-extrabold text-[var(--jshs-primary)]">{item.date}</span><h3 className="mt-2 text-lg font-black">{item.title}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{item.detail}</p><span className="mt-4 inline-block rounded-full bg-[var(--jshs-accent)] px-3 py-1 text-xs font-extrabold text-[var(--jshs-secondary)]">{item.status}</span></article>)}</div>
+          <div className="mt-6 grid gap-3 md:grid-cols-2">{keyTimeline.map((item) => <article key={item.title} className="p-5 jshs-surface-card"><span className="text-sm font-extrabold text-[var(--jshs-primary)]">{item.date}</span><h3 className="mt-2 text-lg font-black">{item.title}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{item.detail}</p><span className="mt-4 jshs-chip">{item.status}</span></article>)}</div>
           <Link className="mt-5 inline-block text-sm font-black text-[var(--jshs-primary)]" href="/news/exam">查看完整會考準備 →</Link>
         </div>
       </section>
 
       <section id="districts" aria-labelledby="districts-title" className="mx-auto w-[min(1160px,calc(100%-32px))] py-10 md:py-12">
         <SectionHeading eyebrow="選擇就學區" id="districts-title" title="15 區資料入口。" body="先確認適用區域，再進入學校查詢或工具。" />
-        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{districts.map(([code, district]) => <a key={code} className="group p-5 jshs-organic-card" href={`/it_hs/guide.htm?district=${code}#schools`}><div className="flex items-start justify-between gap-3"><span className="text-xs font-extrabold tracking-[.12em] text-[var(--jshs-primary)]">{code.toUpperCase()}</span><span className="rounded-full bg-[var(--jshs-muted-surface)] px-2.5 py-1 text-xs font-bold text-[var(--jshs-muted)]">{district.academicYear} 學年度</span></div><strong className="mt-3 block text-xl">{district.label}</strong><small className="mt-1 block min-h-10 text-sm jshs-muted-copy">{district.areas}</small><b className="mt-4 flex items-center justify-between text-sm text-[var(--jshs-primary)]">開啟學校查詢 <span className="transition group-hover:translate-x-1">→</span></b></a>)}</div>
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{districts.map(([code, district]) => <a key={code} className="group p-5 jshs-surface-card" href={`/it_hs/guide.htm?district=${code}#schools`}><div className="flex items-start justify-between gap-3"><span className="text-xs font-extrabold tracking-[.12em] text-[var(--jshs-primary)]">{code.toUpperCase()}</span><span className="rounded-full bg-[var(--jshs-muted-surface)] px-2.5 py-1 text-xs font-bold text-[var(--jshs-muted)]">{district.academicYear} 學年度</span></div><strong className="mt-3 block text-xl">{district.label}</strong><small className="mt-1 block min-h-10 text-sm jshs-muted-copy">{district.areas}</small><b className="mt-4 flex items-center justify-between text-sm text-[var(--jshs-primary)]">開啟學校查詢 <span className="transition group-hover:translate-x-1">→</span></b></a>)}</div>
         <Link className="mt-5 inline-block text-sm font-black text-[var(--jshs-primary)]" href="/it_hs/guide.htm#home">直接選擇就學區 →</Link>
       </section>
       <SiteFooter />
@@ -89,11 +89,11 @@ function SectionHeading({ eyebrow, id, title, body }: { eyebrow: string; id: str
 }
 
 function TaskCard({ title, body, href, action }: { title: string; body: string; href: string; action: string }) {
-  return <Link href={href} className="group p-5 jshs-organic-card"><h2 className="text-lg font-black">{title}</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">{body}</p><b className="mt-4 block text-sm text-[var(--jshs-primary)]">{action} <span className="inline-block transition group-hover:translate-x-1">→</span></b></Link>;
+  return <Link href={href} className="group p-5 jshs-surface-card"><h2 className="text-lg font-black">{title}</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">{body}</p><b className="mt-4 block text-sm text-[var(--jshs-primary)]">{action} <span className="inline-block transition group-hover:translate-x-1">→</span></b></Link>;
 }
 
 function NewsPreview({ article }: { article: NewsArticle }) {
-  return <Link href={`/news/${article.slug}`} className="group flex min-h-56 flex-col p-5 jshs-organic-card"><div className="flex items-center justify-between gap-3 text-xs font-black"><span className="text-[var(--jshs-primary)]">{article.category}</span><span className="text-[var(--jshs-muted)]">{article.readMinutes} 分鐘</span></div><h3 className="mt-4 text-xl font-black leading-snug">{article.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 jshs-muted-copy">{article.description}</p><b className="mt-auto pt-6 text-sm text-[var(--jshs-primary)]">閱讀完整指南 <span className="inline-block transition group-hover:translate-x-1">→</span></b></Link>;
+  return <Link href={`/news/${article.slug}`} className="group flex min-h-56 flex-col p-5 jshs-surface-card"><div className="flex items-center justify-between gap-3 text-xs font-black"><span className="text-[var(--jshs-primary)]">{article.category}</span><span className="text-[var(--jshs-muted)]">{article.readMinutes} 分鐘</span></div><h3 className="mt-4 text-xl font-black leading-snug">{article.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 jshs-muted-copy">{article.description}</p><b className="mt-auto pt-6 text-sm text-[var(--jshs-primary)]">閱讀完整指南 <span className="inline-block transition group-hover:translate-x-1">→</span></b></Link>;
 }
 
 function StatusItem({ label, value }: { label: string; value: string | number }) {

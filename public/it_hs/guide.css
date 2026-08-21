@@ -15,7 +15,7 @@
 
 body {
     margin: 0;
-    font-family: 'DM Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
     color: var(--fg);
 }
@@ -75,7 +75,7 @@ header {
 }
 
 .site-header .brand-name {
-    font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif;
     font-weight: 800;
     font-size: 1rem;
     line-height: 1.2;
@@ -240,7 +240,7 @@ body { background: var(--decision-page) !important; color: var(--decision-ink) !
 .district-data-status { border-left: 3px solid var(--decision-blue); color: var(--decision-muted); font-size: .88rem; line-height: 1.7; margin: 1.25rem 0 0; padding: .45rem 0 .45rem .85rem; }
 .district-data-status a { color: var(--decision-blue); font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
 .planner-dashboard { align-items: stretch; background: radial-gradient(circle at 88% 8%, rgba(150, 202, 255, .42), transparent 34%), linear-gradient(135deg, #fff 0%, #eff6ff 100%); border: 1px solid #d7e7fb; border-radius: var(--decision-radius); display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr) minmax(180px, .34fr); overflow: hidden; padding: 1.75rem; }
-.planner-dashboard-copy h2 { color: var(--decision-ink); font-family: "Noto Sans TC", "Plus Jakarta Sans", sans-serif; font-size: clamp(1.55rem, 3vw, 2.25rem); font-weight: 900; letter-spacing: -.045em; line-height: 1.2; margin: .4rem 0 .7rem; }
+.planner-dashboard-copy h2 { color: var(--decision-ink); font-family: "Noto Sans TC", "SF Pro Text", sans-serif; font-size: clamp(1.55rem, 3vw, 2.25rem); font-weight: 900; letter-spacing: -.045em; line-height: 1.2; margin: .4rem 0 .7rem; }
 .planner-dashboard-copy > p { color: var(--decision-muted); margin: 0 0 .8rem; max-width: 42rem; }
 .planner-dashboard-copy .planner-rule, .planner-dashboard-copy .planner-next-action { font-size: .84rem; line-height: 1.6; margin: .35rem 0; }
 .planner-dashboard-copy .planner-rule { color: var(--decision-navy); font-weight: 800; }
@@ -250,7 +250,7 @@ body { background: var(--decision-page) !important; color: var(--decision-ink) !
 .planner-eyebrow { color: var(--decision-blue); }
 .planner-score-card { align-items: flex-start; background: linear-gradient(145deg, var(--decision-navy), var(--decision-blue)); border-radius: 18px; color: #fff; display: flex; flex-direction: column; justify-content: center; min-height: 170px; padding: 1.25rem; }
 .planner-score-card span { color: #b9d8ff; font-size: .82rem; font-weight: 800; letter-spacing: .07em; }
-.planner-score-card strong { font-family: "Plus Jakarta Sans", sans-serif; font-size: clamp(3rem, 7vw, 4.8rem); letter-spacing: -.07em; line-height: 1; margin: .45rem 0; }
+.planner-score-card strong { font-family: "SF Pro Text", sans-serif; font-size: clamp(3rem, 7vw, 4.8rem); letter-spacing: -.07em; line-height: 1; margin: .45rem 0; }
 .planner-score-card small { color: #e0efff; font-size: .78rem; }
 .wishlist-comparison { border-top: 1px solid var(--decision-line); margin-top: 1.5rem; padding-top: 1.5rem; }
 .wishlist-comparison-head { align-items: end; display: flex; gap: 1rem; justify-content: space-between; margin-bottom: 1rem; }
@@ -355,7 +355,7 @@ body {
 .wishlist-header .section-title,
 .planner-timeline h3 {
     color: var(--jshs-ink) !important;
-    font-family: "Noto Sans TC", "Plus Jakarta Sans", sans-serif;
+    font-family: "Noto Sans TC", "SF Pro Text", sans-serif;
     font-weight: 900;
     letter-spacing: -.04em;
 }
@@ -563,7 +563,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 }
 
 .section-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: clamp(2.1rem, 2.8vw, 3.25rem);
     margin: 0 0 0.75rem;
     line-height: 1.05;
@@ -681,7 +681,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 
 .overview-card-title {
     margin: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1.24rem;
     color: var(--fg);
 }
@@ -992,7 +992,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 
 .calc-card-title {
     margin: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: clamp(1.45rem, 2vw, 2rem);
     font-weight: 800;
     color: #1F2937;
@@ -1090,7 +1090,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 }
 
 .result-heading {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 800;
     color: #1F2937;
     padding-left: 0.25rem;
@@ -1144,7 +1144,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 
 .calc-guide-head h3 {
     margin: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: clamp(1.2rem, 1.8vw, 1.45rem);
     font-weight: 800;
     color: #1F2937;
@@ -1343,7 +1343,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 
 .calc-breakdown-title {
     margin: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1rem;
     color: #111827;
 }
@@ -1473,7 +1473,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 
 .analysis-card-title {
     margin: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1.08rem;
     line-height: 1.4;
     color: #111827;
@@ -1680,7 +1680,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 }
 
 .wish-search-name {
-    font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif;
     font-weight: 700;
     font-size: 0.95rem;
     color: #10213d;
@@ -1770,7 +1770,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 .wish-summary-item.is-reachable .dot { background: #10b981; }
 
 .wish-summary-item strong {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1rem;
     font-weight: 800;
     color: #10213d;
@@ -1819,7 +1819,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 
 .wishlist-empty-title {
     margin: 0 0 0.35rem;
-    font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif;
     font-weight: 800;
     font-size: 1.05rem;
     color: #10213d;
@@ -1870,7 +1870,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 }
 
 .wish-rank-num {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-weight: 800;
     font-size: 1.25rem;
     line-height: 1;
@@ -1902,7 +1902,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 
 .wish-item-name {
     margin: 0;
-    font-family: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans TC', sans-serif;
     font-weight: 800;
     font-size: 1rem;
     color: #10213d;
@@ -2169,7 +2169,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 
 .school-title {
     margin: 0;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 1.25rem;
     font-weight: 900;
     line-height: 1.25;
@@ -2406,7 +2406,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 }
 
 /* 2026 education-platform visual system */
-:root{--bg:#f8fbff;--fg:#10213d;--muted:#62718a;--accent:#1677ff;--accent-light:#65bfff;--shadow-dark:rgba(38,86,148,.10);--shadow-dark-strong:rgba(38,86,148,.16);--shadow-light:rgba(255,255,255,.9);--radius-xl:24px;--radius-lg:14px;--radius-md:12px;--transition:220ms ease}body{font-family:"Noto Sans TC","DM Sans",system-ui,sans-serif;background:linear-gradient(180deg,#fff 0,#f7fbff 45%,#fff 100%);color:var(--fg)}header{background:rgba(255,255,255,.92)!important;border-color:#e6edf6!important;box-shadow:0 1px 0 rgba(16,33,61,.03)}.font-display,.section-title,.overview-card-title,.calc-card-title,.result-heading{font-family:"Noto Sans TC","Plus Jakarta Sans",sans-serif!important;letter-spacing:-.04em}.section-nav{gap:.4rem}.section-nav a,.section-nav button,.mobile-route{min-height:40px;border-radius:10px;background:transparent;color:#52627b;font-size:.84rem}.section-nav a:hover,.section-nav button:hover,.section-nav button.active,.mobile-route:hover,.mobile-route.active{background:#e9f3ff;color:#0965d8;transform:none}.page-section{min-height:calc(100vh - 170px)}.page-section.active{animation:pageFade 220ms ease-out both}.page-section:not(#page-home){padding-top:1rem}.page-section#page-home{border-radius:24px!important;border:1px solid #e2ebf6!important;box-shadow:0 18px 54px rgba(23,70,131,.09)!important;background:linear-gradient(140deg,#fff 0,#f5faff 100%)!important}.page-section#page-home>div{position:relative}.page-section#page-home>div:after{content:"";position:absolute;width:260px;height:260px;right:-100px;top:-105px;border-radius:50%;background:radial-gradient(circle,#c1e8ff 0,rgba(215,239,255,0) 68%);pointer-events:none}.page-section#page-home h2{font-size:clamp(2rem,4vw,3.5rem)!important;max-width:660px;letter-spacing:-.015em;line-height:1.25;font-weight:800}.page-section#page-home .rounded-\[32px\]{position:relative;z-index:1;background:linear-gradient(155deg,#eaf5ff,#f7fbff)!important;border:1px solid #dbeafb;border-radius:20px!important}.page-section#page-home .rounded-\[28px\]{border-radius:15px!important;border:1px solid #e5edf6!important;box-shadow:0 8px 22px rgba(31,79,140,.07)!important;transition:transform var(--transition),box-shadow var(--transition)}.page-section#page-home .rounded-\[28px\]:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(31,79,140,.12)!important}.section-panel,.panel-card,.ui-card{background:rgba(255,255,255,.96);border-radius:20px;box-shadow:0 12px 36px rgba(31,79,140,.07);border:1px solid #e3ebf5}.hero-panel:hover,.section-panel:hover{transform:none;box-shadow:0 12px 36px rgba(31,79,140,.07)}.panel-card{padding:1.5rem}.overview-card{border-radius:16px;box-shadow:none;background:#fff}.overview-card:hover,.overview-card:focus-visible{transform:translateY(-4px);box-shadow:0 14px 28px rgba(31,79,140,.12);border-color:#b9dcff}.overview-card.is-active{background:linear-gradient(145deg,#edf7ff,#fff);border-color:#9ed0ff}.card-pill,.overview-popup-pill{padding:.55rem .75rem;background:#eaf4ff;color:#0965d8}.ui-btn,.ui-btn-primary{min-height:45px;border-radius:11px;box-shadow:none;border:1px solid #dce8f5;background:#fff;color:#254262}.ui-btn-primary{background:linear-gradient(135deg,#126eef,#1984ff);border-color:#126eef;color:#fff}.ui-btn:hover{transform:translateY(-2px);box-shadow:0 9px 18px rgba(22,119,255,.16)}.ui-input{border:1px solid #dbe6f2;border-radius:11px;background:#fff;box-shadow:none;padding:.78rem .9rem}.ui-input:focus{box-shadow:0 0 0 3px rgba(22,119,255,.13);border-color:#58a9ff}.calc-input-card{background:#fff}.calc-field-group,.checkbox-chip{border-color:#e2ebf5;background:#f9fbfe;border-radius:14px}.checkbox-chip{background:#fff}.result-card-primary{background:linear-gradient(135deg,#082a62,#1677ff)}.analysis-score-pill,.calc-note-badge{background:#eaf5ff!important;color:#0867de!important;border-color:#cde5ff!important}.analysis-summary-card,.analysis-result-card,.school-card,.details-panel{border-radius:16px!important;box-shadow:none!important;border-color:#e2ebf5!important;background:#fff!important}.school-filter{border-radius:9px!important;box-shadow:none!important;border:1px solid #e0e9f4!important}.school-filter.active{background:#eaf5ff!important;color:#0965d8!important;border-color:#b5dbff!important}.school-link{box-shadow:none!important;border:1px solid #d9e7f5!important;border-radius:10px!important}.overview-detail-card{border-radius:20px}.overview-popup-close{background:#edf5ff;color:#116be0}.details-panel{background:#fbfdff!important}.details-panel[open]{border-color:#bfdfff!important}@media(max-width:768px){main.max-w-7xl{padding-left:16px!important;padding-right:16px!important;padding-top:20px!important}.page-section#page-home>div{padding:24px!important}.page-section#page-home h2{font-size:2rem!important}.section-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.panel-card{padding:1.15rem}.section-title{font-size:2rem}.calc-guide-table-wrapper{border-radius:12px}}
+:root{--bg:#f8fbff;--fg:#10213d;--muted:#62718a;--accent:#1677ff;--accent-light:#65bfff;--shadow-dark:rgba(38,86,148,.10);--shadow-dark-strong:rgba(38,86,148,.16);--shadow-light:rgba(255,255,255,.9);--radius-xl:24px;--radius-lg:14px;--radius-md:12px;--transition:220ms ease}body{font-family:"Noto Sans TC",-apple-system, BlinkMacSystemFont,system-ui,sans-serif;background:linear-gradient(180deg,#fff 0,#f7fbff 45%,#fff 100%);color:var(--fg)}header{background:rgba(255,255,255,.92)!important;border-color:#e6edf6!important;box-shadow:0 1px 0 rgba(16,33,61,.03)}.font-display,.section-title,.overview-card-title,.calc-card-title,.result-heading{font-family:"Noto Sans TC","SF Pro Text",sans-serif!important;letter-spacing:-.04em}.section-nav{gap:.4rem}.section-nav a,.section-nav button,.mobile-route{min-height:40px;border-radius:10px;background:transparent;color:#52627b;font-size:.84rem}.section-nav a:hover,.section-nav button:hover,.section-nav button.active,.mobile-route:hover,.mobile-route.active{background:#e9f3ff;color:#0965d8;transform:none}.page-section{min-height:calc(100vh - 170px)}.page-section.active{animation:pageFade 220ms ease-out both}.page-section:not(#page-home){padding-top:1rem}.page-section#page-home{border-radius:24px!important;border:1px solid #e2ebf6!important;box-shadow:0 18px 54px rgba(23,70,131,.09)!important;background:linear-gradient(140deg,#fff 0,#f5faff 100%)!important}.page-section#page-home>div{position:relative}.page-section#page-home>div:after{content:"";position:absolute;width:260px;height:260px;right:-100px;top:-105px;border-radius:50%;background:radial-gradient(circle,#c1e8ff 0,rgba(215,239,255,0) 68%);pointer-events:none}.page-section#page-home h2{font-size:clamp(2rem,4vw,3.5rem)!important;max-width:660px;letter-spacing:-.015em;line-height:1.25;font-weight:800}.page-section#page-home .rounded-\[32px\]{position:relative;z-index:1;background:linear-gradient(155deg,#eaf5ff,#f7fbff)!important;border:1px solid #dbeafb;border-radius:20px!important}.page-section#page-home .rounded-\[28px\]{border-radius:15px!important;border:1px solid #e5edf6!important;box-shadow:0 8px 22px rgba(31,79,140,.07)!important;transition:transform var(--transition),box-shadow var(--transition)}.page-section#page-home .rounded-\[28px\]:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(31,79,140,.12)!important}.section-panel,.panel-card,.ui-card{background:rgba(255,255,255,.96);border-radius:20px;box-shadow:0 12px 36px rgba(31,79,140,.07);border:1px solid #e3ebf5}.hero-panel:hover,.section-panel:hover{transform:none;box-shadow:0 12px 36px rgba(31,79,140,.07)}.panel-card{padding:1.5rem}.overview-card{border-radius:16px;box-shadow:none;background:#fff}.overview-card:hover,.overview-card:focus-visible{transform:translateY(-4px);box-shadow:0 14px 28px rgba(31,79,140,.12);border-color:#b9dcff}.overview-card.is-active{background:linear-gradient(145deg,#edf7ff,#fff);border-color:#9ed0ff}.card-pill,.overview-popup-pill{padding:.55rem .75rem;background:#eaf4ff;color:#0965d8}.ui-btn,.ui-btn-primary{min-height:45px;border-radius:11px;box-shadow:none;border:1px solid #dce8f5;background:#fff;color:#254262}.ui-btn-primary{background:linear-gradient(135deg,#126eef,#1984ff);border-color:#126eef;color:#fff}.ui-btn:hover{transform:translateY(-2px);box-shadow:0 9px 18px rgba(22,119,255,.16)}.ui-input{border:1px solid #dbe6f2;border-radius:11px;background:#fff;box-shadow:none;padding:.78rem .9rem}.ui-input:focus{box-shadow:0 0 0 3px rgba(22,119,255,.13);border-color:#58a9ff}.calc-input-card{background:#fff}.calc-field-group,.checkbox-chip{border-color:#e2ebf5;background:#f9fbfe;border-radius:14px}.checkbox-chip{background:#fff}.result-card-primary{background:linear-gradient(135deg,#082a62,#1677ff)}.analysis-score-pill,.calc-note-badge{background:#eaf5ff!important;color:#0867de!important;border-color:#cde5ff!important}.analysis-summary-card,.analysis-result-card,.school-card,.details-panel{border-radius:16px!important;box-shadow:none!important;border-color:#e2ebf5!important;background:#fff!important}.school-filter{border-radius:9px!important;box-shadow:none!important;border:1px solid #e0e9f4!important}.school-filter.active{background:#eaf5ff!important;color:#0965d8!important;border-color:#b5dbff!important}.school-link{box-shadow:none!important;border:1px solid #d9e7f5!important;border-radius:10px!important}.overview-detail-card{border-radius:20px}.overview-popup-close{background:#edf5ff;color:#116be0}.details-panel{background:#fbfdff!important}.details-panel[open]{border-color:#bfdfff!important}@media(max-width:768px){main.max-w-7xl{padding-left:16px!important;padding-right:16px!important;padding-top:20px!important}.page-section#page-home>div{padding:24px!important}.page-section#page-home h2{font-size:2rem!important}.section-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.panel-card{padding:1.15rem}.section-title{font-size:2rem}.calc-guide-table-wrapper{border-radius:12px}}
 
 /* Calculator workspace: original hierarchy inspired by, not copied from, the reference. */
 .header-nav-wrap { background: #fbfcfe !important; }
@@ -2560,7 +2560,7 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 }
 .score-tile-index { color: #7e94a8; font-size: .72rem; font-weight: 900; letter-spacing: .1em; }
 .score-tile-main { color: #173952; font-size: 1.12rem; font-weight: 800; margin-top: auto; }
-.score-tile-value { color: #0d5da6; font-family: "Plus Jakarta Sans", "Noto Sans TC", sans-serif; font-size: 2.8rem; font-weight: 800; line-height: 1; margin-top: .35rem; }
+.score-tile-value { color: #0d5da6; font-family: "SF Pro Text", "Noto Sans TC", sans-serif; font-size: 2.8rem; font-weight: 800; line-height: 1; margin-top: .35rem; }
 .calc-score-tile-large .score-tile-value { color: #087c75; }
 .score-tile-value small { font-family: "Noto Sans TC", sans-serif; font-size: .9rem; font-weight: 700; }
 .score-tile-action { border-top: 1px solid #e3edf3; color: #537088; font-size: .78rem; margin-top: .85rem; padding-top: .7rem; width: 100%; }
@@ -2953,7 +2953,7 @@ html { scroll-behavior: smooth; }
 body[data-guide-shell="unified-2026"] {
     background: var(--jshs-page) !important;
     color: var(--jshs-ink) !important;
-    font-family: "Plus Jakarta Sans", "Noto Sans TC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    font-family: "SF Pro Text", "Noto Sans TC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
     min-height: 100vh;
 }
 
@@ -3701,4 +3701,158 @@ body[data-guide-shell="unified-2026"] .guide-mobile-directory .mobile-menu-group
     .guide-quick-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     body[data-guide-shell="unified-2026"] .guide-quick-actions > a,
     body[data-guide-shell="unified-2026"] .guide-quick-actions > button { min-height: 92px !important; }
+}
+
+/* Guide Apple Notion final layer. */
+body[data-guide-shell="unified-2026"] {
+    --jshs-page: #FFFFFF;
+    --jshs-surface: #FFFFFF;
+    --jshs-subtle: #F5F5F7;
+    --jshs-ink: #1D1D1F;
+    --jshs-muted: #6E6E73;
+    --jshs-tertiary: #86868B;
+    --jshs-navy: #1D1D1F;
+    --jshs-blue: #173D78;
+    --jshs-border: #E5E5E7;
+    --jshs-radius-card: 16px;
+    --jshs-radius-control: 12px;
+    --jshs-shadow-soft: 0 1px 2px rgba(0, 0, 0, .04), 0 8px 24px rgba(0, 0, 0, .05);
+    background: #FFFFFF !important;
+    color: #1D1D1F !important;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang TC", "PingFang SC", "Noto Sans TC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif !important;
+}
+
+body[data-guide-shell="unified-2026"] *,
+body[data-guide-shell="unified-2026"] .font-display,
+body[data-guide-shell="unified-2026"] .section-title,
+body[data-guide-shell="unified-2026"] .overview-card-title,
+body[data-guide-shell="unified-2026"] .calc-card-title,
+body[data-guide-shell="unified-2026"] .result-heading {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang TC", "PingFang SC", "Noto Sans TC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif !important;
+    letter-spacing: 0 !important;
+}
+
+body[data-guide-shell="unified-2026"] > main,
+body[data-guide-shell="unified-2026"] .page-section {
+    background: #FFFFFF !important;
+}
+
+body[data-guide-shell="unified-2026"] header,
+body[data-guide-shell="unified-2026"] .guide-primary-bar,
+body[data-guide-shell="unified-2026"] .guide-workspace-bar,
+body[data-guide-shell="unified-2026"] .guide-mobile-bottom-nav {
+    background: rgba(255, 255, 255, .94) !important;
+    border-color: #E5E5E7 !important;
+    box-shadow: none !important;
+    backdrop-filter: blur(18px);
+}
+
+body[data-guide-shell="unified-2026"] .page-section#page-home,
+body[data-guide-shell="unified-2026"] .section-panel,
+body[data-guide-shell="unified-2026"] .panel-card,
+body[data-guide-shell="unified-2026"] .ui-card,
+body[data-guide-shell="unified-2026"] .overview-card,
+body[data-guide-shell="unified-2026"] .analysis-summary-card,
+body[data-guide-shell="unified-2026"] .analysis-result-card,
+body[data-guide-shell="unified-2026"] .school-card,
+body[data-guide-shell="unified-2026"] .details-panel,
+body[data-guide-shell="unified-2026"] .planner-dashboard,
+body[data-guide-shell="unified-2026"] .planner-score-card,
+body[data-guide-shell="unified-2026"] .calc-input-card,
+body[data-guide-shell="unified-2026"] .overview-detail-card {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E5E7 !important;
+    border-radius: var(--jshs-radius-card) !important;
+    box-shadow: var(--jshs-shadow-soft) !important;
+}
+
+body[data-guide-shell="unified-2026"] .page-section#page-home::before,
+body[data-guide-shell="unified-2026"] .page-section#page-home > div::after {
+    display: none !important;
+}
+
+body[data-guide-shell="unified-2026"] .page-section#page-home .rounded-\[32px\],
+body[data-guide-shell="unified-2026"] .result-card-primary {
+    background: #F5F5F7 !important;
+    border: 1px solid #E5E5E7 !important;
+    border-radius: var(--jshs-radius-card) !important;
+    color: #1D1D1F !important;
+}
+
+body[data-guide-shell="unified-2026"] .ui-btn,
+body[data-guide-shell="unified-2026"] .ui-btn-primary,
+body[data-guide-shell="unified-2026"] button,
+body[data-guide-shell="unified-2026"] .section-nav a,
+body[data-guide-shell="unified-2026"] .section-nav button,
+body[data-guide-shell="unified-2026"] .mobile-route,
+body[data-guide-shell="unified-2026"] .school-link {
+    border-radius: var(--jshs-radius-control) !important;
+    box-shadow: none !important;
+    min-height: 42px;
+    transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+body[data-guide-shell="unified-2026"] .ui-btn-primary,
+body[data-guide-shell="unified-2026"] .section-nav button.active,
+body[data-guide-shell="unified-2026"] .mobile-route.active,
+body[data-guide-shell="unified-2026"] .guide-mobile-bottom-nav a.active {
+    background: #173D78 !important;
+    border-color: #173D78 !important;
+    color: #FFFFFF !important;
+}
+
+body[data-guide-shell="unified-2026"] .ui-btn:hover,
+body[data-guide-shell="unified-2026"] .section-nav a:hover,
+body[data-guide-shell="unified-2026"] .section-nav button:hover,
+body[data-guide-shell="unified-2026"] .mobile-route:hover,
+body[data-guide-shell="unified-2026"] .school-link:hover {
+    background: #F5F5F7 !important;
+    border-color: #D2D2D7 !important;
+    transform: translateY(-1px);
+}
+
+body[data-guide-shell="unified-2026"] .ui-input,
+body[data-guide-shell="unified-2026"] input,
+body[data-guide-shell="unified-2026"] select,
+body[data-guide-shell="unified-2026"] textarea,
+body[data-guide-shell="unified-2026"] .guide-menu-search input {
+    background: #FFFFFF !important;
+    border: 1px solid #D2D2D7 !important;
+    border-radius: var(--jshs-radius-control) !important;
+    box-shadow: none !important;
+    color: #1D1D1F !important;
+}
+
+body[data-guide-shell="unified-2026"] .ui-input:focus,
+body[data-guide-shell="unified-2026"] input:focus,
+body[data-guide-shell="unified-2026"] select:focus,
+body[data-guide-shell="unified-2026"] textarea:focus,
+body[data-guide-shell="unified-2026"] .guide-menu-search input:focus {
+    border-color: #173D78 !important;
+    box-shadow: 0 0 0 4px rgba(23, 61, 120, .12) !important;
+    outline: none !important;
+}
+
+body[data-guide-shell="unified-2026"] .card-pill,
+body[data-guide-shell="unified-2026"] .overview-popup-pill,
+body[data-guide-shell="unified-2026"] .analysis-score-pill,
+body[data-guide-shell="unified-2026"] .calc-note-badge,
+body[data-guide-shell="unified-2026"] .school-filter.active,
+body[data-guide-shell="unified-2026"] .checkbox-chip {
+    background: #F5F5F7 !important;
+    border-color: #E5E5E7 !important;
+    color: #1D1D1F !important;
+}
+
+body[data-guide-shell="unified-2026"] .calc-guide-table-wrapper,
+body[data-guide-shell="unified-2026"] table {
+    background: #FFFFFF !important;
+    border-color: #E5E5E7 !important;
+    border-radius: var(--jshs-radius-card) !important;
+    box-shadow: none !important;
+}
+
+body[data-guide-shell="unified-2026"] th,
+body[data-guide-shell="unified-2026"] td {
+    border-color: #E5E5E7 !important;
 }

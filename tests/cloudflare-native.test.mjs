@@ -58,23 +58,21 @@ test("admin uploads use Cloudflare D1 instead of an unavailable external file la
   assert.match(filesRoute, /arrayBuffer/);
 });
 
-test("local source changes are gated and deployed directly to Cloudflare", async () => {
-  const [pkg, watcher] = await Promise.all([
+test("local source changes are gated through GitHub Actions before Cloudflare deploy", async () => {
+  const [pkg, workflow, agents] = await Promise.all([
     readSource("package.json"),
-    readSource("scripts/cloudflare-watch.mjs"),
+    readSource(".github/workflows/cloudflare-deploy.yml"),
+    readSource("AGENTS.md"),
   ]);
 
-  assert.match(pkg, /"cloudflare:watch"/);
-  assert.match(pkg, /"cloudflare:deploy:direct"/);
-  assert.match(watcher, /process\.execPath/);
-  assert.match(watcher, /typescript\/bin\/tsc/);
-  assert.match(watcher, /vinext\/dist\/cli\.js/);
-  assert.match(watcher, /test/);
-  assert.match(watcher, /wrangler/);
-  assert.match(watcher, /deploy/);
-  assert.match(watcher, /--keep-vars/);
-  assert.match(watcher, /jshs-production/);
-  assert.match(watcher, /setTimeout/);
+  assert.match(pkg, /"test":\s*"pnpm run validate:content && pnpm run typecheck && pnpm run build && node --test tests\/\*\.test\.mjs"/);
+  assert.match(workflow, /on:\s*\n\s*push:\s*\n\s*branches:\s*\n\s*-\s*main/);
+  assert.match(workflow, /pnpm install --frozen-lockfile/);
+  assert.match(workflow, /pnpm test/);
+  assert.match(workflow, /wrangler deploy --keep-vars/);
+  assert.match(workflow, /CLOUDFLARE_API_TOKEN/);
+  assert.match(agents, /Push `main` to GitHub remote `github`/);
+  assert.match(agents, /Let GitHub Actions deploy `jshs\.cc` from GitHub/);
 });
 
 test("health status follows Cloudflare core services, not optional LINE integrations", async () => {

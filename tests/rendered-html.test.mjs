@@ -110,7 +110,7 @@ test("district guide persists a private local planning workspace and exposes com
   assert.match(script, /analysis-tier/);
 });
 
-test("homepage and district guide share one decision visual token system", async () => {
+test("homepage and district guide share one Apple Notion design token system", async () => {
   const [globalCss, districtGuide, districtCss, tokens] = await Promise.all([
     readFile(globalCssUrl, "utf8"),
     readFile(districtGuideUrl, "utf8"),
@@ -118,23 +118,24 @@ test("homepage and district guide share one decision visual token system", async
     readFile(tokenCssUrl, "utf8"),
   ]);
 
-  assert.match(tokens, /--jshs-background:\s*#FDFCF8/i);
-  assert.match(tokens, /--jshs-foreground:\s*#2C2C24/i);
-  assert.match(tokens, /--jshs-primary:\s*#5D7052/i);
-  assert.match(tokens, /--jshs-secondary:\s*#C18C5D/i);
-  assert.match(tokens, /--jshs-accent:\s*#E6DCCD/i);
+  assert.match(tokens, /--bg-page:\s*#FFFFFF/i);
+  assert.match(tokens, /--bg-subtle:\s*#F5F5F7/i);
+  assert.match(tokens, /--text-primary:\s*#1D1D1F/i);
+  assert.match(tokens, /--text-secondary:\s*#6E6E73/i);
+  assert.match(tokens, /--border-light:\s*#E5E5E7/i);
   assert.match(tokens, /--jshs-space-1:\s*4px/i);
-  assert.match(tokens, /--jshs-organic-radius:\s*60% 40% 30% 70% \/ 60% 30% 70% 40%/i);
+  assert.match(tokens, /--radius-lg:\s*16px/i);
+  assert.doesNotMatch(tokens, /organic-radius|#FDFCF8|#5D7052|#C18C5D/i);
   assert.doesNotMatch(globalCss, /main\.min-h-screen > section\s*\{[^}]*min-height:\s*100vh/s);
   assert.match(globalCss, /@import url\("\/design-tokens\.css"\)/);
-  assert.match(globalCss, /fonts\.googleapis\.com\/css2\?family=Fraunces/);
-  assert.match(globalCss, /body::before/);
-  assert.match(globalCss, /mix-blend-mode:\s*multiply/);
-  assert.match(globalCss, /\.jshs-organic-card/);
-  assert.match(globalCss, /\.jshs-pill-button/);
+  assert.match(globalCss, /-apple-system,\s*BlinkMacSystemFont/);
+  assert.match(globalCss, /\.jshs-surface-card/);
+  assert.match(globalCss, /\.jshs-button-primary/);
+  assert.match(globalCss, /\.jshs-input/);
+  assert.doesNotMatch(globalCss, /fonts\.googleapis|Fraunces|Nunito|body::before|mix-blend-mode|organic/i);
   assert.match(districtGuide, /href="\/design-tokens\.css"/);
   assert.match(districtGuide, /href="guide\.css\?v=20260814-4"/);
-  assert.match(districtCss, /Shared visual system final layer/);
+  assert.match(districtCss, /Guide Apple Notion final layer/);
   assert.match(districtCss, /var\(--jshs-radius-card\)/);
 });
 

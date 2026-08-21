@@ -154,15 +154,15 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
                     aria-expanded={open}
                     aria-controls={`mega-${item.activeHref.slice(1)}`}
                     onClick={() => setOpenGroup(open ? null : item.activeHref)}
-                    className={`flex items-center gap-1 px-3 py-2 text-sm font-extrabold transition jshs-pill-button ${active || open ? "bg-[var(--jshs-accent)] text-[var(--jshs-ink)]" : "text-[var(--jshs-muted)] hover:bg-[var(--jshs-muted-surface)] hover:text-[var(--jshs-primary)]"}`}
+                    className={`flex items-center gap-1 px-3 py-2 text-sm font-extrabold transition jshs-button ${active || open ? "bg-[var(--jshs-accent)] text-[var(--jshs-ink)]" : "text-[var(--jshs-muted)] hover:bg-[var(--jshs-muted-surface)] hover:text-[var(--jshs-primary)]"}`}
                   >
                     {item.label}<span aria-hidden="true" className={`text-xs transition ${open ? "rotate-180" : ""}`}>⌄</span>
                   </button>
                   {open ? (
-                    <div id={`mega-${item.activeHref.slice(1)}`} className={`absolute top-[calc(100%-2px)] z-50 w-[540px] p-5 jshs-organic-card ${item.activeHref === "/planner" ? "right-0" : "left-1/2 -translate-x-1/2"}`}>
+                    <div id={`mega-${item.activeHref.slice(1)}`} className={`absolute top-[calc(100%-2px)] z-50 w-[540px] p-5 jshs-surface-card ${item.activeHref === "/planner" ? "right-0" : "left-1/2 -translate-x-1/2"}`}>
                       <div className="flex items-start justify-between gap-5 border-b border-[var(--jshs-border)] pb-4">
                         <div><p className="jshs-eyebrow">{detail.eyebrow}</p><p className="mt-2 max-w-sm text-sm leading-6 jshs-muted-copy">{detail.description}</p></div>
-                        <Link onClick={() => setOpenGroup(null)} className="shrink-0 px-4 py-2.5 text-xs jshs-pill-button jshs-primary-action" href={item.href}>前往全部 →</Link>
+                        <Link onClick={() => setOpenGroup(null)} className="shrink-0 px-4 py-2.5 text-xs jshs-button-primary" href={item.href}>前往全部 →</Link>
                       </div>
                       <div className="mt-3 grid grid-cols-2 gap-2">
                         {detail.links.map((link) => <Link onClick={() => setOpenGroup(null)} key={`${item.activeHref}-${link.href}-${link.label}`} href={link.href} className="rounded-[1.5rem] p-4 hover:bg-[var(--jshs-muted-surface)]"><b className="block text-sm text-[var(--jshs-primary)]">{link.label}</b><span className="mt-1 block text-xs leading-5 jshs-muted-copy">{link.description}</span></Link>)}
@@ -175,9 +175,9 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 lg:ml-3">
-            <Link href="/districts" className="hidden border border-[var(--jshs-border)] bg-[var(--jshs-muted-surface)] px-3 py-2 text-xs text-[var(--jshs-primary)] jshs-pill-button md:block">{districtLabel} ▾</Link>
-            <button type="button" onClick={() => openDrawer(true)} aria-label="搜尋內容與功能" className="grid h-10 w-10 place-items-center border border-[var(--jshs-border)] bg-white text-[var(--jshs-primary)] jshs-pill-button">⌕</button>
-            <button type="button" onClick={() => openDrawer()} aria-label="開啟完整選單" aria-expanded={drawerOpen} className="grid h-10 w-10 place-items-center border border-[var(--jshs-border)] bg-white text-[var(--jshs-primary)] jshs-pill-button lg:hidden"><span className="text-lg" aria-hidden="true">☰</span></button>
+            <Link href="/districts" className="hidden border border-[var(--jshs-border)] bg-[var(--jshs-muted-surface)] px-3 py-2 text-xs text-[var(--jshs-primary)] jshs-button md:block">{districtLabel} ▾</Link>
+            <button type="button" onClick={() => openDrawer(true)} aria-label="搜尋內容與功能" className="grid h-10 w-10 place-items-center border border-[var(--jshs-border)] bg-white text-[var(--jshs-primary)] jshs-button">⌕</button>
+            <button type="button" onClick={() => openDrawer()} aria-label="開啟完整選單" aria-expanded={drawerOpen} className="grid h-10 w-10 place-items-center border border-[var(--jshs-border)] bg-white text-[var(--jshs-primary)] jshs-button lg:hidden"><span className="text-lg" aria-hidden="true">☰</span></button>
           </div>
         </div>
       </header>
@@ -187,11 +187,11 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
           <div className="mx-auto flex h-full w-[min(760px,100%)] flex-col bg-[var(--jshs-surface)] shadow-[var(--jshs-shadow-card)]">
             <div className="flex items-center justify-between border-b border-[var(--jshs-border)] px-5 py-4 sm:px-8">
               <div><p className="jshs-eyebrow">全站導覽</p><b className="mt-1 block text-lg text-[var(--jshs-ink)]">找到現在需要的下一步</b></div>
-              <button type="button" onClick={closeDrawer} aria-label="關閉選單" className="grid h-11 w-11 place-items-center border border-[var(--jshs-border)] text-2xl text-[var(--jshs-primary)] jshs-pill-button">×</button>
+              <button type="button" onClick={closeDrawer} aria-label="關閉選單" className="grid h-11 w-11 place-items-center border border-[var(--jshs-border)] text-2xl text-[var(--jshs-primary)] jshs-button">×</button>
             </div>
 
             <div className="overflow-y-auto px-5 pb-28 pt-5 sm:px-8">
-              <Link onClick={closeDrawer} href="/districts" className="flex items-center justify-between px-5 py-4 text-[var(--jshs-primary)] jshs-organic-card"><span><small className="block font-bold text-[var(--jshs-secondary)]">全站使用情境</small><b className="mt-1 block">{districtLabel}</b></span><span aria-hidden="true">切換 →</span></Link>
+              <Link onClick={closeDrawer} href="/districts" className="flex items-center justify-between px-5 py-4 text-[var(--jshs-primary)] jshs-surface-card"><span><small className="block font-bold text-[var(--jshs-secondary)]">全站使用情境</small><b className="mt-1 block">{districtLabel}</b></span><span aria-hidden="true">切換 →</span></Link>
 
               <label className="mt-5 block">
                 <span className="sr-only">搜尋內容與功能</span>
@@ -202,7 +202,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
                 <section aria-live="polite" className="mt-6">
                   <div className="flex items-end justify-between"><h2 className="text-xl font-black text-[var(--jshs-ink)]">搜尋結果</h2><span className="text-xs font-bold text-[var(--jshs-muted)]">{results.length} 個入口</span></div>
                   <div className="mt-3 grid gap-2">
-                    {results.map((item) => <Link key={`${item.href}-${item.label}`} onClick={closeDrawer} href={item.href} className="p-4 jshs-organic-card"><b className="text-[var(--jshs-primary)]">{item.label}</b><span className="mt-1 block text-sm leading-6 jshs-muted-copy">{item.description}</span></Link>)}
+                    {results.map((item) => <Link key={`${item.href}-${item.label}`} onClick={closeDrawer} href={item.href} className="p-4 jshs-surface-card"><b className="text-[var(--jshs-primary)]">{item.label}</b><span className="mt-1 block text-sm leading-6 jshs-muted-copy">{item.description}</span></Link>)}
                     {!results.length ? <p className="rounded-[1.5rem] bg-[var(--jshs-muted-surface)] p-5 text-sm leading-6 jshs-muted-copy">目前沒有符合的入口。可以搜尋「會考」、「學校」、「積分」或「志願」。</p> : null}
                   </div>
                 </section>
@@ -211,7 +211,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
                   <section className="mt-7">
                     <h2 className="text-sm font-black tracking-[.12em] text-[var(--jshs-muted)]">你現在想做什麼？</h2>
                     <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                      {quickActions.map((item) => <Link onClick={closeDrawer} key={item.label} href={item.href} className="p-4 text-[var(--jshs-primary)] jshs-organic-card"><span className="grid h-9 w-9 place-items-center rounded-full bg-[var(--jshs-muted-surface)] text-sm font-black" aria-hidden="true">{item.icon}</span><b className="mt-3 block">{item.label}</b></Link>)}
+                      {quickActions.map((item) => <Link onClick={closeDrawer} key={item.label} href={item.href} className="p-4 text-[var(--jshs-primary)] jshs-surface-card"><span className="grid h-9 w-9 place-items-center rounded-full bg-[var(--jshs-muted-surface)] text-sm font-black" aria-hidden="true">{item.icon}</span><b className="mt-3 block">{item.label}</b></Link>)}
                     </div>
                   </section>
 
@@ -221,7 +221,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
                       {primaryNavigation.map((item) => {
                         const detail = navigationDetails[item.activeHref];
                         return (
-                          <details key={item.href} className="group jshs-organic-card">
+                          <details key={item.href} className="group jshs-surface-card">
                             <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-4 font-black text-[var(--jshs-primary)] marker:content-none"><span>{item.label}<small className="mt-1 block font-medium jshs-muted-copy">{detail.description}</small></span><span className="transition group-open:rotate-180" aria-hidden="true">⌄</span></summary>
                             <div className="grid gap-1 border-t border-[var(--jshs-border)] p-2 sm:grid-cols-2">
                               <Link onClick={closeDrawer} href={item.href} className="rounded-[1.25rem] px-4 py-3 text-sm font-black text-[var(--jshs-primary)] hover:bg-[var(--jshs-muted-surface)]">前往{item.label}首頁 →</Link>

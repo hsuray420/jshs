@@ -34,7 +34,7 @@ export function SchoolPlannerAction({
         type="button"
         onClick={saveSchool}
         disabled={status === "saving" || status === "saved"}
-        className="rounded-xl bg-[#173d78] px-5 py-3.5 text-sm font-black text-white shadow-lg disabled:cursor-default disabled:bg-[#4f6c96]"
+        className="px-5 py-3.5 text-sm jshs-button-primary disabled:cursor-default disabled:bg-[#4f6c96]"
       >
         {status === "saving" ? "儲存中…" : status === "saved" ? "已加入我的規劃" : "加入我的規劃"}
       </button>

@@ -87,7 +87,7 @@ export function SchoolExplorer({
 
   return (
     <>
-      <section className="border-b jshs-hero-band">
+      <section className="border-b jshs-hero-section">
         <div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-12">
           <p className="jshs-eyebrow">找校科</p>
           <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-5xl">搜尋學校、科別與地區</h1>
@@ -96,7 +96,7 @@ export function SchoolExplorer({
       </section>
 
       <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-8 md:py-10">
-        <div className="grid gap-4 p-4 jshs-organic-card md:grid-cols-[240px_1fr] md:p-5">
+        <div className="grid gap-4 p-4 jshs-surface-card md:grid-cols-[240px_1fr] md:p-5">
           <label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">
             就學區
             <select className="h-12 rounded-full border border-[var(--jshs-border)] bg-white/70 px-4 text-base text-[var(--jshs-ink)]" value={district} onChange={(event) => changeDistrict(event.target.value)}>
@@ -116,7 +116,7 @@ export function SchoolExplorer({
 
         <div className="mt-5 grid gap-3 lg:grid-cols-2">
           {filteredSchools.slice(0, 120).map((school) => (
-            <article key={`${district}-${school.code}-${school.name}`} className="flex flex-col p-5 jshs-organic-card">
+            <article key={`${district}-${school.code}-${school.name}`} className="flex flex-col p-5 jshs-surface-card">
               <div className="flex items-start justify-between gap-3">
                 <div><p className="text-xs font-black tracking-[.12em] text-[var(--jshs-primary)]">{school.code || district.toUpperCase()}</p><h2 className="mt-2 text-2xl font-black">{school.name}</h2></div>
                 <span className="rounded-full bg-[var(--jshs-muted-surface)] px-3 py-1 text-xs font-bold text-[var(--jshs-muted)]">{school.ownership || school.program}</span>
@@ -124,9 +124,9 @@ export function SchoolExplorer({
               <p className="mt-3 text-sm leading-6 jshs-muted-copy">{[school.city, school.area, school.address].filter(Boolean).join(" · ")}</p>
               <p className="mt-4 rounded-[1.5rem] bg-[var(--jshs-muted-surface)] p-4 text-sm leading-7 text-[var(--jshs-primary)]">{school.departments || "科別與招生名額請核對當年度正式簡章。"}</p>
               <div className="mt-auto flex flex-wrap gap-3 pt-5">
-                {district === "ct" && school.code ? <Link className="px-4 py-3 text-sm jshs-pill-button jshs-secondary-action" href={`/schools/${district}/${school.code}`}>查看完整資料</Link> : null}
-                <button type="button" onClick={() => saveSchool(school)} className="px-4 py-3 text-sm jshs-pill-button jshs-primary-action">{savedCode === school.code ? "已加入規劃" : "加入我的規劃"}</button>
-                {school.website ? <a className="border border-[var(--jshs-border)] px-4 py-3 text-sm text-[var(--jshs-primary)] jshs-pill-button" href={school.website} target="_blank" rel="noreferrer">學校官網</a> : null}
+                {district === "ct" && school.code ? <Link className="px-4 py-3 text-sm jshs-button-secondary" href={`/schools/${district}/${school.code}`}>查看完整資料</Link> : null}
+                <button type="button" onClick={() => saveSchool(school)} className="px-4 py-3 text-sm jshs-button-primary">{savedCode === school.code ? "已加入規劃" : "加入我的規劃"}</button>
+                {school.website ? <a className="border border-[var(--jshs-border)] px-4 py-3 text-sm text-[var(--jshs-primary)] jshs-button" href={school.website} target="_blank" rel="noreferrer">學校官網</a> : null}
               </div>
             </article>
           ))}

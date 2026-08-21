@@ -52,7 +52,7 @@ test("shared header exposes scalable desktop, drawer, and mobile bottom navigati
   assert.match(header, /mobile-bottom-nav/);
   assert.match(header, /jshs-nav-open/);
   assert.match(header, /jshs-floating-nav/);
-  assert.match(header, /jshs-pill-button/);
+  assert.match(header, /jshs-button/);
   assert.match(header, /function openDrawer\(focusSearch = false\)/);
   assert.match(header, /onClick=\{\(\) => openDrawer\(true\)\}/);
   assert.doesNotMatch(header, />導覽選單</);
@@ -66,11 +66,11 @@ test("visitor task surfaces hide implementation details from public copy", async
   }
 });
 
-test("visitor task surfaces use the organic visual system without one-off blue UI chrome", async () => {
+test("visitor task surfaces use the shared Apple Notion design system without one-off chrome", async () => {
   for (const url of visitorSurfaceUrls) {
     const source = await readFile(url, "utf8");
-    assert.match(source, /jshs-hero-band|jshs-organic-card|jshs-pill-button/);
-    assert.doesNotMatch(source, /bg-blue-50|text-\[#2868d7\]|text-\[#173d78\]|shadow-blue/);
+    assert.match(source, /jshs-hero-section|jshs-surface-card|jshs-button/);
+    assert.doesNotMatch(source, /jshs-organic|jshs-hero-band|jshs-pill-button|bg-blue-50|text-\[#2868d7\]|shadow-blue/);
   }
 });
 
