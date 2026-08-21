@@ -16,8 +16,8 @@
   --jshs-space-6: 24px;
   --jshs-space-8: 32px;
   --jshs-space-12: 48px;
-  --jshs-radius-card: 24px;
+  --jshs-radius-card: 8px;
   --jshs-radius-control: 12px;
-  --jshs-shadow-card: 0 18px 48px rgba(27, 64, 120, .11);
-  --jshs-shadow-raised: 0 24px 56px rgba(23, 61, 120, .18);
+  --jshs-shadow-card: 0 6px 18px rgba(27, 64, 120, .08);
+  --jshs-shadow-raised: 0 10px 24px rgba(23, 61, 120, .12);
 }

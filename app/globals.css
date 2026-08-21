@@ -43,9 +43,8 @@ main.min-h-screen {
 }
 
 main.min-h-screen > section {
-  min-height: 100vh;
-  padding-top: 48px !important;
-  padding-bottom: 48px !important;
+  padding-top: 40px !important;
+  padding-bottom: 40px !important;
 }
 
 main.min-h-screen > section > div[role="dialog"] {
@@ -76,7 +75,7 @@ main.min-h-screen button {
 }
 
 main.min-h-screen button:not(:disabled):hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   border-color: #8eb8f3 !important;
   box-shadow: var(--jshs-card-shadow);
 }
@@ -85,7 +84,7 @@ main.min-h-screen button:first-child {
   background: linear-gradient(135deg, var(--jshs-primary), var(--jshs-secondary)) !important;
   border-color: transparent !important;
   color: #fff !important;
-  box-shadow: 0 8px 20px rgba(23,61,120,.25);
+  box-shadow: 0 4px 12px rgba(23,61,120,.18);
 }
 
 main.min-h-screen button:first-child span { background: rgba(255,255,255,.18) !important; color: #fff !important; }

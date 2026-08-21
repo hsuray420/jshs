@@ -7,6 +7,12 @@ const headerUrl = new URL("../components/site-header.tsx", import.meta.url);
 const footerUrl = new URL("../components/site-footer.tsx", import.meta.url);
 const sitemapUrl = new URL("../public/sitemap.xml", import.meta.url);
 const articlePageUrl = new URL("../app/news/[slug]/page.tsx", import.meta.url);
+const visitorSurfaceUrls = [
+  new URL("../components/school-explorer.tsx", import.meta.url),
+  new URL("../components/admission-calculator.tsx", import.meta.url),
+  new URL("../components/planner-workspace.tsx", import.meta.url),
+  new URL("../components/site-header.tsx", import.meta.url),
+];
 
 const expectedNavigation = [
   ["升學指南", "/news#latest"],
@@ -49,6 +55,13 @@ test("shared header exposes scalable desktop, drawer, and mobile bottom navigati
   assert.match(header, /onClick=\{\(\) => openDrawer\(true\)\}/);
   assert.doesNotMatch(header, />導覽選單</);
   assert.match(footer, /primaryNavigation\.map/);
+});
+
+test("visitor task surfaces hide implementation details from public copy", async () => {
+  for (const url of visitorSurfaceUrls) {
+    const source = await readFile(url, "utf8");
+    assert.doesNotMatch(source, /CLOUDFLARE|Cloudflare D1|Cloudflare Assets|新版/);
+  }
 });
 
 test("six news category hubs have stable URLs, metadata, and route files", async () => {

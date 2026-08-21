@@ -59,11 +59,11 @@ export default async function DistrictsPage({
   return (
     <main className="min-h-screen bg-[#f5f8fc] text-[#14213d]">
       <SiteHeader activeHref={activeHref} />
-      <section className="border-b border-blue-100 bg-[radial-gradient(circle_at_86%_0%,#dcecff,transparent_32%),linear-gradient(135deg,#fff,#edf5ff)]">
-        <div className="mx-auto w-[min(1120px,calc(100%-32px))] py-16 md:py-24">
+      <section className="border-b border-slate-200 bg-white">
+        <div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-12">
           <p className="text-xs font-black tracking-[.18em] text-[#2868d7]">15 ADMISSION DISTRICTS</p>
-          <h1 className="mt-5 max-w-4xl text-5xl font-black leading-[1.08] tracking-[-.055em] md:text-7xl">先選對就學區，<br />直接進入{requestedLabel}。</h1>
-          <p className="mt-7 max-w-3xl text-lg leading-8 text-slate-600">{target ? `選擇地區後會直接開啟新版${requestedLabel}；若該區規則尚未完成校核，會先進入可用的學校查詢。` : description}</p>
+          <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-5xl">先選對就學區，直接進入{requestedLabel}。</h1>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">{target ? `選擇地區後會直接開啟${requestedLabel}；若該區規則尚未完成校核，會先進入可用的學校查詢。` : description}</p>
         </div>
       </section>
 
@@ -75,7 +75,7 @@ export default async function DistrictsPage({
             const destinationLabel = targetLabels[resolvedTarget];
             const fellBackToSchools = Boolean(target && resolvedTarget !== target);
             return (
-            <a key={code} href={destinationFor(resolvedTarget, code)} className="group rounded-3xl border border-slate-200 bg-white p-6 transition hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-950/10">
+            <a key={code} href={destinationFor(resolvedTarget, code)} className="group border border-slate-200 bg-white p-5 transition hover:border-blue-300 hover:bg-blue-50">
               <div className="flex items-start justify-between gap-3"><span className="text-xs font-black tracking-[.13em] text-[#2868d7]">{code.toUpperCase()}</span><span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-500">{district.academicYear} 學年度</span></div>
               <h2 className="mt-5 text-2xl font-black">{district.label}</h2>
               <p className="mt-2 min-h-12 text-sm leading-6 text-slate-500">{district.areas}</p>

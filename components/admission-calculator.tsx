@@ -23,7 +23,7 @@ export function AdmissionCalculator({ initialDistrict }: { initialDistrict: "ct"
   const [status, setStatus] = useState("");
 
   async function calculate() {
-    if (district !== "ct") { setStatus("基北區新版規則正在校核；目前不以未核定公式產生分數。可先使用找學校與 Cloudflare 志願規劃。 "); setResult(null); return; }
+    if (district !== "ct") { setStatus("基北區規則正在校核；目前不以未核定公式產生分數。可先使用找學校與我的規劃。"); setResult(null); return; }
     setStatus("計算中…");
     const response = await fetch("/api/admission/calculate", {
       method: "POST",
@@ -44,26 +44,26 @@ export function AdmissionCalculator({ initialDistrict }: { initialDistrict: "ct"
 
   return (
     <>
-      <section className="border-b border-blue-100 bg-[radial-gradient(circle_at_82%_0%,#dcecff,transparent_34%),linear-gradient(135deg,#fff,#edf5ff)]">
-        <div className="mx-auto w-[min(1040px,calc(100%-32px))] py-16 md:py-24">
-          <p className="text-xs font-black tracking-[.18em] text-[#2868d7]">CLOUDFLARE ADMISSION CALCULATOR</p>
-          <h1 className="mt-5 text-5xl font-black leading-[1.08] tracking-[-.055em] md:text-7xl">積分試算，<br />直接在新版完成。</h1>
-          <p className="mt-7 max-w-3xl text-lg leading-8 text-slate-600">公式由 JSHS Worker API 計算，不載入外站程式。試算只作為規劃輔助，正式結果仍以當年度招生委員會資料為準。</p>
+      <section className="border-b border-slate-200 bg-white">
+        <div className="mx-auto w-[min(1040px,calc(100%-32px))] py-10 md:py-12">
+          <p className="text-xs font-black tracking-[.18em] text-[#2868d7]">試算工具</p>
+          <h1 className="mt-3 text-4xl font-black leading-tight md:text-5xl">輸入會考資料，先估算中投區積分。</h1>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">試算只作為規劃輔助，正式結果仍以當年度招生委員會資料為準。</p>
         </div>
       </section>
-      <section className="mx-auto grid w-[min(1040px,calc(100%-32px))] gap-6 py-12 lg:grid-cols-[1fr_340px]">
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-blue-950/5 md:p-8">
-          <label className="grid gap-2 text-sm font-black text-[#173d78]">就學區<select className="h-12 rounded-xl border border-slate-300 px-4 text-base" value={district} onChange={(event) => setDistrict(event.target.value as "ct" | "tp")}><option value="ct">中投區（115 已建置）</option><option value="tp">基北區（新版規則校核中）</option></select></label>
+      <section className="mx-auto grid w-[min(1040px,calc(100%-32px))] gap-5 py-8 lg:grid-cols-[1fr_320px]">
+        <div className="border border-slate-200 bg-white p-5 md:p-6">
+          <label className="grid gap-2 text-sm font-black text-[#173d78]">就學區<select className="h-12 rounded-xl border border-slate-300 px-4 text-base" value={district} onChange={(event) => setDistrict(event.target.value as "ct" | "tp")}><option value="ct">中投區（115 已建置）</option><option value="tp">基北區（規則校核中）</option></select></label>
           <h2 className="mt-8 text-2xl font-black">會考成績</h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {subjects.map(([key, label]) => <label key={key} className="grid gap-2 text-sm font-bold text-slate-600">{label}<select className="h-12 rounded-xl border border-slate-300 px-4 text-base text-slate-800" value={exam[key]} onChange={(event) => setExam((current) => ({ ...current, [key]: event.target.value }))}>{grades.map((grade) => <option key={grade}>{grade}</option>)}</select></label>)}
             <label className="grid gap-2 text-sm font-bold text-slate-600">作文級分<input className="h-12 rounded-xl border border-slate-300 px-4 text-base" type="number" min="0" max="6" value={writingLevel} onChange={(event) => setWritingLevel(Number(event.target.value))} /></label>
           </div>
           <h2 className="mt-8 text-2xl font-black">均衡學習</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">{Object.entries({ healthAndPE: "健康與體育", arts: "藝術", integrativeActivities: "綜合活動", technology: "科技" }).map(([key, label]) => <label key={key} className="flex items-center gap-3 rounded-2xl bg-slate-50 p-4 font-bold"><input type="checkbox" checked={balanced[key]} onChange={(event) => setBalanced((current) => ({ ...current, [key]: event.target.checked }))} />{label}</label>)}</div>
-          <button type="button" onClick={calculate} className="mt-8 w-full rounded-2xl bg-[#173d78] px-5 py-4 font-black text-white">開始新版試算</button>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">{Object.entries({ healthAndPE: "健康與體育", arts: "藝術", integrativeActivities: "綜合活動", technology: "科技" }).map(([key, label]) => <label key={key} className="flex items-center gap-3 bg-slate-50 p-4 font-bold"><input type="checkbox" checked={balanced[key]} onChange={(event) => setBalanced((current) => ({ ...current, [key]: event.target.checked }))} />{label}</label>)}</div>
+          <button type="button" onClick={calculate} className="mt-8 w-full rounded-xl bg-[#173d78] px-5 py-4 font-black text-white">開始試算</button>
         </div>
-        <aside className="rounded-3xl bg-[#112f5d] p-7 text-white shadow-xl shadow-blue-950/20">
+        <aside className="bg-[#112f5d] p-6 text-white">
           <p className="text-xs font-black tracking-[.16em] text-blue-200">RESULT</p>
           {result ? <><strong className="mt-5 block text-6xl font-black">{result.totalScore}</strong><span className="text-sm text-blue-100">總積分／100</span><dl className="mt-8 grid gap-4 text-sm"><div><dt className="text-blue-200">會考表現積分</dt><dd className="mt-1 text-xl font-black">{result.exam.examPerformanceScore}</dd></div><div><dt className="text-blue-200">會考積點</dt><dd className="mt-1 text-xl font-black">{result.exam.examTotalPoints}</dd></div><div><dt className="text-blue-200">其他項目</dt><dd className="mt-1 text-xl font-black">{result.otherItems.otherItemsTotal}</dd></div></dl></> : <p className="mt-5 leading-7 text-blue-100">填寫左側資料後開始試算。這裡不會引用第三方落點資料，也不宣稱保證錄取。</p>}
           {status ? <p className="mt-7 rounded-2xl bg-white/10 p-4 text-sm leading-6 text-blue-50">{status}</p> : null}

@@ -87,16 +87,16 @@ export function SchoolExplorer({
 
   return (
     <>
-      <section className="border-b border-blue-100 bg-[radial-gradient(circle_at_82%_0%,#dcecff,transparent_34%),linear-gradient(135deg,#fff,#edf5ff)]">
-        <div className="mx-auto w-[min(1120px,calc(100%-32px))] py-16 md:py-24">
-          <p className="text-xs font-black tracking-[.18em] text-[#2868d7]">CLOUDFLARE SCHOOL DIRECTORY</p>
-          <h1 className="mt-5 max-w-4xl text-5xl font-black leading-[1.08] tracking-[-.055em] md:text-7xl">全國校科查詢，<br />現在就是新功能。</h1>
-          <p className="mt-7 max-w-3xl text-lg leading-8 text-slate-600">直接在全國國中升學資訊網查找與收藏，不再跳轉舊系統。學校 CSV 隨網站版本存放在 Cloudflare Assets，收藏寫入 Cloudflare D1。</p>
+      <section className="border-b border-slate-200 bg-white">
+        <div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-12">
+          <p className="text-xs font-black tracking-[.18em] text-[#2868d7]">找校科</p>
+          <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-5xl">搜尋學校、科別與地區</h1>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">選就學區後直接搜尋校名、科別、縣市或學校代碼。找到候選項目後可先加入我的規劃。</p>
         </div>
       </section>
 
-      <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-12 md:py-16">
-        <div className="grid gap-4 rounded-3xl border border-slate-200 bg-white p-5 shadow-xl shadow-blue-950/5 md:grid-cols-[260px_1fr] md:p-7">
+      <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-8 md:py-10">
+        <div className="grid gap-4 border border-slate-200 bg-white p-4 md:grid-cols-[240px_1fr] md:p-5">
           <label className="grid gap-2 text-sm font-black text-[#173d78]">
             就學區
             <select className="h-12 rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-800" value={district} onChange={(event) => changeDistrict(event.target.value)}>
@@ -110,22 +110,22 @@ export function SchoolExplorer({
         </div>
 
         <div className="mt-7 flex items-center justify-between gap-4">
-          <p className="text-sm font-bold text-slate-500">{status === "loading" ? "正在從 Cloudflare 載入…" : status === "error" ? "資料暫時無法讀取，請稍後重試。" : `找到 ${filteredSchools.length} 所／筆學校資料`}</p>
+          <p className="text-sm font-bold text-slate-500">{status === "loading" ? "正在載入學校資料…" : status === "error" ? "資料暫時無法讀取，請稍後重試。" : `找到 ${filteredSchools.length} 所／筆學校資料`}</p>
           <a className="text-sm font-black text-[#2868d7]" href="/planner">查看我的規劃 →</a>
         </div>
 
-        <div className="mt-5 grid gap-4 lg:grid-cols-2">
+        <div className="mt-5 grid gap-3 lg:grid-cols-2">
           {filteredSchools.slice(0, 120).map((school) => (
-            <article key={`${district}-${school.code}-${school.name}`} className="flex flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <article key={`${district}-${school.code}-${school.name}`} className="flex flex-col border border-slate-200 bg-white p-5">
               <div className="flex items-start justify-between gap-3">
                 <div><p className="text-xs font-black tracking-[.12em] text-[#2868d7]">{school.code || district.toUpperCase()}</p><h2 className="mt-2 text-2xl font-black">{school.name}</h2></div>
                 <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">{school.ownership || school.program}</span>
               </div>
               <p className="mt-3 text-sm leading-6 text-slate-500">{[school.city, school.area, school.address].filter(Boolean).join(" · ")}</p>
-              <p className="mt-4 rounded-2xl bg-blue-50 p-4 text-sm leading-7 text-[#173d78]">{school.departments || "科別與招生名額請核對當年度正式簡章。"}</p>
+              <p className="mt-4 bg-blue-50 p-4 text-sm leading-7 text-[#173d78]">{school.departments || "科別與招生名額請核對當年度正式簡章。"}</p>
               <div className="mt-auto flex flex-wrap gap-3 pt-5">
                 {district === "ct" && school.code ? <Link className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-black text-[#173d78]" href={`/schools/${district}/${school.code}`}>查看完整資料</Link> : null}
-                <button type="button" onClick={() => saveSchool(school)} className="rounded-xl bg-[#173d78] px-4 py-3 text-sm font-black text-white">{savedCode === school.code ? "已存入 Cloudflare" : "加入我的規劃"}</button>
+                <button type="button" onClick={() => saveSchool(school)} className="rounded-xl bg-[#173d78] px-4 py-3 text-sm font-black text-white">{savedCode === school.code ? "已加入規劃" : "加入我的規劃"}</button>
                 {school.website ? <a className="rounded-xl border border-slate-300 px-4 py-3 text-sm font-black text-[#173d78]" href={school.website} target="_blank" rel="noreferrer">學校官網</a> : null}
               </div>
             </article>

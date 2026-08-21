@@ -43,7 +43,7 @@ const navigationDetails: Readonly<Record<string, Readonly<{ eyebrow: string; des
     description: "收藏校科、比較風險、安排志願與重要日期。",
     links: [
       { label: "志願規劃台", href: "/it_hs/guide.htm#analysis", description: "比較、排序與檢查志願清單" },
-      { label: "Cloudflare 收藏", href: "/planner", description: "查看已同步的收藏校科" },
+      { label: "我的收藏", href: "/planner", description: "查看已保存的候選校科" },
       { label: "志願策略指南", href: "/news/strategy", description: "先理解排序方法與常見錯誤" },
       { label: "繼續找校科", href: "/it_hs/guide.htm#schools", description: "新增候選學校與科別" },
     ],
@@ -159,7 +159,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
                     {item.label}<span aria-hidden="true" className={`text-xs transition ${open ? "rotate-180" : ""}`}>⌄</span>
                   </button>
                   {open ? (
-                    <div id={`mega-${item.activeHref.slice(1)}`} className={`absolute top-[calc(100%-6px)] z-50 w-[540px] rounded-3xl border border-slate-200 bg-white p-5 shadow-2xl shadow-blue-950/15 ${item.activeHref === "/planner" ? "right-0" : "left-1/2 -translate-x-1/2"}`}>
+                    <div id={`mega-${item.activeHref.slice(1)}`} className={`absolute top-[calc(100%-6px)] z-50 w-[540px] border border-slate-200 bg-white p-5 shadow-lg shadow-blue-950/10 ${item.activeHref === "/planner" ? "right-0" : "left-1/2 -translate-x-1/2"}`}>
                       <div className="flex items-start justify-between gap-5 border-b border-slate-100 pb-4">
                         <div><p className="text-xs font-black tracking-[.14em] text-[#2868d7]">{detail.eyebrow}</p><p className="mt-2 max-w-sm text-sm leading-6 text-slate-500">{detail.description}</p></div>
                         <Link onClick={() => setOpenGroup(null)} className="shrink-0 rounded-xl bg-[#173d78] px-4 py-2.5 text-xs font-black text-white" href={item.href}>前往全部 →</Link>
@@ -184,7 +184,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
 
       {drawerOpen ? (
         <div className="fixed inset-0 z-[80] bg-[#f5f8fc]" role="dialog" aria-modal="true" aria-label="全站導覽">
-          <div className="mx-auto flex h-full w-[min(760px,100%)] flex-col bg-white shadow-2xl">
+          <div className="mx-auto flex h-full w-[min(760px,100%)] flex-col bg-white shadow-lg">
             <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4 sm:px-8">
               <div><p className="text-xs font-black tracking-[.16em] text-[#2868d7]">全站導覽</p><b className="mt-1 block text-lg text-[#14213d]">找到現在需要的下一步</b></div>
               <button type="button" onClick={closeDrawer} aria-label="關閉選單" className="grid h-11 w-11 place-items-center rounded-xl border border-slate-200 text-2xl text-[#173d78]">×</button>

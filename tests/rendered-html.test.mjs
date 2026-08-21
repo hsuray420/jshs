@@ -21,7 +21,8 @@ test("root route is the canonical public homepage", async () => {
   const page = await readFile(appPageUrl, "utf8");
 
   assert.match(page, /canonical:\s*"\/"/);
-  assert.match(page, /全國升學決策服務平台/);
+  assert.match(page, /先選一件事完成/);
+  for (const label of ["升學指南", "找校科", "試算工具", "我的規劃"]) assert.match(page, new RegExp(label));
   assert.doesNotMatch(page, /redirect\(/);
   assert.doesNotMatch(page, /localStorage|role="dialog"|setSelectedDistrict/);
 });
@@ -122,7 +123,8 @@ test("homepage and district guide share one decision visual token system", async
   assert.match(tokens, /--jshs-stable:\s*#147A67/i);
   assert.match(tokens, /--jshs-challenge:\s*#BA6B18/i);
   assert.match(tokens, /--jshs-space-1:\s*4px/i);
-  assert.match(tokens, /--jshs-radius-card:\s*24px/i);
+  assert.match(tokens, /--jshs-radius-card:\s*8px/i);
+  assert.doesNotMatch(globalCss, /main\.min-h-screen > section\s*\{[^}]*min-height:\s*100vh/s);
   assert.match(globalCss, /@import url\("\/design-tokens\.css"\)/);
   assert.match(districtGuide, /href="\/design-tokens\.css"/);
   assert.match(districtGuide, /href="guide\.css\?v=20260814-4"/);
