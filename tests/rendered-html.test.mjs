@@ -118,14 +118,20 @@ test("homepage and district guide share one decision visual token system", async
     readFile(tokenCssUrl, "utf8"),
   ]);
 
-  assert.match(tokens, /--jshs-navy:\s*#173D78/i);
-  assert.match(tokens, /--jshs-blue:\s*#2868D7/i);
-  assert.match(tokens, /--jshs-stable:\s*#147A67/i);
-  assert.match(tokens, /--jshs-challenge:\s*#BA6B18/i);
+  assert.match(tokens, /--jshs-background:\s*#FDFCF8/i);
+  assert.match(tokens, /--jshs-foreground:\s*#2C2C24/i);
+  assert.match(tokens, /--jshs-primary:\s*#5D7052/i);
+  assert.match(tokens, /--jshs-secondary:\s*#C18C5D/i);
+  assert.match(tokens, /--jshs-accent:\s*#E6DCCD/i);
   assert.match(tokens, /--jshs-space-1:\s*4px/i);
-  assert.match(tokens, /--jshs-radius-card:\s*8px/i);
+  assert.match(tokens, /--jshs-organic-radius:\s*60% 40% 30% 70% \/ 60% 30% 70% 40%/i);
   assert.doesNotMatch(globalCss, /main\.min-h-screen > section\s*\{[^}]*min-height:\s*100vh/s);
   assert.match(globalCss, /@import url\("\/design-tokens\.css"\)/);
+  assert.match(globalCss, /fonts\.googleapis\.com\/css2\?family=Fraunces/);
+  assert.match(globalCss, /body::before/);
+  assert.match(globalCss, /mix-blend-mode:\s*multiply/);
+  assert.match(globalCss, /\.jshs-organic-card/);
+  assert.match(globalCss, /\.jshs-pill-button/);
   assert.match(districtGuide, /href="\/design-tokens\.css"/);
   assert.match(districtGuide, /href="guide\.css\?v=20260814-4"/);
   assert.match(districtCss, /Shared visual system final layer/);

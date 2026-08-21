@@ -1,13 +1,23 @@
 :root {
-  --jshs-navy: #173D78;
-  --jshs-blue: #2868D7;
-  --jshs-stable: #147A67;
-  --jshs-challenge: #BA6B18;
-  --jshs-page: #F6F9FD;
-  --jshs-surface: #FFFFFF;
-  --jshs-ink: #14213D;
-  --jshs-muted: #60708B;
-  --jshs-border: #DBE5F2;
+  --jshs-background: #FDFCF8;
+  --jshs-foreground: #2C2C24;
+  --jshs-primary: #5D7052;
+  --jshs-primary-foreground: #F3F4F1;
+  --jshs-secondary: #C18C5D;
+  --jshs-secondary-foreground: #FFFFFF;
+  --jshs-accent: #E6DCCD;
+  --jshs-accent-foreground: #4A4A40;
+  --jshs-muted: #78786C;
+  --jshs-muted-surface: #F0EBE5;
+  --jshs-border: #DED8CF;
+  --jshs-destructive: #A85448;
+  --jshs-page: var(--jshs-background);
+  --jshs-surface: #FEFEFA;
+  --jshs-ink: var(--jshs-foreground);
+  --jshs-navy: var(--jshs-primary);
+  --jshs-blue: var(--jshs-primary);
+  --jshs-stable: var(--jshs-primary);
+  --jshs-challenge: var(--jshs-secondary);
   --jshs-space-1: 4px;
   --jshs-space-2: 8px;
   --jshs-space-3: 12px;
@@ -16,8 +26,10 @@
   --jshs-space-6: 24px;
   --jshs-space-8: 32px;
   --jshs-space-12: 48px;
-  --jshs-radius-card: 8px;
-  --jshs-radius-control: 12px;
-  --jshs-shadow-card: 0 6px 18px rgba(27, 64, 120, .08);
-  --jshs-shadow-raised: 0 10px 24px rgba(23, 61, 120, .12);
+  --jshs-radius-card: 28px;
+  --jshs-radius-control: 999px;
+  --jshs-organic-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  --jshs-organic-radius-alt: 35% 65% 62% 38% / 42% 42% 58% 58%;
+  --jshs-shadow-card: 0 4px 20px -2px rgba(93, 112, 82, .15);
+  --jshs-shadow-raised: 0 14px 38px -14px rgba(193, 140, 93, .24);
 }
