@@ -12,7 +12,7 @@ import {
 } from "@/lib/news";
 import { newsCategories } from "@/lib/site-map";
 
-const pageTitle = "升學情報中心｜會考時程、規則解讀與志願策略";
+const pageTitle = "升學情報中心｜會考時程、入學規則與志願策略";
 const pageDescription = "以官方資料為底，整理國中教育會考、高中職免試入學、就學區、志願選填與五專升學的可執行指南。";
 
 export const metadata: Metadata = {
