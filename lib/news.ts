@@ -18,6 +18,11 @@ export type NewsArticle = Readonly<{
   kicker: string;
   title: string;
   description: string;
+  audience: string;
+  academicYear: string;
+  districtScope: string;
+  oneLineConclusion: string;
+  preparation: readonly string[];
   publishedAt: string;
   updatedAt: string;
   readMinutes: number;
@@ -25,6 +30,7 @@ export type NewsArticle = Readonly<{
   keywords: readonly string[];
   summary: readonly string[];
   sections: readonly NewsSection[];
+  misconceptions: readonly string[];
   sources: readonly NewsSource[];
   cta: Readonly<{
     label: string;
@@ -65,8 +71,17 @@ export function getRelatedNews(article: NewsArticle, limit = 3): readonly NewsAr
     .slice(0, limit);
 }
 
+export const newsCategoryLabels = [
+  "會考準備",
+  "入學規則",
+  "志願策略",
+  "校科探索",
+  "生涯選擇",
+  "家長與新生",
+] as const;
+
 export function getNewsCategories(): readonly string[] {
-  return [...new Set(newsArticles.map((article) => article.category))];
+  return [...newsCategoryLabels];
 }
 
 export function formatNewsDate(value: string): string {

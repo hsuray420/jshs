@@ -106,9 +106,34 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
         <div className="mx-auto grid w-[min(1120px,calc(100%-32px))] gap-12 py-14 lg:grid-cols-[minmax(0,760px)_280px] lg:items-start lg:justify-between lg:py-20">
           <div>
+            <section aria-labelledby="article-scope" className="p-7 md:p-8 jshs-surface-card">
+              <p className="jshs-eyebrow">閱讀範圍</p>
+              <h2 id="article-scope" className="sr-only">適用範圍</h2>
+              <dl className="mt-5 grid gap-4 sm:grid-cols-3">
+                <InfoItem label="適用對象" value={article.audience} />
+                <InfoItem label="適用學年度" value={article.academicYear} />
+                <InfoItem label="適用就學區" value={article.districtScope} />
+              </dl>
+            </section>
+
+            <section aria-labelledby="one-line-conclusion" className="mt-5 border-l-4 border-[var(--jshs-primary)] bg-[var(--jshs-muted-surface)] p-7 md:p-8">
+              <p className="jshs-eyebrow">一句話結論</p>
+              <h2 id="one-line-conclusion" className="mt-3 text-2xl font-black leading-snug tracking-[-.035em]">{article.oneLineConclusion}</h2>
+            </section>
+
+            <section aria-labelledby="preparation" className="mt-5 p-7 md:p-8 jshs-surface-card">
+              <p className="jshs-eyebrow">開始前先整理</p>
+              <h2 id="preparation" className="mt-3 text-2xl font-black tracking-[-.035em]">你需要先準備什麼</h2>
+              <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+                {article.preparation.map((item, index) => (
+                  <li key={item} className="flex gap-3 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 leading-7 text-slate-700"><span className="mt-1 font-black text-[var(--jshs-primary)]">{String(index + 1).padStart(2, "0")}</span><span>{item}</span></li>
+                ))}
+              </ul>
+            </section>
+
             <section aria-labelledby="article-summary" className="p-7 md:p-8 jshs-surface-card">
-              <p className="jshs-eyebrow">先看結論</p>
-              <h2 id="article-summary" className="mt-3 text-2xl font-black tracking-[-.035em]">這篇文章會幫你完成什麼</h2>
+              <p className="jshs-eyebrow">重點整理</p>
+              <h2 id="article-summary" className="mt-3 text-2xl font-black tracking-[-.035em]">三到五個重點</h2>
               <ul className="mt-5 space-y-3">
                 {article.summary.map((item) => (
                   <li key={item} className="flex gap-3 leading-7 text-slate-700"><span className="mt-2 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[var(--jshs-primary)] text-[10px] font-black text-white">✓</span><span>{item}</span></li>
@@ -139,10 +164,21 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               ))}
             </div>
 
+            <section aria-labelledby="misconceptions" className="mt-14 p-7 md:p-8 jshs-surface-card">
+              <p className="jshs-eyebrow">先避開判斷陷阱</p>
+              <h2 id="misconceptions" className="mt-3 text-2xl font-black">常見誤解</h2>
+              <ul className="mt-5 grid gap-3">
+                {article.misconceptions.map((item) => (
+                  <li key={item} className="flex gap-3 leading-7 text-slate-700"><span className="font-black text-rose-500">×</span><span>{item}</span></li>
+                ))}
+              </ul>
+            </section>
+
             <section aria-labelledby="official-sources" className="mt-14 p-7 md:p-8 jshs-surface-card">
               <p className="jshs-eyebrow">FACT CHECK</p>
-              <h2 id="official-sources" className="mt-3 text-2xl font-black">官方資料來源</h2>
-              <p className="mt-3 leading-7 jshs-muted-copy">以下連結用來核對本文的日期、招生入口或規則範圍。涉及報名權益時，請再次確認官方最新版本。</p>
+              <h2 id="official-sources" className="mt-3 text-2xl font-black">官方來源與最後更新</h2>
+              <p className="mt-2 text-sm font-bold text-slate-500">最後更新：{formatNewsDate(article.updatedAt)}</p>
+              <p className="mt-3 leading-7 jshs-muted-copy">官方資料來源如下，請用來核對本文的日期、招生入口或規則範圍。涉及報名權益時，請再次確認官方最新版本。</p>
               <ul className="mt-6 space-y-4">
                 {article.sources.map((source) => (
                   <li key={source.url} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-5">
@@ -154,7 +190,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </section>
 
             <section className="mt-10 p-8 md:p-10 jshs-surface-card">
-              <p className="jshs-eyebrow">把方法用在自己身上</p>
+              <p className="jshs-eyebrow">下一步工具</p>
               <h2 className="mt-3 text-3xl font-black tracking-[-.045em]">{article.cta.label}</h2>
               <p className="mt-3 max-w-2xl leading-7 jshs-muted-copy">{article.cta.detail}</p>
               <a className="mt-7 inline-flex px-5 py-3.5 text-sm jshs-button-primary" href={article.cta.href}>立即開始 →</a>
@@ -185,6 +221,15 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
 
 function JsonLd({ data }: { data: Record<string, unknown> }) {
   return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />;
+}
+
+function InfoItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-t-2 border-[var(--jshs-primary)] pt-3">
+      <dt className="text-xs font-black tracking-[.12em] text-slate-400">{label}</dt>
+      <dd className="mt-2 text-sm font-bold leading-6 text-slate-700">{value}</dd>
+    </div>
+  );
 }
 
 function RelatedArticles({ articles }: { articles: readonly NewsArticle[] }) {

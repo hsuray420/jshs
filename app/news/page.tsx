@@ -133,7 +133,9 @@ export default function NewsPage() {
 
         <div className="mt-12 space-y-16">
           {categories.map((category, index) => {
-            const articles = newsArticles.filter((article) => article.category === category);
+            const categoryHub = newsCategories.find((item) => item.title === category);
+            const categorySlugs = new Set(categoryHub?.articleSlugs ?? []);
+            const articles = newsArticles.filter((article) => categorySlugs.has(article.slug));
             return (
               <section key={category} id={`category-${index}`} aria-labelledby={`category-title-${index}`} className="scroll-mt-24">
                 <div className="flex items-center gap-4">

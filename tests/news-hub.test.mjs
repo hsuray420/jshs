@@ -17,7 +17,7 @@ test("news catalog contains six useful, source-backed guides", async () => {
   assert.ok(Array.isArray(articles));
   assert.ok(articles.length >= 6);
   assert.equal(new Set(articles.map((article) => article.slug)).size, articles.length);
-  assert.ok(new Set(articles.map((article) => article.category)).size >= 4);
+  assert.ok(new Set(articles.map((article) => article.category)).size >= 5);
 
   for (const article of articles) {
     assert.match(article.slug, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
@@ -26,6 +26,12 @@ test("news catalog contains six useful, source-backed guides", async () => {
     assert.ok(article.readMinutes >= 4);
     assert.ok(article.keywords.length >= 3);
     assert.ok(article.summary.length >= 3);
+    assert.ok(article.audience.length >= 4);
+    assert.ok(article.academicYear.length >= 3);
+    assert.ok(article.districtScope.length >= 4);
+    assert.ok(article.oneLineConclusion.length >= 20);
+    assert.ok(article.preparation.length >= 2);
+    assert.ok(article.misconceptions.length >= 2);
     assert.ok(article.sections.length >= 3);
     assert.ok(article.sources.length >= 1);
     assert.ok(article.sources.every((source) => /^https:\/\//.test(source.url)));
@@ -51,6 +57,13 @@ test("news hub and article template expose SEO, schema and conversion surfaces",
   assert.match(articlePage, /"@type":\s*"BreadcrumbList"/);
   assert.match(articlePage, /application\/ld\+json/);
   assert.match(articlePage, /官方資料來源/);
+  assert.match(articlePage, /適用對象/);
+  assert.match(articlePage, /適用學年度/);
+  assert.match(articlePage, /適用就學區/);
+  assert.match(articlePage, /一句話結論/);
+  assert.match(articlePage, /你需要先準備什麼/);
+  assert.match(articlePage, /常見誤解/);
+  assert.match(articlePage, /下一步工具/);
   assert.match(articlePage, /article\.cta\.href/);
   assert.match(newsLibrary, /export function getNewsArticle/);
   assert.match(newsLibrary, /export function getRelatedNews/);
