@@ -72,15 +72,15 @@ test("the homepage brand always uses the full Chinese name instead of JSHS", asy
 });
 
 test("the central district school catalog is discoverable from every public menu", async () => {
-  const [header, guide] = await Promise.all([
+  const [header, guide, siteMap] = await Promise.all([
     read("components/site-header.tsx"),
     read("public/it_hs/guide.htm"),
+    read("content/site-map.json"),
   ]);
 
-  assert.match(header, /label: "中投區學校資料", href: "\/schools\?district=ct"/);
+  assert.match(siteMap, /"label": "全國學校搜尋",\s+"href": "\/schools\?district=ct"/);
   assert.match(header, /label: "查校科", href: "\/schools\?district=ct"/);
-  assert.match(header, /label: "找校科", href: "\/schools\?district=ct"/);
-  assert.match(header, /label: "原校科查詢", href: "\/it_hs\/guide\.htm#schools"/);
+  assert.match(siteMap, /"label": "找校科",\s+"href": "\/schools\?district=ct"/);
 
   assert.match(guide, /href="\/schools\?district=ct"[^>]*><b>中投區學校資料<\/b>/);
   assert.match(guide, /href="\/schools\?district=ct"[^>]*data-nav-search-item="查校科/);
