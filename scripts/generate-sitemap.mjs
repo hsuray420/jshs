@@ -3,10 +3,9 @@ import { resolve } from "node:path";
 import { toSchoolRecords } from "../lib/school-catalog.mjs";
 
 const root = process.cwd();
-const [newsCatalog, districtMetadata, centralCsv] = await Promise.all([
+const [newsCatalog, districtMetadata] = await Promise.all([
   readJson("content/news.json"),
   readJson("public/it_hs/district-metadata.json"),
-  readFile(resolve(root, "public/it_hs/ct/schools.csv"), "utf8"),
 ]);
 
 const updatedAt = districtMetadata.updatedAt;
@@ -20,8 +19,13 @@ const staticEntries = [
   entry("/districts", updatedAt, "weekly", "0.9"),
 ];
 const newsEntries = newsCatalog.articles.map((article) => entry(`/news/${article.slug}`, article.updatedAt, "monthly", "0.8"));
-const centralSchoolEntries = toSchoolRecords(centralCsv).map((school) => entry(`/schools/ct/${school.code}`, districtMetadata.districts.ct.updatedAt, "monthly", "0.7"));
-const entries = [...staticEntries, ...newsEntries, ...centralSchoolEntries];
+const schoolEntries = Object.entries(districtMetadata.districts).flatMap(([districtCode, district]) => {
+  const file = districtCode === "tp" ? "schools_tp.csv" : districtCode === "taoyuan-lienchiang" ? "schools_tl.csv" : "schools.csv";
+  return readFile(resolve(root, `public/it_hs/${districtCode}/${file}`), "utf8")
+    .then((csv) => toSchoolRecords(csv).map((school) => entry(`/schools/${districtCode}/${school.code}`, district.updatedAt, "monthly", "0.7")));
+});
+const schoolEntryGroups = await Promise.all(schoolEntries);
+const entries = [...staticEntries, ...newsEntries, ...schoolEntryGroups.flat()];
 const uniqueEntries = [...new Map(entries.map((item) => [item.path, item])).values()];
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

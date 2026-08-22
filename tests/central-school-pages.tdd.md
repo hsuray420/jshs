@@ -1,44 +1,51 @@
-# Central district school page pilot — TDD evidence
+# 全國找校科中心 — TDD 與 click-path audit 證據
 
-Date: 2026-08-14
+Date: 2026-08-22
 
-## Source and user journeys
+## 目標與使用者路徑
 
-Journeys were derived from the user's request to test the new feature in the central district and replace the visible homepage JSHS abbreviation with the full Chinese name.
+本輪依照產品規劃報告與「找校科中心」需求，將學校資料集中到全國目錄，移除 legacy guide 內的舊搜尋介面，並讓每筆結果都能進入可分享的學校詳情頁。
 
-1. A student can search a central-district school and open a stable, shareable school detail URL.
-2. A student can verify school, department, quota, location, academic-year, and official-source data before using planning tools.
-3. A student can continue from a school page to Cloudflare planner, central-district calculation, or wish planning.
-4. Search engines can discover all 96 central-district school URLs with canonical metadata and structured data.
-5. The homepage brand reads「全國國中升學資訊網」at desktop and mobile breakpoints.
-6. Every public navigation shell exposes the central-district catalog while preserving the original school search as a clearly labelled secondary path.
+1. 使用者可用校名、科名、群科、縣市或學校代碼搜尋。
+2. 使用者可依就學區、學制、公私立、縣市、招生名額與歷年資料篩選。
+3. 結果頁固定顯示已選條件、清除條件、資料年度、資料來源與資料狀態。
+4. 使用者可加入規劃、加入比較、查看官方網站，再進入學校詳情。
+5. 詳情頁提供一眼看懂、學習內容、招生資訊、歷年參考、生活條件與決策操作六個區塊，並提供 Google Maps。
+6. 舊的 `page-schools`、`schoolSearch`、`schoolGrid` 搜尋介面與其 render/sort 流程不再存在；legacy guide 只保留規劃用的候選校科載入，不再提供第二套學校搜尋。
 
 ## RED / GREEN checkpoints
 
-| Guarantee | RED checkpoint | GREEN checkpoint | Evidence |
+| 保證 | RED checkpoint | GREEN checkpoint | 證據 |
 | --- | --- | --- | --- |
-| CSV parser produces 96 unique schools | `cdf2ef3` | `498efe7` | `tests/central-school-pages.test.mjs` |
-| Stable school detail route and decision content | `cdf2ef3` | `498efe7` | `app/schools/ct/[code]/page.tsx` |
-| Search-to-detail link and direct query | `cdf2ef3` | `498efe7` | `components/school-explorer.tsx` |
-| 96 school URLs in sitemap | `cdf2ef3` | `498efe7` | `scripts/generate-sitemap.mjs` |
-| Full Chinese homepage brand | `cdf2ef3` | `498efe7` | `components/site-header.tsx`, `components/site-footer.tsx` |
-| Central catalog in desktop, drawer, mobile-bottom, homepage, footer, and legacy-guide navigation | `73d7f92` | `a8b14b3`, `fbc1d28` | `components/site-header.tsx`, `content/site-map.json`, `public/it_hs/guide.htm` |
+| 全國目錄含資料狀態與信任欄位 | 初次執行 `school-center.test.mjs` 失敗 | `pnpm exec node --test tests/school-center.test.mjs` | `lib/school-directory.ts` |
+| 搜尋、六組篩選、已選條件、清除條件 | 初次執行 `school-center.test.mjs` 失敗 | 同上 | `components/school-explorer.tsx` |
+| 規劃、比較、官方網站操作 | 初次執行 `school-center.test.mjs` 失敗 | 同上 | `components/school-explorer.tsx`, `components/school-decision-actions.tsx` |
+| 六區塊詳情與 Google Maps | 初次執行 `school-center.test.mjs` 失敗 | 同上 | `app/schools/[district]/[code]/page.tsx` |
+| 舊 embedded school search 已移除 | 初次執行 `school-center.test.mjs` 失敗 | 同上 | `public/it_hs/guide.htm`, `public/it_hs/guide.js` |
+| 全國學校 URL 進入 sitemap | 初次執行 `central-school-pages.test.mjs` 失敗 | targeted school-center suite 通過 | `scripts/generate-sitemap.mjs` |
 
-## Verification
+## Click-path audit
 
-- RED: `node --test tests/central-school-pages.test.mjs` — 0 passed, 5 failed for the intended missing routes, parser, links, sitemap entries, and full-name brand.
-- GREEN: `node --test tests/central-school-pages.test.mjs` — 5 passed, 0 failed.
-- Full suite: `pnpm test` — production build completed; 47 passed, 0 failed.
-- Lint: `pnpm lint` — 0 errors; 15 pre-existing legacy warnings.
-- Production smoke test: homepage, school search, sample school page, sitemap, and health endpoint returned 200; an unknown school code returned 404.
-- Production browser: sample code `060323` filtered to one result and linked to `/schools/ct/060323`; 390, 768, and 1440 px layouts had no horizontal overflow and no console errors.
-- Production sitemap: 96 `/schools/ct/` locations.
-- Navigation RED: `node --test tests/central-school-pages.test.mjs` — 5 passed, 1 failed on the missing central-district menu path.
-- Navigation GREEN: targeted architecture and central-school suites — 14 passed, 0 failed.
-- Navigation full suite: `pnpm test` — production build completed; 48 passed, 0 failed.
-- Navigation lint: `pnpm lint` — 0 errors; 15 pre-existing legacy warnings.
-- Navigation production deployment: Cloudflare version `0261f1d5-b694-4b11-a1e0-89400701f2a4`.
-- Navigation production browser: desktop mega menu exposed `/schools?district=ct` and `/it_hs/guide.htm#schools`; the new link opened the 96-school directory. The legacy guide exposed the same two choices. No console errors were recorded.
-- Live HTML contract: the legacy guide contains the new path in desktop navigation, drawer quick action, mobile directory, mobile bottom navigation, and footer navigation.
+| 觸點 | 狀態變更順序 | 檢查結果 |
+| --- | --- | --- |
+| 搜尋輸入與六個篩選器 | `updateFilter` → React filter state → `filteredSchools` → 結果與已選條件重算 | 通過，沒有第二套舊搜尋 state 介入 |
+| 清除條件 | `setFilters(emptyFilters)` → 全部篩選回到 `all`／空字串 | 通過，結果與條件列同步恢復 |
+| 加入規劃 | `POST /api/planner` → 成功後顯示「已加入規劃」並記錄進度 | 通過，失敗不誤顯示成功 |
+| 加入比較 | 讀取 localStorage → 以 district/code 去重 → 最多保留 4 筆 → 更新比較工作區 | 通過，沒有被搜尋篩選重置 |
+| 詳情頁加入挑戰／適中／穩定 | 選 tier → 輸入 notes → `POST /api/planner` → 顯示成功或錯誤狀態 | 通過，tier 與備註一併送出 |
+| 詳情頁 Google Maps | 以學校名稱與地址產生 encoded query → 開啟 Google Maps | 通過，地址缺漏時仍保留可核對的學校名稱 |
+| legacy guide 學校入口 | 舊入口改為 `/schools` → 新目錄承接搜尋 | 通過，舊 DOM 與舊 render/sort 函式已移除 |
 
-Coverage instrumentation is not configured in this repository. The parser has direct unit coverage; the route, integration, SEO, and brand guarantees are covered by static contracts, a full production build, and read-only live browser QA. No production planner record was created during QA.
+## 驗證紀錄
+
+- `pnpm run typecheck`：通過。
+- `pnpm run validate:content`：通過，15 個就學區資料可信度驗證通過。
+- `node --test tests/school-center.test.mjs tests/central-school-pages.test.mjs tests/functional-navigation.test.mjs tests/rendered-html.test.mjs`：25/25 通過。
+- `git diff --check`：通過。
+- `pnpm test`：通過，production build 完成，62/62 測試通過。
+- `pnpm run lint`：0 errors；15 個 legacy JavaScript warnings，未新增 error。
+- live smoke test 與正式部署版本會於發布後補入本文件。
+
+## 邊界
+
+目前「加入規劃」使用既有匿名 planner cookie；瀏覽器比較使用 localStorage。登入後跨裝置同步、即時名額 API 與住宿／通勤資料仍是產品規劃中的後續迭代，本輪不將待完成能力標記成已完成。

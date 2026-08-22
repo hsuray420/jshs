@@ -45,7 +45,7 @@ test("district picker restores the last district and preserves the requested too
   assert.match(script, /localStorage\.getItem\('jshs_district'\)/);
   assert.match(script, /requestedPage === 'home' \? 'overview' : requestedPage/);
   assert.match(script, /window\.location\.replace\(`\/it_hs\/guide\.htm\?district=\$\{encodeURIComponent\(district\)\}#\$\{encodeURIComponent\(targetPage\)\}`\)/);
-  assert.match(script, /if \(!getSelectedDistrict\(\) && \['home', 'schools', 'calculator', 'analysis'\]\.includes\(requestedPage\)\) open\(\)/);
+  assert.match(script, /if \(!getSelectedDistrict\(\) && \['home', 'calculator', 'analysis'\]\.includes\(requestedPage\)\) open\(\)/);
   assert.match(script, /localStorage\.setItem\('jshs_district', district\)/);
 });
 
@@ -69,7 +69,7 @@ test("districts with a school CSV open school search without scoring tools", asy
   ]);
 
   assert.match(script, /function isSchoolQueryOnlyMode\(\)/);
-  assert.match(script, /\? 'schools' : 'overview'/);
+  assert.match(script, /\|\| 'overview'/);
   assert.match(script, /\['calculator', 'analysis'\]/);
   assert.match(page, /data-scoring-feature/);
 });

@@ -7,6 +7,7 @@ export type PlannerItem = {
   school_code: string;
   school_name: string;
   department: string;
+  tier: string;
   notes: string;
   created_at: string;
 };
@@ -20,6 +21,7 @@ export async function ensurePlannerSchema() {
       school_code TEXT NOT NULL,
       school_name TEXT NOT NULL,
       department TEXT NOT NULL DEFAULT '',
+      tier TEXT NOT NULL DEFAULT '',
       notes TEXT NOT NULL DEFAULT '',
       created_at TEXT NOT NULL
     )`),
@@ -31,6 +33,11 @@ export async function ensurePlannerSchema() {
       updated_at TEXT NOT NULL
     )`),
   ]);
+
+  const columns = await getD1().prepare("PRAGMA table_info(planner_items)").all<{ name: string }>();
+  if (!(columns.results ?? []).some((column) => column.name === "tier")) {
+    await getD1().prepare("ALTER TABLE planner_items ADD COLUMN tier TEXT NOT NULL DEFAULT ''").run();
+  }
 }
 
 export async function listPlannerItems(plannerId: string) {
@@ -46,10 +53,10 @@ export async function createPlannerItem(input: PlannerItem) {
     WHERE planner_id = ?`).bind(input.planner_id).first<{ count: number }>();
   if ((count?.count ?? 0) >= 100) throw new Error("planner_limit_reached");
   await getD1().prepare(`INSERT INTO planner_items (
-    id, planner_id, district, school_code, school_name, department, notes, created_at
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+    id, planner_id, district, school_code, school_name, department, tier, notes, created_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
     input.id, input.planner_id, input.district, input.school_code, input.school_name,
-    input.department, input.notes, input.created_at,
+    input.department, input.tier, input.notes, input.created_at,
   ).run();
 }
 

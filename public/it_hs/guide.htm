@@ -52,7 +52,7 @@
                         <button type="button" class="mega-menu-trigger" aria-label="展開找校科" aria-expanded="false"><span aria-hidden="true">⌄</span></button>
                         <div class="mega-menu-panel guide-nav-panel">
                             <a href="/schools?district=ct"><b>中投區學校資料</b><small>搜尋 96 所學校並查看完整資料頁</small></a>
-                            <button type="button" data-page="schools"><b>全國校科查詢</b><small>保留原有學校、科別、名額與地址查詢</small></button>
+                            <a href="/schools"><b>全國校科查詢</b><small>新版找校科中心：搜尋、篩選、比較與規劃</small></a>
                             <button type="button" data-page="overview"><b>高中職學制</b><small>比較普高、技高與綜合高中</small></button>
                             <a href="/news/schools"><b>校科探索指南</b><small>十五群科、五專與學校比較</small></a>
                             <button type="button" data-page="download"><b>招生資料</b><small>官方來源與資料下載</small></button>
@@ -73,7 +73,7 @@
                         <button type="button" class="mega-menu-trigger" aria-label="展開我的規劃" aria-expanded="false"><span aria-hidden="true">⌄</span></button>
                         <div class="mega-menu-panel guide-nav-panel guide-nav-panel-end">
                             <button type="button" data-page="analysis"><b>志願規劃台</b><small>比較、排序與檢查志願清單</small></button>
-                            <button type="button" data-page="schools"><b>繼續找校科</b><small>新增候選學校與科別</small></button>
+                            <a href="/schools"><b>繼續找校科</b><small>回到新版找校科中心新增候選</small></a>
                             <a href="/planner"><b>Cloudflare 收藏</b><small>查看已同步的收藏校科</small></a>
                             <a href="/news/strategy"><b>志願策略指南</b><small>理解排序方法與常見錯誤</small></a>
                         </div>
@@ -124,9 +124,9 @@
                     <nav class="guide-mobile-directory" aria-label="瀏覽所有內容">
                         <h2>瀏覽所有內容</h2>
                         <details class="mobile-menu-group"><summary>升學指南<small>會考、規則、策略與生涯選擇</small></summary><a href="/news/exam" data-nav-search-item="會考準備 時程 應試">會考準備</a><a href="/news/rules" data-nav-search-item="入學規則 免試 比序">入學規則</a><a href="/news/strategy" data-nav-search-item="志願策略 排序">志願策略</a><a href="/news/career" data-nav-search-item="生涯選擇 家長">生涯與家長</a></details>
-                        <details class="mobile-menu-group"><summary>找校科<small>學校、科別、學制與招生資料</small></summary><a href="/schools?district=ct" data-nav-search-item="中投區學校資料 96 所學校">中投區學校資料</a><button type="button" data-page="schools" data-nav-search-item="全國校科查詢 學校 科別">全國校科查詢</button><button type="button" data-page="overview" data-nav-search-item="高中職學制 普高 技高 綜高">高中職學制</button><a href="/news/schools" data-nav-search-item="校科探索 十五群科 五專">校科探索指南</a><button type="button" data-page="download" data-nav-search-item="招生資料 下載">招生資料</button></details>
+                        <details class="mobile-menu-group"><summary>找校科<small>學校、科別、學制與招生資料</small></summary><a href="/schools" data-nav-search-item="全國校科查詢 學校 科別">全國校科查詢</a><button type="button" data-page="overview" data-nav-search-item="高中職學制 普高 技高 綜高">高中職學制</button><a href="/news/schools" data-nav-search-item="校科探索 十五群科 五專">校科探索指南</a><button type="button" data-page="download" data-nav-search-item="招生資料 下載">招生資料</button></details>
                         <details class="mobile-menu-group" data-scoring-feature><summary>試算工具<small>積分、落點與時程提醒</small></summary><button type="button" data-page="calculator" data-nav-search-item="積分試算 會考">積分試算</button><button type="button" data-page="analysis" data-nav-search-item="落點分析 風險">落點分析</button><button type="button" data-page="faq" data-nav-search-item="工具說明 常見問題">工具使用說明</button></details>
-                        <details class="mobile-menu-group" data-scoring-feature><summary>我的規劃<small>收藏、比較、排序與待辦</small></summary><button type="button" data-page="analysis" data-nav-search-item="志願規劃 比較 排序">志願規劃台</button><a href="/planner" data-nav-search-item="Cloudflare 收藏 校科">Cloudflare 收藏</a><button type="button" data-page="schools" data-nav-search-item="繼續找校科">繼續找校科</button></details>
+                        <details class="mobile-menu-group" data-scoring-feature><summary>我的規劃<small>收藏、比較、排序與待辦</small></summary><button type="button" data-page="analysis" data-nav-search-item="志願規劃 比較 排序">志願規劃台</button><a href="/planner" data-nav-search-item="Cloudflare 收藏 校科">Cloudflare 收藏</a><a href="/schools" data-nav-search-item="繼續找校科">繼續找校科</a></details>
                     </nav>
                     <p class="guide-menu-search-empty" data-guide-search-empty hidden>目前沒有符合的入口。可以搜尋「會考」、「學校」、「積分」或「志願」。</p>
                 </div>
@@ -689,55 +689,7 @@
                 </section>
 
                 <div class="section-footer">
-                    <button type="button" data-page="schools">下一頁：學校查詢 →</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="page-schools" data-page-section="schools" class="page-section">
-            <div class="section-panel panel-card">
-                <div class="mb-8">
-                    <p class="text-xs-uppercase text-neo-accent font-semibold mb-3">學校查詢</p>
-                    <h2 class="section-title">高中職學校一覽表。</h2>
-                    <p class="section-copy">全區學校資料可依學制、地區與特色篩選。門檻、名額與科別會依各校已提供欄位呈現；未公告的資訊會明確標示為待公告。</p>
-                </div>
-                <div class="school-toolbar">
-                    <div class="school-search-wrap">
-                        <label for="schoolSearch" class="sr-only">搜尋學校、科別、地址</label>
-                        <input id="schoolSearch" type="search" class="ui-input" placeholder="搜尋學校、科別、課程、地址或縣市（例如：台中、餐旅、資訊）">
-                    </div>
-                    <div class="school-sort-wrap">
-                        <label for="schoolSort" class="sr-only">排序</label>
-                        <select id="schoolSort" class="ui-input">
-                            <option value="rank">依排名排序</option>
-                            <option value="name">依學校名稱</option>
-                            <option value="city">依縣市/區</option>
-                            <option value="quota">依簡章名額</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="school-filter-bar" aria-label="學校快速分類">
-                    <button type="button" class="school-filter active" data-school-filter="all">全部</button>
-                    <button type="button" class="school-filter" data-school-filter="公立">公立</button>
-                    <button type="button" class="school-filter" data-school-filter="私立">私立</button>
-                    <button type="button" class="school-filter" data-school-filter="高中">高中</button>
-                    <button type="button" class="school-filter" data-school-filter="高中職">高中職</button>
-                    <button type="button" class="school-filter" data-school-filter="綜合高中">綜合高中</button>
-                    <button type="button" class="school-filter" data-school-filter="進修部">進修部</button>
-                    <button type="button" class="school-filter" data-school-filter="男校">男校</button>
-                    <button type="button" class="school-filter" data-school-filter="女校">女校</button>
-                    <button type="button" class="school-filter" data-school-filter="資優">資優/特色班</button>
-                    <button type="button" class="school-filter" data-school-filter="有分數">有錄取分數</button>
-                    <button type="button" class="school-filter" data-school-filter="有名額">有招生名額</button>
-                    <button type="button" class="school-filter" data-school-filter="有公開科別">有網路科別</button>
-                </div>
-                <div class="school-summary" id="schoolSummary">載入學校清單中...</div>
-                <p id="schoolDataTrust" class="school-source-note">正在整理各校科別與課程資料…</p>
-                <div id="schoolGrid" class="school-grid" aria-live="polite"></div>
-                <div id="schoolEmpty" class="school-empty hidden">沒有符合條件的學校，請換一個分類或關鍵字。</div>
-                <p class="school-source-note">資料來源：本站各區學校 CSV、教育與學校公開科別資料。科別名稱可供搜尋與比較；招生名額、錄取分數與特色班仍以各區免試入學委員會及學校最新公告為準。</p>
-                <div class="section-footer">
-                    <button type="button" data-page="download">下一頁：資料下載 →</button>
+                    <a href="/schools">下一頁：新版找校科中心 →</a>
                 </div>
             </div>
         </section>

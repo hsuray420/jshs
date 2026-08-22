@@ -140,7 +140,7 @@ function initDistrictPicker() {
     document.querySelectorAll('[data-close-district]').forEach(button => button.addEventListener('click', close));
     modal.addEventListener('click', event => { if (event.target === modal) close(); });
     document.addEventListener('keydown', event => { if (event.key === 'Escape' && !modal.hidden) close(); });
-    if (!getSelectedDistrict() && ['home', 'schools', 'calculator', 'analysis'].includes(requestedPage)) open();
+    if (!getSelectedDistrict() && ['home', 'calculator', 'analysis'].includes(requestedPage)) open();
 }
 
 let DISTRICT_RULES = {
@@ -356,7 +356,7 @@ function showPage(page) {
     const routeControls = document.querySelectorAll('[data-page]');
     const pages = Array.from(sections).map(section => section.dataset.pageSection);
     const isTopic = Boolean(topicPages[page]);
-    const requestedPage = isSchoolQueryOnlyMode() && ['calculator', 'analysis'].includes(page) ? 'schools' : page;
+    const requestedPage = isSchoolQueryOnlyMode() && ['calculator', 'analysis'].includes(page) ? 'overview' : page;
     const targetPage = isTopic ? 'topic' : (pages.includes(requestedPage) ? requestedPage : 'overview');
     if (isTopic) renderTopic(page);
 
@@ -615,10 +615,10 @@ function initPageRouter() {
     initHomeSections();
     initMegaMenus();
 
-    const initialPage = window.location.hash.replace('#', '') || (isSchoolQueryOnlyMode() ? 'schools' : 'overview');
+    const initialPage = window.location.hash.replace('#', '') || 'overview';
     showPage(initialPage);
     window.addEventListener('hashchange', () => {
-        const nextPage = window.location.hash.replace('#', '') || (isSchoolQueryOnlyMode() ? 'schools' : 'overview');
+        const nextPage = window.location.hash.replace('#', '') || 'overview';
         showPage(nextPage);
     });
 }
@@ -1156,7 +1156,6 @@ function initCalculator() {
 }
 
 let allSchools = [];
-let activeSchoolFilter = 'all';
 let publicSchoolIndex = [];
 let publicSchoolIndexByKey = new Map();
 
@@ -1214,34 +1213,6 @@ function escapeHtml(value) {
     }[char]));
 }
 
-function programItems(programText) {
-    if (!programText) return [];
-    return programText.split('；').filter(Boolean).map(item => {
-        const [name, rest = ''] = item.split(':');
-        const quotaMatch = rest.match(/^(\d+)(?:\(([^)]+)\))?/);
-        return {
-            name: name || item,
-            quota: quotaMatch ? quotaMatch[1] : '',
-            gender: quotaMatch ? quotaMatch[2] || '' : ''
-        };
-    });
-}
-
-function schoolMatchesFilter(school, filter) {
-    if (filter === 'all') return true;
-    if (filter === '公立' || filter === '私立') return school['公私立'] === filter;
-    if (filter === '高中') return school['學制分類'] === '高中';
-    if (filter === '高中職') return school['學制分類'].includes('高中職');
-    if (filter === '綜合高中') return school['學制分類'].includes('綜合高中');
-    if (filter === '進修部') return school['招生區'].includes('進修部') || school['學制分類'].includes('進修部');
-    if (filter === '男校' || filter === '女校') return school['男女校'] === filter;
-    if (filter === '資優') return Boolean(school['資優班/特色班']);
-    if (filter === '有分數') return Boolean(school['最低錄取分數']);
-    if (filter === '有名額') return Number(school['招生名額'] || school['簡章招生名額']) > 0;
-    if (filter === '有公開科別') return Number(school.__publicDepartmentCount) > 0;
-    return true;
-}
-
 function normalizeSchoolKey(value) {
     return String(value || '')
         .replace(/臺/g, '台')
@@ -1284,162 +1255,6 @@ function normalizedSearchText(value) {
     return String(value || '').replace(/臺/g, '台').toLowerCase();
 }
 
-function schoolSearchAliases(school) {
-    const name = school['學校名稱'] || '';
-    const cityShort = (school['縣市'] || '').replace(/[縣市]$/, '');
-    const normalizedCity = cityShort.replace(/臺/g, '台');
-    const aliases = [name.replace(/臺/g, '台')];
-
-    [['第一', '一'], ['第二', '二'], ['第三', '三']].forEach(([formal, short]) => {
-        if (cityShort && name.includes(`${cityShort}${formal}`)) {
-            aliases.push(`${cityShort}${short}中`, `${normalizedCity}${short}中`);
-        }
-    });
-
-    if (cityShort && name.includes(`${cityShort}女子`)) {
-        aliases.push(`${cityShort}女中`, `${normalizedCity}女中`);
-    }
-
-    if (cityShort && name.includes(`${cityShort}工業`)) {
-        aliases.push(`${cityShort}高工`, `${normalizedCity}高工`);
-    }
-
-    if (cityShort && name.includes(`${cityShort}家事商業`)) {
-        aliases.push(`${cityShort}家商`, `${normalizedCity}家商`);
-    }
-
-    return aliases;
-}
-
-function sortSchools(schools, sortValue) {
-    const sorted = [...schools];
-    sorted.sort((a, b) => {
-        if (sortValue === 'name') return a['學校名稱'].localeCompare(b['學校名稱'], 'zh-Hant');
-        if (sortValue === 'city') {
-            return `${a['縣市']}${a['區']}${a['學校名稱']}`.localeCompare(`${b['縣市']}${b['區']}${b['學校名稱']}`, 'zh-Hant');
-        }
-        if (sortValue === 'quota') return (Number(b['簡章招生名額']) || 0) - (Number(a['簡章招生名額']) || 0);
-        return (Number(a['排名']) || 9999) - (Number(b['排名']) || 9999);
-    });
-    return sorted;
-}
-
-function renderSchools() {
-    const grid = document.getElementById('schoolGrid');
-    const summary = document.getElementById('schoolSummary');
-    const empty = document.getElementById('schoolEmpty');
-    const search = document.getElementById('schoolSearch');
-    const sort = document.getElementById('schoolSort');
-    if (!grid || !summary || !empty) return;
-
-    const keyword = normalizedSearchText((search?.value || '').trim());
-    const sortValue = sort?.value || 'rank';
-    const filtered = allSchools.filter(school => {
-        const haystack = [
-            school['學校名稱'], school['縣市'], school['區'], school['地址'],
-            school['公私立'], school['招生區'], school['學制分類'],
-            school['男女校'], school['科系與名額'], school['最低錄取分數'],
-            ...((school.__publicDepartments || []).map(item => `${item.deptName || ''} ${item.groupName || ''} ${item.levelInfo || ''}`)),
-            ...schoolSearchAliases(school)
-        ].map(normalizedSearchText).join(' ');
-        return schoolMatchesFilter(school, activeSchoolFilter) && (!keyword || haystack.includes(keyword));
-    });
-    const sorted = sortSchools(filtered, sortValue);
-
-    summary.textContent = `共 ${allSchools.length} 所，符合條件 ${sorted.length} 所。排序依「${sort?.selectedOptions?.[0]?.textContent || '排名'}」；未公告欄位會標示資料狀態。`;
-    empty.classList.toggle('hidden', sorted.length > 0);
-    grid.innerHTML = sorted.map(school => {
-        const programs = programItems(school['科系與名額']);
-        const webPrograms = (school.__publicDepartments || []).map(item => ({
-            name: item.deptName || item.levelInfo || '科別未命名',
-            quota: '尚未公告',
-            gender: item.groupName || item.levelInfo || ''
-        }));
-        const shownPrograms = (programs.length ? programs : webPrograms).slice(0, 24);
-        const score = school['最低錄取分數'] || '尚未公告（官方未提供）';
-        const scoreYear = school['分數年度'] ? `${school['分數年度']}年` : '未公告';
-        const quotaBlank = school['招生名額'] || '尚未公告（官方未提供）';
-        const publicClass = school['公私立'] === '私立' ? 'is-private' : 'is-public';
-        const website = school['官網'] || '#';
-        return `
-            <article class="panel-card school-card">
-                <div class="school-card-head">
-                    <div>
-                        <h3 class="school-title">${escapeHtml(school['學校名稱'])}</h3>
-                    </div>
-                    <span class="school-rank">#${escapeHtml(school['排名'])}</span>
-                </div>
-                <div class="school-chip-row">
-                    <span class="school-chip ${publicClass}">${escapeHtml(school['公私立'])}</span>
-                    <span class="school-chip">${escapeHtml(school['學制分類'])}</span>
-                    <span class="school-chip">${escapeHtml(school['男女校'])}</span>
-                    <span class="school-chip">${escapeHtml(school['區'] || school['縣市'])}</span>
-                    ${school['最低錄取分數'] ? `<span class="school-chip is-score">${escapeHtml(scoreYear)}</span>` : ''}
-                </div>
-                <dl class="school-meta">
-                    <dt>地址</dt><dd>${escapeHtml(school['地址'])}</dd>
-                    <dt>招生區</dt><dd>${escapeHtml(school['招生區'])}</dd>
-                    <dt>簡章名額</dt><dd>${escapeHtml(school['簡章招生名額'] || '待公告')}</dd>
-                    <dt>招生名額</dt><dd>${escapeHtml(quotaBlank)}</dd>
-                    <dt>錄取分數</dt><dd>${escapeHtml(score)}</dd>
-                    <dt>特色班</dt><dd>${escapeHtml(school['資優班/特色班'] || '尚未公告（請查官方簡章）')}</dd>
-                    ${school.__publicDepartmentCount ? `<dt>科別資料</dt><dd>${school.__publicDepartmentCount} 筆網路資料</dd>` : ''}
-                </dl>
-                ${school.__publicDepartmentCount ? `<div class="school-public-index"><span>科別與課程</span><p>${escapeHtml((school.__publicDepartments || []).slice(0, 8).map(item => item.deptName || item.levelInfo || '').filter(Boolean).join('、'))}${school.__publicDepartmentCount > 8 ? '…' : ''}</p><a href="${escapeHtml(school.__publicSource)}" target="_blank" rel="noopener noreferrer">查看資料來源</a></div>` : ''}
-                <div class="school-programs">
-                    <button type="button" class="school-program-toggle" aria-expanded="false">
-                        <span>查看科系與名額</span>
-                        <span aria-hidden="true">▼</span>
-                    </button>
-                    <ul class="school-program-list">
-                        ${shownPrograms.map(program => `
-                            <li>
-                                <span>${escapeHtml(program.name)}</span>
-                                <strong>${escapeHtml(program.quota || '-')}${program.gender ? ` / ${escapeHtml(program.gender)}` : ''}</strong>
-                            </li>
-                        `).join('')}
-                    </ul>
-                </div>
-                <div class="school-actions">
-                    <button type="button" class="school-wish-add-btn ${wishlistContainsSchool(school) ? 'is-added' : ''}" data-wish-add="${escapeHtml(school['學校代碼'])}">
-                        ${wishlistContainsSchool(school) ? '✓ 已加入志願' : '+ 加入志願'}
-                    </button>
-                    <a class="school-link" href="${escapeHtml(website)}" target="_blank" rel="noopener noreferrer" ${website === '#' ? 'aria-disabled="true"' : ''}>學校官網</a>
-                </div>
-            </article>
-        `;
-    }).join('');
-
-    grid.querySelectorAll('.school-program-toggle').forEach(button => {
-        button.addEventListener('click', () => {
-            const card = button.closest('.school-card');
-            const isOpen = card?.classList.toggle('is-open');
-            button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            const icon = button.querySelector('[aria-hidden="true"]');
-            if (icon) icon.textContent = isOpen ? '▲' : '▼';
-        });
-    });
-
-    grid.querySelectorAll('[data-wish-add]').forEach(button => {
-        button.addEventListener('click', () => {
-            const code = button.getAttribute('data-wish-add');
-            const school = allSchools.find(s => s['學校代碼'] === code);
-            if (!school) return;
-            if (wishlistContainsSchool(school)) {
-                const index = wishlistState.indexOf(code);
-                if (index !== -1) {
-                    wishlistState.splice(index, 1);
-                    renderWishlist();
-                    renderSchools();
-                }
-            } else {
-                const ok = addSchoolToWishlist(school);
-                if (ok) renderSchools();
-            }
-        });
-    });
-}
-
 function getSchoolDataConfig() {
     const config = window.JSHS_SITE_CONFIG || {};
     const district = getSelectedDistrict();
@@ -1449,16 +1264,6 @@ function getSchoolDataConfig() {
         district,
         dataVar: config.schoolsDataVar || 'IT_HS_SCHOOLS'
     };
-}
-
-function useEmbeddedSchoolsData() {
-    const config = getSchoolDataConfig();
-    if (config.district !== 'ct') return false;
-    const source = window[config.dataVar];
-    if (!Array.isArray(source) || source.length === 0) return false;
-    allSchools = enrichSchoolsWithPublicIndex(source.map(school => ({ ...school })));
-    renderSchools();
-    return true;
 }
 
 let wishlistState = [];
@@ -1574,7 +1379,6 @@ function removeWishlistAt(index) {
     wishlistState.splice(index, 1);
     saveWishlistState();
     renderWishlist();
-    renderSchools();
 }
 
 function moveWishlist(index, direction) {
@@ -1594,7 +1398,6 @@ function clearWishlist() {
     wishlistState = [];
     saveWishlistState();
     renderWishlist();
-    renderSchools();
 }
 
 function getWishlistAnalysisForSchool(school) {
@@ -1790,7 +1593,6 @@ function renderWishlistSearchResults(keyword) {
                     inputEl.value = '';
                     renderWishlistSearchResults('');
                 }
-                renderSchools();
             }
         };
         item.addEventListener('click', action);
@@ -1838,57 +1640,24 @@ function initAnalysisControls() {
     initWishlistControls();
 }
 
-function initSchools() {
-    const grid = document.getElementById('schoolGrid');
-    const summary = document.getElementById('schoolSummary');
-    if (!grid || !summary) return;
-
+function initLegacyPlannerSchoolCatalog() {
     const config = getSchoolDataConfig();
-    if (!config.csvPath) {
-        summary.textContent = `${config.district} 學校資料建置中，完成後會在此區更新。`;
-        return;
-    }
-
-    const downloadLink = document.getElementById('schoolsCsvDownload');
-    if (downloadLink) downloadLink.href = config.csvPath;
+    if (!config.csvPath) return;
 
     const indexPath = window.JSHS_SITE_CONFIG?.publicSchoolIndexPath;
     const indexPromise = indexPath
         ? fetch(indexPath).then(response => response.ok ? response.json() : []).catch(() => [])
         : Promise.resolve([]);
     Promise.all([
-        fetch(config.csvPath).then(response => {
-            if (!response.ok) throw new Error('CSV load failed');
-            return response.text();
-        }),
+        fetch(config.csvPath).then(response => response.ok ? response.text() : ''),
         indexPromise
-    ])
-        .then(([text, index]) => {
-            buildPublicSchoolIndex(index);
-            allSchools = enrichSchoolsWithPublicIndex(parseCsv(text));
-            wishlistState = currentPlan().wishSchoolCodes.filter(code => allSchools.some(school => school['學校代碼'] === code));
-            const matched = allSchools.filter(school => school.__publicDepartmentCount > 0).length;
-            const trust = document.getElementById('schoolDataTrust');
-            if (trust) trust.innerHTML = `本站校別資料 ${allSchools.length} 所，已與網路科別資料交叉核對 ${matched} 所；網路資料不含招生名額，名額與錄取分數仍以各區官方公告為準。<a href="${escapeHtml(window.JSHS_SITE_CONFIG?.publicSchoolIndexSource || '#')}" target="_blank" rel="noopener noreferrer">查看資料來源</a>`;
-            renderSchools();
-            renderWishlist();
-        })
-        .catch(() => {
-            summary.textContent = `無法載入 ${config.csvPath}，請稍後再試。`;
-        });
-
-    document.querySelectorAll('.school-filter').forEach(button => {
-        button.addEventListener('click', () => {
-            activeSchoolFilter = button.dataset.schoolFilter || 'all';
-            document.querySelectorAll('.school-filter').forEach(item => {
-                item.classList.toggle('active', item === button);
-            });
-            renderSchools();
-        });
-    });
-
-    document.getElementById('schoolSearch')?.addEventListener('input', renderSchools);
-    document.getElementById('schoolSort')?.addEventListener('change', renderSchools);
+    ]).then(([text, index]) => {
+        if (!text) return;
+        buildPublicSchoolIndex(index);
+        allSchools = enrichSchoolsWithPublicIndex(parseCsv(text));
+        wishlistState = currentPlan().wishSchoolCodes.filter(code => allSchools.some(school => school['學校代碼'] === code));
+        renderWishlist();
+    }).catch(() => {});
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
@@ -1915,7 +1684,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
     initLineFloatingLink();
     if (!isSchoolQueryOnlyMode()) initAnalysisControls();
-    initSchools();
+    initLegacyPlannerSchoolCatalog();
     if (!isSchoolQueryOnlyMode()) {
         renderAnalysis();
         renderWishlist();

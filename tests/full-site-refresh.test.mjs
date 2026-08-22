@@ -37,12 +37,15 @@ test("the guide mobile drawer prioritizes search and four quick tasks without th
 test("the unified shell keeps every original interactive destination", async () => {
   const guide = await readFile(guideUrl, "utf8");
 
-  for (const page of ["home", "overview", "admission", "calculator", "analysis", "schools", "download", "faq"]) {
+  for (const page of ["home", "overview", "admission", "calculator", "analysis", "download", "faq"]) {
     assert.match(guide, new RegExp(`data-page-section=["']${page}["']`));
   }
-  for (const id of ["schoolSearch", "schoolGrid", "resPoints", "analysisResults", "wishlistSearch", "plannerTimelineList"]) {
+  for (const id of ["resPoints", "analysisResults", "wishlistSearch", "plannerTimelineList"]) {
     assert.match(guide, new RegExp(`id=["']${id}["']`));
   }
+  assert.match(guide, /href="\/schools["']/);
+  assert.doesNotMatch(guide, /data-page-section=["']schools["']/);
+  assert.doesNotMatch(guide, /id=["']school(Search|Grid)["']/);
 });
 
 test("the guide stylesheet inherits the homepage design system at desktop and mobile sizes", async () => {

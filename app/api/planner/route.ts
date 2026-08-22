@@ -19,12 +19,15 @@ export async function POST(request: Request) {
   const schoolName = clean(body.schoolName, 120);
   const schoolCode = clean(body.schoolCode, 40);
   const district = clean(body.district, 40);
+  const tier = clean(body.tier, 20);
+  const notes = clean(body.notes, 1000);
   if (!schoolName || !district) return Response.json({ ok: false, error: "school_required" }, { status: 400 });
+  if (tier && !["challenge", "balanced", "stable"].includes(tier)) return Response.json({ ok: false, error: "invalid_tier" }, { status: 400 });
 
   const item = {
     id: crypto.randomUUID(), planner_id: planner.id, district, school_code: schoolCode,
-    school_name: schoolName, department: clean(body.department, 1200),
-    notes: clean(body.notes, 1000), created_at: new Date().toISOString(),
+    school_name: schoolName, department: clean(body.department, 1200), tier, notes,
+    created_at: new Date().toISOString(),
   };
   await createPlannerItem(item);
   return plannerResponse({ ok: true, item }, planner.created ? planner.id : undefined, 201);

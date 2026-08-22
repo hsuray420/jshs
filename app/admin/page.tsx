@@ -58,7 +58,7 @@ export default async function AdminPage({
         </div>
         <div className="admin-actions">
           <Link href="/">看前台</Link>
-          <a href="/schools">看學校資料</a>
+          <Link href="/schools">看學校資料</Link>
           <a href="/admin/code/">看程式碼</a>
           <a href={admin.signOutPath}>登出</a>
         </div>
@@ -272,7 +272,7 @@ export default async function AdminPage({
             <a href="/api/admission/calculate">後端試算 API</a>
             <a href="/api/schools.csv">學校 CSV</a>
             <a href="/tools">積分試算</a>
-            <a href="/schools">學校查詢</a>
+            <Link href="/schools">學校查詢</Link>
             <a href="/planner">志願清單</a>
           </div>
           <p className="admin-muted">LINE 密鑰、管理員名單與告警接收者使用環境變數保護。</p>

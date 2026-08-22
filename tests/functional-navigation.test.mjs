@@ -66,7 +66,7 @@ test("new school, calculator, and planner clients own the functional destination
     readSource("components/planner-workspace.tsx"),
   ]);
 
-  assert.match(schools, /\/api\/schools\.csv\?district=/);
+  assert.match(schools, /SchoolDirectoryRecord/);
   assert.match(schools, /\/api\/planner/);
   assert.match(calculator, /\/api\/admission\/calculate/);
   assert.match(planner, /\/api\/planner/);

@@ -1,176 +1,211 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import type { SchoolDirectoryRecord } from "@/lib/school-directory";
 import { markProgress } from "@/lib/progress";
 
-type DistrictOption = { code: string; label: string };
-type School = {
-  code: string;
-  name: string;
-  ownership: string;
+type FilterValue = "all" | "yes" | "no";
+export type SchoolExplorerFilters = Readonly<{
+  district: string;
+  query: string;
   program: string;
+  ownership: string;
   city: string;
-  area: string;
-  address: string;
-  website: string;
-  departments: string;
-  quota: string;
-};
+  quota: FilterValue;
+  history: FilterValue;
+}>;
+
+const emptyFilters: SchoolExplorerFilters = { district: "all", query: "", program: "all", ownership: "all", city: "all", quota: "all", history: "all" };
+const compareStorageKey = "jshs:school-compare:v1";
+const compareEventName = "jshs:school-compare-changed";
+
+function readCompareSnapshot() {
+  if (typeof window === "undefined") return "[]";
+  return window.localStorage.getItem(compareStorageKey) || "[]";
+}
+
+function subscribeToCompare(listener: () => void) {
+  window.addEventListener("storage", listener);
+  window.addEventListener(compareEventName, listener);
+  return () => {
+    window.removeEventListener("storage", listener);
+    window.removeEventListener(compareEventName, listener);
+  };
+}
+
+function publishCompare(next: string[], schools: readonly SchoolDirectoryRecord[]) {
+  window.localStorage.setItem(compareStorageKey, JSON.stringify(next.map((item) => {
+    const [district, code] = item.split(":");
+    const record = schools.find((candidate) => candidate.districtCode === district && candidate.code === code);
+    return { district, code, name: record?.name || code };
+  })));
+  window.dispatchEvent(new Event(compareEventName));
+}
 
 export function SchoolExplorer({
+  schools,
   districtOptions,
-  initialDistrict,
-  initialQuery = "",
+  initialFilters = emptyFilters,
 }: {
-  districtOptions: DistrictOption[];
-  initialDistrict: string;
-  initialQuery?: string;
+  schools: readonly SchoolDirectoryRecord[];
+  districtOptions: readonly { code: string; label: string }[];
+  initialFilters?: SchoolExplorerFilters;
 }) {
-  const [district, setDistrict] = useState(initialDistrict);
-  const [query, setQuery] = useState(initialQuery);
-  const [schools, setSchools] = useState<School[]>([]);
-  const [status, setStatus] = useState("loading");
+  const [filters, setFilters] = useState<SchoolExplorerFilters>(initialFilters);
   const [savedCode, setSavedCode] = useState("");
+  const compareSnapshot = useSyncExternalStore(subscribeToCompare, readCompareSnapshot, () => "[]");
+  const compareCodes = useMemo(() => {
+    try {
+      const saved = JSON.parse(compareSnapshot) as Array<{ district: string; code: string }>;
+      return saved.map((item) => `${item.district}:${item.code}`);
+    } catch {
+      return [];
+    }
+  }, [compareSnapshot]);
 
   useEffect(() => {
-    markProgress("district", district);
-    const controller = new AbortController();
-    fetch(`/api/schools.csv?district=${encodeURIComponent(district)}`, {
-      headers: { accept: "text/csv" },
-      signal: controller.signal,
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error("school_data_unavailable");
-        return response.text();
-      })
-      .then((csv) => {
-        setSchools(toSchools(parseCsv(csv)));
-        setStatus("ready");
-        markProgress("schoolSearch");
-      })
-      .catch((error) => {
-        if (error instanceof DOMException && error.name === "AbortError") return;
-        setStatus("error");
-      });
-    return () => controller.abort();
-  }, [district]);
+    markProgress("district", filters.district === "all" ? "ct" : filters.district);
+    markProgress("schoolSearch");
+  }, [filters.district]);
 
-  function changeDistrict(nextDistrict: string) {
-    setStatus("loading");
-    setSchools([]);
-    setDistrict(nextDistrict);
+  const programs = useMemo(() => unique(schools.map((school) => school.program)), [schools]);
+  const cities = useMemo(() => unique(schools.map((school) => school.city)), [schools]);
+  const filteredSchools = useMemo(() => {
+    const needle = normalize(filters.query);
+    return schools.filter((school) => {
+      const haystack = normalize([
+        school.name, school.code, school.city, school.area, school.program,
+        school.departmentsRaw, ...school.groups,
+      ].join(" "));
+      return (!needle || haystack.includes(needle))
+        && (filters.district === "all" || school.districtCode === filters.district)
+        && (filters.program === "all" || school.program === filters.program)
+        && (filters.ownership === "all" || school.ownership === filters.ownership)
+        && (filters.city === "all" || school.city === filters.city)
+        && (filters.quota === "all" || String(school.hasQuota) === String(filters.quota === "yes"))
+        && (filters.history === "all" || String(school.hasHistoricalData) === String(filters.history === "yes"));
+    });
+  }, [filters, schools]);
+
+  function updateFilter<K extends keyof SchoolExplorerFilters>(key: K, value: SchoolExplorerFilters[K]) {
+    setFilters((current) => ({ ...current, [key]: value }));
   }
 
-  const filteredSchools = useMemo(() => {
-    const needle = query.trim().toLocaleLowerCase("zh-TW");
-    if (!needle) return schools;
-    return schools.filter((school) =>
-      [school.name, school.code, school.city, school.area, school.program, school.departments]
-        .join(" ")
-        .toLocaleLowerCase("zh-TW")
-        .includes(needle),
-    );
-  }, [query, schools]);
+  function clearFilters() {
+    setFilters(emptyFilters);
+  }
 
-  async function saveSchool(school: School) {
+  async function saveSchool(school: SchoolDirectoryRecord) {
     setSavedCode("");
     const response = await fetch("/api/planner", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        district,
-        schoolCode: school.code,
-        schoolName: school.name,
-        department: school.departments,
-      }),
-    });
-    if (response.ok) {
-      setSavedCode(school.code);
+      body: JSON.stringify({ district: school.districtCode, schoolCode: school.code, schoolName: school.name, department: school.departmentsRaw, tier: "balanced" }),
+    }).catch(() => null);
+    if (response?.ok) {
+      setSavedCode(`${school.districtCode}:${school.code}`);
       markProgress("planner");
     }
   }
 
+  function toggleCompare(school: SchoolDirectoryRecord) {
+    const key = `${school.districtCode}:${school.code}`;
+    const next = compareCodes.includes(key) ? compareCodes.filter((item) => item !== key) : [...compareCodes, key].slice(-4);
+    publishCompare(next, schools);
+  }
+
+  const compareSchools = compareCodes.map((key) => {
+    const [district, code] = key.split(":");
+    return schools.find((school) => school.districtCode === district && school.code === code);
+  }).filter((school): school is SchoolDirectoryRecord => Boolean(school));
+
   return (
     <>
       <section className="border-b jshs-hero-section">
-        <div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-12">
-          <p className="jshs-eyebrow">找校科</p>
-          <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-5xl">搜尋學校、科別與地區</h1>
-          <p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">選就學區後直接搜尋校名、科別、縣市或學校代碼。找到候選項目後可先加入我的規劃。</p>
+        <div className="mx-auto w-[min(1180px,calc(100%-32px))] py-12 md:py-16">
+          <p className="jshs-eyebrow">找校科中心</p>
+          <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-6xl">把校名，變成可比較的選項。</h1>
+          <p className="mt-5 max-w-3xl text-lg leading-8 jshs-muted-copy">搜尋校名、科名、群科、縣市或學校代碼，再用資料狀態、學制與招生條件縮小範圍。</p>
         </div>
       </section>
 
-      <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-8 md:py-10">
-        <div className="grid gap-4 p-4 jshs-surface-card md:grid-cols-[240px_1fr] md:p-5">
+      <section className="mx-auto w-[min(1180px,calc(100%-32px))] py-8 md:py-12">
+        <div className="grid gap-5 p-5 jshs-surface-card md:p-7">
           <label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">
-            就學區
-            <select className="h-12 rounded-full border border-[var(--jshs-border)] bg-white/70 px-4 text-base text-[var(--jshs-ink)]" value={district} onChange={(event) => changeDistrict(event.target.value)}>
-              {districtOptions.map((option) => <option key={option.code} value={option.code}>{option.label}</option>)}
-            </select>
+            搜尋校名、科名、群科、縣市、學校代碼
+            <input value={filters.query} onChange={(event) => updateFilter("query", event.target.value)} placeholder="例如：資訊科、電機與電子群、臺中、060323" />
           </label>
-          <label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">
-            搜尋校名、科別、縣市或學校代碼
-            <input className="h-12 rounded-full border border-[var(--jshs-border)] bg-white/70 px-4 text-base font-normal text-[var(--jshs-ink)]" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="例如：資訊科、臺中、060323" />
-          </label>
+          <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
+            <FilterSelect label="就學區" value={filters.district} onChange={(value) => updateFilter("district", value)} options={[{ code: "all", label: "全部就學區" }, ...districtOptions]} />
+            <FilterSelect label="學制" value={filters.program} onChange={(value) => updateFilter("program", value)} options={[{ code: "all", label: "全部學制" }, ...programs.map((value) => ({ code: value, label: value }))]} />
+            <FilterSelect label="公私立" value={filters.ownership} onChange={(value) => updateFilter("ownership", value)} options={[{ code: "all", label: "公私立皆可" }, { code: "公立", label: "公立" }, { code: "私立", label: "私立" }]} />
+            <FilterSelect label="地區" value={filters.city} onChange={(value) => updateFilter("city", value)} options={[{ code: "all", label: "全部縣市" }, ...cities.map((value) => ({ code: value, label: value }))]} />
+            <FilterSelect label="招生名額" value={filters.quota} onChange={(value) => updateFilter("quota", value as FilterValue)} options={[{ code: "all", label: "名額皆可" }, { code: "yes", label: "有招生名額" }, { code: "no", label: "待公告" }]} />
+            <FilterSelect label="歷年資料" value={filters.history} onChange={(value) => updateFilter("history", value as FilterValue)} options={[{ code: "all", label: "資料皆可" }, { code: "yes", label: "有歷年參考資料" }, { code: "no", label: "待整理" }]} />
+          </div>
         </div>
 
-        <div className="mt-7 flex items-center justify-between gap-4">
-          <p className="text-sm font-bold jshs-muted-copy">{status === "loading" ? "正在載入學校資料…" : status === "error" ? "資料暫時無法讀取，請稍後重試。" : `找到 ${filteredSchools.length} 所／筆學校資料`}</p>
-          <a className="text-sm font-black text-[var(--jshs-primary)]" href="/planner">查看我的規劃 →</a>
+        <div className="sticky top-0 z-10 mt-5 flex flex-wrap items-center gap-3 border-y border-[var(--jshs-border)] bg-[var(--jshs-page)] py-3" aria-label="已選條件">
+          <strong className="text-sm text-slate-700">已選條件</strong>
+          <ConditionChip label={filters.district === "all" ? "全部就學區" : districtOptions.find((item) => item.code === filters.district)?.label || filters.district} />
+          {filters.query ? <ConditionChip label={`關鍵字：${filters.query}`} /> : null}
+          {filters.program !== "all" ? <ConditionChip label={`學制：${filters.program}`} /> : null}
+          {filters.ownership !== "all" ? <ConditionChip label={filters.ownership} /> : null}
+          {filters.city !== "all" ? <ConditionChip label={filters.city} /> : null}
+          {filters.quota !== "all" ? <ConditionChip label={filters.quota === "yes" ? "有招生名額" : "招生名額待公告"} /> : null}
+          {filters.history !== "all" ? <ConditionChip label={filters.history === "yes" ? "有歷年參考" : "歷年資料待整理"} /> : null}
+          <button type="button" onClick={clearFilters} className="ml-auto px-3 py-2 text-sm jshs-button-secondary">清除條件</button>
         </div>
 
-        <div className="mt-5 grid gap-3 lg:grid-cols-2">
-          {filteredSchools.slice(0, 120).map((school) => (
-            <article key={`${district}-${school.code}-${school.name}`} className="flex flex-col p-5 jshs-surface-card">
-              <div className="flex items-start justify-between gap-3">
-                <div><p className="text-xs font-black tracking-[.12em] text-[var(--jshs-primary)]">{school.code || district.toUpperCase()}</p><h2 className="mt-2 text-2xl font-black">{school.name}</h2></div>
-                <span className="rounded-full bg-[var(--jshs-muted-surface)] px-3 py-1 text-xs font-bold text-[var(--jshs-muted)]">{school.ownership || school.program}</span>
-              </div>
-              <p className="mt-3 text-sm leading-6 jshs-muted-copy">{[school.city, school.area, school.address].filter(Boolean).join(" · ")}</p>
-              <p className="mt-4 rounded-[1.5rem] bg-[var(--jshs-muted-surface)] p-4 text-sm leading-7 text-[var(--jshs-primary)]">{school.departments || "科別與招生名額請核對當年度正式簡章。"}</p>
-              <div className="mt-auto flex flex-wrap gap-3 pt-5">
-                {district === "ct" && school.code ? <Link className="px-4 py-3 text-sm jshs-button-secondary" href={`/schools/${district}/${school.code}`}>查看完整資料</Link> : null}
-                <button type="button" onClick={() => saveSchool(school)} className="px-4 py-3 text-sm jshs-button-primary">{savedCode === school.code ? "已加入規劃" : "加入我的規劃"}</button>
-                {school.website ? <a className="border border-[var(--jshs-border)] px-4 py-3 text-sm text-[var(--jshs-primary)] jshs-button" href={school.website} target="_blank" rel="noreferrer">學校官網</a> : null}
-              </div>
-            </article>
-          ))}
+        <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
+          <div><p className="text-sm font-bold jshs-muted-copy">目前顯示 {filteredSchools.length} 所學校／校科資料</p><p className="mt-1 text-xs leading-5 text-slate-500">每筆結果保留資料年度、來源與欄位狀態；正式招生權益仍以官方公告為準。</p></div>
+          <Link className="text-sm font-black text-[var(--jshs-primary)]" href="/planner">查看我的規劃 →</Link>
         </div>
+
+        {compareSchools.length ? (
+          <section aria-labelledby="compare-title" className="mt-6 p-5 jshs-surface-card">
+            <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="jshs-eyebrow">比較工作區</p><h2 id="compare-title" className="mt-2 text-xl font-black">已加入比較：{compareSchools.length} 所</h2></div><button type="button" onClick={() => publishCompare([], schools)} className="text-sm font-bold text-slate-500">清除比較</button></div>
+            <div className="mt-4 grid gap-3 md:grid-cols-4">{compareSchools.map((school) => <div key={`${school.districtCode}-${school.code}`} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><strong className="block text-sm">{school.name}</strong><span className="mt-1 block text-xs text-slate-500">{school.districtLabel} · {school.program}</span></div>)}</div>
+          </section>
+        ) : null}
+
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+          {filteredSchools.slice(0, 120).map((school) => {
+            const key = `${school.districtCode}:${school.code}`;
+            return (
+              <article key={key} className="flex flex-col p-6 jshs-surface-card">
+                <div className="flex items-start justify-between gap-4"><div><p className="text-xs font-black tracking-[.12em] text-[var(--jshs-primary)]">{school.districtLabel} · {school.code}</p><h2 className="mt-2 text-2xl font-black leading-snug">{school.name}</h2></div><span className="jshs-chip">{school.dataStatus === "ready" ? "資料已校核" : "參考資料"}</span></div>
+                <p className="mt-3 text-sm leading-6 jshs-muted-copy">{[school.city, school.area].filter(Boolean).join(" · ")} · {school.program || "學制待確認"} · {school.ownership || "公私立待確認"}</p>
+                <div className="mt-4 grid grid-cols-2 gap-2 text-xs font-bold"><Status label="資料年度" value={`${school.academicYear} 學年度`} /><Status label="招生名額" value={school.hasQuota ? "已有資料" : "待公告"} /><Status label="歷年參考" value={school.hasHistoricalData ? "已有資料" : "待整理"} /><Status label="資料來源" value={school.sourceName} /></div>
+                <p className="mt-4 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-7 text-slate-700">科別／群科：{school.groups.length ? school.groups.join("、") : school.departmentsRaw || "待以學校公告確認"}</p>
+                <div className="mt-auto flex flex-wrap gap-2 pt-5"><Link className="px-4 py-3 text-sm jshs-button-primary" href={`/schools/${school.districtCode}/${school.code}`}>查看學校詳情</Link><button type="button" onClick={() => saveSchool(school)} className="px-4 py-3 text-sm jshs-button-secondary">{savedCode === key ? "已加入規劃" : "加入規劃"}</button><button type="button" onClick={() => toggleCompare(school)} className="px-4 py-3 text-sm jshs-button-secondary">{compareCodes.includes(key) ? "移出比較" : "加入比較"}</button>{school.website ? <a className="px-4 py-3 text-sm jshs-button-secondary" href={school.website} target="_blank" rel="noreferrer">查看官方網站 ↗</a> : null}</div>
+              </article>
+            );
+          })}
+        </div>
+        {filteredSchools.length > 120 ? <p className="mt-6 text-center text-sm font-bold text-slate-500">目前先顯示前 120 筆；請用條件繼續縮小範圍。</p> : null}
       </section>
     </>
   );
 }
 
-function parseCsv(csv: string) {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let field = "";
-  let quoted = false;
-  for (let index = 0; index < csv.length; index += 1) {
-    const character = csv[index];
-    if (character === '"') {
-      if (quoted && csv[index + 1] === '"') { field += '"'; index += 1; }
-      else quoted = !quoted;
-    } else if (character === "," && !quoted) {
-      row = [...row, field]; field = "";
-    } else if ((character === "\n" || character === "\r") && !quoted) {
-      if (character === "\r" && csv[index + 1] === "\n") index += 1;
-      if (field || row.length) rows.push([...row, field]);
-      row = []; field = "";
-    } else field += character;
-  }
-  if (field || row.length) rows.push([...row, field]);
-  return rows;
+function FilterSelect({ label, value, onChange, options }: { label: string; value: string; onChange: (value: string) => void; options: readonly { code: string; label: string }[] }) {
+  return <label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">{label}<select value={value} onChange={(event) => onChange(event.target.value)}>{options.map((option) => <option key={option.code} value={option.code}>{option.label}</option>)}</select></label>;
 }
 
-function toSchools(rows: string[][]): School[] {
-  const headers = (rows[0] || []).map((header) => header.replace(/^\uFEFF/, "").trim());
-  const at = (row: string[], name: string) => row[headers.indexOf(name)]?.trim() || "";
-  return rows.slice(1).filter((row) => row.some(Boolean)).map((row) => ({
-    code: at(row, "學校代碼"), name: at(row, "學校名稱"), ownership: at(row, "公私立"),
-    program: at(row, "學制分類"), city: at(row, "縣市"), area: at(row, "區"),
-    address: at(row, "地址"), website: at(row, "官網"), departments: at(row, "科系與名額"),
-    quota: at(row, "招生名額"),
-  })).filter((school) => school.name);
+function ConditionChip({ label }: { label: string }) {
+  return <span className="jshs-chip">{label}</span>;
+}
+
+function Status({ label, value }: { label: string; value: string }) {
+  return <div className="rounded-xl bg-[var(--jshs-muted-surface)] p-3"><span className="block text-slate-400">{label}</span><strong className="mt-1 block line-clamp-1 text-slate-700">{value}</strong></div>;
+}
+
+function unique(values: readonly string[]) {
+  return [...new Set(values.filter(Boolean))].sort((left, right) => left.localeCompare(right, "zh-TW"));
+}
+
+function normalize(value: string) {
+  return value.replace(/臺/g, "台").trim().toLocaleLowerCase("zh-TW");
 }
