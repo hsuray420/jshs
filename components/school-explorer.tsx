@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { markProgress } from "@/lib/progress";
 
 type DistrictOption = { code: string; label: string };
 type School = {
@@ -33,6 +34,7 @@ export function SchoolExplorer({
   const [savedCode, setSavedCode] = useState("");
 
   useEffect(() => {
+    markProgress("district", district);
     const controller = new AbortController();
     fetch(`/api/schools.csv?district=${encodeURIComponent(district)}`, {
       headers: { accept: "text/csv" },
@@ -45,6 +47,7 @@ export function SchoolExplorer({
       .then((csv) => {
         setSchools(toSchools(parseCsv(csv)));
         setStatus("ready");
+        markProgress("schoolSearch");
       })
       .catch((error) => {
         if (error instanceof DOMException && error.name === "AbortError") return;
@@ -82,7 +85,10 @@ export function SchoolExplorer({
         department: school.departments,
       }),
     });
-    if (response.ok) setSavedCode(school.code);
+    if (response.ok) {
+      setSavedCode(school.code);
+      markProgress("planner");
+    }
   }
 
   return (

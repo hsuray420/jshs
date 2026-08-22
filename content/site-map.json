@@ -3,8 +3,8 @@
   "primaryNavigation": [
     { "label": "升學指南", "href": "/news#latest", "activeHref": "/news" },
     { "label": "找校科", "href": "/schools?district=ct", "activeHref": "/schools" },
-    { "label": "試算工具", "href": "/it_hs/guide.htm#calculator", "activeHref": "/tools" },
-    { "label": "我的規劃", "href": "/it_hs/guide.htm#analysis", "activeHref": "/planner" }
+    { "label": "試算工具", "href": "/tools", "activeHref": "/tools" },
+    { "label": "我的規劃", "href": "/planner", "activeHref": "/planner" }
   ],
   "menuGroups": [
     {
@@ -42,17 +42,17 @@
     },
     {
       "label": "試算工具",
-      "href": "/it_hs/guide.htm#calculator",
+      "href": "/tools",
       "activeHref": "/tools",
       "eyebrow": "把資料變成下一步",
       "description": "依正確就學區完成積分、落點與志願決策準備。",
       "items": [
         { "label": "先選就學區", "href": "/districts?target=calculator", "description": "確認目前使用的區域與資料狀態" },
-        { "label": "會考成績輸入", "href": "/it_hs/guide.htm#calculator", "description": "輸入各科等級與作文等資料" },
-        { "label": "多元學習表現", "href": "/it_hs/guide.htm#calculator", "description": "整理志願序、就近入學與學習表現" },
-        { "label": "各區超額比序試算", "href": "/it_hs/guide.htm#calculator", "description": "依目前已校核的區域規則計算" },
-        { "label": "個人積分摘要", "href": "/it_hs/guide.htm#analysis", "description": "查看各項分數、上限與資料來源" },
-        { "label": "落點區間", "href": "/it_hs/guide.htm#analysis", "description": "查看挑戰、適中與穩定選項" },
+        { "label": "會考成績輸入", "href": "/tools", "description": "輸入各科等級與作文等資料" },
+        { "label": "多元學習表現", "href": "/tools", "description": "整理志願序、就近入學與學習表現" },
+        { "label": "各區超額比序試算", "href": "/tools", "description": "依目前已校核的區域規則計算" },
+        { "label": "個人積分摘要", "href": "/tools", "description": "查看各項分數、上限與資料來源" },
+        { "label": "落點區間", "href": "/tools", "description": "查看挑戰、適中與穩定選項" },
         { "label": "風險解釋", "href": "#menu-coming-soon", "description": "了解差距、推估限制與需要核對的因素", "available": false },
         { "label": "結果存入我的規劃", "href": "/planner", "description": "把試算結果帶進候選校科與志願清單" }
       ]
@@ -65,8 +65,8 @@
       "description": "收藏、比較、排序與檢查志願，讓每次查資料都留下可執行的結果。",
       "items": [
         { "label": "我的候選校科", "href": "/planner", "description": "查看已收藏的學校與科別" },
-        { "label": "挑戰／適中／穩定分層", "href": "/it_hs/guide.htm#analysis", "description": "用風險層級整理候選選項" },
-        { "label": "志願排序", "href": "/it_hs/guide.htm#analysis", "description": "建立並調整志願順序" },
+        { "label": "挑戰／適中／穩定分層", "href": "/planner", "description": "用風險層級整理候選選項" },
+        { "label": "志願排序", "href": "/planner", "description": "建立並調整志願順序" },
         { "label": "校科比較", "href": "#menu-coming-soon", "description": "比較學制、課程、通勤與資料狀態", "available": false },
         { "label": "家庭討論備註", "href": "#menu-coming-soon", "description": "留下想選的理由與需要一起確認的問題", "available": false },
         { "label": "升學待辦與重要日期", "href": "/news/exam", "description": "掌握下一個要完成的升學任務" },

@@ -16,14 +16,33 @@ test("task hubs route users into the new first-party admission surfaces", async 
   assert.match(schools, /SchoolExplorer/);
   assert.match(planner, /PlannerWorkspace/);
   assert.match(home, /href="\/schools\?district=ct"/);
-  assert.match(home, /href="\/it_hs\/guide\.htm#calculator"/);
-  assert.match(home, /href="\/it_hs\/guide\.htm#analysis"/);
-  assert.match(home, /`\/it_hs\/guide\.htm\?district=\$\{code\}#schools`/);
+  assert.match(home, /href="\/tools\?district=ct"/);
+  assert.match(home, /href="\/planner"/);
+  assert.match(home, /`\/schools\?district=\$\{code\}`/);
+  assert.match(home, /HomeProgress/);
+  assert.doesNotMatch(home, /\/it_hs\/guide\.htm#(?:calculator|analysis|home)/);
+  assert.doesNotMatch(home, /\/it_hs\/guide\.htm\?district=/);
 
   for (const source of [tools, schools, planner, home]) {
     assert.doesNotMatch(source, /\/it_hs\/it_hs\.html/);
     assert.doesNotMatch(source, /原有功能|原有規劃|原有比較/);
   }
+});
+
+test("first-party actions publish progress for the homepage summary", async () => {
+  const [schools, calculator, progress] = await Promise.all([
+    readSource("components/school-explorer.tsx"),
+    readSource("components/admission-calculator.tsx"),
+    readSource("components/home-progress.tsx"),
+  ]);
+
+  assert.match(schools, /markProgress\("district"/);
+  assert.match(schools, /markProgress\("schoolSearch"/);
+  assert.match(schools, /markProgress\("planner"/);
+  assert.match(calculator, /markProgress\("district"/);
+  assert.match(calculator, /markProgress\("calculator"/);
+  assert.match(progress, /jshs-progress/);
+  assert.match(progress, /選擇就學區|查找校科|完成試算|建立規劃/);
 });
 
 test("district selection preserves the requested tool on first-party routes", async () => {

@@ -6,9 +6,9 @@ import { menuGroups, primaryNavigation, type MenuGroup, type MenuItem } from "@/
 
 const quickActions = [
   { label: "查校科", href: "/schools?district=ct", icon: "校" },
-  { label: "算積分", href: "/it_hs/guide.htm#calculator", icon: "算" },
+  { label: "算積分", href: "/tools?district=ct", icon: "算" },
   { label: "看時程", href: "/news/exam", icon: "日" },
-  { label: "排志願", href: "/it_hs/guide.htm#analysis", icon: "排" },
+  { label: "排志願", href: "/planner", icon: "排" },
 ] as const;
 
 const districtLabels: Readonly<Record<string, string>> = {
@@ -277,7 +277,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
           { label: "首頁", href: "/", icon: "⌂", active: !activeHref },
           { label: "指南", href: "/news#latest", icon: "讀", active: activeHref === "/news" },
           { label: "找校科", href: "/schools?district=ct", icon: "校", active: activeHref === "/schools" },
-          { label: "工具", href: "/it_hs/guide.htm#calculator", icon: "算", active: activeHref === "/tools" },
+          { label: "工具", href: "/tools?district=ct", icon: "算", active: activeHref === "/tools" },
           { label: "規劃", href: "/planner", icon: "存", active: activeHref === "/planner" },
         ].map((item) => <Link key={item.label} aria-current={item.active ? "page" : undefined} href={item.href} className={`flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-[1.25rem] text-[11px] font-black ${item.active ? "bg-[var(--jshs-accent)] text-[var(--jshs-ink)]" : "text-[var(--jshs-muted)]"}`}><span className="text-base" aria-hidden="true">{item.icon}</span>{item.label}</Link>)}
       </nav>

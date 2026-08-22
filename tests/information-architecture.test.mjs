@@ -17,8 +17,8 @@ const visitorSurfaceUrls = [
 const expectedNavigation = [
   ["升學指南", "/news#latest"],
   ["找校科", "/schools?district=ct"],
-  ["試算工具", "/it_hs/guide.htm#calculator"],
-  ["我的規劃", "/it_hs/guide.htm#analysis"],
+  ["試算工具", "/tools"],
+  ["我的規劃", "/planner"],
 ];
 
 const expectedCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
@@ -106,6 +106,8 @@ test("primary navigation lands on an interactive surface instead of an introduct
   const guide = await readFile(new URL("../public/it_hs/guide.htm", import.meta.url), "utf8");
   const news = await readFile(new URL("../app/news/page.tsx", import.meta.url), "utf8");
   const schools = await readFile(new URL("../app/schools/page.tsx", import.meta.url), "utf8");
+  const tools = await readFile(new URL("../app/tools/page.tsx", import.meta.url), "utf8");
+  const planner = await readFile(new URL("../app/planner/page.tsx", import.meta.url), "utf8");
 
   for (const { href } of siteMap.primaryNavigation) {
     const url = new URL(href, "https://jshs.cc");
@@ -115,10 +117,14 @@ test("primary navigation lands on an interactive surface instead of an introduct
       continue;
     }
     const [path, anchor] = href.split("#");
-    assert.ok(anchor, `${path} must link directly to its useful content`);
-    if (path === "/news") assert.match(news, new RegExp(`id=["']${anchor}["']`));
+    if (path === "/news") {
+      assert.ok(anchor, `${path} must link directly to its useful content`);
+      assert.match(news, new RegExp(`id=["']${anchor}["']`));
+    } else if (path === "/tools") assert.match(tools, /AdmissionCalculator/);
+    else if (path === "/planner") assert.match(planner, /PlannerWorkspace/);
     else {
       assert.equal(path, "/it_hs/guide.htm");
+      assert.ok(anchor, `${path} must link directly to its useful content`);
       assert.match(guide, new RegExp(`data-page-section=["']${anchor}["']`));
     }
   }

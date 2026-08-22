@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { markProgress } from "@/lib/progress";
 
 const subjects = [
   ["chineseGrade", "國文"], ["mathGrade", "數學"], ["englishGrade", "英語"],
@@ -22,6 +23,8 @@ export function AdmissionCalculator({ initialDistrict }: { initialDistrict: "ct"
   const [result, setResult] = useState<Result | null>(null);
   const [status, setStatus] = useState("");
 
+  useEffect(() => markProgress("district", initialDistrict), [initialDistrict]);
+
   async function calculate() {
     if (district !== "ct") { setStatus("基北區規則正在校核；目前不以未核定公式產生分數。可先使用找學校與我的規劃。"); setResult(null); return; }
     setStatus("計算中…");
@@ -40,6 +43,7 @@ export function AdmissionCalculator({ initialDistrict }: { initialDistrict: "ct"
     const payload = await response.json() as { result?: Result };
     setResult(payload.result || null);
     setStatus(response.ok ? "依 115 學年度中投區已建置規則完成試算。" : "試算失敗，請稍後重試。");
+    if (response.ok && payload.result) markProgress("calculator", district);
   }
 
   return (

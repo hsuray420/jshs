@@ -758,6 +758,9 @@
   .border-\[var\(--border-light\)\] {
     border-color: var(--border-light);
   }
+  .border-\[var\(--brand-tint-strong\)\] {
+    border-color: var(--brand-tint-strong);
+  }
   .border-\[var\(--jshs-border\)\] {
     border-color: var(--jshs-border);
   }
