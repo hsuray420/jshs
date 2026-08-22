@@ -44,7 +44,8 @@ Date: 2026-08-22
 - `git diff --check`：通過。
 - `pnpm test`：通過，production build 完成，62/62 測試通過。
 - `pnpm run lint`：0 errors；15 個 legacy JavaScript warnings，未新增 error。
-- live smoke test 與正式部署版本會於發布後補入本文件。
+- live smoke test：`/`、`/schools`、`/schools/ct/060323`、`/sitemap.xml`、`/it_hs/guide.htm`、`/api/health` 均回 200；新搜尋頁、詳情六區塊、sitemap 學校 URL 與舊搜尋 DOM 移除檢查均通過。
+- 正式部署：Cloudflare version `3b832fca-63a7-4e6d-9c2d-8e6f5594e3f9`。
 
 ## 邊界
 
