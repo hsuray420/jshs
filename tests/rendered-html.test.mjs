@@ -3,9 +3,6 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const appPageUrl = new URL("../app/page.tsx", import.meta.url);
-const jshsPageUrl = new URL("../app/jshs/page.tsx", import.meta.url);
-const legacyJshsPageUrl = new URL("../app/jshs/jshs/page.tsx", import.meta.url);
-const legacyHomePageUrl = new URL("../app/jshs/home/page.tsx", import.meta.url);
 const legacyJshsHtmlUrl = new URL("../public/jshs/jshs.html", import.meta.url);
 const districtScriptUrl = new URL("../public/it_hs/guide.js", import.meta.url);
 const districtIndexUrl = new URL("../public/it_hs/ilan/index.html", import.meta.url);
@@ -28,16 +25,16 @@ test("root route is the canonical public homepage", async () => {
 });
 
 test("legacy jshs entry points resolve to the single public homepage", async () => {
-  const [jshsPage, legacyJshsPage, legacyHomePage, legacyHtml] = await Promise.all([
-    readFile(jshsPageUrl, "utf8"),
-    readFile(legacyJshsPageUrl, "utf8"),
-    readFile(legacyHomePageUrl, "utf8"),
+  const [worker, legacyHtml] = await Promise.all([
+    readFile(workerUrl, "utf8"),
     readFile(legacyJshsHtmlUrl, "utf8"),
   ]);
 
-  assert.match(jshsPage, /permanentRedirect\("\/"\)/);
-  assert.match(legacyJshsPage, /permanentRedirect\("\/"\)/);
-  assert.match(legacyHomePage, /permanentRedirect\("\/"\)/);
+  assert.match(worker, /const canonicalHomePaths = new Set/);
+  for (const path of ["/jshs", "/jshs/home", "/jshs/jshs"]) {
+    assert.match(worker, new RegExp(`"${path.replaceAll("/", "\\/")}"`));
+  }
+  assert.match(worker, /redirectToCanonicalHome\(request\)/);
   assert.match(legacyHtml, /url=\//);
   assert.match(legacyHtml, /window\.location\.replace\('\/'\)/);
 });
@@ -150,7 +147,7 @@ test("shared visual token stylesheet and static guide are served by the Worker a
   assert.match(worker, /url\.pathname === "\/design-tokens\.css"/);
   assert.match(worker, /url\.pathname === "\/app\/globals\.css"/);
   assert.match(worker, /url\.pathname\.startsWith\("\/it_hs\/"\)/);
-  assert.match(worker, /url\.pathname !== "\/it_hs\/it_hs"/);
+  assert.match(worker, /const legacyGuidePaths = new Set/);
   assert.match(worker, /new Request\(assetUrl, request\)/);
   assert.match(config, /"html_handling": "none"/);
   assert.match(config, /"run_worker_first": true/);
@@ -173,7 +170,8 @@ test("worker serves the original admission app and redirects its alias back to t
   const worker = await readFile(workerUrl, "utf8");
 
   assert.match(worker, /url\.pathname\.startsWith\("\/assets\/"\)/);
-  assert.match(worker, /url\.pathname === "\/it_hs\/it_hs\.html"/);
+  assert.match(worker, /"\/it_hs\/it_hs"/);
+  assert.match(worker, /"\/it_hs\/it_hs\.html"/);
   assert.match(worker, /new URL\("\/it_hs\/guide\.htm"/);
   assert.doesNotMatch(worker, /url\.pathname === "\/it_hs\/guide\.htm"[^}]+Response\.redirect/s);
   assert.match(worker, /url\.pathname\.startsWith\("\/jshs\/"\)/);

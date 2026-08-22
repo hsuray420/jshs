@@ -46,6 +46,32 @@ const rootStaticAssets = new Set([
   "/window.svg",
 ]);
 
+const canonicalHomePaths = new Set([
+  "/jshs",
+  "/jshs/",
+  "/jshs/home",
+  "/jshs/home/",
+  "/jshs/jshs",
+  "/jshs/jshs/",
+]);
+
+const legacyGuidePaths = new Set([
+  "/it_hs/it_hs",
+  "/it_hs/it_hs.html",
+]);
+
+function redirectToCanonicalHome(request: Request): Response {
+  return Response.redirect(new URL("/", request.url), 301);
+}
+
+function redirectToGuide(request: Request, status = 301): Response {
+  const url = new URL(request.url);
+  const destination = new URL("/it_hs/guide.htm", request.url);
+  const district = url.searchParams.get("district");
+  if (district && /^[a-z-]{2,30}$/.test(district)) destination.searchParams.set("district", district);
+  return Response.redirect(destination, status);
+}
+
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
@@ -86,12 +112,8 @@ const worker = {
       return env.ASSETS.fetch(request);
     }
 
-    if (url.pathname === "/it_hs/it_hs.html") {
-      const destination = new URL("/it_hs/guide.htm", request.url);
-      const district = url.searchParams.get("district");
-      if (district && /^[a-z-]{2,30}$/.test(district)) destination.searchParams.set("district", district);
-      return Response.redirect(destination, 301);
-    }
+    if (canonicalHomePaths.has(url.pathname)) return redirectToCanonicalHome(request);
+    if (legacyGuidePaths.has(url.pathname)) return redirectToGuide(request);
 
     const isStaticAsset =
       url.pathname.startsWith("/assets/") ||
@@ -103,7 +125,7 @@ const worker = {
       return env.ASSETS.fetch(request);
     }
 
-    if (url.pathname.startsWith("/it_hs/") && url.pathname !== "/it_hs/it_hs") {
+    if (url.pathname.startsWith("/it_hs/")) {
       const assetPath = url.pathname.endsWith("/") ? `${url.pathname}index.html` : url.pathname;
       const assetUrl = new URL(assetPath, request.url);
       return env.ASSETS.fetch(new Request(assetUrl, request));
