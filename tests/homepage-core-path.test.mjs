@@ -12,7 +12,7 @@ test("homepage exposes canonical task routes and progress context", async () => 
   assert.match(home, /href="\/tools\?district=ct"/);
   assert.match(home, /href="\/planner"/);
   assert.match(home, /<HomeProgress/);
-  assert.match(home, /目前資料狀態/);
+  assert.match(home, /你的使用情境/);
   assert.match(home, /更新日/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm#(?:calculator|analysis|home)/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm\?district=/);

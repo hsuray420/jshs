@@ -37,27 +37,28 @@ export default function HomePage() {
       <SiteHeader />
 
       <section className="border-b jshs-hero-section">
-        <div className="mx-auto grid w-[min(1160px,calc(100%-32px))] gap-8 py-10 md:grid-cols-[1fr_360px] md:py-14">
+        <div className="mx-auto grid w-[min(1160px,calc(100%-32px))] gap-8 py-10 md:grid-cols-[1fr_340px] md:py-16">
           <div>
-            <p className="jshs-eyebrow">先選一件事完成</p>
-            <h1 className="mt-3 max-w-3xl text-4xl font-black leading-tight md:text-6xl">全國國中升學資訊網</h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 jshs-muted-copy">查就學區、找校科、算積分、排志願。每一步都保留資料年度、更新日與官方來源提醒。</p>
+            <p className="jshs-eyebrow">全國國中升學資訊網</p>
+            <h1 className="mt-3 max-w-3xl text-4xl leading-tight md:text-6xl">從下一步開始。</h1>
+            <p className="mt-4 max-w-2xl text-base leading-7 jshs-muted-copy">不必一次讀完所有升學資訊。先完成現在最需要的一件事，再沿著清楚的路徑繼續。</p>
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
-              <TaskCard title="升學指南" body="先讀懂會考、免試入學與志願策略。" href="/news#latest" action="閱讀指南" />
-              <TaskCard title="找校科" body="從中投區 96 所學校開始搜尋與收藏。" href="/schools?district=ct" action="搜尋學校" />
-              <TaskCard title="試算工具" body="使用已校核地區的積分試算。" href="/tools?district=ct" action="開始試算" />
-              <TaskCard title="我的規劃" body="整理候選校科、志願與待辦。" href="/planner" action="打開規劃" />
+              <TaskCard icon="讀" title="讀懂規則" body="會考、入學規則與重要日期。" href="/news#latest" action="閱讀指南" />
+              <TaskCard icon="校" title="找校科" body="搜尋學校、科別、群科與學制。" href="/schools?district=ct" action="搜尋學校" />
+              <TaskCard icon="算" title="算積分" body="輸入成績，查看可核對的試算結果。" href="/tools?district=ct" action="開始試算" />
+              <TaskCard icon="排" title="排志願" body="整理挑戰、適中與穩定的選項。" href="/planner" action="打開規劃" />
             </div>
           </div>
           <aside className="p-5 jshs-surface-card">
-            <h2 className="text-lg font-black">目前資料狀態</h2>
+            <div className="flex items-center justify-between gap-3"><div><p className="jshs-eyebrow">你的使用情境</p><h2 className="mt-2">先選就學區。</h2></div><span className="jshs-icon-tile is-success" aria-hidden="true">✓</span></div>
+            <p className="mt-3 text-sm leading-6 jshs-muted-copy">資料年度、可用工具與重要日期會依選擇的地區調整。</p>
             <dl className="mt-5 grid gap-4 text-sm">
               <StatusItem label="就學區" value={`${districts.length} 區`} />
               <StatusItem label="可查學校" value="全國資料" />
               <StatusItem label="可試算" value="中投區已建置" />
               <StatusItem label="更新日" value={districtMetadata.updatedAt} />
             </dl>
-            <p className="mt-5 border-t border-[var(--jshs-border)] pt-4 text-sm leading-6 jshs-muted-copy">{districtMetadata.disclaimer}</p>
+            <p className="mt-5 border-t border-[var(--jshs-border)] pt-4 text-xs leading-6 jshs-muted-copy">{districtMetadata.disclaimer}</p>
             <HomeDistrictPicker options={districtOptions} />
           </aside>
         </div>
@@ -93,8 +94,8 @@ function SectionHeading({ eyebrow, id, title, body }: { eyebrow: string; id: str
   return <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end"><div><p className="jshs-eyebrow">{eyebrow}</p><h2 id={id} className="mt-2 text-2xl font-black md:text-3xl">{title}</h2></div><p className="max-w-md text-sm leading-6 jshs-muted-copy">{body}</p></div>;
 }
 
-function TaskCard({ title, body, href, action }: { title: string; body: string; href: string; action: string }) {
-  return <Link href={href} className="group p-5 jshs-surface-card"><h2 className="text-lg font-black">{title}</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">{body}</p><b className="mt-4 block text-sm text-[var(--jshs-primary)]">{action} <span className="inline-block transition group-hover:translate-x-1">→</span></b></Link>;
+function TaskCard({ icon, title, body, href, action }: { icon: string; title: string; body: string; href: string; action: string }) {
+  return <Link href={href} className="group p-5 jshs-surface-card"><span className="jshs-icon-tile" aria-hidden="true">{icon}</span><h2 className="mt-4">{title}</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">{body}</p><b className="mt-4 block text-sm text-[var(--jshs-primary)]">{action} <span className="inline-block transition group-hover:translate-x-1">→</span></b></Link>;
 }
 
 function NewsPreview({ article }: { article: NewsArticle }) {

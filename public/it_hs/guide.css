@@ -3858,3 +3858,167 @@ body[data-guide-shell="unified-2026"] th,
 body[data-guide-shell="unified-2026"] td {
     border-color: #E5E5E7 !important;
 }
+
+/* Education design guide v2: remove the remaining legacy visual language. */
+body[data-guide-shell="unified-2026"] {
+    --jshs-page: #F2F2F7;
+    --jshs-surface: #FFFFFF;
+    --jshs-subtle: #F2F2F7;
+    --jshs-ink: #1C1C1E;
+    --jshs-muted: #8E8E93;
+    --jshs-tertiary: #8E8E93;
+    --jshs-navy: #007AFF;
+    --jshs-blue: #007AFF;
+    --jshs-tint: #E8F2FF;
+    --jshs-tint-strong: #B9D9FF;
+    --jshs-border: #E5E5EA;
+    --jshs-radius-card: 16px;
+    --jshs-radius-control: 20px;
+    --jshs-shadow-soft: 0 0 0 rgba(0,0,0,0);
+    background: #F2F2F7 !important;
+    color: #1C1C1E !important;
+    font-size: 14px !important;
+}
+
+body[data-guide-shell="unified-2026"] *,
+body[data-guide-shell="unified-2026"] *::before,
+body[data-guide-shell="unified-2026"] *::after {
+    background-image: none !important;
+    backdrop-filter: none !important;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang TC", "PingFang SC", "Noto Sans TC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif !important;
+    font-weight: 400 !important;
+}
+
+body[data-guide-shell="unified-2026"] :where(h1, h2, h3, h4, strong, b, dt, th) {
+    color: #1C1C1E !important;
+    font-weight: 500 !important;
+    letter-spacing: -.3px !important;
+}
+
+body[data-guide-shell="unified-2026"] :where(h1, h2, h3, h4, strong, b, dt, th, button, a, summary, label, [class*="font-"]) {
+    font-weight: 500 !important;
+}
+
+body[data-guide-shell="unified-2026"] header,
+body[data-guide-shell="unified-2026"] .guide-primary-bar,
+body[data-guide-shell="unified-2026"] .guide-workspace-bar,
+body[data-guide-shell="unified-2026"] .guide-mobile-bottom-nav {
+    background: #FFFFFF !important;
+    border: 0 !important;
+    box-shadow: 0 1px 8px rgba(0,0,0,.06) !important;
+}
+
+body[data-guide-shell="unified-2026"] .site-header .brand-mark,
+body[data-guide-shell="unified-2026"] .guide-quick-actions > a span,
+body[data-guide-shell="unified-2026"] .guide-quick-actions > button span {
+    background: #E8F2FF !important;
+    border-radius: 9px !important;
+    color: #007AFF !important;
+}
+
+body[data-guide-shell="unified-2026"] .page-section,
+body[data-guide-shell="unified-2026"] .section-panel,
+body[data-guide-shell="unified-2026"] .panel-card,
+body[data-guide-shell="unified-2026"] .ui-card,
+body[data-guide-shell="unified-2026"] .overview-card,
+body[data-guide-shell="unified-2026"] .analysis-summary-card,
+body[data-guide-shell="unified-2026"] .analysis-result-card,
+body[data-guide-shell="unified-2026"] .school-card,
+body[data-guide-shell="unified-2026"] .details-panel,
+body[data-guide-shell="unified-2026"] .planner-dashboard,
+body[data-guide-shell="unified-2026"] .planner-score-card,
+body[data-guide-shell="unified-2026"] .planner-score-card,
+body[data-guide-shell="unified-2026"] .calc-input-card,
+body[data-guide-shell="unified-2026"] .overview-detail-card {
+    background: #FFFFFF !important;
+    border: 0 !important;
+    border-radius: 16px !important;
+    box-shadow: none !important;
+}
+
+body[data-guide-shell="unified-2026"] .page-section#page-home,
+body[data-guide-shell="unified-2026"] .page-section#page-home .rounded-\[32px\],
+body[data-guide-shell="unified-2026"] .result-card-primary {
+    background: #E8F2FF !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+body[data-guide-shell="unified-2026"] .planner-score-card,
+body[data-guide-shell="unified-2026"] .result-card-primary,
+body[data-guide-shell="unified-2026"] .ui-btn-primary,
+body[data-guide-shell="unified-2026"] .section-nav button.active,
+body[data-guide-shell="unified-2026"] .mobile-route.active,
+body[data-guide-shell="unified-2026"] .guide-mobile-bottom-nav a.active {
+    background: #007AFF !important;
+    border: 0 !important;
+    color: #FFFFFF !important;
+}
+
+body[data-guide-shell="unified-2026"] button,
+body[data-guide-shell="unified-2026"] .ui-btn,
+body[data-guide-shell="unified-2026"] .ui-btn-primary,
+body[data-guide-shell="unified-2026"] .section-nav a,
+body[data-guide-shell="unified-2026"] .section-nav button,
+body[data-guide-shell="unified-2026"] .mobile-route,
+body[data-guide-shell="unified-2026"] .school-link {
+    border: 0 !important;
+    border-radius: 20px !important;
+    box-shadow: none !important;
+    font-weight: 500 !important;
+    min-height: 44px;
+    transition: transform 150ms cubic-bezier(.4,0,.2,1), opacity 150ms ease, background 150ms ease !important;
+}
+
+body[data-guide-shell="unified-2026"] button:hover,
+body[data-guide-shell="unified-2026"] .ui-btn:hover,
+body[data-guide-shell="unified-2026"] .section-nav a:hover,
+body[data-guide-shell="unified-2026"] .section-nav button:hover,
+body[data-guide-shell="unified-2026"] .mobile-route:hover,
+body[data-guide-shell="unified-2026"] .school-link:hover {
+    background: #E8F2FF !important;
+    color: #007AFF !important;
+    opacity: .9;
+    transform: scale(1.03);
+}
+
+body[data-guide-shell="unified-2026"] input,
+body[data-guide-shell="unified-2026"] select,
+body[data-guide-shell="unified-2026"] textarea,
+body[data-guide-shell="unified-2026"] .ui-input,
+body[data-guide-shell="unified-2026"] .guide-menu-search input {
+    background: #FFFFFF !important;
+    border: 1px solid #E5E5EA !important;
+    border-radius: 12px !important;
+    color: #1C1C1E !important;
+}
+
+body[data-guide-shell="unified-2026"] input:focus,
+body[data-guide-shell="unified-2026"] select:focus,
+body[data-guide-shell="unified-2026"] textarea:focus,
+body[data-guide-shell="unified-2026"] .ui-input:focus,
+body[data-guide-shell="unified-2026"] .guide-menu-search input:focus {
+    border-color: #007AFF !important;
+    box-shadow: 0 0 0 3px rgba(0,122,255,.16) !important;
+    outline: none !important;
+}
+
+body[data-guide-shell="unified-2026"] .card-pill,
+body[data-guide-shell="unified-2026"] .overview-popup-pill,
+body[data-guide-shell="unified-2026"] .analysis-score-pill,
+body[data-guide-shell="unified-2026"] .calc-note-badge,
+body[data-guide-shell="unified-2026"] .school-filter.active,
+body[data-guide-shell="unified-2026"] .checkbox-chip {
+    background: #E8F2FF !important;
+    border: 0 !important;
+    color: #007AFF !important;
+}
+
+body[data-guide-shell="unified-2026"] .line-header-link,
+body[data-guide-shell="unified-2026"] .line-floating-link {
+    background: #34C759 !important;
+    border: 0 !important;
+    border-radius: 20px !important;
+    box-shadow: none !important;
+    font-weight: 500 !important;
+}

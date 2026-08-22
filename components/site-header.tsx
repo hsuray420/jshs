@@ -172,10 +172,10 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
 
   return (
     <>
-      <header ref={headerRef} className="sticky top-3 z-40 mx-auto w-[min(1180px,calc(100%-24px))] jshs-floating-nav">
+      <header ref={headerRef} className="sticky top-0 z-40 mx-auto w-[min(1180px,calc(100%-24px))] jshs-floating-nav jshs-site-header">
         <div className="flex min-h-16 items-center gap-3 px-3 sm:px-4">
           <Link className="flex min-w-0 shrink-0 items-center gap-2.5 font-black tracking-tight text-[var(--jshs-ink)]" href="/">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[var(--jshs-primary)] text-lg text-white">↗</span>
+            <span className="jshs-icon-tile shrink-0" aria-hidden="true">↗</span>
             <span className="truncate text-xs sm:text-base">全國國中升學資訊網</span>
           </Link>
 
@@ -272,7 +272,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
         </div>
       ) : null}
 
-      <nav aria-label="行動版快速導覽" className="mobile-bottom-nav fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t border-[var(--jshs-border)] bg-white/90 px-1 pb-[max(6px,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur-xl lg:hidden">
+      <nav aria-label="行動版快速導覽" className="mobile-bottom-nav fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t border-[var(--jshs-border)] bg-white px-1 pb-[max(6px,env(safe-area-inset-bottom))] pt-1.5 lg:hidden">
         {[
           { label: "首頁", href: "/", icon: "⌂", active: !activeHref },
           { label: "指南", href: "/news#latest", icon: "讀", active: activeHref === "/news" },

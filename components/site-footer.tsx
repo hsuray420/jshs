@@ -7,7 +7,7 @@ export function SiteFooter() {
       <div className="mx-auto w-[min(1180px,calc(100%-32px))]">
         <div className="grid gap-8 lg:grid-cols-[1.1fr_2fr]">
           <div>
-            <b className="text-[var(--text-primary)]">全國國中升學資訊網</b>
+            <div className="flex items-center gap-3"><span className="jshs-icon-tile" aria-hidden="true">↗</span><b className="text-[var(--text-primary)]">全國國中升學資訊網</b></div>
             <p className="mt-3 max-w-sm text-sm leading-6 text-[var(--text-secondary)]">從制度理解、校科探索到志願規劃，把升學資訊整理成下一步。</p>
           </div>
           <nav aria-label="頁尾導覽" className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">

@@ -17,23 +17,24 @@ const surfaceUrls = [
   new URL("../components/planner-workspace.tsx", import.meta.url),
 ];
 
-test("design tokens define the Apple Notion visual system", async () => {
+test("design tokens follow the education iOS visual guide", async () => {
   const tokens = await readFile(tokenCssUrl, "utf8");
 
-  assert.match(tokens, /--bg-page:\s*#FFFFFF/i);
-  assert.match(tokens, /--bg-subtle:\s*#F5F5F7/i);
-  assert.match(tokens, /--text-primary:\s*#1D1D1F/i);
-  assert.match(tokens, /--text-secondary:\s*#6E6E73/i);
-  assert.match(tokens, /--border-light:\s*#E5E5E7/i);
-  assert.match(tokens, /--brand-primary:\s*#0066CC/i);
-  assert.match(tokens, /--brand-tint:\s*#F2F7FF/i);
-  assert.match(tokens, /--radius-sm:\s*8px/i);
-  assert.match(tokens, /--radius-md:\s*12px/i);
+  assert.match(tokens, /--bg-page:\s*#F2F2F7/i);
+  assert.match(tokens, /--bg-subtle:\s*#F2F2F7/i);
+  assert.match(tokens, /--text-primary:\s*#1C1C1E/i);
+  assert.match(tokens, /--text-secondary:\s*#8E8E93/i);
+  assert.match(tokens, /--border-light:\s*#E5E5EA/i);
+  assert.match(tokens, /--brand-primary:\s*#007AFF/i);
+  assert.match(tokens, /--success:\s*#34C759/i);
+  assert.match(tokens, /--brand-tint:\s*#E8F2FF/i);
+  assert.match(tokens, /--radius-sm:\s*9px/i);
+  assert.match(tokens, /--radius-md:\s*20px/i);
   assert.match(tokens, /--radius-lg:\s*16px/i);
   assert.match(tokens, /--radius-xl:\s*20px/i);
   assert.match(tokens, /--radius-full:\s*999px/i);
-  assert.doesNotMatch(tokens, /--jshs-background:\s*#FDFCF8/i);
-  assert.doesNotMatch(tokens, /organic-radius|#5D7052|#C18C5D/i);
+  assert.match(tokens, /--shadow-hover:\s*0 8px 20px rgba\(0, 0, 0, \.08\)/i);
+  assert.doesNotMatch(tokens, /organic-radius|#5D7052|#C18C5D|linear-gradient/i);
 });
 
 test("global app stylesheet uses system typography and shared component primitives", async () => {
@@ -48,14 +49,15 @@ test("global app stylesheet uses system typography and shared component primitiv
   assert.match(globalCss, /\.jshs-button-primary/);
   assert.match(globalCss, /\.jshs-input/);
   assert.match(globalCss, /\.jshs-table/);
-  assert.match(globalCss, /Apple Notion design system/);
-  assert.doesNotMatch(globalCss, /fonts\.googleapis|Fraunces|Nunito|body::before|mix-blend-mode|organic/i);
+  assert.match(globalCss, /Education platform visual system/);
+  assert.match(globalCss, /backdrop-filter:\s*none/);
+  assert.doesNotMatch(globalCss, /fonts\.googleapis|Fraunces|Nunito|body::before|mix-blend-mode|linear-gradient|organic/i);
   assert.match(publicAppCss, /tailwindcss v4/);
   assert.match(publicAppCss, /@import url\("\/design-tokens\.css"\)/);
   assert.match(publicAppCss, /\.jshs-surface-card/);
 });
 
-test("admin and legacy guide inherit the same Apple Notion system", async () => {
+test("admin and legacy guide inherit the same education iOS system", async () => {
   const [adminCss, guideCss, guideTailwindSource] = await Promise.all([
     readFile(adminCssUrl, "utf8"),
     readFile(guideCssUrl, "utf8"),
@@ -64,14 +66,15 @@ test("admin and legacy guide inherit the same Apple Notion system", async () => 
 
   for (const css of [adminCss, guideCss, guideTailwindSource]) {
     assert.match(css, /#FFFFFF/i);
-    assert.match(css, /#F5F5F7/i);
-    assert.match(css, /#1D1D1F/i);
+    assert.match(css, /#F2F2F7/i);
+    assert.match(css, /#1C1C1E/i);
+    assert.match(css, /#007AFF/i);
     assert.match(css, /-apple-system,\s*BlinkMacSystemFont/);
     assert.doesNotMatch(css, /Plus Jakarta Sans|Fraunces|Nunito|linear-gradient\(135deg,\s*var\(--admin-primary/i);
   }
 
-  assert.match(adminCss, /Admin Apple Notion final layer/);
-  assert.match(guideCss, /Guide Apple Notion final layer/);
+  assert.match(adminCss, /Education design guide v2/);
+  assert.match(guideCss, /Education design guide v2/);
 });
 
 test("core visitor surfaces use neutral design-system primitives for future pages", async () => {

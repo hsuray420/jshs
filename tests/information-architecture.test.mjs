@@ -66,7 +66,7 @@ test("visitor task surfaces hide implementation details from public copy", async
   }
 });
 
-test("visitor task surfaces use the shared Apple Notion design system without one-off chrome", async () => {
+test("visitor task surfaces use the shared education iOS design system without one-off chrome", async () => {
   for (const url of visitorSurfaceUrls) {
     const source = await readFile(url, "utf8");
     assert.match(source, /jshs-hero-section|jshs-surface-card|jshs-button/);

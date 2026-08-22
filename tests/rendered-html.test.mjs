@@ -18,8 +18,8 @@ test("root route is the canonical public homepage", async () => {
   const page = await readFile(appPageUrl, "utf8");
 
   assert.match(page, /canonical:\s*"\/"/);
-  assert.match(page, /先選一件事完成/);
-  for (const label of ["升學指南", "找校科", "試算工具", "我的規劃"]) assert.match(page, new RegExp(label));
+  assert.match(page, /從下一步開始/);
+  for (const label of ["讀懂規則", "找校科", "算積分", "排志願"]) assert.match(page, new RegExp(label));
   assert.doesNotMatch(page, /redirect\(/);
   assert.doesNotMatch(page, /localStorage|role="dialog"|setSelectedDistrict/);
 });
@@ -107,7 +107,7 @@ test("district guide persists a private local planning workspace and exposes com
   assert.match(script, /analysis-tier/);
 });
 
-test("homepage and district guide share one Apple Notion design token system", async () => {
+test("homepage and district guide share the education iOS design token system", async () => {
   const [globalCss, districtGuide, districtCss, tokens] = await Promise.all([
     readFile(globalCssUrl, "utf8"),
     readFile(districtGuideUrl, "utf8"),
@@ -115,13 +115,14 @@ test("homepage and district guide share one Apple Notion design token system", a
     readFile(tokenCssUrl, "utf8"),
   ]);
 
-  assert.match(tokens, /--bg-page:\s*#FFFFFF/i);
-  assert.match(tokens, /--bg-subtle:\s*#F5F5F7/i);
-  assert.match(tokens, /--text-primary:\s*#1D1D1F/i);
-  assert.match(tokens, /--text-secondary:\s*#6E6E73/i);
-  assert.match(tokens, /--border-light:\s*#E5E5E7/i);
-  assert.match(tokens, /--brand-primary:\s*#0066CC/i);
-  assert.match(tokens, /--brand-tint:\s*#F2F7FF/i);
+  assert.match(tokens, /--bg-page:\s*#F2F2F7/i);
+  assert.match(tokens, /--bg-subtle:\s*#F2F2F7/i);
+  assert.match(tokens, /--text-primary:\s*#1C1C1E/i);
+  assert.match(tokens, /--text-secondary:\s*#8E8E93/i);
+  assert.match(tokens, /--border-light:\s*#E5E5EA/i);
+  assert.match(tokens, /--brand-primary:\s*#007AFF/i);
+  assert.match(tokens, /--success:\s*#34C759/i);
+  assert.match(tokens, /--brand-tint:\s*#E8F2FF/i);
   assert.match(tokens, /--jshs-space-1:\s*4px/i);
   assert.match(tokens, /--radius-lg:\s*16px/i);
   assert.doesNotMatch(tokens, /organic-radius|#FDFCF8|#5D7052|#C18C5D/i);
@@ -134,7 +135,7 @@ test("homepage and district guide share one Apple Notion design token system", a
   assert.doesNotMatch(globalCss, /fonts\.googleapis|Fraunces|Nunito|body::before|mix-blend-mode|organic/i);
   assert.match(districtGuide, /href="\/design-tokens\.css"/);
   assert.match(districtGuide, /href="guide\.css\?v=20260814-4"/);
-  assert.match(districtCss, /Guide Apple Notion final layer/);
+  assert.match(districtCss, /Education design guide v2/);
   assert.match(districtCss, /var\(--jshs-radius-card\)/);
 });
 

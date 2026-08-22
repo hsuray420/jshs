@@ -462,3 +462,44 @@
   .admin-header { gap: 16px; }
   .admin-panel { padding: 20px; }
 }
+
+/* Education design guide v2. */
+:root {
+  --admin-bg: #F2F2F7;
+  --admin-subtle: #F2F2F7;
+  --admin-surface: #FFFFFF;
+  --admin-ink: #1C1C1E;
+  --admin-muted: #8E8E93;
+  --admin-primary: #007AFF;
+  --admin-secondary: #1C1C1E;
+  --admin-border: #E5E5EA;
+  --admin-tint: #E8F2FF;
+  --admin-success: #34C759;
+  --admin-shadow: 0 0 0 rgba(0,0,0,0);
+  --admin-shadow-hover: 0 8px 20px rgba(0,0,0,.08);
+}
+
+.admin-shell { background: #F2F2F7; color: #1C1C1E; font-size: 14px; padding: 32px 24px 64px; }
+.admin-shell :where(h1, h2, h3, h4, strong, b, dt, th, label, button, a) { font-weight: 500; }
+.admin-header h1, .admin-panel h1, .admin-panel h2 { font-weight: 500; letter-spacing: -.3px; }
+.admin-muted { color: #8E8E93; }
+.admin-eyebrow { color: #007AFF; font-weight: 500; letter-spacing: 0; }
+.admin-panel, .admin-stat-card { background: #FFFFFF; border: 0; border-radius: 16px; box-shadow: none; }
+.admin-panel { padding: 24px; transition: transform 180ms cubic-bezier(.4,0,.2,1), box-shadow 180ms ease; }
+.admin-panel:hover { border-color: transparent; box-shadow: var(--admin-shadow-hover); transform: translateY(-4px); }
+.admin-stat-card { min-height: 122px; padding: 20px; }
+.admin-stat-card strong { color: #1C1C1E; font-weight: 500; }
+.admin-stat-card.ok { border-left: 0; }
+.admin-stat-card.warn { border-left: 0; }
+.admin-actions a, .admin-button, .admin-row-actions a, .admin-row-actions button { min-height: 44px; border: 0; border-radius: 20px; background: #007AFF; font-weight: 500; transition: transform 150ms ease, opacity 150ms ease, background 150ms ease; }
+.admin-actions a:hover, .admin-button:hover:not(:disabled), .admin-row-actions a:hover, .admin-row-actions button:hover { background: #0066D6; box-shadow: none; transform: scale(1.03); }
+.admin-row-actions a, .admin-row-actions button { background: #FFFFFF; color: #007AFF; }
+.admin-panel input, .admin-panel select, .admin-panel textarea { min-height: 44px; border: 1px solid #E5E5EA; border-radius: 12px; background: #FFFFFF; color: #1C1C1E; }
+.admin-panel input:focus, .admin-panel select:focus, .admin-panel textarea:focus { border-color: #007AFF; box-shadow: 0 0 0 3px rgba(0,122,255,.16); outline: none; }
+.admin-link-grid a, .admin-code-list a { border: 0; border-radius: 16px; background: #F2F2F7; color: #1C1C1E; }
+.admin-link-grid a:hover, .admin-code-list a:hover { border-color: transparent; background: #E8F2FF; transform: translateY(-4px); }
+.admin-badge { border-radius: 999px; font-weight: 500; }
+.admin-badge.ok { background: #E4F9E9; color: #2CA84C; }
+.admin-badge.warn { background: #FFF3E0; color: #C46A00; }
+.admin-flash, .admin-success, .admin-alert { border: 0; border-radius: 16px; }
+.admin-line-button { background: #34C759; }
