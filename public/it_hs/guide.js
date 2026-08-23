@@ -147,13 +147,13 @@ let DISTRICT_RULES = {
     ct: { label: '中投區', totalMax: 100, examMax: 30, examUnit: '111 點', otherMax: 70 },
     tp: { label: '基北區', totalMax: 108, examMax: 36, examUnit: '36 分', otherMax: 72 },
     ilan: { label: '宜蘭區', available: false },
-    'taoyuan-lienchiang': { label: '桃連區', available: false },
+    'taoyuan-lienchiang': { label: '桃連區', available: true },
     'hsinchu-miaoli': { label: '竹苗區', available: false },
     changhua: { label: '彰化區', available: false },
     yunlin: { label: '雲林區', available: false },
     chiayi: { label: '嘉義區', available: false },
-    tainan: { label: '臺南區', available: false },
-    kaohsiung: { label: '高雄區', available: false },
+    tainan: { label: '臺南區', available: true },
+    kaohsiung: { label: '高雄區', available: true },
     pingtung: { label: '屏東區', available: false },
     hualien: { label: '花蓮區', available: false },
     taitung: { label: '臺東區', available: false },
@@ -352,6 +352,13 @@ function renderFaqContext(page) {
 }
 
 function showPage(page) {
+    const modernCalculatorDistricts = ['tainan', 'kaohsiung', 'taoyuan-lienchiang'];
+    if (page === 'calculator' && modernCalculatorDistricts.includes(getSelectedDistrict())) {
+        // The standalone guide must hand off to the canonical Next.js calculator.
+        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+        window.location.href = `/tools?district=${encodeURIComponent(getSelectedDistrict())}`;
+        return;
+    }
     const sections = document.querySelectorAll('[data-page-section]');
     const routeControls = document.querySelectorAll('[data-page]');
     const pages = Array.from(sections).map(section => section.dataset.pageSection);

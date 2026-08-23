@@ -59,7 +59,7 @@ export default function HomePage() {
               </div>
               <div>
                 <p className="jshs-info-group-title">資料與試算</p>
-                <dl className="mt-2 grid gap-2"><StatusItem label="可試算" value="中投區已建置" /><StatusItem label="更新日" value={districtMetadata.updatedAt} /></dl>
+                <dl className="mt-2 grid gap-2"><StatusItem label="可試算" value="五區已建置" /><StatusItem label="更新日" value={districtMetadata.updatedAt} /></dl>
               </div>
             </div>
             <p className="mt-5 text-xs leading-6 jshs-muted-copy">{districtMetadata.disclaimer}</p>
