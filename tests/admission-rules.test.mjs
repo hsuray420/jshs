@@ -82,9 +82,9 @@ test("五區滿分案例都遵守各區總分上限", () => {
 
 test("各區會考折算與作文規則分開呈現", () => {
   const grades = { chineseGrade: "A++", mathGrade: "A+", englishGrade: "A", socialGrade: "B+", scienceGrade: "C" };
-  assert.equal(calculateAdmissionScore({ district: "tp", exam: { ...grades, writingLevel: 5 } }).exam.examPerformanceScore, 22);
+  assert.equal(calculateAdmissionScore({ district: "tp", exam: { ...grades, writingLevel: 5 } }).exam.examPerformanceScore, 22.8);
   assert.equal(calculateAdmissionScore({ district: "tp", exam: { ...grades, writingLevel: 5 } }).exam.writingScore, 0.8);
-  assert.equal(calculateAdmissionScore({ district: "ct", exam: { ...grades, writingLevel: 6 } }).exam.examPerformanceScore, 22);
+  assert.equal(calculateAdmissionScore({ district: "ct", exam: { ...grades, writingLevel: 6 } }).exam.examPerformanceScore, 24);
   assert.equal(calculateAdmissionScore({ district: "tainan", exam: { ...grades, writingLevel: 5 } }).exam.writingScore, 0.8);
   assert.equal(calculateAdmissionScore({ district: "taoyuan-lienchiang", exam: { ...grades, writingLevel: 4 } }).exam.writingScore, 3);
 });
@@ -99,9 +99,9 @@ test("志願序會依各區規則分群，且同校連續科別不重複扣分",
   ];
   assert.deepEqual(assignPreferenceSequences(repeated, "ct").map((choice) => choice.preferenceSequence), [1, 1, 2, 3, 4]);
   assert.deepEqual(assignPreferenceSequences(repeated, "tainan").map((choice) => choice.preferenceSequence), [1, 1, 1, 1, 2]);
-  assert.equal(calculateAdmissionScore({ district: "ct", choiceList: choices(11) }).otherItems.preferenceScore, 29);
-  assert.equal(calculateAdmissionScore({ district: "tainan", choiceList: choices(4) }).otherItems.preferenceScore, 11);
-  assert.equal(calculateAdmissionScore({ district: "tp", choiceList: choices(21) }).otherItems.preferenceScore, 32);
+  assert.equal(calculateAdmissionScore({ district: "ct", choiceList: choices(11) }).perChoiceResults[10].preferenceScore, 29);
+  assert.equal(calculateAdmissionScore({ district: "tainan", choiceList: choices(4) }).perChoiceResults[3].preferenceScore, 11);
+  assert.equal(calculateAdmissionScore({ district: "tp", choiceList: choices(21) }).perChoiceResults[20].preferenceScore, 32);
 });
 
 test("特殊身分與資料不足不會讓分數超出上限", () => {
