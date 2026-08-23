@@ -17,6 +17,8 @@ const staticEntries = [
   entry("/schools", updatedAt, "weekly", "0.9"),
   entry("/tools", updatedAt, "weekly", "0.9"),
   entry("/districts", updatedAt, "weekly", "0.9"),
+  entry("/search", updatedAt, "weekly", "0.8"),
+  entry("/trust", updatedAt, "monthly", "0.7"),
 ];
 const newsEntries = newsCatalog.articles.map((article) => entry(`/news/${article.slug}`, article.updatedAt, "monthly", "0.8"));
 const schoolEntries = Object.entries(districtMetadata.districts).flatMap(([districtCode, district]) => {

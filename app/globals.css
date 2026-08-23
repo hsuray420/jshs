@@ -183,6 +183,10 @@ main table { border-collapse: collapse; color: var(--text-primary); width: 100%;
 
 .jshs-muted-copy { color: var(--text-secondary) !important; }
 .jshs-chip { border-radius: var(--radius-full); background: var(--brand-tint); color: var(--brand-primary); display: inline-flex; font-size: 12px; font-weight: var(--font-weight-strong); padding: 4px 10px; }
+.jshs-data-tag { border-radius: var(--radius-full); display: inline-flex; font-size: 12px; font-weight: var(--font-weight-strong); padding: 4px 10px; }
+.jshs-data-tag.is-verified { background: var(--success-tint); color: var(--success-hover); }
+.jshs-data-tag.is-reference { background: #edf2f8; color: #526275; }
+.jshs-data-tag.is-pending { background: #fff1df; color: #a85d18; }
 .jshs-icon-tile { align-items: center; background: var(--brand-tint); border-radius: 9px; color: var(--brand-primary); display: inline-flex; height: 32px; justify-content: center; width: 32px; }
 .jshs-icon-tile.is-success { background: var(--success-tint); color: var(--success-hover); }
 .jshs-status-dot { background: var(--success); border-radius: 999px; display: inline-block; height: 8px; width: 8px; }

@@ -34,10 +34,10 @@
         { "label": "就學區篩選", "href": "/districts?target=schools", "description": "先選適用區域，再查看可用資料" },
         { "label": "學制篩選", "href": "/schools?district=ct", "description": "依普通高中、技高與綜合高中篩選" },
         { "label": "學校詳情", "href": "/schools/ct", "description": "查看學校資料、科別、來源與規劃操作" },
-        { "label": "群科探索", "href": "#menu-coming-soon", "description": "認識十五群科與實際學習內容", "available": false },
-        { "label": "五專探索", "href": "#menu-coming-soon", "description": "了解五專學制與升學路徑", "available": false },
-        { "label": "學制比較", "href": "#menu-coming-soon", "description": "把普高、技高、綜高、五專放在一起比較", "available": false },
-        { "label": "校科比較表", "href": "#menu-coming-soon", "description": "把候選學校與科別放在同一張比較表", "available": false }
+        { "label": "群科探索", "href": "/search?q=群科", "description": "認識十五群科與實際學習內容" },
+        { "label": "五專探索", "href": "/news/schools", "description": "了解五專學制與升學路徑" },
+        { "label": "學制比較", "href": "/news/career", "description": "把普高、技高、綜高、五專放在一起比較" },
+        { "label": "校科比較表", "href": "/planner", "description": "把候選學校與科別放在同一張比較表" }
       ]
     },
     {
@@ -53,7 +53,7 @@
         { "label": "各區超額比序試算", "href": "/tools", "description": "依目前已校核的區域規則計算" },
         { "label": "個人積分摘要", "href": "/tools", "description": "查看各項分數、上限與資料來源" },
         { "label": "落點區間", "href": "/tools", "description": "查看挑戰、適中與穩定選項" },
-        { "label": "風險解釋", "href": "#menu-coming-soon", "description": "了解差距、推估限制與需要核對的因素", "available": false },
+        { "label": "風險解釋", "href": "/trust#placement", "description": "了解差距、推估限制與需要核對的因素" },
         { "label": "結果存入我的規劃", "href": "/planner", "description": "把試算結果帶進候選校科與志願清單" }
       ]
     },
@@ -67,12 +67,12 @@
         { "label": "我的候選校科", "href": "/planner", "description": "查看已收藏的學校與科別" },
         { "label": "挑戰／適中／穩定分層", "href": "/planner", "description": "用風險層級整理候選選項" },
         { "label": "志願排序", "href": "/planner", "description": "建立並調整志願順序" },
-        { "label": "校科比較", "href": "#menu-coming-soon", "description": "比較學制、課程、通勤與資料狀態", "available": false },
-        { "label": "家庭討論備註", "href": "#menu-coming-soon", "description": "留下想選的理由與需要一起確認的問題", "available": false },
+        { "label": "校科比較", "href": "/planner", "description": "比較學制、課程、通勤與資料狀態" },
+        { "label": "家庭討論備註", "href": "/planner#family-summary", "description": "留下想選的理由與需要一起確認的問題" },
         { "label": "升學待辦與重要日期", "href": "/news/exam", "description": "掌握下一個要完成的升學任務" },
-        { "label": "送出前檢核", "href": "#menu-coming-soon", "description": "核對區域、年度、志願數與官方簡章", "available": false },
-        { "label": "列印／下載規劃摘要", "href": "#menu-coming-soon", "description": "整理成家庭討論與核對用摘要", "available": false },
-        { "label": "分享只讀版本", "href": "#menu-coming-soon", "description": "讓家長或老師查看規劃而不改動內容", "available": false }
+        { "label": "送出前檢核", "href": "/planner#family-summary", "description": "核對區域、年度、志願數與官方簡章" },
+        { "label": "列印／下載規劃摘要", "href": "/planner", "description": "整理成家庭討論與核對用摘要" },
+        { "label": "分享只讀版本", "href": "/planner", "description": "讓家長或老師查看規劃而不改動內容" }
       ]
     },
     {
@@ -91,36 +91,34 @@
             { "label": "各區資料狀態", "href": "/districts", "description": "查看已校核、參考與建置中的功能" },
             { "label": "各區適用規則", "href": "/news/rules", "description": "閱讀比序、跨區與志願規則" },
             { "label": "各區重要日期", "href": "/news/exam", "description": "查看會考與免試入學時程" },
-            { "label": "各區官方委員會", "href": "#menu-coming-soon", "description": "前往各區正式公告來源", "available": false },
+            { "label": "各區官方委員會", "href": "/districts", "description": "前往各區正式公告來源" },
             { "label": "各區可用工具", "href": "/districts", "description": "依區域進入學校、試算或規劃" }
           ]
         },
         {
           "label": "查詢與百科",
-          "href": "#menu-coming-soon",
+          "href": "/search",
           "description": "用關鍵字與知識頁補足判斷所需資訊",
-          "available": false,
           "children": [
-            { "label": "搜尋", "href": "#menu-coming-soon", "description": "搜尋學校、科別、文章與名詞", "available": false },
-            { "label": "學校類型", "href": "#menu-coming-soon", "description": "比較普高、技高、綜高與五專", "available": false },
-            { "label": "十五群科", "href": "#menu-coming-soon", "description": "了解技職群科與學習內容", "available": false },
-            { "label": "升學名詞 FAQ", "href": "#menu-coming-soon", "description": "快速理解會考與免試入學名詞", "available": false },
-            { "label": "歷年統計", "href": "#menu-coming-soon", "description": "查看成績分布與歷年參考資料", "available": false },
+            { "label": "搜尋", "href": "/search", "description": "搜尋學校、科別、文章與名詞" },
+            { "label": "學校類型", "href": "/news/career", "description": "比較普高、技高、綜高與五專" },
+            { "label": "十五群科", "href": "/search?q=群科", "description": "了解技職群科與學習內容" },
+            { "label": "升學名詞 FAQ", "href": "/search?q=超額比序", "description": "快速理解會考與免試入學名詞" },
+            { "label": "歷年統計", "href": "/schools", "description": "查看學校歷年參考資料" },
             { "label": "重要日程", "href": "/news/exam", "description": "整理目前階段最重要的日期" }
           ]
         },
         {
           "label": "關於與信任",
-          "href": "#menu-coming-soon",
+          "href": "/trust",
           "description": "了解資料如何整理、更新與回報問題",
-          "available": false,
           "children": [
-            { "label": "資料來源與更新紀錄", "href": "#menu-coming-soon", "description": "查看資料年度、來源與校核狀態", "available": false },
-            { "label": "如何閱讀落點", "href": "#menu-coming-soon", "description": "理解區間、推估與限制", "available": false },
-            { "label": "資料錯誤回報", "href": "#menu-coming-soon", "description": "回報學校或規則資料問題", "available": false },
-            { "label": "隱私權", "href": "#menu-coming-soon", "description": "了解個人資料與規劃內容的處理方式", "available": false },
-            { "label": "服務條款", "href": "#menu-coming-soon", "description": "查看網站使用規範", "available": false },
-            { "label": "支持／合作", "href": "#menu-coming-soon", "description": "支持資料維護或洽談教育合作", "available": false }
+            { "label": "資料來源與更新紀錄", "href": "/trust#sources", "description": "查看資料年度、來源與校核狀態" },
+            { "label": "如何閱讀落點", "href": "/trust#placement", "description": "理解區間、推估與限制" },
+            { "label": "資料錯誤回報", "href": "/trust#report", "description": "回報學校或規則資料問題" },
+            { "label": "隱私權", "href": "/trust#privacy", "description": "了解個人資料與規劃內容的處理方式" },
+            { "label": "服務條款", "href": "/trust#terms", "description": "查看網站使用規範" },
+            { "label": "支持／合作", "href": "/trust#support", "description": "支持資料維護或洽談教育合作" }
           ]
         }
       ]
