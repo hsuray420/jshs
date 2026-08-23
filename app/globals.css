@@ -51,16 +51,17 @@ main,
 main :where(h1, h2, h3, h4, strong, b, dt, th) {
   color: var(--text-primary);
   font-family: var(--font-system);
-  font-weight: 500 !important;
+  font-weight: var(--font-weight-strong) !important;
   letter-spacing: -.3px;
   line-height: 1.4;
 }
 
-main h1 { font-weight: 500 !important; letter-spacing: -.4px; line-height: 1.3; }
-main h2 { font-weight: 500 !important; line-height: 1.4; }
+main h1 { font-weight: var(--font-weight-strong) !important; letter-spacing: -.4px; line-height: 1.3; }
+main h2 { font-weight: var(--font-weight-strong) !important; line-height: 1.4; }
+main h3 { font-weight: var(--font-weight-strong) !important; }
 .jshs-site-header nav button,
-.jshs-site-header nav a { font-size: 17px; font-weight: 500 !important; line-height: 1.4; }
-.jshs-site-header > div > a { font-size: 17px; font-weight: 500 !important; line-height: 1.4; }
+.jshs-site-header nav a { font-size: 17px; font-weight: var(--font-weight-strong) !important; line-height: 1.4; }
+.jshs-site-header > div > a { font-size: 17px; font-weight: var(--font-weight-strong) !important; line-height: 1.4; }
 .jshs-task-icon { font-size: 17px; line-height: 1; }
 .jshs-task-icon > span { transform: translateY(-.5px); }
 .jshs-info-group-title { color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
@@ -70,7 +71,7 @@ main h2 { font-size: 18px !important; }
 main h3 { font-size: 16px !important; }
 main :where(p, small, dd, li) { color: var(--text-secondary); }
 main :where(a) { color: var(--brand-primary); text-decoration-thickness: 1px; text-underline-offset: 3px; }
-main :where(.font-black, .font-extrabold, .font-bold, .font-semibold) { font-weight: 500 !important; }
+main :where(.font-black, .font-extrabold, .font-bold, .font-semibold) { font-weight: var(--font-weight-strong) !important; }
 
 main :where(section, header, div, article, aside)[class*="gradient"],
 main :where(section, header, div, article, aside)[class*="bg-[#102f60]"],
@@ -110,7 +111,7 @@ main :where([class*="backdrop"], [style*="backdrop-filter"]) {
   align-items: center;
   border-radius: var(--radius-md) !important;
   display: inline-flex;
-  font-weight: 500 !important;
+  font-weight: var(--font-weight-strong) !important;
   justify-content: center;
   min-height: 44px;
   transition: transform 150ms cubic-bezier(.4, 0, .2, 1), opacity 150ms ease, background 150ms ease, color 150ms ease;
@@ -175,13 +176,13 @@ main table { border-collapse: collapse; color: var(--text-primary); width: 100%;
 .jshs-eyebrow {
   color: var(--brand-primary);
   font-size: 12px;
-  font-weight: 500 !important;
+  font-weight: var(--font-weight-strong) !important;
   letter-spacing: 0;
   text-transform: none;
 }
 
 .jshs-muted-copy { color: var(--text-secondary) !important; }
-.jshs-chip { border-radius: var(--radius-full); background: var(--brand-tint); color: var(--brand-primary); display: inline-flex; font-size: 12px; font-weight: 500; padding: 4px 10px; }
+.jshs-chip { border-radius: var(--radius-full); background: var(--brand-tint); color: var(--brand-primary); display: inline-flex; font-size: 12px; font-weight: var(--font-weight-strong); padding: 4px 10px; }
 .jshs-icon-tile { align-items: center; background: var(--brand-tint); border-radius: 9px; color: var(--brand-primary); display: inline-flex; height: 32px; justify-content: center; width: 32px; }
 .jshs-icon-tile.is-success { background: var(--success-tint); color: var(--success-hover); }
 .jshs-status-dot { background: var(--success); border-radius: 999px; display: inline-block; height: 8px; width: 8px; }
@@ -192,7 +193,7 @@ main :where(.bg-blue-50, .bg-slate-50, .bg-[#fbfdff], .bg-[#f7fbff]) { backgroun
 main :where(.border, .border-2, .border-y, .border-b, .border-t) { border-color: var(--border-light) !important; }
 
 main.min-h-screen > section { padding-top: var(--space-12) !important; padding-bottom: var(--space-12) !important; }
-main.min-h-screen button { min-height: 44px; border-radius: var(--radius-md) !important; font-weight: 500 !important; }
+main.min-h-screen button { min-height: 44px; border-radius: var(--radius-md) !important; font-weight: var(--font-weight-strong) !important; }
 main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 
 .mobile-bottom-nav {

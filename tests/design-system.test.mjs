@@ -35,6 +35,7 @@ test("design tokens follow the education iOS visual guide", async () => {
   assert.match(tokens, /--radius-full:\s*999px/i);
   assert.match(tokens, /--shadow-hover:\s*0 8px 20px rgba\(0, 0, 0, \.08\)/i);
   assert.match(tokens, /--font-system:\s*-apple-system,\s*"SF Pro Text",\s*"PingFang TC",\s*"Noto Sans TC",\s*"Helvetica Neue",\s*Arial,\s*sans-serif/i);
+  assert.match(tokens, /--font-weight-strong:\s*600/i);
   assert.doesNotMatch(tokens, /organic-radius|#5D7052|#C18C5D|linear-gradient/i);
 });
 

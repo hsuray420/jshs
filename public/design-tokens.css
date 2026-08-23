@@ -36,6 +36,7 @@
   --shadow-subtle: 0 0 0 rgba(0, 0, 0, 0);
   --shadow-hover: 0 8px 20px rgba(0, 0, 0, .08);
   --font-system: -apple-system, "SF Pro Text", "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  --font-weight-strong: 600;
 
   --jshs-background: var(--bg-page);
   --jshs-foreground: var(--text-primary);
