@@ -88,7 +88,7 @@ export default async function DistrictsPage({
               <div className="mt-3 flex flex-wrap gap-2"><Feature enabled={district.schools}>學校查詢</Feature><Feature enabled={district.calculator}>積分試算</Feature><Feature enabled={district.analysis}>落點分析</Feature><Feature enabled={true}>規則</Feature></div>
               <small className="mt-5 block text-xs text-slate-400">更新：{district.updatedAt || districtMetadata.updatedAt}</small>
               <p className="mt-3 text-sm leading-6 text-slate-600">主要任務：{district.tasks?.[0] || "先確認適用區域與官方公告"}</p>
-              <a className="mt-3 inline-block text-xs text-[var(--jshs-primary)]" href={district.sourceUrl} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()}>官方委員會／來源 ↗</a>
+              <a className="mt-3 inline-block text-xs text-[var(--jshs-primary)]" href={district.sourceUrl} target="_blank" rel="noreferrer">官方委員會／來源 ↗</a>
               <a className="mt-4 flex items-center justify-between text-sm text-[var(--jshs-primary)]" href={destinationFor(resolvedTarget, code)}>{fellBackToSchools ? "此區先開啟學校查詢" : `直接開啟${destinationLabel}`} <span className="transition group-hover:translate-x-1">→</span></a>
             </article>
           )})}
