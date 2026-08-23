@@ -61,6 +61,21 @@ const legacyGuidePaths = new Set([
   "/it_hs/it_hs.html",
 ]);
 
+function isPublicDocumentRequest(request: Request, url: URL): boolean {
+  const accept = request.headers.get("accept") || "";
+  if (request.method !== "GET" || request.headers.has("cookie") || !accept.includes("text/html")) return false;
+  if (request.headers.has("rsc") || request.headers.has("next-router-state-tree") || request.headers.has("next-url")) return false;
+  return !url.pathname.startsWith("/api/") && !url.pathname.startsWith("/admin") && !url.pathname.startsWith("/planner/share");
+}
+
+function publicDocumentResponse(response: Response): Response {
+  if (response.status !== 200 || response.headers.has("set-cookie")) return response;
+  const headers = new Headers(response.headers);
+  headers.set("cache-control", "public, max-age=0, s-maxage=60, stale-while-revalidate=300");
+  headers.set("x-jshs-cache-policy", "public-document-60s");
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
 function redirectToCanonicalHome(request: Request): Response {
   return Response.redirect(new URL("/", request.url), 301);
 }
@@ -136,7 +151,8 @@ const worker = {
       return env.ASSETS.fetch(new Request(assetUrl, request));
     }
 
-    return handler.fetch(request, env, ctx);
+    const response = await handler.fetch(request, env, ctx);
+    return isPublicDocumentRequest(request, url) ? publicDocumentResponse(response) : response;
   },
 };
 

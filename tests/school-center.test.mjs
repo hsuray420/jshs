@@ -15,7 +15,7 @@ test("school directory exposes searchable national records with trust metadata",
   for (const field of ["districtCode", "districtLabel", "academicYear", "dataStatus", "groups", "hasQuota", "hasHistoricalData", "sourceUrl"]) {
     assert.match(directory, new RegExp(field));
   }
-  assert.match(schoolsPage, /schoolDirectory/);
+  assert.match(schoolsPage, /schoolDistrictOptions/);
   assert.match(schoolsPage, /SchoolExplorer/);
 });
 
@@ -59,4 +59,3 @@ test("the old embedded school search surface is removed from the legacy guide", 
   assert.doesNotMatch(guideScript, /function renderSchools\(/);
   assert.doesNotMatch(guideScript, /schoolSearchAliases/);
 });
-

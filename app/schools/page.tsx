@@ -3,7 +3,7 @@ import { SchoolExplorer, type SchoolExplorerFilters } from "@/components/school-
 import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { schoolDirectory, schoolDistrictOptions } from "@/lib/school-directory";
+import { schoolDistrictOptions } from "@/lib/school-directory";
 
 const title = "找學校｜全國高中職、校科與五專探索";
 const description = "從全國就學區、校科、十五群科與五專路徑探索升學選項，將學習內容、通勤與後續發展放在同一套決策流程。";
@@ -30,7 +30,7 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
     <main className="min-h-screen jshs-page-shell">
       <SiteHeader activeHref="/schools" />
       <DistrictGate initialDistrict={params.district}>
-        <SchoolExplorer schools={schoolDirectory} districtOptions={schoolDistrictOptions} initialFilters={initialFilters} />
+        <SchoolExplorer districtOptions={schoolDistrictOptions} initialFilters={initialFilters} />
       </DistrictGate>
       <SiteFooter />
     </main>

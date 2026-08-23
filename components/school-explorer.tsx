@@ -5,6 +5,14 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import type { SchoolDirectoryRecord } from "@/lib/school-directory";
 import { markProgress } from "@/lib/progress";
 
+type SchoolExplorerRecord = Pick<SchoolDirectoryRecord, "districtCode" | "districtLabel" | "academicYear" | "dataStatus" | "sourceName" | "code" | "name" | "ownership" | "program" | "city" | "area" | "website" | "departmentsRaw" | "groups" | "hasQuota" | "hasHistoricalData">;
+
+type SchoolDirectoryPayload = Readonly<{
+  version: string;
+  updatedAt: string;
+  schools: readonly SchoolExplorerRecord[];
+}>;
+
 type FilterValue = "all" | "yes" | "no";
 export type SchoolExplorerFilters = Readonly<{
   district: string;
@@ -34,7 +42,7 @@ function subscribeToCompare(listener: () => void) {
   };
 }
 
-function publishCompare(next: string[], schools: readonly SchoolDirectoryRecord[]) {
+function publishCompare(next: string[], schools: readonly SchoolExplorerRecord[]) {
   window.localStorage.setItem(compareStorageKey, JSON.stringify(next.map((item) => {
     const [district, code] = item.split(":");
     const record = schools.find((candidate) => candidate.districtCode === district && candidate.code === code);
@@ -44,14 +52,15 @@ function publishCompare(next: string[], schools: readonly SchoolDirectoryRecord[
 }
 
 export function SchoolExplorer({
-  schools,
   districtOptions,
   initialFilters = emptyFilters,
 }: {
-  schools: readonly SchoolDirectoryRecord[];
   districtOptions: readonly { code: string; label: string }[];
   initialFilters?: SchoolExplorerFilters;
 }) {
+  const [schools, setSchools] = useState<readonly SchoolExplorerRecord[]>([]);
+  const [loaded, setLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [filters, setFilters] = useState<SchoolExplorerFilters>(initialFilters);
   const [savedCode, setSavedCode] = useState("");
   const compareSnapshot = useSyncExternalStore(subscribeToCompare, readCompareSnapshot, () => "[]");
@@ -68,6 +77,30 @@ export function SchoolExplorer({
     markProgress("district", filters.district === "all" ? "ct" : filters.district);
     markProgress("schoolSearch");
   }, [filters.district]);
+
+  useEffect(() => {
+    let active = true;
+
+    fetch("/it_hs/school-directory.json", { headers: { accept: "application/json" } })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`school_directory_${response.status}`);
+        return response.json() as Promise<SchoolDirectoryPayload>;
+      })
+      .then((payload) => {
+        if (!active || !Array.isArray(payload.schools)) throw new Error("school_directory_invalid");
+        setSchools(payload.schools);
+        setLoaded(true);
+      })
+      .catch(() => {
+        if (!active) return;
+        setLoadError(true);
+        setLoaded(true);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const programs = useMemo(() => unique(schools.map((school) => school.program)), [schools]);
   const cities = useMemo(() => unique(schools.map((school) => school.city)), [schools]);
@@ -96,7 +129,7 @@ export function SchoolExplorer({
     setFilters(emptyFilters);
   }
 
-  async function saveSchool(school: SchoolDirectoryRecord) {
+  async function saveSchool(school: SchoolExplorerRecord) {
     setSavedCode("");
     const response = await fetch("/api/planner", {
       method: "POST",
@@ -109,7 +142,7 @@ export function SchoolExplorer({
     }
   }
 
-  function toggleCompare(school: SchoolDirectoryRecord) {
+  function toggleCompare(school: SchoolExplorerRecord) {
     const key = `${school.districtCode}:${school.code}`;
     const next = compareCodes.includes(key) ? compareCodes.filter((item) => item !== key) : [...compareCodes, key].slice(-4);
     publishCompare(next, schools);
@@ -170,7 +203,9 @@ export function SchoolExplorer({
           </section>
         ) : null}
 
-        <div className="mt-6 grid gap-4 lg:grid-cols-2">
+        {!loaded ? <div className="mt-6 p-8 text-center jshs-surface-card">正在載入學校資料…</div> : null}
+        {loadError ? <div className="mt-6 p-8 text-center jshs-surface-card"><h2 className="text-xl">學校資料暫時無法載入</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">請重新整理頁面；如果問題持續，請稍後再試。</p></div> : null}
+        {loaded && !loadError ? <div className="mt-6 grid gap-4 lg:grid-cols-2">
           {filteredSchools.slice(0, 120).map((school) => {
             const key = `${school.districtCode}:${school.code}`;
             return (
@@ -183,8 +218,8 @@ export function SchoolExplorer({
               </article>
             );
           })}
-        </div>
-        {filteredSchools.length > 120 ? <p className="mt-6 text-center text-sm font-bold text-slate-500">目前先顯示前 120 筆；請用條件繼續縮小範圍。</p> : null}
+        </div> : null}
+        {loaded && !loadError && filteredSchools.length > 120 ? <p className="mt-6 text-center text-sm font-bold text-slate-500">目前先顯示前 120 筆；請用條件繼續縮小範圍。</p> : null}
       </section>
     </>
   );
