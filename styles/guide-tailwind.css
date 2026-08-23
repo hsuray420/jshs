@@ -10,6 +10,6 @@
   --color-neo-accentLight: #E8F2FF;
   --color-neo-blueGray: #E5E5EA;
   --color-neo-surface: #FFFFFF;
-  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang TC", "PingFang SC", "Noto Sans TC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang TC", "PingFang SC", "Noto Sans TC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+  --font-display: -apple-system, "SF Pro Text", "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  --font-body: -apple-system, "SF Pro Text", "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
 }

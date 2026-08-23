@@ -75,8 +75,8 @@
     --color-neo-muted: #8E8E93;
     --color-neo-accent: #007AFF;
     --color-neo-blueGray: #E5E5EA;
-    --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang TC", "PingFang SC", "Noto Sans TC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
-    --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang TC", "PingFang SC", "Noto Sans TC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+    --font-display: -apple-system, "SF Pro Text", "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+    --font-body: -apple-system, "SF Pro Text", "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
   }
 }
 @layer base {
@@ -882,6 +882,9 @@
   .p-8 {
     padding: calc(var(--spacing) * 8);
   }
+  .p-\[14px\] {
+    padding: 14px;
+  }
   .px-1 {
     padding-inline: calc(var(--spacing) * 1);
   }
@@ -948,17 +951,20 @@
   .pt-8 {
     padding-top: calc(var(--spacing) * 8);
   }
+  .pt-12 {
+    padding-top: calc(var(--spacing) * 12);
+  }
   .pr-1 {
     padding-right: calc(var(--spacing) * 1);
   }
   .pb-2 {
     padding-bottom: calc(var(--spacing) * 2);
   }
-  .pb-3 {
-    padding-bottom: calc(var(--spacing) * 3);
-  }
   .pb-4 {
     padding-bottom: calc(var(--spacing) * 4);
+  }
+  .pb-8 {
+    padding-bottom: calc(var(--spacing) * 8);
   }
   .pb-16 {
     padding-bottom: calc(var(--spacing) * 16);
@@ -1568,6 +1574,16 @@
   .md\:py-24 {
     @media (width >= 48rem) {
       padding-block: calc(var(--spacing) * 24);
+    }
+  }
+  .md\:pt-16 {
+    @media (width >= 48rem) {
+      padding-top: calc(var(--spacing) * 16);
+    }
+  }
+  .md\:pb-12 {
+    @media (width >= 48rem) {
+      padding-bottom: calc(var(--spacing) * 12);
     }
   }
   .md\:text-3xl {

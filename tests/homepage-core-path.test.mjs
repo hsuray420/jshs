@@ -14,6 +14,9 @@ test("homepage exposes canonical task routes and progress context", async () => 
   assert.match(home, /<HomeProgress/);
   assert.match(home, /你的使用情境/);
   assert.match(home, /更新日/);
+  assert.match(home, /jshs-task-icon/);
+  assert.match(home, /tone="green"/);
+  assert.match(home, /jshs-info-group-title/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm#(?:calculator|analysis|home)/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm\?district=/);
 });

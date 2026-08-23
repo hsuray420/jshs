@@ -128,7 +128,8 @@ test("homepage and district guide share the education iOS design token system", 
   assert.doesNotMatch(tokens, /organic-radius|#FDFCF8|#5D7052|#C18C5D/i);
   assert.doesNotMatch(globalCss, /main\.min-h-screen > section\s*\{[^}]*min-height:\s*100vh/s);
   assert.match(globalCss, /@import url\("\/design-tokens\.css"\)/);
-  assert.match(globalCss, /-apple-system,\s*BlinkMacSystemFont/);
+  assert.match(globalCss, /font-family:\s*var\(--font-system\)/);
+  assert.match(tokens, /--font-system:\s*-apple-system,\s*"SF Pro Text",\s*"PingFang TC",\s*"Noto Sans TC"/);
   assert.match(globalCss, /\.jshs-surface-card/);
   assert.match(globalCss, /\.jshs-button-primary/);
   assert.match(globalCss, /\.jshs-input/);

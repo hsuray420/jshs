@@ -34,6 +34,7 @@ test("design tokens follow the education iOS visual guide", async () => {
   assert.match(tokens, /--radius-xl:\s*20px/i);
   assert.match(tokens, /--radius-full:\s*999px/i);
   assert.match(tokens, /--shadow-hover:\s*0 8px 20px rgba\(0, 0, 0, \.08\)/i);
+  assert.match(tokens, /--font-system:\s*-apple-system,\s*"SF Pro Text",\s*"PingFang TC",\s*"Noto Sans TC",\s*"Helvetica Neue",\s*Arial,\s*sans-serif/i);
   assert.doesNotMatch(tokens, /organic-radius|#5D7052|#C18C5D|linear-gradient/i);
 });
 
@@ -43,7 +44,7 @@ test("global app stylesheet uses system typography and shared component primitiv
     readFile(publicAppCssUrl, "utf8"),
   ]);
 
-  assert.match(globalCss, /-apple-system,\s*BlinkMacSystemFont/);
+  assert.match(globalCss, /font-family:\s*var\(--font-system\)/);
   assert.match(globalCss, /\.jshs-page-shell/);
   assert.match(globalCss, /\.jshs-surface-card/);
   assert.match(globalCss, /\.jshs-button-primary/);
@@ -69,12 +70,13 @@ test("admin and legacy guide inherit the same education iOS system", async () =>
     assert.match(css, /#F2F2F7/i);
     assert.match(css, /#1C1C1E/i);
     assert.match(css, /#007AFF/i);
-    assert.match(css, /-apple-system,\s*BlinkMacSystemFont/);
+    assert.match(css, /-apple-system,\s*"SF Pro Text",\s*"PingFang TC",\s*"Noto Sans TC"/);
     assert.doesNotMatch(css, /Plus Jakarta Sans|Fraunces|Nunito|linear-gradient\(135deg,\s*var\(--admin-primary/i);
   }
 
   assert.match(adminCss, /Education design guide v2/);
   assert.match(guideCss, /Education design guide v2/);
+  assert.match(guideCss, /font-family: -apple-system, "SF Pro Text", "PingFang TC", "Noto Sans TC"/);
 });
 
 test("core visitor surfaces use neutral design-system primitives for future pages", async () => {
@@ -83,4 +85,14 @@ test("core visitor surfaces use neutral design-system primitives for future page
     assert.match(source, /jshs-page-shell|jshs-hero-section|jshs-section|jshs-surface-card|jshs-button/);
     assert.doesNotMatch(source, /jshs-organic|jshs-hero-band|jshs-pill-button|jshs-primary-action|jshs-secondary-action/);
   }
+});
+
+test("homepage task cards use icon tiles and grouped context spacing", async () => {
+  const home = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+
+  assert.equal((home.match(/className=\{`jshs-icon-tile jshs-task-icon/g) || []).length, 1);
+  assert.match(home, /jshs-task-icon/);
+  assert.match(home, /jshs-info-group-title/);
+  assert.doesNotMatch(home, /StatusItem[^\n]*border-b/);
+  assert.doesNotMatch(home, /districtMetadata\.disclaimer[^\n]*border-t/);
 });

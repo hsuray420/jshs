@@ -16,7 +16,7 @@
 }
 
 /* Education platform visual system: iOS-inspired, calm, readable, task-first. */
-/* System stack: -apple-system, BlinkMacSystemFont, SF Pro, PingFang TC, Noto Sans TC. */
+/* Exact cross-platform stack from the education visual guide. */
 * { box-sizing: border-box; }
 
 html {
@@ -55,6 +55,15 @@ main :where(h1, h2, h3, h4, strong, b, dt, th) {
   letter-spacing: -.3px;
   line-height: 1.4;
 }
+
+main h1 { font-weight: 500 !important; letter-spacing: -.4px; line-height: 1.3; }
+main h2 { font-weight: 500 !important; line-height: 1.4; }
+.jshs-site-header nav button,
+.jshs-site-header nav a { font-size: 17px; font-weight: 500 !important; line-height: 1.4; }
+.jshs-site-header > div > a { font-size: 17px; font-weight: 500 !important; line-height: 1.4; }
+.jshs-task-icon { font-size: 17px; line-height: 1; }
+.jshs-task-icon > span { transform: translateY(-.5px); }
+.jshs-info-group-title { color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
 
 main h1 { font-size: 24px !important; }
 main h2 { font-size: 18px !important; }
