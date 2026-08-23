@@ -148,6 +148,8 @@ test("shared visual token stylesheet and static guide are served by the Worker a
 
   assert.match(worker, /url\.pathname === "\/design-tokens\.css"/);
   assert.match(worker, /url\.pathname === "\/app\/globals\.css"/);
+  assert.match(worker, /import guideCss from "\.\.\/public\/it_hs\/guide\.css\?raw"/);
+  assert.match(worker, /url\.pathname === "\/it_hs\/guide\.css"/);
   assert.match(worker, /url\.pathname\.startsWith\("\/it_hs\/"\)/);
   assert.match(worker, /const legacyGuidePaths = new Set/);
   assert.match(worker, /new Request\(assetUrl, request\)/);

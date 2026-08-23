@@ -2,6 +2,7 @@
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
 import districtMetadata from "../public/it_hs/district-metadata.json";
+import guideCss from "../public/it_hs/guide.css?raw";
 import robotsText from "../public/robots.txt?raw";
 import sitemapXml from "../public/sitemap.xml?raw";
 
@@ -110,6 +111,10 @@ const worker = {
     // straight to the versioned asset binding.
     if (url.pathname === "/design-tokens.css" || url.pathname === "/app/globals.css") {
       return env.ASSETS.fetch(request);
+    }
+
+    if (url.pathname === "/it_hs/guide.css") {
+      return trustResponse(guideCss, "text/css; charset=utf-8");
     }
 
     if (canonicalHomePaths.has(url.pathname)) return redirectToCanonicalHome(request);
