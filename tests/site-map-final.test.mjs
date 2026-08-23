@@ -13,7 +13,7 @@ test("final sitemap defines the seven user-facing navigation groups", async () =
 
   const labels = catalog.menuGroups.flatMap(({ items }) => collectLabels(items));
   for (const label of [
-    "全國學校查詢", "校科比較表", "群科／十五群科介紹", "開始試算", "積分／序位換算說明",
+    "全國校科查詢", "歷年錄取成績查詢", "群科／十五群科介紹", "開始試算", "積分／序位換算說明",
     "全年倒數計時", "重要時程總覽", "我的候選校科清單", "排序與健檢", "版本紀錄",
     "資格自我檢測", "特色招生／特色班", "3 分鐘看懂免試入學", "名詞小百科", "AI 問答小幫手",
     "會員登入", "LINE 官方帳號整合", "資料來源與更新紀錄", "資料錯誤回報", "隱私權", "支持／合作",

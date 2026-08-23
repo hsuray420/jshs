@@ -17,7 +17,7 @@ test("every school detail route has a static decision page contract", async () =
   const page = await read("app/schools/[district]/[code]/page.tsx");
   assert.match(page, /generateStaticParams/);
   assert.match(page, /EducationalOrganization/);
-  assert.match(page, /Google Maps/);
+  assert.doesNotMatch(page, /Google Maps|maps\/search/);
   assert.match(page, /SchoolDecisionActions/);
   assert.match(page, /歷年參考區間/);
 });
@@ -25,8 +25,8 @@ test("every school detail route has a static decision page contract", async () =
 test("school search results link into every district detail route", async () => {
   const explorer = await read("components/school-explorer.tsx");
   assert.match(explorer, /href={`\/schools\/\$\{school\.districtCode\}\/\$\{school\.code\}`}/);
-  assert.match(explorer, /加入比較/);
   assert.match(explorer, /查看官方網站/);
+  assert.doesNotMatch(explorer, /加入比較|比較工作區/);
 });
 
 test("sitemap generator includes all national school detail records", async () => {

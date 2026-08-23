@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AdmissionHistoryExplorer } from "@/components/admission-history-explorer";
 import { SchoolExplorer, type SchoolExplorerFilters } from "@/components/school-explorer";
 import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
 
 export default async function SchoolsPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const params = await searchParams;
+  const historyView = params.view === "history";
   const initialFilters: SchoolExplorerFilters = {
     district: params.district || "all",
     query: params.q?.slice(0, 100) || "",
@@ -30,7 +32,7 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
     <main className="min-h-screen jshs-page-shell">
       <SiteHeader activeHref="/schools" />
       <DistrictGate initialDistrict={params.district}>
-        <SchoolExplorer districtOptions={schoolDistrictOptions} initialFilters={initialFilters} />
+        {historyView ? <AdmissionHistoryExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} /> : <SchoolExplorer districtOptions={schoolDistrictOptions} initialFilters={initialFilters} />}
       </DistrictGate>
       <SiteFooter />
     </main>

@@ -15,6 +15,7 @@ import tpCsv from "../public/it_hs/tp/schools_tp.csv?raw";
 import yunlinCsv from "../public/it_hs/yunlin/schools.csv?raw";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 import { toSchoolRecords, type SchoolDepartment } from "./school-catalog.mjs";
+import { classifyHistoricalSource, type HistoricalSourceType } from "./school-history";
 
 export type SchoolDirectoryRecord = Readonly<{
   districtCode: string;
@@ -43,6 +44,7 @@ export type SchoolDirectoryRecord = Readonly<{
   referenceScore: string;
   scoreYear: string;
   sourceNote: string;
+  historicalSourceType: HistoricalSourceType;
   specialPrograms: string;
   courseDirection: string;
   internshipProject: string;
@@ -107,6 +109,7 @@ const districtRecords = Object.entries(csvByDistrict).flatMap(([districtCode, cs
       updatedAt: district.updatedAt,
       sourceName: district.sourceName,
       sourceUrl: district.sourceUrl,
+      historicalSourceType: classifyHistoricalSource(district.sourceName, school.sourceNote),
       groups,
       hasQuota: Boolean(school.quota || school.departments.some((department) => department.quota !== null)),
       hasHistoricalData: Boolean(school.referenceScore),

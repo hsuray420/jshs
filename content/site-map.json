@@ -11,15 +11,11 @@
   ],
   "menuGroups": [
     {
-      "label": "查學校", "href": "/schools", "activeHref": "/schools", "eyebrow": "先找到適合你的校科", "description": "用就學區、學制、群科、交通與費用條件，從全國學校資料找出可比較的選項。",
+      "label": "查學校", "href": "/schools", "activeHref": "/schools", "eyebrow": "先找到適合你的校科", "description": "用全國校科查詢與歷年錄取成績資料，從學校、科別與來源狀態開始判斷。",
       "items": [
-        { "label": "全國學校查詢", "href": "/schools", "description": "搜尋校名、科別、縣市或學校代碼" },
-        { "label": "學制篩選（普高／技高／綜高／五專）", "href": "/schools?view=program", "description": "依學制縮小選項" },
-        { "label": "群科／十五群科介紹", "href": "/knowledge?topic=groups", "description": "看學習內容與未來方向" },
-        { "label": "校科比較表", "href": "/planner?view=compare", "description": "把候選校科放在同一張表比較" },
-        { "label": "學校地圖總覽", "href": "/schools?view=map", "description": "依區域查看學校位置" },
-        { "label": "通勤時間與距離比較", "href": "/planner?view=commute", "description": "比較通勤與生活條件" },
-        { "label": "費用試算", "href": "/schools?view=cost", "description": "試算學費、制服與住宿支出" }
+        { "label": "全國校科查詢", "href": "/schools", "description": "用同一套篩選搜尋全國校名、科別、群科、縣市與學校代碼" },
+        { "label": "歷年錄取成績查詢", "href": "/schools?view=history", "description": "讀取同一份校科資料，分開查看官方與非官方歷年成績" },
+        { "label": "群科／十五群科介紹", "href": "/knowledge?topic=groups", "description": "看學習內容與未來方向" }
       ]
     },
     {
@@ -29,7 +25,6 @@
         { "label": "積分／序位換算說明", "href": "/knowledge?topic=scoring", "description": "看每個項目的算法、上限與來源" },
         { "label": "個人積分摘要", "href": "/tools?view=summary", "description": "查看各項分數與待補資料" },
         { "label": "成績歷史紀錄", "href": "/tools?view=history", "description": "保存模擬考趨勢與每次試算版本" },
-        { "label": "歷年錄取統計", "href": "/schools?view=history", "description": "查看可取得的歷年參考資料" },
         { "label": "模擬考先估落點", "href": "/tools?view=placement", "description": "用挑戰、適中、穩定區間輔助規劃" }
       ]
     },
