@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { AdmissionHistoryExplorer } from "@/components/admission-history-explorer";
+import { SchoolAlumniExplorer } from "@/components/school-alumni-explorer";
+import { CommuteComparison } from "@/components/commute-comparison";
+import { SchoolCostPlanner } from "@/components/school-cost-planner";
 import { SchoolExplorer, type SchoolExplorerFilters } from "@/components/school-explorer";
+import { SchoolMapExplorer } from "@/components/school-map-explorer";
 import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -18,7 +22,7 @@ export const metadata: Metadata = {
 
 export default async function SchoolsPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const params = await searchParams;
-  const historyView = params.view === "history";
+  const view = params.view || "schools";
   const initialFilters: SchoolExplorerFilters = {
     district: params.district || "all",
     query: params.q?.slice(0, 100) || "",
@@ -32,7 +36,12 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
     <main className="min-h-screen jshs-page-shell">
       <SiteHeader activeHref="/schools" />
       <DistrictGate initialDistrict={params.district}>
-        {historyView ? <AdmissionHistoryExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} /> : <SchoolExplorer districtOptions={schoolDistrictOptions} initialFilters={initialFilters} />}
+        {view === "history" ? <AdmissionHistoryExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
+          : view === "alumni" ? <SchoolAlumniExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
+            : view === "map" ? <SchoolMapExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
+              : view === "cost" ? <SchoolCostPlanner />
+                : view === "commute" ? <CommuteComparison districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
+                  : <SchoolExplorer districtOptions={schoolDistrictOptions} initialFilters={initialFilters} />}
       </DistrictGate>
       <SiteFooter />
     </main>

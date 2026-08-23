@@ -62,6 +62,7 @@ const districtEntries = await Promise.all(Object.entries(csvFiles).map(async ([d
     program: school.program,
     city: school.city,
     area: school.area,
+    address: school.address,
     website: school.website,
     departmentsRaw: school.departmentsRaw,
     referenceScore: school.referenceScore,

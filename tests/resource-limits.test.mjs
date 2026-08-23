@@ -15,7 +15,7 @@ test("school explorer data is a compact static asset, not an SSR prop", async ()
   assert.ok(Array.isArray(payload.schools));
   assert.ok(payload.schools.length >= 600);
   assert.ok(payload.schools.every((school) => school.code && school.name && school.districtCode));
-  assert.ok(payload.schools.every((school) => !("address" in school) && !("courseDirection" in school)));
+  assert.ok(payload.schools.every((school) => "address" in school && !("courseDirection" in school)));
   assert.doesNotMatch(page, /schoolDirectory/);
   assert.match(explorer, /school-directory\.json/);
   assert.match(explorer, /正在載入學校資料/);

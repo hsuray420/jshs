@@ -11,10 +11,14 @@
   ],
   "menuGroups": [
     {
-      "label": "查學校", "href": "/schools", "activeHref": "/schools", "eyebrow": "先找到適合你的校科", "description": "用全國校科查詢與歷年錄取成績資料，從學校、科別與來源狀態開始判斷。",
+      "label": "查學校", "href": "/schools", "activeHref": "/schools", "eyebrow": "先找到適合你的校科", "description": "用全國校科查詢、歷年錄取成績、學長姐分享、地圖、費用與通勤工具，從學校、科別與生活條件開始判斷。",
       "items": [
         { "label": "全國校科查詢", "href": "/schools", "description": "用同一套篩選搜尋全國校名、科別、群科、縣市與學校代碼" },
         { "label": "歷年錄取成績查詢", "href": "/schools?view=history", "description": "讀取同一份校科資料，分開查看官方與非官方歷年成績" },
+        { "label": "學長姐分享", "href": "/schools?view=alumni", "description": "集中閱讀非官方的最低錄取經驗與學校看法" },
+        { "label": "學校地圖", "href": "/schools?view=map", "description": "依縣市、區域與地址查看學校位置" },
+        { "label": "費用試算", "href": "/schools?view=cost", "description": "用可調整欄位估算三年就學支出" },
+        { "label": "通勤比較", "href": "/schools?view=commute", "description": "選擇學校並輸入時間，並排比較通勤負擔" },
         { "label": "群科／十五群科介紹", "href": "/knowledge?topic=groups", "description": "看學習內容與未來方向" }
       ]
     },

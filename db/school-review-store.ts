@@ -68,6 +68,17 @@ export async function listSchoolReviews(district: string, schoolCode: string) {
   return result.results ?? [];
 }
 
+export async function listRecentSchoolReviews(limit = 100) {
+  await ensureSchoolReviewSchema();
+  const safeLimit = Math.min(Math.max(Math.trunc(limit), 1), 100);
+  const result = await getD1().prepare(`SELECT id, district, school_code, school_name,
+    nickname, graduation_year, admission_score, content, status, created_at
+    FROM school_reviews
+    WHERE status = 'published'
+    ORDER BY created_at DESC LIMIT ?`).bind(safeLimit).all<SchoolReview>();
+  return result.results ?? [];
+}
+
 export async function createSchoolReview(input: SchoolReview) {
   await ensureSchoolReviewSchema();
   await getD1().prepare(`INSERT INTO school_reviews (

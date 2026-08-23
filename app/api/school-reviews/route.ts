@@ -1,13 +1,13 @@
 import { getSchoolDirectoryRecord } from "../../../lib/school-directory";
-import { consumeSchoolReviewRateLimit, createSchoolReview, listSchoolReviews, type SchoolReview } from "../../../db/school-review-store";
+import { consumeSchoolReviewRateLimit, createSchoolReview, listRecentSchoolReviews, listSchoolReviews, type SchoolReview } from "../../../db/school-review-store";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   const { district, schoolCode } = readTarget(request);
-  if (!district || !schoolCode) return Response.json({ ok: false, error: "school_required" }, { status: 400 });
+  if ((district && !schoolCode) || (!district && schoolCode)) return Response.json({ ok: false, error: "school_required" }, { status: 400 });
   try {
-    const reviews = await listSchoolReviews(district, schoolCode);
+    const reviews = district && schoolCode ? await listSchoolReviews(district, schoolCode) : await listRecentSchoolReviews();
     return Response.json({ ok: true, reviews }, { headers: { "cache-control": "no-store" } });
   } catch {
     return Response.json({ ok: false, error: "review_service_unavailable" }, { status: 503 });
