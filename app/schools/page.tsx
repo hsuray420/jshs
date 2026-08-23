@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SchoolExplorer, type SchoolExplorerFilters } from "@/components/school-explorer";
+import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { schoolDirectory, schoolDistrictOptions } from "@/lib/school-directory";
@@ -28,7 +29,9 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
   return (
     <main className="min-h-screen jshs-page-shell">
       <SiteHeader activeHref="/schools" />
-      <SchoolExplorer schools={schoolDirectory} districtOptions={schoolDistrictOptions} initialFilters={initialFilters} />
+      <DistrictGate initialDistrict={params.district}>
+        <SchoolExplorer schools={schoolDirectory} districtOptions={schoolDistrictOptions} initialFilters={initialFilters} />
+      </DistrictGate>
       <SiteFooter />
     </main>
   );

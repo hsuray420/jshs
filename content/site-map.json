@@ -1,195 +1,124 @@
 {
-  "updatedAt": "2026-08-14",
+  "updatedAt": "2026-08-23",
   "primaryNavigation": [
-    { "label": "升學指南", "href": "/news#latest", "activeHref": "/news" },
-    { "label": "找校科", "href": "/schools?district=ct", "activeHref": "/schools" },
-    { "label": "試算工具", "href": "/tools", "activeHref": "/tools" },
-    { "label": "我的規劃", "href": "/planner", "activeHref": "/planner" }
+    { "label": "查學校", "href": "/schools", "activeHref": "/schools" },
+    { "label": "算成績", "href": "/tools", "activeHref": "/tools" },
+    { "label": "時間日程", "href": "/schedule", "activeHref": "/schedule" },
+    { "label": "我的志願", "href": "/planner", "activeHref": "/planner" },
+    { "label": "特殊資格", "href": "/eligibility", "activeHref": "/eligibility" },
+    { "label": "升學知識", "href": "/knowledge", "activeHref": "/knowledge" },
+    { "label": "更多", "href": "/trust", "activeHref": "/trust" }
   ],
   "menuGroups": [
     {
-      "label": "升學指南",
-      "href": "/news#latest",
-      "activeHref": "/news",
-      "eyebrow": "先理解，再做決定",
-      "description": "從會考、入學規則到志願策略，先把制度看懂，再開始比較選項。",
+      "label": "查學校", "href": "/schools", "activeHref": "/schools", "eyebrow": "先找到適合你的校科", "description": "用就學區、學制、群科、交通與費用條件，從全國學校資料找出可比較的選項。",
       "items": [
-        { "label": "全部指南", "href": "/news#latest", "description": "瀏覽全部升學文章與最新整理" },
-        { "label": "會考準備", "href": "/news/exam", "description": "重要時程、各科準備與應試提醒" },
-        { "label": "入學規則", "href": "/news/rules", "description": "免試入學、比序與跨區資格" },
-        { "label": "志願策略", "href": "/news/strategy", "description": "挑戰、適中、穩定三層規劃" },
-        { "label": "校科探索", "href": "/news/schools", "description": "從學校、群科、五專與課程方向開始" },
-        { "label": "生涯選擇", "href": "/news/career", "description": "比較學制、興趣與後續升學路徑" },
-        { "label": "家長與新生", "href": "/news/parents", "description": "親子討論、家庭支持與入學準備" }
+        { "label": "全國學校查詢", "href": "/schools", "description": "搜尋校名、科別、縣市或學校代碼" },
+        { "label": "學制篩選（普高／技高／綜高／五專）", "href": "/schools?view=program", "description": "依學制縮小選項" },
+        { "label": "群科／十五群科介紹", "href": "/knowledge?topic=groups", "description": "看學習內容與未來方向" },
+        { "label": "校科比較表", "href": "/planner?view=compare", "description": "把候選校科放在同一張表比較" },
+        { "label": "學校地圖總覽", "href": "/schools?view=map", "description": "依區域查看學校位置" },
+        { "label": "通勤時間與距離比較", "href": "/planner?view=commute", "description": "比較通勤與生活條件" },
+        { "label": "費用試算", "href": "/schools?view=cost", "description": "試算學費、制服與住宿支出" }
       ]
     },
     {
-      "label": "找校科",
-      "href": "/schools?district=ct",
-      "activeHref": "/schools",
-      "eyebrow": "把校名變成可比較的選項",
-      "description": "從就學區、學制、群科與生活條件探索適合的學校與科別。",
+      "label": "算成績", "href": "/tools", "activeHref": "/tools", "eyebrow": "先算清楚，再判斷選項", "description": "依目前就學區與學年度規則，完成會考、多元學習與比序積分整理。",
       "items": [
-        { "label": "全國學校搜尋", "href": "/schools?district=ct", "description": "搜尋校名、科別、縣市或學校代碼" },
-        { "label": "就學區篩選", "href": "/districts?target=schools", "description": "先選適用區域，再查看可用資料" },
-        { "label": "學制篩選", "href": "/schools?district=ct", "description": "依普通高中、技高與綜合高中篩選" },
-        { "label": "學校詳情", "href": "/schools/ct", "description": "查看學校資料、科別、來源與規劃操作" },
-        { "label": "群科探索", "href": "/search?q=群科", "description": "認識十五群科與實際學習內容" },
-        { "label": "五專探索", "href": "/news/schools", "description": "了解五專學制與升學路徑" },
-        { "label": "學制比較", "href": "/news/career", "description": "把普高、技高、綜高、五專放在一起比較" },
-        { "label": "校科比較表", "href": "/planner", "description": "把候選學校與科別放在同一張比較表" }
+        { "label": "開始試算", "href": "/tools", "description": "輸入會考成績與學習表現" },
+        { "label": "積分／序位換算說明", "href": "/knowledge?topic=scoring", "description": "看每個項目的算法、上限與來源" },
+        { "label": "個人積分摘要", "href": "/tools?view=summary", "description": "查看各項分數與待補資料" },
+        { "label": "成績歷史紀錄", "href": "/tools?view=history", "description": "保存模擬考趨勢與每次試算版本" },
+        { "label": "歷年錄取統計", "href": "/schools?view=history", "description": "查看可取得的歷年參考資料" },
+        { "label": "模擬考先估落點", "href": "/tools?view=placement", "description": "用挑戰、適中、穩定區間輔助規劃" }
       ]
     },
     {
-      "label": "試算工具",
-      "href": "/tools",
-      "activeHref": "/tools",
-      "eyebrow": "把資料變成下一步",
-      "description": "依正確就學區完成積分、落點與志願決策準備。",
+      "label": "時間日程", "href": "/schedule", "activeHref": "/schedule", "eyebrow": "知道現在該做什麼", "description": "全國共通時程、就學區差異、倒數、待辦與匯出行事曆集中管理。",
       "items": [
-        { "label": "先選就學區", "href": "/districts?target=calculator", "description": "確認目前使用的區域與資料狀態" },
-        { "label": "會考成績輸入", "href": "/tools", "description": "輸入各科等級與作文等資料" },
-        { "label": "多元學習表現", "href": "/tools", "description": "整理志願序、就近入學與學習表現" },
-        { "label": "各區超額比序試算", "href": "/tools", "description": "依目前已校核的區域規則計算" },
-        { "label": "個人積分摘要", "href": "/tools", "description": "查看各項分數、上限與資料來源" },
-        { "label": "落點區間", "href": "/tools", "description": "查看挑戰、適中與穩定選項" },
-        { "label": "風險解釋", "href": "/trust#placement", "description": "了解差距、推估限制與需要核對的因素" },
-        { "label": "結果存入我的規劃", "href": "/planner", "description": "把試算結果帶進候選校科與志願清單" }
+        { "label": "全年倒數計時", "href": "/schedule#countdown", "description": "距離會考與重要節點還有多久" },
+        { "label": "重要時程總覽", "href": "/schedule#timeline", "description": "依目前地區自動帶出日期" },
+        { "label": "我現在該做什麼", "href": "/schedule#now", "description": "依日期取得下一個行動建議" },
+        { "label": "升學待辦清單", "href": "/schedule#tasks", "description": "勾選、保存並追蹤待辦" },
+        { "label": "各就學區時程差異比較", "href": "/schedule#compare", "description": "並排比較不同地區時間" },
+        { "label": "校園開放日行事曆", "href": "/schedule#open-days", "description": "整理學校參訪與開放資訊" },
+        { "label": "個人化行事曆匯出", "href": "/schedule#export", "description": "下載 ICS 加入手機或 Google Calendar" }
       ]
     },
     {
-      "label": "我的規劃",
-      "href": "/planner",
-      "activeHref": "/planner",
-      "eyebrow": "把選項留在同一個地方",
-      "description": "收藏、比較、排序與檢查志願，讓每次查資料都留下可執行的結果。",
+      "label": "我的志願", "href": "/planner", "activeHref": "/planner", "eyebrow": "把選項整理成決定", "description": "從候選校科到排序、健檢、版本與家庭討論，完整留下每一個選擇理由。",
       "items": [
-        { "label": "我的候選校科", "href": "/planner", "description": "查看已收藏的學校與科別" },
-        { "label": "挑戰／適中／穩定分層", "href": "/planner", "description": "用風險層級整理候選選項" },
-        { "label": "志願排序", "href": "/planner", "description": "建立並調整志願順序" },
-        { "label": "校科比較", "href": "/planner", "description": "比較學制、課程、通勤與資料狀態" },
-        { "label": "家庭討論備註", "href": "/planner#family-summary", "description": "留下想選的理由與需要一起確認的問題" },
-        { "label": "升學待辦與重要日期", "href": "/news/exam", "description": "掌握下一個要完成的升學任務" },
-        { "label": "送出前檢核", "href": "/planner#family-summary", "description": "核對區域、年度、志願數與官方簡章" },
-        { "label": "列印／下載規劃摘要", "href": "/planner", "description": "整理成家庭討論與核對用摘要" },
-        { "label": "分享只讀版本", "href": "/planner", "description": "讓家長或老師查看規劃而不改動內容" }
+        { "label": "我的候選校科清單", "href": "/planner", "description": "挑戰／適中／穩定分頁整理候選項目" },
+        { "label": "排序與健檢", "href": "/planner?view=check", "description": "排序、組合健檢與送出前檢核" },
+        { "label": "版本紀錄", "href": "/planner?view=versions", "description": "查看異動、比較版本並留下家庭備註" },
+        { "label": "列印／下載", "href": "/planner?view=export", "description": "輸出規劃摘要版或志願卡正式版" },
+        { "label": "志願選填平台連結", "href": "/trust#official-platform", "description": "前往外部正式選填平台" }
       ]
     },
     {
-      "label": "更多",
-      "href": "/districts",
-      "activeHref": "/districts",
-      "eyebrow": "完整網站地圖",
-      "description": "就學區、查詢百科與信任支援都放在這裡，不干擾主要決策流程。",
+      "label": "特殊資格", "href": "/eligibility", "activeHref": "/eligibility", "eyebrow": "先確認你適用哪條路", "description": "用自我檢測先篩選可能的資格，再閱讀正式規定與應備文件。",
       "items": [
-        {
-          "label": "就學區",
-          "href": "/districts",
-          "description": "選擇適用地區與查看功能狀態",
-          "children": [
-            { "label": "15 區總覽", "href": "/districts", "description": "瀏覽全國免試入學就學區" },
-            { "label": "各區資料狀態", "href": "/districts", "description": "查看已校核、參考與建置中的功能" },
-            { "label": "各區適用規則", "href": "/news/rules", "description": "閱讀比序、跨區與志願規則" },
-            { "label": "各區重要日期", "href": "/news/exam", "description": "查看會考與免試入學時程" },
-            { "label": "各區官方委員會", "href": "/districts", "description": "前往各區正式公告來源" },
-            { "label": "各區可用工具", "href": "/districts", "description": "依區域進入學校、試算或規劃" }
-          ]
-        },
-        {
-          "label": "查詢與百科",
-          "href": "/search",
-          "description": "用關鍵字與知識頁補足判斷所需資訊",
-          "children": [
-            { "label": "搜尋", "href": "/search", "description": "搜尋學校、科別、文章與名詞" },
-            { "label": "學校類型", "href": "/news/career", "description": "比較普高、技高、綜高與五專" },
-            { "label": "十五群科", "href": "/search?q=群科", "description": "了解技職群科與學習內容" },
-            { "label": "升學名詞 FAQ", "href": "/search?q=超額比序", "description": "快速理解會考與免試入學名詞" },
-            { "label": "歷年統計", "href": "/schools", "description": "查看學校歷年參考資料" },
-            { "label": "重要日程", "href": "/news/exam", "description": "整理目前階段最重要的日期" }
-          ]
-        },
-        {
-          "label": "關於與信任",
-          "href": "/trust",
-          "description": "了解資料如何整理、更新與回報問題",
-          "children": [
-            { "label": "資料來源與更新紀錄", "href": "/trust#sources", "description": "查看資料年度、來源與校核狀態" },
-            { "label": "如何閱讀落點", "href": "/trust#placement", "description": "理解區間、推估與限制" },
-            { "label": "資料錯誤回報", "href": "/trust#report", "description": "回報學校或規則資料問題" },
-            { "label": "隱私權", "href": "/trust#privacy", "description": "了解個人資料與規劃內容的處理方式" },
-            { "label": "服務條款", "href": "/trust#terms", "description": "查看網站使用規範" },
-            { "label": "支持／合作", "href": "/trust#support", "description": "支持資料維護或洽談教育合作" }
-          ]
-        }
+        { "label": "資格自我檢測", "href": "/eligibility", "description": "用幾個問題找到要深入查的資格" },
+        { "label": "特色招生／特色班", "href": "/eligibility#特色招生", "description": "了解報名條件、流程與時程" },
+        { "label": "資優／特殊教育升學路徑", "href": "/eligibility#資優與特教", "description": "整理不同支持需求的升學路徑" },
+        { "label": "直升與甄選入學說明", "href": "/eligibility#直升與甄選", "description": "了解校內直升與甄選差異" },
+        { "label": "跨區就學資格判定", "href": "/eligibility#跨區", "description": "檢查居住、就讀與報名條件" },
+        { "label": "外加名額說明", "href": "/eligibility#外加名額", "description": "查看外加名額的適用情形" },
+        { "label": "轉學生／非應屆生規則", "href": "/eligibility#非應屆", "description": "整理不同身分的注意事項" },
+        { "label": "僑生／境外生說明", "href": "/eligibility#境外生", "description": "了解專屬申請與文件方向" }
+      ]
+    },
+    {
+      "label": "升學知識", "href": "/knowledge", "activeHref": "/knowledge", "eyebrow": "把複雜的制度講成人話", "description": "從三分鐘入門、名詞百科到學制測驗與未來科系地圖，建立自己的判斷基礎。",
+      "items": [
+        { "label": "3 分鐘看懂免試入學", "href": "/knowledge#免試入學", "description": "先掌握制度全貌與決策順序" },
+        { "label": "名詞小百科", "href": "/knowledge#名詞百科", "description": "搜尋超額比序、序位與志願等名詞" },
+        { "label": "常見迷思破解", "href": "/knowledge#迷思", "description": "分清楚事實、推估與誤解" },
+        { "label": "過來人經驗談", "href": "/knowledge#經驗", "description": "從不同選擇整理可借鑑的經驗" },
+        { "label": "AI 問答小幫手", "href": "/knowledge#ai", "description": "用問題導向找到可信的下一步" },
+        { "label": "短影音系列", "href": "/knowledge#影音", "description": "用短內容快速理解升學概念" },
+        { "label": "Podcast／語音版", "href": "/knowledge#podcast", "description": "通勤時也能聽懂重要資訊" },
+        { "label": "學制適合度測驗", "href": "/knowledge#測驗", "description": "依興趣與學習方式探索學制" },
+        { "label": "未來銜接大學科系地圖", "href": "/knowledge#科系地圖", "description": "把高中職學習連到未來方向" }
+      ]
+    },
+    {
+      "label": "更多", "href": "/trust", "activeHref": "/trust", "eyebrow": "帳號、通知與信任支援", "description": "把輔助功能收在這裡，不干擾主要決策流程。",
+      "items": [
+        { "label": "帳號與資料", "href": "/account", "description": "會員、資料匯入匯出、老師模式與手足資料", "children": [
+          { "label": "會員登入", "href": "/account", "description": "登入後同步個人規劃" },
+          { "label": "匯入／匯出資料", "href": "/account#data", "description": "保存或搬移自己的資料" },
+          { "label": "老師／輔導室批次模式", "href": "/account#teacher", "description": "為班級或輔導工作準備資料" },
+          { "label": "手足資料切換", "href": "/account#siblings", "description": "在同一帳號切換不同學生" }
+        ] },
+        { "label": "通知與提醒", "href": "/notifications", "description": "集中管理提醒與訂閱", "children": [
+          { "label": "分數到手機推播", "href": "/notifications#push", "description": "重要結果與狀態提醒" },
+          { "label": "LINE 官方帳號整合", "href": "/notifications#line", "description": "連結 LINE 接收重要通知" },
+          { "label": "Email 週報", "href": "/notifications#email", "description": "每週整理升學進度" },
+          { "label": "重要日期訂閱設定", "href": "/notifications#calendar", "description": "選擇想收到的日期提醒" }
+        ] },
+        { "label": "信任與回饋", "href": "/trust", "description": "查看資料來源、回報問題與社群回饋", "children": [
+          { "label": "資料來源與更新紀錄", "href": "/trust#sources", "description": "每筆資料的年度、來源與更新日" },
+          { "label": "評分與回饋", "href": "/trust#feedback", "description": "分享使用體驗與建議" },
+          { "label": "使用人數展示", "href": "/trust#community", "description": "查看平台服務範圍與社群參與" },
+          { "label": "資料錯誤回報", "href": "/trust#report", "description": "回報需要校正的資料" },
+          { "label": "社群投票互動", "href": "/trust#community", "description": "參與公開議題與經驗整理" },
+          { "label": "在校生真實心得", "href": "/trust#stories", "description": "閱讀匿名整理的學習經驗" }
+        ] },
+        { "label": "關於平台", "href": "/trust", "description": "法律、隱私與合作資訊", "children": [
+          { "label": "隱私權", "href": "/trust#privacy", "description": "了解個人資料如何處理" },
+          { "label": "服務條款", "href": "/trust#terms", "description": "查看使用規範" },
+          { "label": "支持／合作", "href": "/trust#support", "description": "支持維護或洽談教育合作" }
+        ] }
       ]
     }
   ],
   "newsCategories": [
-    {
-      "slug": "exam",
-      "href": "/news/exam",
-      "title": "會考準備",
-      "eyebrow": "EXAM PREPARATION",
-      "description": "整理國中教育會考重要時程、各科準備、考前衝刺與應試提醒，先掌握已公告資訊，再安排每一階段的行動。",
-      "topics": ["重要時程", "各科準備", "考前衝刺", "應試提醒"],
-      "articleSlugs": ["116-junior-high-exam-roadmap"],
-      "nextHref": "/tools",
-      "nextLabel": "查看升學工具"
-    },
-    {
-      "slug": "rules",
-      "href": "/news/rules",
-      "title": "入學規則",
-      "eyebrow": "ADMISSION RULES",
-      "description": "把免試入學、超額比序、積分與序位等複雜名詞拆成可核對的步驟，並清楚標示適用學年度與官方來源。",
-      "topics": ["免試入學", "超額比序", "積分與序位", "跨區資格"],
-      "articleSlugs": ["how-to-confirm-enrollment-district", "score-ranking-placement-difference"],
-      "nextHref": "/districts",
-      "nextLabel": "確認適用就學區"
-    },
-    {
-      "slug": "strategy",
-      "href": "/news/strategy",
-      "title": "志願策略",
-      "eyebrow": "WISH STRATEGY",
-      "description": "從候選校科、風險分層到正式排序，協助學生用挑戰、適中與穩定三層結構，建立真正願意就讀的志願清單。",
-      "topics": ["三層志願", "志願排序", "落點判讀", "常見錯誤"],
-      "articleSlugs": ["wish-list-three-tiers", "score-ranking-placement-difference"],
-      "nextHref": "/planner",
-      "nextLabel": "建立我的規劃"
-    },
-    {
-      "slug": "schools",
-      "href": "/news/schools",
-      "title": "校科探索",
-      "eyebrow": "SCHOOL EXPLORATION",
-      "description": "從學校、群科、五專與課程方向理解不同選項，不只看校名或分數，還把通勤、學習內容與未來路徑一起比較。",
-      "topics": ["高中職校科", "十五群科", "五專", "學校比較"],
-      "articleSlugs": ["general-vocational-five-year-choice"],
-      "nextHref": "/schools",
-      "nextLabel": "開始找學校"
-    },
-    {
-      "slug": "career",
-      "href": "/news/career",
-      "title": "生涯選擇",
-      "eyebrow": "CAREER PATHS",
-      "description": "比較普通高中、技術型高中與五專的學習方式和後續路徑，從自己的興趣與生活條件出發，而不是只追逐單一排名。",
-      "topics": ["普通高中", "技術型高中", "五專路徑", "適性選擇"],
-      "articleSlugs": ["general-vocational-five-year-choice"],
-      "nextHref": "/schools",
-      "nextLabel": "比較學校與校科"
-    },
-    {
-      "slug": "parents",
-      "href": "/news/parents",
-      "title": "家長與新生",
-      "eyebrow": "FAMILY GUIDE",
-      "description": "提供家長與新生共同討論升學選擇的方法、會議清單與入學準備，讓家庭支持決策，而不是代替學生做決定。",
-      "topics": ["親子討論", "升學會議", "新生準備", "家庭支持"],
-      "articleSlugs": ["parent-student-admission-meeting"],
-      "nextHref": "/planner",
-      "nextLabel": "整理家庭待辦"
-    }
+    { "slug": "exam", "href": "/news/exam", "title": "會考準備", "eyebrow": "EXAM PREPARATION", "description": "整理國中教育會考重要時程、各科準備、考前衝刺與應試提醒，讓每個階段都有下一步。", "topics": ["重要時程", "各科準備", "考前衝刺", "應試提醒"], "articleSlugs": ["116-junior-high-exam-roadmap"], "nextHref": "/tools", "nextLabel": "查看算成績" },
+    { "slug": "rules", "href": "/news/rules", "title": "入學規則", "eyebrow": "ADMISSION RULES", "description": "把免試入學、超額比序、積分與序位拆成可核對的步驟，清楚標示年度與官方來源。", "topics": ["免試入學", "超額比序", "積分與序位", "跨區資格"], "articleSlugs": ["how-to-confirm-enrollment-district", "score-ranking-placement-difference"], "nextHref": "/districts", "nextLabel": "確認適用就學區" },
+    { "slug": "strategy", "href": "/news/strategy", "title": "志願策略", "eyebrow": "WISH STRATEGY", "description": "從候選校科、風險分層到正式排序，建立真正願意就讀的志願清單。", "topics": ["三層志願", "志願排序", "落點判讀", "常見錯誤"], "articleSlugs": ["wish-list-three-tiers", "score-ranking-placement-difference"], "nextHref": "/planner", "nextLabel": "建立我的志願" },
+    { "slug": "schools", "href": "/news/schools", "title": "校科探索", "eyebrow": "SCHOOL EXPLORATION", "description": "從學校、群科、五專與課程方向理解不同選項，把學習內容、通勤與未來路徑放在一起比較。", "topics": ["高中職校科", "十五群科", "五專", "學校比較"], "articleSlugs": ["general-vocational-five-year-choice"], "nextHref": "/schools", "nextLabel": "開始查學校" },
+    { "slug": "career", "href": "/news/career", "title": "生涯選擇", "eyebrow": "CAREER PATHS", "description": "比較普通高中、技術型高中與五專的學習方式和後續路徑，從興趣、學習方式與生活條件出發。", "topics": ["普通高中", "技術型高中", "五專路徑", "適性選擇"], "articleSlugs": ["general-vocational-five-year-choice"], "nextHref": "/schools", "nextLabel": "比較學校與校科" },
+    { "slug": "parents", "href": "/news/parents", "title": "家長與新生", "eyebrow": "FAMILY GUIDE", "description": "提供家長與新生共同討論升學選擇的方法、會議清單與入學準備，讓家庭支持決策。", "topics": ["親子討論", "升學會議", "新生準備", "家庭支持"], "articleSlugs": ["parent-student-admission-meeting"], "nextHref": "/planner", "nextLabel": "整理家庭待辦" }
   ]
 }

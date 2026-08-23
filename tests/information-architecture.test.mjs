@@ -15,25 +15,28 @@ const visitorSurfaceUrls = [
 ];
 
 const expectedNavigation = [
-  ["升學指南", "/news#latest"],
-  ["找校科", "/schools?district=ct"],
-  ["試算工具", "/tools"],
-  ["我的規劃", "/planner"],
+  ["查學校", "/schools"],
+  ["算成績", "/tools"],
+  ["時間日程", "/schedule"],
+  ["我的志願", "/planner"],
+  ["特殊資格", "/eligibility"],
+  ["升學知識", "/knowledge"],
+  ["更多", "/trust"],
 ];
 
 const expectedCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
 
-test("the information architecture keeps four task hubs and treats district as context", async () => {
+test("the information architecture follows the final seven-group product sitemap", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
 
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ label, href }) => [label, href]),
     expectedNavigation,
   );
-  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 4);
+  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 7);
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ activeHref }) => activeHref),
-    ["/news", "/schools", "/tools", "/planner"],
+    ["/schools", "/tools", "/schedule", "/planner", "/eligibility", "/knowledge", "/trust"],
   );
   assert.equal(siteMap.primaryNavigation.some(({ label }) => label === "就學區"), false);
 });
@@ -44,17 +47,16 @@ test("shared header exposes scalable desktop, drawer, and mobile bottom navigati
     readFile(footerUrl, "utf8"),
   ]);
 
-  assert.match(header, /primaryNavigation\.map/);
+  assert.match(header, /menuGroups\.map/);
   assert.match(header, /aria-label="主要導覽"/);
   assert.match(header, /role="dialog"/);
   assert.match(header, /aria-modal="true"/);
   assert.match(header, /搜尋內容與功能/);
   assert.match(header, /mobile-bottom-nav/);
   assert.match(header, /jshs-nav-open/);
-  assert.match(header, /jshs-floating-nav/);
+  assert.match(header, /jshs-site-header/);
   assert.match(header, /jshs-button/);
-  assert.match(header, /function openDrawer\(focusSearch = false\)/);
-  assert.match(header, /onClick=\{\(\) => openDrawer\(true\)\}/);
+  assert.match(header, /finalNavigationLabels/);
   assert.doesNotMatch(header, />導覽選單</);
   assert.match(footer, /menuGroups\.map/);
 });
@@ -103,30 +105,25 @@ test("tools, schools, districts, and private planner each have a real landing pa
 
 test("primary navigation lands on an interactive surface instead of an introductory hero", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
-  const guide = await readFile(new URL("../public/it_hs/guide.htm", import.meta.url), "utf8");
-  const news = await readFile(new URL("../app/news/page.tsx", import.meta.url), "utf8");
   const schools = await readFile(new URL("../app/schools/page.tsx", import.meta.url), "utf8");
   const tools = await readFile(new URL("../app/tools/page.tsx", import.meta.url), "utf8");
   const planner = await readFile(new URL("../app/planner/page.tsx", import.meta.url), "utf8");
+  const schedule = await readFile(new URL("../app/schedule/page.tsx", import.meta.url), "utf8");
+  const eligibility = await readFile(new URL("../app/eligibility/page.tsx", import.meta.url), "utf8");
+  const knowledge = await readFile(new URL("../app/knowledge/page.tsx", import.meta.url), "utf8");
 
   for (const { href } of siteMap.primaryNavigation) {
     const url = new URL(href, "https://jshs.cc");
     if (url.pathname === "/schools") {
-      assert.equal(url.searchParams.get("district"), "ct");
       assert.match(schools, /<SchoolExplorer/);
       continue;
     }
-    const [path, anchor] = href.split("#");
-    if (path === "/news") {
-      assert.ok(anchor, `${path} must link directly to its useful content`);
-      assert.match(news, new RegExp(`id=["']${anchor}["']`));
-    } else if (path === "/tools") assert.match(tools, /AdmissionCalculator/);
-    else if (path === "/planner") assert.match(planner, /PlannerWorkspace/);
-    else {
-      assert.equal(path, "/it_hs/guide.htm");
-      assert.ok(anchor, `${path} must link directly to its useful content`);
-      assert.match(guide, new RegExp(`data-page-section=["']${anchor}["']`));
-    }
+    if (url.pathname === "/tools") assert.match(tools, /AdmissionCalculator/);
+    else if (url.pathname === "/planner") assert.match(planner, /PlannerWorkspace/);
+    else if (url.pathname === "/schedule") assert.match(schedule, /ScheduleWorkspace/);
+    else if (url.pathname === "/eligibility") assert.match(eligibility, /EligibilityChecker/);
+    else if (url.pathname === "/knowledge") assert.match(knowledge, /KnowledgeHelper/);
+    else assert.equal(url.pathname, "/trust");
   }
 });
 

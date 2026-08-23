@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AdmissionCalculator } from "@/components/admission-calculator";
+import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -18,7 +19,9 @@ export default async function ToolsPage({ searchParams }: { searchParams: Promis
   return (
     <main className="min-h-screen jshs-page-shell">
       <SiteHeader activeHref="/tools" />
-      <AdmissionCalculator initialDistrict={params.district === "tp" ? "tp" : "ct"} />
+      <DistrictGate initialDistrict={params.district}>
+        <AdmissionCalculator initialDistrict={params.district === "tp" ? "tp" : "ct"} />
+      </DistrictGate>
       <SiteFooter />
     </main>
   );

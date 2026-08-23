@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PlannerWorkspace } from "@/components/planner-workspace";
+import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { schoolDirectory } from "@/lib/school-directory";
@@ -14,7 +15,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function PlannerPage() {
+export default async function PlannerPage({ searchParams }: { searchParams: Promise<{ district?: string }> }) {
+  const params = await searchParams;
   const plannerSchools = schoolDirectory.map((school) => ({
     district: school.districtCode,
     code: school.code,
@@ -31,7 +33,9 @@ export default function PlannerPage() {
   return (
     <main className="min-h-screen jshs-page-shell">
       <SiteHeader activeHref="/planner" />
-      <PlannerWorkspace schools={plannerSchools} />
+      <DistrictGate initialDistrict={params.district}>
+        <PlannerWorkspace schools={plannerSchools} />
+      </DistrictGate>
       <SiteFooter />
     </main>
   );
