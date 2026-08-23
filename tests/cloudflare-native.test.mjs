@@ -98,7 +98,7 @@ test("local source changes are gated through GitHub Actions before Cloudflare de
     readSource("AGENTS.md"),
   ]);
 
-  assert.match(pkg, /"test":\s*"pnpm run validate:content && pnpm run typecheck && pnpm run build && node --test tests\/\*\.test\.mjs"/);
+  assert.match(pkg, /"test":\s*"pnpm run validate:content && pnpm run typecheck && pnpm run build && node --experimental-strip-types --test tests\/\*\.test\.mjs"/);
   assert.match(workflow, /on:\s*\n\s*push:\s*\n\s*branches:\s*\n\s*-\s*main/);
   assert.match(workflow, /pnpm install --frozen-lockfile/);
   assert.match(workflow, /pnpm test/);
