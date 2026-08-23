@@ -44,6 +44,14 @@ export type SchoolDirectoryRecord = Readonly<{
   scoreYear: string;
   sourceNote: string;
   specialPrograms: string;
+  courseDirection: string;
+  internshipProject: string;
+  suitableStudents: string;
+  brochureUrl: string;
+  transport: string;
+  commuteInfo: string;
+  boardingInfo: string;
+  lifeSource: string;
   hasQuota: boolean;
   hasHistoricalData: boolean;
 }>;
