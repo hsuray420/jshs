@@ -37,6 +37,12 @@
   --shadow-hover: 0 8px 20px rgba(0, 0, 0, .08);
   --font-system: -apple-system, "SF Pro Text", "PingFang TC", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
   --font-weight-strong: 600;
+  --font-size-body: 16px;
+  --font-size-small: 13px;
+  --font-size-h1: 32px;
+  --font-size-h2: 22px;
+  --font-size-h3: 18px;
+  --font-size-nav: 18px;
 
   --jshs-background: var(--bg-page);
   --jshs-foreground: var(--text-primary);

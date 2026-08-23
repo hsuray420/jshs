@@ -479,7 +479,7 @@
   --admin-shadow-hover: 0 8px 20px rgba(0,0,0,.08);
 }
 
-.admin-shell { background: #F2F2F7; color: #1C1C1E; font-size: 14px; padding: 32px 24px 64px; }
+.admin-shell { background: #F2F2F7; color: #1C1C1E; font-size: 16px; line-height: 1.7; padding: 32px 24px 64px; }
 .admin-shell :where(h1, h2, h3, h4, strong, b, dt, th, label, button, a) { font-weight: 600; }
 .admin-header h1, .admin-panel h1, .admin-panel h2 { font-weight: 600; letter-spacing: -.3px; }
 .admin-muted { color: #8E8E93; }

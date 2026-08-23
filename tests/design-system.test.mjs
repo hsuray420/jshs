@@ -36,6 +36,8 @@ test("design tokens follow the education iOS visual guide", async () => {
   assert.match(tokens, /--shadow-hover:\s*0 8px 20px rgba\(0, 0, 0, \.08\)/i);
   assert.match(tokens, /--font-system:\s*-apple-system,\s*"SF Pro Text",\s*"PingFang TC",\s*"Noto Sans TC",\s*"Helvetica Neue",\s*Arial,\s*sans-serif/i);
   assert.match(tokens, /--font-weight-strong:\s*600/i);
+  assert.match(tokens, /--font-size-body:\s*16px/i);
+  assert.match(tokens, /--font-size-h1:\s*32px/i);
   assert.doesNotMatch(tokens, /organic-radius|#5D7052|#C18C5D|linear-gradient/i);
 });
 
@@ -46,6 +48,8 @@ test("global app stylesheet uses system typography and shared component primitiv
   ]);
 
   assert.match(globalCss, /font-family:\s*var\(--font-system\)/);
+  assert.match(globalCss, /main h1 \{ font-size: var\(--font-size-h1\) !important; \}/);
+  assert.match(globalCss, /main h2 \{ font-size: var\(--font-size-h2\) !important; \}/);
   assert.match(globalCss, /\.jshs-page-shell/);
   assert.match(globalCss, /\.jshs-surface-card/);
   assert.match(globalCss, /\.jshs-button-primary/);

@@ -29,7 +29,7 @@ body {
   background: var(--bg-page);
   color: var(--text-primary);
   font-family: var(--font-system);
-  font-size: 14px;
+  font-size: var(--font-size-body);
   line-height: 1.7;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -60,15 +60,15 @@ main h1 { font-weight: var(--font-weight-strong) !important; letter-spacing: -.4
 main h2 { font-weight: var(--font-weight-strong) !important; line-height: 1.4; }
 main h3 { font-weight: var(--font-weight-strong) !important; }
 .jshs-site-header nav button,
-.jshs-site-header nav a { font-size: 17px; font-weight: var(--font-weight-strong) !important; line-height: 1.4; }
-.jshs-site-header > div > a { font-size: 17px; font-weight: var(--font-weight-strong) !important; line-height: 1.4; }
+.jshs-site-header nav a { font-size: var(--font-size-nav); font-weight: var(--font-weight-strong) !important; line-height: 1.4; }
+.jshs-site-header > div > a { font-size: var(--font-size-nav); font-weight: var(--font-weight-strong) !important; line-height: 1.4; }
 .jshs-task-icon { font-size: 17px; line-height: 1; }
 .jshs-task-icon > span { transform: translateY(-.5px); }
 .jshs-info-group-title { color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
 
-main h1 { font-size: 24px !important; }
-main h2 { font-size: 18px !important; }
-main h3 { font-size: 16px !important; }
+main h1 { font-size: var(--font-size-h1) !important; }
+main h2 { font-size: var(--font-size-h2) !important; }
+main h3 { font-size: var(--font-size-h3) !important; }
 main :where(p, small, dd, li) { color: var(--text-secondary); }
 main :where(a) { color: var(--brand-primary); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 main :where(.font-black, .font-extrabold, .font-bold, .font-semibold) { font-weight: var(--font-weight-strong) !important; }
@@ -175,7 +175,7 @@ main table { border-collapse: collapse; color: var(--text-primary); width: 100%;
 
 .jshs-eyebrow {
   color: var(--brand-primary);
-  font-size: 12px;
+  font-size: var(--font-size-small);
   font-weight: var(--font-weight-strong) !important;
   letter-spacing: 0;
   text-transform: none;
@@ -204,7 +204,10 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 
 @media (max-width: 640px) {
   main.min-h-screen > section { padding: var(--space-8) var(--space-4) !important; }
-  main h1 { font-size: 24px !important; }
+  body { font-size: 15px; }
+  main h1 { font-size: 28px !important; }
+  main h2 { font-size: 20px !important; }
+  main h3 { font-size: 17px !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
