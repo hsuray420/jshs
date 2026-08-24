@@ -31,6 +31,32 @@ test("new school center supports search, filters, selected conditions, and decis
   assert.match(explorer, /資料狀態/);
 });
 
+test("all school surfaces use the CSV field naming standard", async () => {
+  const [detail, explorer, search, planner, history, home, header] = await Promise.all([
+    read("app/schools/[district]/[code]/page.tsx"),
+    read("components/school-explorer.tsx"),
+    read("app/search/page.tsx"),
+    read("components/planner-workspace.tsx"),
+    read("components/admission-history-explorer.tsx"),
+    read("app/page.tsx"),
+    read("components/site-header.tsx"),
+  ]);
+
+  for (const [source, labels] of [
+    [detail, ["學制分類", "縣市", "區", "科系與名額", "招生名額", "招生區", "正式簡章連結", "交通方式", "通勤資訊", "住宿資訊", "生活資料來源"]],
+    [explorer, ["學校名稱", "科系", "學制分類", "縣市"]],
+    [search, ["學制分類", "科系"]],
+    [planner, ["學制分類", "課程方向", "通勤資訊", "招生名額", "最低錄取分數"]],
+    [history, ["科系"]],
+    [home, ["科系", "學制分類"]],
+    [header, ["科系"]],
+  ]) {
+    for (const label of labels) assert.match(source, new RegExp(label));
+  }
+
+  assert.doesNotMatch(detail, /學校類型|招生管道|科別與課程方向|適合什麼樣的學生|住宿／交通資訊/);
+});
+
 test("school details keep decision sections without duplicating separate history or alumni tools", async () => {
   const [page, actions] = await Promise.all([
     read("app/schools/[district]/[code]/page.tsx"),
