@@ -37,7 +37,7 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
       <SiteHeader activeHref="/schools" />
       <DistrictGate initialDistrict={params.district}>
         {view === "history" ? <AdmissionHistoryExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
-          : view === "alumni" ? <SchoolAlumniExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
+          : view === "alumni" ? <SchoolAlumniExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} initialSchoolCode={params.schoolCode} />
             : view === "map" ? <SchoolMapExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
               : view === "cost" ? <SchoolCostPlanner />
                 : view === "commute" ? <CommuteComparison districtOptions={schoolDistrictOptions} initialDistrict={params.district} />

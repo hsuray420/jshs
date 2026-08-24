@@ -7,9 +7,11 @@ export type SchoolReview = Readonly<{
   school_name: string;
   nickname: string;
   graduation_year: string;
+  exam_score: string;
   admission_score: string;
+  admission_result: string;
   content: string;
-  status: "published" | "hidden";
+  status: "pending" | "published" | "rejected" | "hidden";
   created_at: string;
 }>;
 
@@ -23,9 +25,11 @@ export async function ensureSchoolReviewSchema() {
       school_name TEXT NOT NULL,
       nickname TEXT NOT NULL DEFAULT '匿名學長姐',
       graduation_year TEXT NOT NULL DEFAULT '',
+      exam_score TEXT NOT NULL DEFAULT '',
       admission_score TEXT NOT NULL DEFAULT '',
+      admission_result TEXT NOT NULL DEFAULT '',
       content TEXT NOT NULL,
-      status TEXT NOT NULL DEFAULT 'published',
+      status TEXT NOT NULL DEFAULT 'pending',
       created_at TEXT NOT NULL
     )`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_school_reviews_school_created
@@ -37,9 +41,10 @@ export async function ensureSchoolReviewSchema() {
     )`),
   ]);
   const columns = await db.prepare("PRAGMA table_info(school_reviews)").all<{ name: string }>();
-  if (!(columns.results ?? []).some((column) => column.name === "admission_score")) {
-    await db.prepare("ALTER TABLE school_reviews ADD COLUMN admission_score TEXT NOT NULL DEFAULT ''").run();
-  }
+  const names = new Set((columns.results ?? []).map((column) => column.name));
+  if (!names.has("exam_score")) await db.prepare("ALTER TABLE school_reviews ADD COLUMN exam_score TEXT NOT NULL DEFAULT ''").run();
+  if (!names.has("admission_score")) await db.prepare("ALTER TABLE school_reviews ADD COLUMN admission_score TEXT NOT NULL DEFAULT ''").run();
+  if (!names.has("admission_result")) await db.prepare("ALTER TABLE school_reviews ADD COLUMN admission_result TEXT NOT NULL DEFAULT ''").run();
 }
 
 export async function consumeSchoolReviewRateLimit(fingerprint: string, limit = 5, windowMs = 15 * 60 * 1000) {
@@ -61,7 +66,7 @@ export async function consumeSchoolReviewRateLimit(fingerprint: string, limit = 
 export async function listSchoolReviews(district: string, schoolCode: string) {
   await ensureSchoolReviewSchema();
   const result = await getD1().prepare(`SELECT id, district, school_code, school_name,
-    nickname, graduation_year, admission_score, content, status, created_at
+    nickname, graduation_year, exam_score, admission_score, admission_result, content, status, created_at
     FROM school_reviews
     WHERE district = ? AND school_code = ? AND status = 'published'
     ORDER BY created_at DESC LIMIT 50`).bind(district, schoolCode).all<SchoolReview>();
@@ -72,7 +77,7 @@ export async function listRecentSchoolReviews(limit = 100) {
   await ensureSchoolReviewSchema();
   const safeLimit = Math.min(Math.max(Math.trunc(limit), 1), 100);
   const result = await getD1().prepare(`SELECT id, district, school_code, school_name,
-    nickname, graduation_year, admission_score, content, status, created_at
+    nickname, graduation_year, exam_score, admission_score, admission_result, content, status, created_at
     FROM school_reviews
     WHERE status = 'published'
     ORDER BY created_at DESC LIMIT ?`).bind(safeLimit).all<SchoolReview>();
@@ -83,17 +88,34 @@ export async function createSchoolReview(input: SchoolReview) {
   await ensureSchoolReviewSchema();
   await getD1().prepare(`INSERT INTO school_reviews (
     id, district, school_code, school_name, nickname, graduation_year,
-    admission_score, content, status, created_at
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
+    exam_score, admission_score, admission_result, content, status, created_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
     input.id,
     input.district,
     input.school_code,
     input.school_name,
     input.nickname,
     input.graduation_year,
+    input.exam_score,
     input.admission_score,
+    input.admission_result,
     input.content,
     input.status,
     input.created_at,
   ).run();
+}
+
+export async function listPendingSchoolReviews(limit = 100) {
+  await ensureSchoolReviewSchema();
+  const safeLimit = Math.min(Math.max(Math.trunc(limit), 1), 100);
+  const result = await getD1().prepare(`SELECT id, district, school_code, school_name,
+    nickname, graduation_year, exam_score, admission_score, admission_result, content, status, created_at
+    FROM school_reviews WHERE status = 'pending' ORDER BY created_at ASC LIMIT ?`).bind(safeLimit).all<SchoolReview>();
+  return result.results ?? [];
+}
+
+export async function moderateSchoolReview(id: string, status: "published" | "rejected") {
+  await ensureSchoolReviewSchema();
+  const result = await getD1().prepare("UPDATE school_reviews SET status = ? WHERE id = ? AND status = 'pending'").bind(status, id).run();
+  return (result.meta.changes ?? 0) > 0;
 }

@@ -6,6 +6,7 @@ import {
   listLineUsers,
   listSiteSettings,
 } from "../../db/admin-store";
+import { listPendingSchoolReviews } from "../../db/school-review-store";
 import {
   getAlertLineUserIds,
   getAllowedLineUserIds,
@@ -29,11 +30,12 @@ export default async function AdminPage({
 }) {
   const admin = await requireAdmin();
   const params = await searchParams;
-  const [files, settings, lineUsers, extraAdminLineUsers] = await Promise.all([
+  const [files, settings, lineUsers, extraAdminLineUsers, pendingReviews] = await Promise.all([
     listAdminFiles(),
     listSiteSettings(),
     listLineUsers(),
     listExtraAdminLineUserIds(),
+    listPendingSchoolReviews(),
   ]);
   const settingsMap = new Map(settings.map((item) => [item.key, item.value]));
   const publicFiles = files.filter((file) => file.visibility === "public");
@@ -71,6 +73,8 @@ export default async function AdminPage({
           {params.updated === "line_users_added" ? "已加入 LINE 後台管理員。" : null}
           {params.updated === "line_users_removed" ? "已移除後台新增的 LINE 管理員。" : null}
           {params.updated === "line_users_invalid" ? "LINE userId 格式不正確。" : null}
+          {params.updated === "review_published" ? "分享已審核並公開。" : null}
+          {params.updated === "review_rejected" ? "分享已退回，不會公開。" : null}
           {params.tested === "line" ? "LINE 測試通知已送出。" : null}
         </section>
       ) : null}
@@ -165,6 +169,38 @@ export default async function AdminPage({
           </dl>
           <p className="admin-muted">整台服務掛掉時需要外部監控服務檢查健康檢查網址。</p>
         </section>
+      </section>
+
+      <section className="admin-panel">
+        <div className="admin-section-head">
+          <div>
+            <p className="admin-eyebrow">Moderation</p>
+            <h2>匿名分享待審核</h2>
+          </div>
+          <span className={pendingReviews.length ? "admin-badge warn" : "admin-badge ok"}>{pendingReviews.length} 筆待處理</span>
+        </div>
+        <p className="admin-muted">使用者送出的會考成績、錄取結果與經驗，先進入 D1 待審核資料表；只有按下公開後，前台 API 才會讀取。</p>
+        <div className="admin-review-list">
+          {pendingReviews.map((review) => (
+            <article className="admin-review-card" key={review.id}>
+              <div>
+                <strong>{review.school_name}</strong>
+                <small>{review.district} · {review.school_code} · {review.nickname || "匿名學長姐"}</small>
+              </div>
+              <dl className="admin-kv">
+                <dt>會考成績</dt><dd>{review.exam_score || "未填"}</dd>
+                <dt>最低錄取</dt><dd>{review.admission_score || "未填"}</dd>
+                <dt>錄取結果</dt><dd>{review.admission_result || "未填"}</dd>
+                <dt>分享內容</dt><dd>{review.content}</dd>
+              </dl>
+              <div className="admin-row-actions">
+                <form action="/api/admin/school-reviews" method="post"><input type="hidden" name="id" value={review.id} /><input type="hidden" name="status" value="published" /><button type="submit">審核公開</button></form>
+                <form action="/api/admin/school-reviews" method="post"><input type="hidden" name="id" value={review.id} /><input type="hidden" name="status" value="rejected" /><button type="submit">退回</button></form>
+              </div>
+            </article>
+          ))}
+          {!pendingReviews.length ? <p className="admin-muted">目前沒有待審核分享。</p> : null}
+        </div>
       </section>
 
       <section className="admin-panel">

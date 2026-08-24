@@ -54,12 +54,14 @@ export function hasLineMessagingConfigured() {
 export function buildLineAuthorizeUrl({
   origin,
   state,
+  callbackPath = "/api/admin/line/callback",
 }: {
   origin: string;
   state: string;
+  callbackPath?: string;
 }) {
   const { channelId } = getLineLoginConfig();
-  const redirectUri = `${origin}/api/admin/line/callback`;
+  const redirectUri = `${origin}${callbackPath}`;
   const params = new URLSearchParams({
     response_type: "code",
     client_id: channelId,
@@ -74,15 +76,17 @@ export function buildLineAuthorizeUrl({
 export async function exchangeLineCode({
   code,
   origin,
+  callbackPath = "/api/admin/line/callback",
 }: {
   code: string;
   origin: string;
+  callbackPath?: string;
 }) {
   const { channelId, channelSecret } = getLineLoginConfig();
   const body = new URLSearchParams({
     grant_type: "authorization_code",
     code,
-    redirect_uri: `${origin}/api/admin/line/callback`,
+    redirect_uri: `${origin}${callbackPath}`,
     client_id: channelId,
     client_secret: channelSecret,
   });

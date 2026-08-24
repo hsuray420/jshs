@@ -25,7 +25,9 @@ export async function POST(request: Request) {
   const schoolCode = clean(body.schoolCode, 40);
   const nickname = clean(body.nickname, 40) || "匿名學長姐";
   const graduationYear = clean(body.graduationYear, 8);
+  const examScore = clean(body.examScore, 120);
   const admissionScore = clean(body.admissionScore, 120);
+  const admissionResult = clean(body.admissionResult, 160);
   const content = clean(body.content, 1000);
   if (!district || !schoolCode || !content) return Response.json({ ok: false, error: "review_required" }, { status: 400 });
   if (content.length < 10) return Response.json({ ok: false, error: "review_too_short" }, { status: 400 });
@@ -50,14 +52,16 @@ export async function POST(request: Request) {
     school_name: school.name,
     nickname,
     graduation_year: graduationYear,
+    exam_score: examScore,
     admission_score: admissionScore,
+    admission_result: admissionResult,
     content,
-    status: "published",
+    status: "pending",
     created_at: new Date().toISOString(),
   };
   try {
     await createSchoolReview(review);
-    return Response.json({ ok: true, review }, { status: 201, headers: { "cache-control": "no-store" } });
+    return Response.json({ ok: true, status: "pending", message: "已送出，待管理員審核後公開" }, { status: 202, headers: { "cache-control": "no-store" } });
   } catch {
     return Response.json({ ok: false, error: "review_service_unavailable" }, { status: 503 });
   }

@@ -15,7 +15,7 @@ import tpCsv from "../public/it_hs/tp/schools_tp.csv?raw";
 import yunlinCsv from "../public/it_hs/yunlin/schools.csv?raw";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 import { toSchoolRecords, type SchoolDepartment } from "./school-catalog.mjs";
-import { classifyHistoricalSource, type HistoricalSourceType } from "./school-history";
+import admissionHistoryData from "../public/it_hs/admission-history.json";
 
 export type SchoolDirectoryRecord = Readonly<{
   districtCode: string;
@@ -41,10 +41,6 @@ export type SchoolDirectoryRecord = Readonly<{
   departments: readonly SchoolDepartment[];
   groups: readonly string[];
   quota: string;
-  referenceScore: string;
-  scoreYear: string;
-  sourceNote: string;
-  historicalSourceType: HistoricalSourceType;
   specialPrograms: string;
   courseDirection: string;
   internshipProject: string;
@@ -94,6 +90,8 @@ const groupRules: readonly [string, readonly string[]][] = [
   ["藝術群", ["藝術", "表演", "音樂"]],
 ];
 
+const historyKeys = new Set(admissionHistoryData.schools.map((school) => `${school.districtCode}:${school.code}`));
+
 const districtRecords = Object.entries(csvByDistrict).flatMap(([districtCode, csv]) => {
   const district = districtMetadata.districts[districtCode as keyof typeof districtMetadata.districts];
   return (toSchoolRecords(csv) as readonly Omit<SchoolDirectoryRecord, "districtCode" | "districtLabel" | "academicYear" | "dataStatus" | "updatedAt" | "sourceName" | "sourceUrl" | "groups" | "hasQuota" | "hasHistoricalData">[]).map((school) => {
@@ -109,10 +107,9 @@ const districtRecords = Object.entries(csvByDistrict).flatMap(([districtCode, cs
       updatedAt: district.updatedAt,
       sourceName: district.sourceName,
       sourceUrl: district.sourceUrl,
-      historicalSourceType: classifyHistoricalSource(district.sourceName, school.sourceNote),
       groups,
       hasQuota: Boolean(school.quota || school.departments.some((department) => department.quota !== null)),
-      hasHistoricalData: Boolean(school.referenceScore),
+      hasHistoricalData: historyKeys.has(`${districtCode}:${school.code}`),
     });
   });
 });

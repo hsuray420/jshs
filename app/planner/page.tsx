@@ -3,6 +3,7 @@ import { PlannerWorkspace } from "@/components/planner-workspace";
 import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { getAdmissionHistoryRecord } from "@/lib/admission-history";
 import { schoolDirectory } from "@/lib/school-directory";
 
 const title = "我的升學規劃｜收藏、志願與待辦";
@@ -18,6 +19,7 @@ export const metadata: Metadata = {
 export default async function PlannerPage({ searchParams }: { searchParams: Promise<{ district?: string }> }) {
   const params = await searchParams;
   const plannerSchools = schoolDirectory.map((school) => ({
+    history: getAdmissionHistoryRecord(school.districtCode, school.code),
     district: school.districtCode,
     code: school.code,
     name: school.name,
@@ -26,7 +28,7 @@ export default async function PlannerPage({ searchParams }: { searchParams: Prom
     courseDirection: school.courseDirection,
     commuteInfo: school.commuteInfo,
     quota: school.quota,
-    referenceScore: school.referenceScore,
+    referenceScore: getAdmissionHistoryRecord(school.districtCode, school.code)?.referenceScore || "",
     dataStatus: school.dataStatus,
     academicYear: school.academicYear,
   }));

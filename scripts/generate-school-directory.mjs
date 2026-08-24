@@ -1,10 +1,11 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { toSchoolRecords } from "../lib/school-catalog.mjs";
-import { classifyHistoricalSource } from "../lib/school-history.mjs";
 
 const root = process.cwd();
 const metadata = JSON.parse(await readFile(resolve(root, "public/it_hs/district-metadata.json"), "utf8"));
+const history = JSON.parse(await readFile(resolve(root, "public/it_hs/admission-history.json"), "utf8"));
+const historyKeys = new Set(history.schools.map((school) => `${school.districtCode}:${school.code}`));
 
 const csvFiles = {
   ct: "ct/schools.csv",
@@ -65,13 +66,9 @@ const districtEntries = await Promise.all(Object.entries(csvFiles).map(async ([d
     address: school.address,
     website: school.website,
     departmentsRaw: school.departmentsRaw,
-    referenceScore: school.referenceScore,
-    scoreYear: school.scoreYear,
-    sourceNote: school.sourceNote,
-    historicalSourceType: classifyHistoricalSource(district.sourceName, school.sourceNote),
     groups: groupsFor(school.departmentsRaw),
     hasQuota: Boolean(school.quota || school.departments.some((department) => department.quota !== null)),
-    hasHistoricalData: Boolean(school.referenceScore),
+    hasHistoricalData: historyKeys.has(`${districtCode}:${school.code}`),
   }));
 }));
 
