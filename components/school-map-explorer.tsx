@@ -108,7 +108,7 @@ export function SchoolMapExplorer({ districtOptions, initialDistrict = "all" }: 
     }
     locatedSchools.forEach((school) => {
       const coordinate = coordinates[schoolKey(school)];
-      const marker = L.marker([coordinate.lat, coordinate.lon]).bindPopup(`<strong>${escapeHtml(school.name)}</strong><br>${escapeHtml(school.address || "地址未提供")}<br><a href="/schools/${encodeURIComponent(school.districtCode)}/${encodeURIComponent(school.code)}">查看學校詳情</a>`);
+      const marker = L.marker([coordinate.lat, coordinate.lon], { icon: L.divIcon({ className: "jshs-school-marker", html: `<span class="jshs-school-marker-pin" aria-hidden="true"></span><span class="jshs-school-marker-label">${escapeHtml(shortSchoolName(school.name))}</span>`, iconSize: [180, 42], iconAnchor: [12, 30], popupAnchor: [0, -30] }) }).bindPopup(`<strong>${escapeHtml(school.name)}</strong><br>${escapeHtml(school.address || "地址未提供")}<br><a href="/schools/${encodeURIComponent(school.districtCode)}/${encodeURIComponent(school.code)}">查看學校詳情</a>`);
       marker.addTo(markers.current as Leaflet.LayerGroup);
       points.push(marker.getLatLng());
     });
@@ -214,6 +214,17 @@ async function geocodeAddress(address: string): Promise<Coordinate | null> {
 
 function schoolKey(school: MapRecord) {
   return `${school.districtCode}:${school.code}`;
+}
+
+function shortSchoolName(name: string) {
+  const withoutOrganization = name.includes("財團法人") ? name.split("財團法人").pop() || name : name;
+  const compact = withoutOrganization
+    .replace(/^(國立|省立)/, "")
+    .replace(/^[\u4e00-\u9fff]{1,4}(?:縣|市)(?:私[立立]|立)?/, "")
+    .replace(/(?:高級家事商業職業學校|高級海事水產職業學校|高級工業職業學校|高級農業職業學校|高級商業職業學校|高級中等學校|高級職業學校|高級中學|進修部)$/, "")
+    .trim();
+  const characters = Array.from(compact || name);
+  return characters.length > 7 ? `${characters.slice(0, 6).join("")}…` : characters.join("");
 }
 
 function haversineKm(left: Coordinate, right: Coordinate) {

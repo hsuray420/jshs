@@ -91,6 +91,9 @@ test("學校地圖使用免付款的 OpenStreetMap 與 Leaflet 顯示標記並�
   assert.match(map, /tile.openstreetmap.org/);
   assert.match(map, /fitBounds/);
   assert.match(map, /setView/);
+  assert.match(map, /jshs-school-marker/);
+  assert.match(map, /jshs-school-marker-pin/);
+  assert.match(map, /shortSchoolName/);
   assert.match(map, /搜尋學校/);
   assert.match(map, /中投區/);
   assert.match(map, /住家位置/);
