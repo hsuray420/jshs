@@ -78,6 +78,32 @@ test("查學校四個獨立工具各自有路由與可操作頁面", async () =>
   assert.match(commute, /選擇學校/);
 });
 
+test("學校地圖使用免付款的 OpenStreetMap 與 Leaflet 顯示標記並支援聚焦", async () => {
+  const [map, route, packageJson] = await Promise.all([
+    read("components/school-map-explorer.tsx"),
+    read("app/api/school-geocode/route.ts"),
+    read("package.json"),
+  ]);
+  const manifest = JSON.parse(packageJson);
+  assert.ok(manifest.dependencies.leaflet);
+  assert.match(map, /from "leaflet"/);
+  assert.match(map, /tile.openstreetmap.org/);
+  assert.match(map, /fitBounds/);
+  assert.match(map, /setView/);
+  assert.match(map, /搜尋學校/);
+  assert.match(map, /中投區/);
+  assert.match(map, /住家位置/);
+  assert.match(map, /通勤時間/);
+  assert.match(map, /比較/);
+  assert.match(map, /selectedSchools/);
+  assert.match(map, /distance/);
+  assert.match(map, /\/api\/school-geocode/);
+  assert.match(route, /nominatim\.openstreetmap\.org/);
+  assert.match(route, /user-agent/i);
+  assert.match(route, /q/);
+  assert.doesNotMatch(map, /maps.googleapis.com/);
+});
+
 test("學校詳情顯示最低錄取資料並提供非官方學長姐分享", async () => {
   const [page, api, store] = await Promise.all([
     read("app/schools/[district]/[code]/page.tsx"),
