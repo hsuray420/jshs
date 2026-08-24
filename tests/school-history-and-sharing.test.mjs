@@ -99,6 +99,9 @@ test("學校地圖使用免付款的 OpenStreetMap 與 Leaflet 顯示標記並�
   assert.match(map, /distance/);
   assert.match(map, /\/api\/school-geocode/);
   assert.match(route, /nominatim\.openstreetmap\.org/);
+  assert.match(route, /overpass-api\.de/);
+  assert.match(route, /district/);
+  assert.match(route, /coordinates/);
   assert.match(route, /user-agent/i);
   assert.match(route, /q/);
   assert.doesNotMatch(map, /maps.googleapis.com/);

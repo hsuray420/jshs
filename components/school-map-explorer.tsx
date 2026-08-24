@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type * as Leaflet from "leaflet";
 
 type MapRecord = Readonly<{ districtCode: string; districtLabel: string; code: string; name: string; city: string; area: string; address: string }>;
@@ -19,6 +19,7 @@ const travelModes: Readonly<Record<TravelMode, Readonly<{ label: string; speed: 
 };
 
 export function SchoolMapExplorer({ districtOptions, initialDistrict = "all" }: { districtOptions: readonly { code: string; label: string }[]; initialDistrict?: string }) {
+  const coordinateCache = useRef<CoordinateCache>(readCoordinateCache());
   const [schools, setSchools] = useState<readonly MapRecord[]>([]);
   const [query, setQuery] = useState("");
   const [district, setDistrict] = useState(initialDistrict || "all");
@@ -31,7 +32,8 @@ export function SchoolMapExplorer({ districtOptions, initialDistrict = "all" }: 
   const [coordinates, setCoordinates] = useState<CoordinateCache>(() => readCoordinateCache());
   const [loading, setLoading] = useState(true);
   const [locating, setLocating] = useState(false);
-  const [locatedCount, setLocatedCount] = useState(0);
+  const [districtLocating, setDistrictLocating] = useState(false);
+  const [districtStatus, setDistrictStatus] = useState("");
   const [loadError, setLoadError] = useState(false);
   const [mapReady, setMapReady] = useState(false);
   const mapElement = useRef<HTMLDivElement | null>(null);
@@ -108,19 +110,38 @@ export function SchoolMapExplorer({ districtOptions, initialDistrict = "all" }: 
     if (points.length > 1) map.current.fitBounds(L.latLngBounds(points), { padding: [28, 28], maxZoom: 15 });
   }, [coordinates, homeCoordinate, locatedSchools, mapReady]);
 
+  const loadDistrictCoordinates = useCallback(async (targetDistrict: string) => {
+    setDistrictLocating(true);
+    setDistrictStatus("正在載入這個就學區的學校位置…");
+    const response = await fetch(`/api/school-geocode?district=${encodeURIComponent(targetDistrict)}`, { headers: { accept: "application/json" } }).catch(() => null);
+    const payload = await response?.json().catch(() => null) as { coordinates?: CoordinateCache; matched?: number; total?: number } | null;
+    if (!response?.ok || !payload?.coordinates) { setDistrictStatus("學校位置暫時無法載入，請稍後再試。"); setDistrictLocating(false); return; }
+    const next = { ...coordinateCache.current, ...payload.coordinates };
+    coordinateCache.current = next;
+    setCoordinates(next);
+    writeCoordinateCache(next);
+    setDistrictStatus(`已載入 ${payload.matched || 0}／${payload.total || 0} 所學校位置。`);
+    setDistrictLocating(false);
+  }, []);
+
+  useEffect(() => {
+    if (district === "all") return;
+    const timer = window.setTimeout(() => { void loadDistrictCoordinates(district); }, 0);
+    return () => window.clearTimeout(timer);
+  }, [district, loadDistrictCoordinates]);
+
   async function locateSchools(targets: readonly MapRecord[]) {
     if (locating || !targets.length) return;
     setLocating(true);
-    setLocatedCount(0);
     let next = { ...coordinates };
     for (const school of targets) {
       const key = schoolKey(school);
-      if (!school.address || next[key]) { setLocatedCount((count) => count + 1); continue; }
+      if (!school.address || next[key]) continue;
       const coordinate = await geocodeAddress(`${school.name}, ${school.address}`);
       if (coordinate) next = { ...next, [key]: coordinate };
-      setLocatedCount((count) => count + 1);
       if (targets.length > 1) await wait(1100);
     }
+    coordinateCache.current = next;
     setCoordinates(next);
     writeCoordinateCache(next);
     setLocating(false);
@@ -150,8 +171,8 @@ export function SchoolMapExplorer({ districtOptions, initialDistrict = "all" }: 
   return <>
     <section className="border-b jshs-hero-section"><div className="mx-auto w-[min(1180px,calc(100%-32px))] py-12 md:py-16"><p className="jshs-eyebrow">學校地圖 · OpenStreetMap</p><h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-6xl">從住家出發，比較一所以上學校。</h1><p className="mt-5 max-w-3xl text-lg leading-8 jshs-muted-copy">選擇就學區、輸入住家位置，再勾選學校；地圖會顯示住家與學校，並用距離與平均速度估算通勤時間。不需要 Google 金鑰或付款方式。</p></div></section>
     <section className="mx-auto w-[min(1180px,calc(100%-32px))] py-8 md:py-12">
-      <div className="grid gap-4 p-5 jshs-surface-card md:grid-cols-[1fr_220px_180px] md:p-7"><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">搜尋學校、地址或代碼<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="例如：中投區、臺中、060323" /></label><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">就學區<select value={district} onChange={(event) => { setDistrict(event.target.value); setCity("all"); }}><option value="all">全部就學區</option>{districtOptions.map((option) => <option key={option.code} value={option.code}>{option.label}</option>)}</select></label><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">縣市<select value={city} onChange={(event) => setCity(event.target.value)}><option value="all">全部縣市</option>{cities.map((item) => <option key={item} value={item}>{item}</option>)}</select></label></div>
-      <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_1fr]"><div className="p-5 jshs-surface-card"><p className="jshs-eyebrow">住家位置</p><label className="mt-2 grid gap-2 text-sm font-black text-[var(--jshs-primary)]">輸入住家地址或附近地標<input value={homeAddress} onChange={(event) => setHomeAddress(event.target.value)} placeholder="例如：臺中市西屯區市政路" /></label><button type="button" className="mt-4 px-4 py-2 text-sm jshs-button-primary" onClick={() => void locateHome()}>定位住家</button>{homeStatus ? <p className="mt-3 text-sm leading-6 text-[var(--jshs-primary)]" role="status">{homeStatus}</p> : null}</div><div className="p-5 jshs-surface-card"><p className="jshs-eyebrow">學校位置</p><div className="flex flex-wrap items-center gap-3"><span className="jshs-chip">符合 {filtered.length} 所</span><span className="jshs-chip">已定位 {locatedSchools.length} 所</span><button type="button" className="px-4 py-2 text-sm jshs-button-primary" onClick={() => void locateSchools(filtered)} disabled={locating || loading || !filtered.length}>{locating ? `定位中 ${locatedCount}/${filtered.length}…` : `載入這個篩選的學校位置（${filtered.length}）`}</button></div><p className="mt-3 text-xs leading-5 text-slate-500">首次載入會逐筆查詢地址，結果會暫存於本瀏覽器；勾選學校後可比較通勤。</p></div></div>
+      <div className="grid gap-4 p-5 jshs-surface-card md:grid-cols-[1fr_220px_180px] md:p-7"><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">搜尋學校、地址或代碼<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="例如：中投區、臺中、060323" /></label><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">就學區<select value={district} onChange={(event) => { setDistrict(event.target.value); setCity("all"); setSelectedSchools([]); }}><option value="all">全部就學區</option>{districtOptions.map((option) => <option key={option.code} value={option.code}>{option.label}</option>)}</select></label><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">縣市<select value={city} onChange={(event) => setCity(event.target.value)}><option value="all">全部縣市</option>{cities.map((item) => <option key={item} value={item}>{item}</option>)}</select></label></div>
+      <div className="mt-5 grid gap-4 lg:grid-cols-[1fr_1fr]"><div className="p-5 jshs-surface-card"><p className="jshs-eyebrow">住家位置</p><label className="mt-2 grid gap-2 text-sm font-black text-[var(--jshs-primary)]">輸入住家地址或附近地標<input value={homeAddress} onChange={(event) => setHomeAddress(event.target.value)} placeholder="例如：臺中市西屯區市政路" /></label><button type="button" className="mt-4 px-4 py-2 text-sm jshs-button-primary" onClick={() => void locateHome()}>定位住家</button>{homeStatus ? <p className="mt-3 text-sm leading-6 text-[var(--jshs-primary)]" role="status">{homeStatus}</p> : null}</div><div className="p-5 jshs-surface-card"><p className="jshs-eyebrow">學校位置</p><div className="flex flex-wrap items-center gap-3"><span className="jshs-chip">符合 {filtered.length} 所</span><span className="jshs-chip">已定位 {locatedSchools.length} 所</span><button type="button" className="px-4 py-2 text-sm jshs-button-primary" onClick={() => void loadDistrictCoordinates(district)} disabled={districtLocating || loading || district === "all"}>{districtLocating ? "載入中…" : "重新載入此區位置"}</button></div>{(districtStatus || district === "all") ? <p className="mt-3 text-sm leading-6 text-[var(--jshs-primary)]" role="status">{districtStatus || "請先選擇就學區，地圖會載入該區學校位置。"}</p> : null}<p className="mt-3 text-xs leading-5 text-slate-500">選區後會一次載入學校位置，不再逐校等待；結果會暫存於本瀏覽器。</p></div></div>
       <div className="mt-6 overflow-hidden rounded-3xl jshs-surface-card"><div ref={mapElement} className="h-[440px] w-full bg-[var(--jshs-muted-surface)] md:h-[560px]" aria-label="OpenStreetMap 學校互動地圖" /><p className="border-t border-[var(--jshs-border)] px-5 py-3 text-xs leading-5 text-slate-500">© OpenStreetMap contributors。地址定位由 OpenStreetMap Nominatim 提供；請勿將地圖座標視為官方校址證明。</p></div>
       <div className="mt-7 grid gap-4 p-5 jshs-surface-card"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="jshs-eyebrow">通勤比較</p><h2 className="mt-2 text-2xl font-black">勾選一所以上學校</h2></div><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">交通方式<select value={travelMode} onChange={(event) => setTravelMode(event.target.value as TravelMode)}>{Object.entries(travelModes).map(([key, value]) => <option key={key} value={key}>{value.label}</option>)}</select></label></div><p className="text-sm leading-6 jshs-muted-copy">已選 {selectedSchoolRecords.length} 所；請先定位住家與選取學校，系統會以距離、道路係數與平均速度估算通勤時間。</p>{commuteRows.length ? <div className="grid gap-3 md:grid-cols-2">{commuteRows.map((row) => <article key={schoolKey(row.school)} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><div className="flex items-start justify-between gap-3"><div><h3 className="font-black">{row.school.name}</h3><p className="text-xs text-slate-500">{row.school.city} {row.school.area}</p></div><strong className="text-[var(--jshs-primary)]">約 {row.minutes} 分鐘</strong></div><p className="mt-3 text-sm text-slate-700">住家到學校直線約 {row.distance.toFixed(1)} 公里</p></article>)}</div> : <p className="rounded-2xl border border-dashed border-[var(--jshs-border)] p-5 text-sm leading-6 jshs-muted-copy">尚未產生比較結果。請在下方勾選學校，並定位住家與學校。</p>}<p className="text-xs leading-6 text-slate-500">通勤時間是估算值，不是即時導航；未包含紅綠燈、塞車、轉乘與天候。正式出發前請用實際導航再次確認。</p></div>
       {!loading && !loadError ? <div className="mt-7 grid gap-4 md:grid-cols-2">{filtered.slice(0, 100).map((school) => <article key={schoolKey(school)} className="p-5 jshs-surface-card"><label className="flex items-start gap-3"><input type="checkbox" checked={selectedSchools.includes(schoolKey(school))} onChange={() => toggleSchool(school)} /><span><p className="text-xs font-black tracking-[.12em] text-[var(--jshs-primary)]">{school.districtLabel} · {school.code}</p><h2 className="mt-2 text-xl font-black">{school.name}</h2></span></label><p className="mt-3 text-sm leading-6 jshs-muted-copy">{[school.city, school.area].filter(Boolean).join(" · ") || "地區未標示"}</p><p className="mt-2 text-sm leading-6 text-slate-700">{school.address || "CSV 尚未提供地址"}</p><div className="mt-4 flex flex-wrap gap-3"><button type="button" className="text-sm font-black text-[var(--jshs-primary)]" onClick={() => focusSchool(school)}>在地圖聚焦 ↗</button><Link className="text-sm font-black text-[var(--jshs-primary)]" href={`/schools/${school.districtCode}/${school.code}`}>查看學校詳情 →</Link>{school.address ? <a className="text-sm font-black text-[var(--jshs-primary)]" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${school.name} ${school.address}`)}`} target="_blank" rel="noreferrer">用 Google Maps 導航 ↗</a> : null}</div></article>)}</div> : null}
