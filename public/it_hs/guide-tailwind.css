@@ -1356,6 +1356,11 @@
       }
     }
   }
+  .first\:mt-0 {
+    &:first-child {
+      margin-top: calc(var(--spacing) * 0);
+    }
+  }
   .hover\:bg-\[var\(--jshs-muted-surface\)\] {
     &:hover {
       @media (hover: hover) {

@@ -97,17 +97,17 @@
           { "label": "重要日期訂閱設定", "href": "/notifications#calendar", "description": "選擇想收到的日期提醒" }
         ] },
         { "label": "信任與回饋", "href": "/trust", "description": "查看資料來源、回報問題與社群回饋", "children": [
-          { "label": "資料來源與更新紀錄", "href": "/trust#sources", "description": "每筆資料的年度、來源與更新日" },
-          { "label": "評分與回饋", "href": "/trust#feedback", "description": "分享使用體驗與建議" },
-          { "label": "使用人數展示", "href": "/trust#community", "description": "查看平台服務範圍與社群參與" },
-          { "label": "資料錯誤回報", "href": "/trust#report", "description": "回報需要校正的資料" },
-          { "label": "社群投票互動", "href": "/trust#community", "description": "參與公開議題與經驗整理" },
-          { "label": "在校生真實心得", "href": "/trust#stories", "description": "閱讀匿名整理的學習經驗" }
+          { "label": "資料來源與更新紀錄", "href": "/trust/sources", "description": "每筆資料的年度、來源與更新日" },
+          { "label": "評分與回饋", "href": "/trust/feedback", "description": "分享使用體驗與建議" },
+          { "label": "使用人數展示", "href": "/trust/community", "description": "查看平台服務範圍與社群參與" },
+          { "label": "資料錯誤回報", "href": "/trust/report", "description": "回報需要校正的資料" },
+          { "label": "社群投票互動", "href": "/trust/voting", "description": "參與公開議題與經驗整理" },
+          { "label": "在校生真實心得", "href": "/trust/stories", "description": "閱讀匿名整理的學習經驗" }
         ] },
         { "label": "關於平台", "href": "/trust", "description": "法律、隱私與合作資訊", "children": [
-          { "label": "隱私權", "href": "/trust#privacy", "description": "了解個人資料如何處理" },
-          { "label": "服務條款", "href": "/trust#terms", "description": "查看使用規範" },
-          { "label": "支持／合作", "href": "/trust#support", "description": "支持維護或洽談教育合作" }
+          { "label": "隱私權", "href": "/trust/privacy", "description": "了解個人資料如何處理" },
+          { "label": "服務條款", "href": "/trust/terms", "description": "查看使用規範" },
+          { "label": "支持／合作", "href": "/trust/support", "description": "支持維護或洽談教育合作" }
         ] }
       ]
     }

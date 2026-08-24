@@ -38,6 +38,40 @@ test("final sitemap exposes real hubs and all district-gated hubs use the shared
   assert.match(gate, /jshs-district-changed/);
 });
 
+test("trust and about menu items each have independent detail pages", async () => {
+  const catalog = JSON.parse(await read("content/site-map.json"));
+  const more = catalog.menuGroups.find(({ label }) => label === "更多");
+  const expected = new Map([
+    ["資料來源與更新紀錄", "/trust/sources"],
+    ["評分與回饋", "/trust/feedback"],
+    ["使用人數展示", "/trust/community"],
+    ["資料錯誤回報", "/trust/report"],
+    ["社群投票互動", "/trust/voting"],
+    ["在校生真實心得", "/trust/stories"],
+    ["隱私權", "/trust/privacy"],
+    ["服務條款", "/trust/terms"],
+    ["支持／合作", "/trust/support"],
+  ]);
+  const children = more.items.flatMap(({ children = [] }) => children);
+
+  for (const [label, href] of expected) {
+    assert.equal(children.find((item) => item.label === label)?.href, href, `${label} should have its own URL`);
+  }
+
+  const detailRoute = await read("app/trust/[slug]/page.tsx");
+  assert.match(detailRoute, /generateStaticParams/);
+  for (const href of expected.values()) assert.match(detailRoute, new RegExp(href.split("/").at(-1)));
+});
+
+test("long-form trust policies live in editable text files", async () => {
+  const detailRoute = await read("app/trust/[slug]/page.tsx");
+  for (const file of ["privacy", "terms", "support"]) {
+    const text = await read(`content/trust/${file}.txt`);
+    assert.ok(text.trim().length > 200, `${file} policy should be editable as long-form text`);
+    assert.match(detailRoute, new RegExp(`content/trust/${file}\\.txt\\?raw`));
+  }
+});
+
 test("shared header contains the final fixed context controls", async () => {
   const header = await read("components/site-header.tsx");
   for (const label of finalGroups) assert.match(header, new RegExp(label));
