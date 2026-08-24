@@ -1,4 +1,5 @@
-import { getPlannerState, savePlannerState } from "../../../../db/planner-store";
+import { getOrCreateMemberPlanner, getPlannerState, savePlannerState } from "../../../../db/planner-store";
+import { getMemberSession } from "../../../../lib/member-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -6,15 +7,17 @@ const COOKIE_NAME = "jshs_planner_id";
 const MAX_AGE = 365 * 24 * 60 * 60;
 const MAX_STATE_BYTES = 60_000;
 
-export async function GET(request: Request) {
-  const planner = plannerIdentity(request);
-  const stateJson = await getPlannerState(planner.id);
+export async function GET() {
+  const plannerId = await memberPlanner();
+  if (!plannerId) return memberRequired();
+  const stateJson = await getPlannerState(plannerId);
   const state = parseState(stateJson);
-  return plannerResponse({ ok: true, state }, planner.created ? planner.id : undefined);
+  return plannerResponse({ ok: true, state }, plannerId);
 }
 
 export async function PUT(request: Request) {
-  const planner = plannerIdentity(request);
+  const plannerId = await memberPlanner();
+  if (!plannerId) return memberRequired();
   const body = await request.json().catch(() => null) as { state?: unknown } | null;
   if (!body || !isRecord(body.state)) {
     return Response.json({ ok: false, error: "invalid_state" }, { status: 400 });
@@ -25,8 +28,8 @@ export async function PUT(request: Request) {
     return Response.json({ ok: false, error: "state_too_large" }, { status: 413 });
   }
 
-  await savePlannerState(planner.id, stateJson);
-  return plannerResponse({ ok: true }, planner.created ? planner.id : undefined);
+  await savePlannerState(plannerId, stateJson);
+  return plannerResponse({ ok: true }, plannerId);
 }
 
 function parseState(stateJson: string | null) {
@@ -39,16 +42,21 @@ function parseState(stateJson: string | null) {
   }
 }
 
-function plannerIdentity(request: Request) {
-  const cookie = request.headers.get("cookie") || "";
-  const value = cookie.split(";").map((part) => part.trim()).find((part) => part.startsWith(`${COOKIE_NAME}=`))?.slice(COOKIE_NAME.length + 1);
-  if (value && /^[0-9a-f-]{36}$/i.test(value)) return { id: value, created: false };
-  return { id: crypto.randomUUID(), created: true };
+async function memberPlanner() {
+  const member = await getMemberSession();
+  return member ? getOrCreateMemberPlanner(member.lineUserId) : null;
 }
 
-function plannerResponse(body: unknown, newPlannerId?: string, status = 200) {
+function memberRequired() {
+  return Response.json(
+    { ok: false, error: "member_required", loginPath: "/api/line/login/start" },
+    { status: 401, headers: { "cache-control": "no-store" } },
+  );
+}
+
+function plannerResponse(body: unknown, plannerId: string, status = 200) {
   const headers = new Headers({ "cache-control": "no-store", "content-type": "application/json; charset=utf-8" });
-  if (newPlannerId) headers.append("set-cookie", `${COOKIE_NAME}=${newPlannerId}; Path=/; Max-Age=${MAX_AGE}; HttpOnly; Secure; SameSite=Lax`);
+  headers.append("set-cookie", `${COOKIE_NAME}=${plannerId}; Path=/; Max-Age=${MAX_AGE}; HttpOnly; Secure; SameSite=Lax`);
   return new Response(JSON.stringify(body), { status, headers });
 }
 

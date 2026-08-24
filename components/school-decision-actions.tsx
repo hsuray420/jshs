@@ -28,7 +28,7 @@ export function SchoolDecisionActions({
 }) {
   const [tier, setTier] = useState<Tier>("balanced");
   const [notes, setNotes] = useState("");
-  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error" | "member_required">("idle");
 
   async function saveSchool() {
     setStatus("saving");
@@ -37,7 +37,7 @@ export function SchoolDecisionActions({
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ district, schoolCode, schoolName, department: departments, tier, notes }),
     }).catch(() => null);
-    setStatus(response?.ok ? "saved" : "error");
+    setStatus(response?.status === 401 ? "member_required" : response?.ok ? "saved" : "error");
   }
 
   return (
@@ -65,6 +65,7 @@ export function SchoolDecisionActions({
           {status === "saving" ? "儲存中…" : status === "saved" ? `已加入${tierLabels[tier]}` : "加入規劃"}
         </button>
       </div>
+      {status === "member_required" ? <p className="mt-3 text-sm font-bold text-amber-800" role="status">收藏需要 LINE 會員登入。<a className="ml-1 underline" href="/api/line/login/start">使用 LINE 登入</a></p> : null}
       {status === "error" ? <p className="mt-3 text-sm font-bold text-red-700" role="status">暫時無法儲存，請稍後再試。</p> : null}
     </div>
   );

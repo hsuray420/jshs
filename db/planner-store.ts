@@ -13,8 +13,9 @@ export type PlannerItem = {
 };
 
 export async function ensurePlannerSchema() {
-  await getD1().batch([
-    getD1().prepare(`CREATE TABLE IF NOT EXISTS planner_items (
+  const db = getD1();
+  await db.batch([
+    db.prepare(`CREATE TABLE IF NOT EXISTS planner_items (
       id TEXT PRIMARY KEY,
       planner_id TEXT NOT NULL,
       district TEXT NOT NULL,
@@ -25,19 +26,43 @@ export async function ensurePlannerSchema() {
       notes TEXT NOT NULL DEFAULT '',
       created_at TEXT NOT NULL
     )`),
-    getD1().prepare(`CREATE INDEX IF NOT EXISTS idx_planner_items_owner_created
+    db.prepare(`CREATE INDEX IF NOT EXISTS idx_planner_items_owner_created
       ON planner_items(planner_id, created_at)`),
-    getD1().prepare(`CREATE TABLE IF NOT EXISTS planner_states (
+    db.prepare(`CREATE TABLE IF NOT EXISTS planner_states (
       planner_id TEXT PRIMARY KEY,
       state_json TEXT NOT NULL,
       updated_at TEXT NOT NULL
     )`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS member_planners (
+      line_user_id TEXT PRIMARY KEY,
+      planner_id TEXT NOT NULL UNIQUE,
+      created_at TEXT NOT NULL,
+      last_used_at TEXT NOT NULL
+    )`),
+    db.prepare(`CREATE INDEX IF NOT EXISTS idx_member_planners_last_used_at
+      ON member_planners(last_used_at)`),
   ]);
 
-  const columns = await getD1().prepare("PRAGMA table_info(planner_items)").all<{ name: string }>();
+  const columns = await db.prepare("PRAGMA table_info(planner_items)").all<{ name: string }>();
   if (!(columns.results ?? []).some((column) => column.name === "tier")) {
-    await getD1().prepare("ALTER TABLE planner_items ADD COLUMN tier TEXT NOT NULL DEFAULT ''").run();
+    await db.prepare("ALTER TABLE planner_items ADD COLUMN tier TEXT NOT NULL DEFAULT ''").run();
   }
+}
+
+export async function getOrCreateMemberPlanner(lineUserId: string) {
+  await ensurePlannerSchema();
+  const db = getD1();
+  const now = new Date().toISOString();
+  const plannerId = crypto.randomUUID();
+  await db.prepare(`INSERT OR IGNORE INTO member_planners (
+    line_user_id, planner_id, created_at, last_used_at
+  ) VALUES (?, ?, ?, ?)`).bind(lineUserId, plannerId, now, now).run();
+  await db.prepare(`UPDATE member_planners SET last_used_at = ? WHERE line_user_id = ?`)
+    .bind(now, lineUserId).run();
+  const memberPlanner = await db.prepare(`SELECT planner_id FROM member_planners
+    WHERE line_user_id = ? LIMIT 1`).bind(lineUserId).first<{ planner_id: string }>();
+  if (!memberPlanner?.planner_id) throw new Error("member_planner_unavailable");
+  return memberPlanner.planner_id;
 }
 
 export async function listPlannerItems(plannerId: string) {

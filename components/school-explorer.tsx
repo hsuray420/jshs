@@ -39,6 +39,7 @@ export function SchoolExplorer({
   const [loadError, setLoadError] = useState(false);
   const [filters, setFilters] = useState<SchoolExplorerFilters>(initialFilters);
   const [savedCode, setSavedCode] = useState("");
+  const [saveMessage, setSaveMessage] = useState("");
   const districtInitialized = useRef(initialFilters.district !== "all");
 
   useEffect(() => {
@@ -112,6 +113,7 @@ export function SchoolExplorer({
 
   async function saveSchool(school: SchoolExplorerRecord) {
     setSavedCode("");
+    setSaveMessage("");
     const response = await fetch("/api/planner", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -120,6 +122,10 @@ export function SchoolExplorer({
     if (response?.ok) {
       setSavedCode(`${school.districtCode}:${school.code}`);
       markProgress("planner");
+    } else if (response?.status === 401) {
+      setSaveMessage("收藏校科需要先使用 LINE 登入。");
+    } else {
+      setSaveMessage("暫時無法儲存，請稍後再試。");
     }
   }
 
@@ -162,9 +168,10 @@ export function SchoolExplorer({
         </div>
 
         <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
-          <div><p className="text-sm font-bold jshs-muted-copy">目前顯示 {filteredSchools.length} 所學校／校科資料</p><p className="mt-1 text-xs leading-5 text-slate-500">每筆結果保留資料年度、來源與欄位狀態；正式招生權益仍以官方公告為準。</p></div>
+          <div><p className="text-sm font-bold jshs-muted-copy">目前顯示 {filteredSchools.length} 所學校／校科資料</p><p className="mt-1 text-xs leading-5 text-slate-500">每筆結果保留資料年度、來源與欄位狀態；正式招生權益仍以官方公告為準。瀏覽可匿名，收藏需要 LINE 登入。</p></div>
           <Link className="text-sm font-black text-[var(--jshs-primary)]" href="/planner">查看我的規劃 →</Link>
         </div>
+        {saveMessage ? <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-900" role="status">{saveMessage} <a className="ml-1 underline" href="/api/line/login/start">使用 LINE 登入</a></p> : null}
 
         {!loaded ? <div className="mt-6 p-8 text-center jshs-surface-card">正在載入學校資料…</div> : null}
         {loadError ? <div className="mt-6 p-8 text-center jshs-surface-card"><h2 className="text-xl">學校資料暫時無法載入</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">請重新整理頁面；如果問題持續，請稍後再試。</p></div> : null}

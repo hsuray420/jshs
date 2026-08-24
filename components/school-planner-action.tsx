@@ -11,7 +11,7 @@ export function SchoolPlannerAction({
   schoolName: string;
   departments: string;
 }) {
-  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error" | "member_required">("idle");
 
   async function saveSchool() {
     setStatus("saving");
@@ -25,7 +25,7 @@ export function SchoolPlannerAction({
         department: departments,
       }),
     }).catch(() => null);
-    setStatus(response?.ok ? "saved" : "error");
+    setStatus(response?.status === 401 ? "member_required" : response?.ok ? "saved" : "error");
   }
 
   return (
@@ -38,6 +38,7 @@ export function SchoolPlannerAction({
       >
         {status === "saving" ? "儲存中…" : status === "saved" ? "已加入我的規劃" : "加入我的規劃"}
       </button>
+      {status === "member_required" ? <p className="mt-2 text-sm font-bold text-amber-800" role="status">收藏需要 LINE 會員登入。<a className="ml-1 underline" href="/api/line/login/start">使用 LINE 登入</a></p> : null}
       {status === "error" ? <p className="mt-2 text-sm font-bold text-red-700" role="status">暫時無法儲存，請稍後再試。</p> : null}
     </div>
   );
