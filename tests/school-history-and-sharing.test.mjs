@@ -34,18 +34,33 @@ test("全國校科查詢不再顯示獨立比較與地圖功能", async () => {
   assert.doesNotMatch(explorer, /加入比較|比較工作區/);
 });
 
-test("歷年錄取查詢讀取同一份校科目錄並區分官方與非官方", async () => {
+test("歷年錄取查詢使用獨立資料並明確標示非官方整理", async () => {
   const [page, history] = await Promise.all([
     read("app/schools/page.tsx"),
     read("components/admission-history-explorer.tsx"),
   ]);
   assert.match(page, /view === "history"/);
   assert.match(page, /AdmissionHistoryExplorer/);
-  assert.match(history, /school-directory\.json/);
+  assert.match(history, /admission-history\.json/);
+  assert.doesNotMatch(history, /school-directory\.json/);
   assert.match(history, /最低錄取成績/);
-  assert.match(history, /官方資料/);
   assert.match(history, /非官方整理/);
-  assert.match(history, /sourceNote/);
+  assert.doesNotMatch(history, /官方歷年錄取資料/);
+});
+
+test("校科目錄與歷年資料各自有獨立資產", async () => {
+  const [directory, history, generator] = await Promise.all([
+    read("public/it_hs/school-directory.json").then(JSON.parse),
+    read("public/it_hs/admission-history.json").then(JSON.parse),
+    read("scripts/generate-school-directory.mjs"),
+  ]);
+
+  assert.ok(directory.schools.length >= 600);
+  assert.ok(directory.schools.every((school) => !("referenceScore" in school)));
+  assert.ok(history.schools.length > 0);
+  assert.ok(history.schools.every((school) => school.sourceType === "community"));
+  assert.match(generator, /admission-history\.json/);
+  assert.match(generator, /hasHistoricalData/);
 });
 
 test("查學校四個獨立工具各自有路由與可操作頁面", async () => {
