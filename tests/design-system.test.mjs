@@ -97,6 +97,8 @@ test("homepage task cards use icon tiles and grouped context spacing", async () 
 
   assert.equal((home.match(/className=\{`jshs-icon-tile jshs-task-icon/g) || []).length, 1);
   assert.match(home, /jshs-task-icon/);
+  assert.match(home, /SiteIcon/);
+  assert.doesNotMatch(home, /[▤⌂∑☷]/);
   assert.match(home, /jshs-info-group-title/);
   assert.doesNotMatch(home, /StatusItem[^\n]*border-b/);
   assert.doesNotMatch(home, /districtMetadata\.disclaimer[^\n]*border-t/);

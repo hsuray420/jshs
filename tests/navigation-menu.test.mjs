@@ -31,6 +31,10 @@ test("desktop and mobile navigation render the same complete submenu model", asy
   assert.match(header, /role="dialog"/);
   assert.match(header, /搜尋內容與功能/);
   assert.match(header, /mobile-bottom-nav/);
+  assert.match(header, /SiteIcon/);
+  assert.match(header, /jshs-mobile-nav-item/);
+  assert.match(header, /開啟更多功能選單/);
+  assert.doesNotMatch(header, /[♧♙⌕☰↗]/);
   assert.match(header, /group\.items/);
   assert.doesNotMatch(header, /功能準備中/);
   assert.match(footer, /menuGroups\.map/);
