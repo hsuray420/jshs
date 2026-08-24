@@ -10,8 +10,10 @@ type Coordinate = Readonly<{ lat: number; lon: number }>;
 type CoordinateCache = Readonly<Record<string, Coordinate>>;
 type LeafletModule = typeof import("leaflet");
 type TravelMode = "scooter" | "car" | "walk";
+type DistrictCacheRecord = Readonly<{ coordinates: CoordinateCache; matched: number; total: number; savedAt: number }>;
 
 const COORDINATE_CACHE_KEY = "jshs:school-coordinates:v1";
+const DISTRICT_CACHE_KEY = "jshs:school-district-coordinates:v1";
 const travelModes: Readonly<Record<TravelMode, Readonly<{ label: string; speed: number; roadFactor: number }>>> = {
   scooter: { label: "機車估算", speed: 28, roadFactor: 1.25 },
   car: { label: "汽車估算", speed: 30, roadFactor: 1.3 },
@@ -111,15 +113,30 @@ export function SchoolMapExplorer({ districtOptions, initialDistrict = "all" }: 
   }, [coordinates, homeCoordinate, locatedSchools, mapReady]);
 
   const loadDistrictCoordinates = useCallback(async (targetDistrict: string) => {
+    const cached = readDistrictCache()[targetDistrict];
+    if (cached && Date.now() - cached.savedAt < 6 * 60 * 60 * 1000) {
+      const next = { ...coordinateCache.current, ...cached.coordinates };
+      coordinateCache.current = next;
+      setCoordinates(next);
+      setDistrictStatus(`已載入 ${cached.matched}／${cached.total} 所學校位置（本機快取）。`);
+      return;
+    }
     setDistrictLocating(true);
     setDistrictStatus("正在載入這個就學區的學校位置…");
-    const response = await fetch(`/api/school-geocode?district=${encodeURIComponent(targetDistrict)}`, { headers: { accept: "application/json" } }).catch(() => null);
-    const payload = await response?.json().catch(() => null) as { coordinates?: CoordinateCache; matched?: number; total?: number } | null;
+    let response: Response | null = null;
+    let payload: { coordinates?: CoordinateCache; matched?: number; total?: number } | null = null;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      response = await fetch(`/api/school-geocode?district=${encodeURIComponent(targetDistrict)}`, { headers: { accept: "application/json" } }).catch(() => null);
+      payload = await response?.json().catch(() => null) as { coordinates?: CoordinateCache; matched?: number; total?: number } | null;
+      if (response?.ok && payload?.coordinates) break;
+      if (attempt === 0) await wait(900);
+    }
     if (!response?.ok || !payload?.coordinates) { setDistrictStatus("學校位置暫時無法載入，請稍後再試。"); setDistrictLocating(false); return; }
     const next = { ...coordinateCache.current, ...payload.coordinates };
     coordinateCache.current = next;
     setCoordinates(next);
     writeCoordinateCache(next);
+    writeDistrictCache(targetDistrict, { coordinates: payload.coordinates, matched: payload.matched || 0, total: payload.total || 0, savedAt: Date.now() });
     setDistrictStatus(`已載入 ${payload.matched || 0}／${payload.total || 0} 所學校位置。`);
     setDistrictLocating(false);
   }, []);
@@ -210,6 +227,15 @@ function readCoordinateCache(): CoordinateCache {
 
 function writeCoordinateCache(cache: CoordinateCache) {
   try { window.sessionStorage.setItem(COORDINATE_CACHE_KEY, JSON.stringify(cache)); } catch { /* storage is optional */ }
+}
+
+function readDistrictCache(): Readonly<Record<string, DistrictCacheRecord>> {
+  if (typeof window === "undefined") return {};
+  try { return JSON.parse(window.sessionStorage.getItem(DISTRICT_CACHE_KEY) || "{}"); } catch { return {}; }
+}
+
+function writeDistrictCache(district: string, value: DistrictCacheRecord) {
+  try { window.sessionStorage.setItem(DISTRICT_CACHE_KEY, JSON.stringify({ ...readDistrictCache(), [district]: value })); } catch { /* storage is optional */ }
 }
 
 function escapeHtml(value: string) {
