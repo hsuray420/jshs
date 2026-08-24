@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 import districtMetadata from "../../../public/it_hs/district-metadata.json";
 import privacyText from "../../../content/trust/privacy.txt?raw";
 import supportText from "../../../content/trust/support.txt?raw";
-import termsText from "../../../content/trust/terms.txt?raw";
+import termsText from "../../../全國國中升學資訊網服務條款?raw";
 
 const pages = {
   sources: { title: "資料來源與更新紀錄", eyebrow: "SOURCES & UPDATES", description: "查看每筆升學資料的年度、來源、狀態與最近一次整理時間。" },
