@@ -6,7 +6,7 @@ import { defaultProgress, PROGRESS_STORAGE_KEY, readProgress, type ProgressState
 
 const steps = [
   { key: "district", label: "選擇就學區", detail: "先確認適用區域與資料狀態。", href: "/districts" },
-  { key: "schoolSearch", label: "開始找校科", detail: "搜尋學校、科別與學制。", href: "/schools?district=ct" },
+  { key: "schoolSearch", label: "開始找校科", detail: "搜尋學校、科系與學制分類。", href: "/schools?district=ct" },
   { key: "calculator", label: "完成試算", detail: "用已校核規則整理個人分數。", href: "/tools?district=ct" },
   { key: "planner", label: "建立規劃", detail: "收藏、分層並留下下一步。", href: "/planner" },
 ] as const;

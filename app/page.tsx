@@ -45,7 +45,7 @@ export default function HomePage() {
             <p className="mt-4 max-w-2xl text-base leading-7 jshs-muted-copy">不必一次讀完所有升學資訊。先完成現在最需要的一件事，再沿著清楚的路徑繼續。</p>
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
               <TaskCard icon="knowledge" tone="blue" title="讀懂規則" body="會考、入學規則與重要日期。" href="/news#latest" action="閱讀指南" />
-              <TaskCard icon="school" tone="green" title="找校科" body="搜尋學校、科別、群科與學制。" href="/schools?district=ct" action="搜尋學校" />
+              <TaskCard icon="school" tone="green" title="找校科" body="搜尋學校、科系、群科與學制分類。" href="/schools?district=ct" action="搜尋學校" />
               <TaskCard icon="calculator" tone="blue" title="算積分" body="輸入成績，查看可核對的試算結果。" href="/tools?district=ct" action="開始試算" />
               <TaskCard icon="planner" tone="green" title="排志願" body="整理挑戰、適中與穩定的選項。" href="/planner" action="打開規劃" />
             </div>

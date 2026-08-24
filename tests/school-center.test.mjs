@@ -22,7 +22,7 @@ test("school directory exposes searchable national records with trust metadata",
 test("new school center supports search, filters, selected conditions, and decision actions", async () => {
   const explorer = await read("components/school-explorer.tsx");
 
-  for (const label of ["搜尋校名、科名、群科、縣市、學校代碼", "就學區", "學制", "公私立", "地區", "有招生名額", "有歷年參考資料", "已選條件", "清除條件", "加入規劃", "查看官方網站"]) {
+  for (const label of ["搜尋學校名稱、科系、群科、縣市、學校代碼", "就學區", "學制分類", "公私立", "縣市", "有招生名額", "有歷年參考資料", "已選條件", "清除條件", "加入規劃", "查看官方網站"]) {
     assert.match(explorer, new RegExp(label));
   }
   assert.match(explorer, /hasQuota/);
@@ -63,7 +63,7 @@ test("school details keep decision sections without duplicating separate history
     read("components/school-decision-actions.tsx"),
   ]);
 
-  for (const label of ["一眼看懂", "學習內容", "招生資訊", "生活條件", "決策操作", "適合什麼樣的學生", "住宿／交通資訊"]) {
+  for (const label of ["一眼看懂", "學習內容", "招生資訊", "生活條件", "決策操作", "適合學生", "交通方式", "通勤資訊", "住宿資訊"]) {
     assert.match(page, new RegExp(label));
   }
   assert.doesNotMatch(page, /HISTORICAL REFERENCE|歷年參考|ALUMNI SHARING|學長姐分享/);

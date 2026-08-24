@@ -27,7 +27,7 @@ test("查學校選單提供查詢、歷年、分享、地圖、費用與通勤�
 
 test("全國校科查詢不再顯示獨立比較與地圖功能", async () => {
   const explorer = await read("components/school-explorer.tsx");
-  for (const label of ["學制", "公私立", "地區", "招生名額", "歷年資料", "清除條件", "查看學校詳情"]) {
+  for (const label of ["學制分類", "公私立", "縣市", "招生名額", "歷年資料", "清除條件", "查看學校詳情"]) {
     assert.match(explorer, new RegExp(label));
   }
   assert.doesNotMatch(explorer, /jshs:school-compare/);

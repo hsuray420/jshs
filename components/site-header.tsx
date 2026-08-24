@@ -9,7 +9,7 @@ import { menuGroups, type MenuGroup, type MenuItem } from "@/lib/site-map";
 const finalNavigationLabels = ["查學校", "算成績", "時間日程", "我的志願", "特殊資格", "升學知識", "更多"] as const;
 
 const quickActions = [
-  { label: "查學校", href: "/schools", icon: "school", description: "搜尋學校、科別與歷年資料" },
+  { label: "查學校", href: "/schools", icon: "school", description: "搜尋學校、科系與歷年資料" },
   { label: "算成績", href: "/tools", icon: "calculator", description: "依就學區規則完成積分試算" },
   { label: "看日程", href: "/schedule", icon: "calendar", description: "掌握重要日期與升學待辦" },
   { label: "我的志願", href: "/planner", icon: "planner", description: "整理候選校科與志願順序" },
