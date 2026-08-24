@@ -77,15 +77,16 @@ async function loadDistrictCoordinates(district: string) {
 }
 
 async function loadDistrictCoordinatesFromOverpass(district: string, query: string): Promise<DistrictCoordinates | null> {
-  let response: Response | null = null;
-  for (const endpoint of OVERPASS_ENDPOINTS) {
-    response = await fetch(endpoint, {
+  const requests = OVERPASS_ENDPOINTS.map(async (endpoint) => {
+    const response = await fetch(endpoint, {
       method: "POST",
       headers: { accept: "application/json", "content-type": "text/plain", "user-agent": APPLICATION_USER_AGENT },
       body: query,
     }).catch(() => null);
-    if (response?.ok) break;
-  }
+    if (!response?.ok) throw new Error("overpass_unavailable");
+    return response;
+  });
+  const response = await Promise.any(requests).catch(() => null);
   if (!response?.ok) return null;
   const payload = await response.json().catch(() => null) as { elements?: readonly OverpassElement[] } | null;
   const schools = schoolDirectory.filter((school) => school.districtCode === district);
