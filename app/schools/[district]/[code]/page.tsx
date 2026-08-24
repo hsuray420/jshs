@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import { AlumniSharing } from "@/components/alumni-sharing";
 import { SchoolDecisionActions } from "@/components/school-decision-actions";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -21,7 +20,7 @@ export async function generateMetadata({ params }: SchoolPageProps): Promise<Met
   const school = getSchoolDirectoryRecord(district, code);
   if (!school) return {};
   const title = `${school.name}｜${school.districtLabel}校科詳情與招生資料`;
-  const description = `查看${school.name}的學制、科別、招生名額、歷年參考、生活條件與官方來源。資料年度：${school.academicYear}學年度。`;
+  const description = `查看${school.name}的學制、科別、招生名額、生活條件與官方來源。資料年度：${school.academicYear}學年度。`;
   return { title, description, alternates: { canonical: `/schools/${district}/${code}` }, openGraph: { type: "website", locale: "zh_TW", url: `/schools/${district}/${code}`, siteName: "全國國中升學資訊網", title, description } };
 }
 
@@ -43,11 +42,11 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           <div className="mt-8 flex flex-wrap gap-2"><span className="jshs-chip">{school.districtLabel}</span><span className="jshs-chip">{school.academicYear} 學年度</span><span className="jshs-chip">{school.dataStatus === "ready" ? "資料已校核" : "參考資料"}</span></div>
           <p className="mt-5 jshs-eyebrow">學校代碼 {school.code}</p>
           <h1 className="mt-3 max-w-5xl text-4xl font-black leading-[1.12] tracking-[-.055em] md:text-6xl">{school.name}</h1>
-          <p className="mt-6 max-w-3xl text-lg leading-8 jshs-muted-copy">把學校類型、學習內容、招生資訊、歷年參考與生活條件放在同一頁，再決定是否加入你的規劃。</p>
+          <p className="mt-6 max-w-3xl text-lg leading-8 jshs-muted-copy">把學校類型、學習內容、招生資訊與生活條件放在同一頁，再決定是否加入你的規劃。</p>
         </div>
       </header>
 
-      <nav aria-label="學校詳情分頁" className="border-b border-slate-200 bg-white"><div className="mx-auto flex w-[min(1120px,calc(100%-32px))] gap-2 overflow-x-auto py-4">{[["overview", "一眼看懂"], ["learning", "學習內容"], ["admission", "招生資訊"], ["history", "歷年參考"], ["alumni", "學長姐分享"], ["life", "生活條件"], ["decision", "決策操作"]].map(([id, label]) => <a key={id} href={`#${id}`} className="shrink-0 px-4 py-2 text-sm jshs-button-secondary">{label}</a>)}</div></nav>
+      <nav aria-label="學校詳情分頁" className="border-b border-slate-200 bg-white"><div className="mx-auto flex w-[min(1120px,calc(100%-32px))] gap-2 overflow-x-auto py-4">{[["overview", "一眼看懂"], ["learning", "學習內容"], ["admission", "招生資訊"], ["life", "生活條件"], ["decision", "決策操作"]].map(([id, label]) => <a key={id} href={`#${id}`} className="shrink-0 px-4 py-2 text-sm jshs-button-secondary">{label}</a>)}</div></nav>
 
       <div className="mx-auto grid w-[min(1120px,calc(100%-32px))] gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:py-14">
         <div className="space-y-4">
@@ -56,10 +55,6 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
           <SchoolSection id="learning" title="學習內容" eyebrow="LEARNING"><div className="grid gap-5 lg:grid-cols-[1.2fr_.8fr]"><div><h3 className="font-black">科別與課程方向</h3>{school.departments.length ? <ul className="mt-4 grid gap-3 sm:grid-cols-2">{school.departments.map((department) => <li key={`${department.name}-${department.quota}`} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><strong className="text-[var(--jshs-primary)]">{department.name}</strong><span className="mt-2 block text-sm text-slate-600">名額：{department.quota === null ? "待公告" : department.quota} · {department.audience || "招生對象依簡章"}</span></li>)}</ul> : <MissingField label="科別資料" />}{school.courseDirection ? <InfoBlock title="課程方向" value={school.courseDirection} /> : <MissingField label="課程方向" />}</div><div className="rounded-2xl border border-[var(--jshs-border)] p-5"><h3 className="font-black">實習／專題</h3>{school.internshipProject || school.specialPrograms ? <p className="mt-3 text-sm leading-7 text-slate-600">{school.internshipProject || school.specialPrograms}</p> : <MissingField label="實習／專題" />}<h3 className="mt-6 font-black">適合什麼樣的學生</h3>{school.suitableStudents ? <p className="mt-3 text-sm leading-7 text-slate-600">{school.suitableStudents}</p> : <MissingField label="適合學生" />}</div></div></SchoolSection>
 
           <SchoolSection id="admission" title="招生資訊" eyebrow="ADMISSION"><div className="grid gap-4 sm:grid-cols-2"><Fact label="招生名額" value={school.quota || (school.hasQuota ? "依科別資料彙整" : "待公告")} /><Fact label="招生管道" value={school.admissionTrack || `${school.districtLabel}免試入學`} /><Fact label="正式簡章" value={school.brochureUrl ? "CSV 已提供連結" : "請以本區官方入口最新版本為準"} /><Fact label="資料來源" value={school.sourceName} /></div><div className="mt-6 flex flex-wrap gap-3"><a className="px-4 py-3 text-sm jshs-button-primary" href={school.sourceUrl} target="_blank" rel="noreferrer">查看正式招生來源 ↗</a>{school.brochureUrl ? <a className="px-4 py-3 text-sm jshs-button-secondary" href={school.brochureUrl} target="_blank" rel="noreferrer">查看正式簡章 ↗</a> : null}{school.website ? <a className="px-4 py-3 text-sm jshs-button-secondary" href={school.website} target="_blank" rel="noreferrer">查看學校官方網站 ↗</a> : null}</div></SchoolSection>
-
-          <SchoolSection id="history" title="歷年參考" eyebrow="HISTORICAL REFERENCE"><h3 className="font-black">官方最低錄取成績／歷年參考區間</h3><p className="mt-3 text-2xl font-black text-amber-950">{school.referenceScore || "目前沒有可公開的歷年參考資料"}</p><p className="mt-2 text-sm font-bold text-amber-800">參考年度：{school.scoreYear || "未標示"}</p><p className="mt-5 rounded-2xl bg-amber-50 p-5 text-sm leading-7 text-amber-950">這裡只呈現歷年資料形成的參考區間，不是本年度錄取結果。名額、報名人數、志願序與同分比序都可能改變，正式判斷請回到當年度簡章。</p></SchoolSection>
-
-          <SchoolSection id="alumni" title="學長姐分享" eyebrow="ALUMNI SHARING"><AlumniSharing district={school.districtCode} schoolCode={school.code} referenceScore={school.referenceScore} scoreYear={school.scoreYear} /></SchoolSection>
 
           <SchoolSection id="life" title="生活條件" eyebrow="LIFE & COMMUTE"><div><dl className="grid gap-4 text-sm sm:grid-cols-[120px_1fr]"><dt className="font-black text-slate-500">地址</dt><dd className="font-bold leading-6">{school.address || "資料未提供"}</dd><dt className="font-black text-slate-500">電話</dt><dd className="font-bold leading-6">{school.phone || "資料未提供"}</dd><dt className="font-black text-slate-500">住宿／交通資訊</dt><dd className="font-bold leading-6">{[school.transport, school.commuteInfo, school.boardingInfo].filter(Boolean).join("；") || "CSV 尚未提供，請以學校官方資料確認"}</dd><dt className="font-black text-slate-500">通勤資訊</dt><dd className="font-bold leading-6">{school.commuteInfo || "CSV 尚未提供，請用家庭實際出發地確認"}</dd><dt className="font-black text-slate-500">住宿資訊</dt><dd className="font-bold leading-6">{school.boardingInfo || "CSV 尚未提供，請以學校官方資料確認"}</dd></dl></div><p className="mt-5 text-xs leading-6 text-slate-500">地址來源：{school.sourceName}；{school.lifeSource ? `生活資料來源：${school.lifeSource}；` : "生活資料尚未由 CSV 提供；"}</p></SchoolSection>
 

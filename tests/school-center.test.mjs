@@ -31,15 +31,16 @@ test("new school center supports search, filters, selected conditions, and decis
   assert.match(explorer, /資料狀態/);
 });
 
-test("school details use the decision sections and alumni sharing", async () => {
+test("school details keep decision sections without duplicating separate history or alumni tools", async () => {
   const [page, actions] = await Promise.all([
     read("app/schools/[district]/[code]/page.tsx"),
     read("components/school-decision-actions.tsx"),
   ]);
 
-  for (const label of ["一眼看懂", "學習內容", "招生資訊", "歷年參考", "學長姐分享", "生活條件", "決策操作", "歷年參考區間", "最低錄取成績", "適合什麼樣的學生", "住宿／交通資訊"]) {
+  for (const label of ["一眼看懂", "學習內容", "招生資訊", "生活條件", "決策操作", "適合什麼樣的學生", "住宿／交通資訊"]) {
     assert.match(page, new RegExp(label));
   }
+  assert.doesNotMatch(page, /HISTORICAL REFERENCE|歷年參考|ALUMNI SHARING|學長姐分享/);
   for (const label of ["加入挑戰", "加入適中", "加入穩定", "加備註"]) {
     assert.match(actions, new RegExp(label));
   }

@@ -10,7 +10,7 @@ Date: 2026-08-22
 2. 使用者可依就學區、學制、公私立、縣市、招生名額與歷年資料篩選。
 3. 結果頁固定顯示已選條件、清除條件、資料年度、資料來源與資料狀態。
 4. 使用者可加入規劃、加入比較、查看官方網站，再進入學校詳情。
-5. 詳情頁提供一眼看懂、學習內容、招生資訊、歷年參考、生活條件與決策操作六個區塊，並提供 Google Maps。
+5. 詳情頁提供一眼看懂、學習內容、招生資訊、生活條件與決策操作五個區塊；歷年參考與學長姐分享改由獨立工具提供。
 6. 舊的 `page-schools`、`schoolSearch`、`schoolGrid` 搜尋介面與其 render/sort 流程不再存在；legacy guide 只保留規劃用的候選校科載入，不再提供第二套學校搜尋。
 
 ## RED / GREEN checkpoints
@@ -20,7 +20,7 @@ Date: 2026-08-22
 | 全國目錄含資料狀態與信任欄位 | 初次執行 `school-center.test.mjs` 失敗 | `pnpm exec node --test tests/school-center.test.mjs` | `lib/school-directory.ts` |
 | 搜尋、六組篩選、已選條件、清除條件 | 初次執行 `school-center.test.mjs` 失敗 | 同上 | `components/school-explorer.tsx` |
 | 規劃、比較、官方網站操作 | 初次執行 `school-center.test.mjs` 失敗 | 同上 | `components/school-explorer.tsx`, `components/school-decision-actions.tsx` |
-| 六區塊詳情與 Google Maps | 初次執行 `school-center.test.mjs` 失敗 | 同上 | `app/schools/[district]/[code]/page.tsx` |
+| 五區塊詳情與獨立歷年／分享工具 | 初次執行 `school-center.test.mjs` 失敗 | 同上 | `app/schools/[district]/[code]/page.tsx`, `app/schools/page.tsx` |
 | 舊 embedded school search 已移除 | 初次執行 `school-center.test.mjs` 失敗 | 同上 | `public/it_hs/guide.htm`, `public/it_hs/guide.js` |
 | 全國學校 URL 進入 sitemap | 初次執行 `central-school-pages.test.mjs` 失敗 | targeted school-center suite 通過 | `scripts/generate-sitemap.mjs` |
 
@@ -44,7 +44,7 @@ Date: 2026-08-22
 - `git diff --check`：通過。
 - `pnpm test`：通過，production build 完成，62/62 測試通過。
 - `pnpm run lint`：0 errors；15 個 legacy JavaScript warnings，未新增 error。
-- live smoke test：`/`、`/schools`、`/schools/ct/060323`、`/sitemap.xml`、`/it_hs/guide.htm`、`/api/health` 均回 200；新搜尋頁、詳情六區塊、sitemap 學校 URL 與舊搜尋 DOM 移除檢查均通過。
+- live smoke test：`/`、`/schools`、`/schools/ct/060323`、`/sitemap.xml`、`/it_hs/guide.htm`、`/api/health` 均回 200；新搜尋頁、詳情五區塊、獨立歷年／分享工具、sitemap 學校 URL 與舊搜尋 DOM 移除檢查均通過。
 - 正式部署：Cloudflare version `3b832fca-63a7-4e6d-9c2d-8e6f5594e3f9`。
 
 ## 邊界

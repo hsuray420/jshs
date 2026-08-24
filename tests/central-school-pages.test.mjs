@@ -19,7 +19,7 @@ test("every school detail route has a static decision page contract", async () =
   assert.match(page, /EducationalOrganization/);
   assert.doesNotMatch(page, /Google Maps|maps\/search/);
   assert.match(page, /SchoolDecisionActions/);
-  assert.match(page, /歷年參考區間/);
+  assert.doesNotMatch(page, /HISTORICAL REFERENCE|歷年參考|ALUMNI SHARING|學長姐分享/);
 });
 
 test("school search results link into every district detail route", async () => {

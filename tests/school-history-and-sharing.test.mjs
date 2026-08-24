@@ -112,14 +112,17 @@ test("學校地圖使用免付款的 OpenStreetMap 與 Leaflet 顯示標記並�
   assert.doesNotMatch(map, /maps.googleapis.com/);
 });
 
-test("學校詳情顯示最低錄取資料並提供非官方學長姐分享", async () => {
-  const [page, api, store] = await Promise.all([
+test("歷年與學長姐資料保留在獨立工具，不混入全國校科查詢詳情", async () => {
+  const [page, history, alumni, api, store] = await Promise.all([
     read("app/schools/[district]/[code]/page.tsx"),
+    read("components/admission-history-explorer.tsx"),
+    read("components/school-alumni-explorer.tsx"),
     read("app/api/school-reviews/route.ts"),
     read("db/school-review-store.ts"),
   ]);
-  assert.match(page, /AlumniSharing/);
-  assert.match(page, /最低錄取成績/);
+  assert.doesNotMatch(page, /HISTORICAL REFERENCE|歷年參考|ALUMNI SHARING|學長姐分享/);
+  assert.match(history, /最低錄取成績/);
+  assert.match(alumni, /學長姐分享/);
   assert.doesNotMatch(page, /maps\/search/);
   assert.match(api, /schoolCode/);
   assert.match(api, /listRecentSchoolReviews/);
