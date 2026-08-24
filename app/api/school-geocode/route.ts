@@ -1,7 +1,10 @@
 import { schoolDirectory } from "../../../lib/school-directory";
 
 const NOMINATIM_ENDPOINT = "https://nominatim.openstreetmap.org/search";
-const OVERPASS_ENDPOINT = "https://overpass-api.de/api/interpreter";
+const OVERPASS_ENDPOINTS = [
+  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+  "https://overpass-api.de/api/interpreter",
+] as const;
 const APPLICATION_USER_AGENT = "jshs.cc school map/1.0 (https://jshs.cc)";
 const DISTRICT_CACHE_TTL = 6 * 60 * 60 * 1000;
 
@@ -74,11 +77,15 @@ async function loadDistrictCoordinates(district: string) {
 }
 
 async function loadDistrictCoordinatesFromOverpass(district: string, query: string): Promise<DistrictCoordinates | null> {
-  const response = await fetch(OVERPASS_ENDPOINT, {
-    method: "POST",
-    headers: { accept: "application/json", "content-type": "text/plain", "user-agent": APPLICATION_USER_AGENT },
-    body: query,
-  }).catch(() => null);
+  let response: Response | null = null;
+  for (const endpoint of OVERPASS_ENDPOINTS) {
+    response = await fetch(endpoint, {
+      method: "POST",
+      headers: { accept: "application/json", "content-type": "text/plain", "user-agent": APPLICATION_USER_AGENT },
+      body: query,
+    }).catch(() => null);
+    if (response?.ok) break;
+  }
   if (!response?.ok) return null;
   const payload = await response.json().catch(() => null) as { elements?: readonly OverpassElement[] } | null;
   const schools = schoolDirectory.filter((school) => school.districtCode === district);
