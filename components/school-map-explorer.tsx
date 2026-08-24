@@ -60,10 +60,14 @@ export function SchoolMapExplorer({ districtOptions, initialDistrict = "all" }: 
       if (!active || !mapElement.current) return;
       const L = module;
       leaflet.current = module;
-      map.current = L.map(mapElement.current, { scrollWheelZoom: true, zoomControl: true }).setView([23.7, 120.9], 7);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "© OpenStreetMap contributors", maxZoom: 19 }).addTo(map.current);
-      markers.current = L.layerGroup().addTo(map.current);
+      const mapInstance = L.map(mapElement.current, { scrollWheelZoom: true, zoomControl: true }).setView([23.7, 120.9], 7);
+      map.current = mapInstance;
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "© OpenStreetMap contributors", maxZoom: 19 }).addTo(mapInstance);
+      markers.current = L.layerGroup().addTo(mapInstance);
       setMapReady(true);
+      window.requestAnimationFrame(() => {
+        if (active) mapInstance.invalidateSize({ pan: false });
+      });
     });
     return () => {
       active = false;

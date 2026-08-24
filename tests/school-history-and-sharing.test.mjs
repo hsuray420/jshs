@@ -79,9 +79,10 @@ test("查學校四個獨立工具各自有路由與可操作頁面", async () =>
 });
 
 test("學校地圖使用免付款的 OpenStreetMap 與 Leaflet 顯示標記並支援聚焦", async () => {
-  const [map, route, packageJson] = await Promise.all([
+  const [map, route, globals, packageJson] = await Promise.all([
     read("components/school-map-explorer.tsx"),
     read("app/api/school-geocode/route.ts"),
+    read("app/globals.css"),
     read("package.json"),
   ]);
   const manifest = JSON.parse(packageJson);
@@ -99,6 +100,7 @@ test("學校地圖使用免付款的 OpenStreetMap 與 Leaflet 顯示標記並�
   assert.match(map, /distance/);
   assert.match(map, /\/api\/school-geocode/);
   assert.match(route, /nominatim\.openstreetmap\.org/);
+  assert.match(globals, /leaflet\/dist\/leaflet\.css/);
   assert.match(route, /overpass-api\.de/);
   assert.match(route, /district/);
   assert.match(route, /coordinates/);
