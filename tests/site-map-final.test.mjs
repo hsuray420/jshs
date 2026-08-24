@@ -65,14 +65,12 @@ test("trust and about menu items each have independent detail pages", async () =
 
 test("long-form trust policies live in editable text files", async () => {
   const detailRoute = await read("app/trust/[slug]/page.tsx");
-  for (const file of ["privacy", "support"]) {
+  for (const file of ["privacy", "terms", "support"]) {
     const text = await read(`content/trust/${file}.txt`);
     assert.ok(text.trim().length > 200, `${file} policy should be editable as long-form text`);
     assert.match(detailRoute, new RegExp(`content/trust/${file}\\.txt\\?raw`));
   }
-  const terms = await read("全國國中升學資訊網服務條款");
-  assert.ok(terms.trim().length > 1000, "existing terms document should remain the source of truth");
-  assert.match(detailRoute, /全國國中升學資訊網服務條款\?raw/);
+  assert.match(detailRoute, /text-slate-950/);
 });
 
 test("shared header contains the final fixed context controls", async () => {

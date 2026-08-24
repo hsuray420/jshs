@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/site-header";
 import districtMetadata from "../../../public/it_hs/district-metadata.json";
 import privacyText from "../../../content/trust/privacy.txt?raw";
 import supportText from "../../../content/trust/support.txt?raw";
-import termsText from "../../../全國國中升學資訊網服務條款?raw";
+import termsText from "../../../content/trust/terms.txt?raw";
 
 const pages = {
   sources: { title: "資料來源與更新紀錄", eyebrow: "SOURCES & UPDATES", description: "查看每筆升學資料的年度、來源、狀態與最近一次整理時間。" },
@@ -63,5 +63,5 @@ function CommunityContent() { const districtCount = Object.keys(districtMetadata
 function ReportContent() { return <><p className="max-w-3xl text-sm leading-7 text-slate-600">回報時請附上學校代碼、欄位名稱、目前顯示內容、應修正內容與可核對的官方連結。涉及個人資格或特殊身分時，請直接詢問就讀國中承辦人。</p><div className="mt-5 flex flex-wrap gap-3"><a className="px-4 py-3 text-sm jshs-button-primary" href="mailto:hello@jshs.cc?subject=找校科資料錯誤回報">寄送錯誤回報</a><Link className="px-4 py-3 text-sm jshs-button-secondary" href="/schools">回到找校科</Link></div></>; }
 function VotingContent() { return <><p className="max-w-3xl text-sm leading-7 text-slate-600">社群投票入口正在整理中。正式開放前，我們會先定義題目來源、投票期間、重複投票限制與結果呈現方式，避免把未經核對的意見誤當成招生規則。</p><Link className="mt-5 inline-flex px-4 py-3 text-sm jshs-button-secondary" href="/trust/feedback">先提供議題建議 →</Link></>; }
 function StoriesContent() { return <><p className="max-w-3xl text-sm leading-7 text-slate-600">在校生心得會以匿名、經整理的方式呈現，讓讀者了解課程、校園與通勤的真實感受。心得屬於個人經驗，不能取代學校公告、招生簡章或正式資格判定。</p><Link className="mt-5 inline-flex px-4 py-3 text-sm jshs-button-primary" href="/schools?view=alumni">閱讀學長姐分享 →</Link></>; }
-function PolicyContent({ title, text, children }: { title: string; text: string; children?: ReactNode }) { return <><p className="jshs-eyebrow">TRUST & SUPPORT</p><h2 className="mt-2">{title}</h2><div className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">{text.split(/\n\s*\n/).map((paragraph) => <p key={paragraph} className="mt-3 first:mt-0">{paragraph}</p>)}{children}</div></>; }
+function PolicyContent({ title, text, children }: { title: string; text: string; children?: ReactNode }) { return <><p className="jshs-eyebrow">TRUST & SUPPORT</p><h2 className="mt-2">{title}</h2><div className="mt-4 max-w-3xl text-sm leading-7 text-slate-950">{text.split(/\n\s*\n/).map((paragraph) => <p key={paragraph} className="mt-3 first:mt-0">{paragraph}</p>)}{children}</div></>; }
 function Metric({ label, value }: { label: string; value: string }) { return <div className="rounded-2xl bg-[var(--jshs-muted-surface)] p-5"><span className="block text-xs font-black text-slate-500">{label}</span><strong className="mt-2 block text-2xl text-[var(--jshs-primary)]">{value}</strong></div>; }
