@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { SchoolDirectoryRecord } from "@/lib/school-directory";
+import { readStoredDistrict } from "@/lib/district-context";
 import { markProgress } from "@/lib/progress";
 
 type SchoolExplorerRecord = Pick<SchoolDirectoryRecord, "districtCode" | "districtLabel" | "academicYear" | "dataStatus" | "sourceName" | "code" | "name" | "ownership" | "program" | "city" | "area" | "website" | "departmentsRaw" | "groups" | "hasQuota" | "hasHistoricalData">;
@@ -38,11 +39,25 @@ export function SchoolExplorer({
   const [loadError, setLoadError] = useState(false);
   const [filters, setFilters] = useState<SchoolExplorerFilters>(initialFilters);
   const [savedCode, setSavedCode] = useState("");
+  const districtInitialized = useRef(initialFilters.district !== "all");
 
   useEffect(() => {
-    markProgress("district", filters.district === "all" ? "ct" : filters.district);
+    if (initialFilters.district !== "all" && filters.district !== initialFilters.district) {
+      districtInitialized.current = true;
+      const timer = window.setTimeout(() => setFilters((current) => ({ ...current, district: initialFilters.district })), 0);
+      return () => window.clearTimeout(timer);
+    }
+    if (!districtInitialized.current) {
+      districtInitialized.current = true;
+      const storedDistrict = readStoredDistrict();
+      if (storedDistrict) {
+        const timer = window.setTimeout(() => setFilters((current) => ({ ...current, district: storedDistrict })), 0);
+        return () => window.clearTimeout(timer);
+      }
+    }
+    if (filters.district !== "all") markProgress("district", filters.district);
     markProgress("schoolSearch");
-  }, [filters.district]);
+  }, [filters.district, initialFilters.district]);
 
   useEffect(() => {
     let active = true;

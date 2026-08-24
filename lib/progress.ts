@@ -1,3 +1,5 @@
+import { writeStoredDistrict } from "@/lib/district-context";
+
 export type ProgressKey = "schoolSearch" | "calculator" | "planner";
 
 export type ProgressState = Readonly<{
@@ -38,6 +40,6 @@ export function markProgress(key: ProgressKey | "district", value = "") {
     ...(key === "district" ? { district: value } : { [key]: true }),
   });
   window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(next));
-  if (key === "district" && value) window.localStorage.setItem("jshs_district", value);
+  if (key === "district" && value) writeStoredDistrict(value);
   window.dispatchEvent(new Event("jshs-progress"));
 }

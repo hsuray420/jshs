@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getAdmissionRule, isAdmissionDistrict, type AdmissionDistrict, type AdmissionRule } from "@/lib/admission-score";
+import { readStoredDistrict } from "@/lib/district-context";
 import { markProgress } from "@/lib/progress";
 
 const subjects = [["chineseGrade", "國文"], ["mathGrade", "數學"], ["englishGrade", "英語"], ["socialGrade", "社會"], ["scienceGrade", "自然"]] as const;
@@ -61,8 +62,10 @@ const defaultCriteria: CriteriaState = {
   warnings: "0", minorDemerits: "0", majorDemerits: "0", majorMerits: "0", minorMerits: "0", commendations: "0",
 };
 
-export function AdmissionCalculator({ initialDistrict }: { initialDistrict: string }) {
-  const [district, setDistrict] = useState<AdmissionDistrict>(isAdmissionDistrict(initialDistrict) ? initialDistrict : "ct");
+export function AdmissionCalculator({ initialDistrict }: { initialDistrict?: string }) {
+  const requestedDistrict = initialDistrict && isAdmissionDistrict(initialDistrict) ? initialDistrict : undefined;
+  const [district, setDistrict] = useState<AdmissionDistrict>(requestedDistrict || "ct");
+  const districtInitialized = useRef(Boolean(requestedDistrict));
   const [academicYear, setAcademicYear] = useState("115");
   const [step, setStep] = useState<StepId>("context");
   const [exam, setExam] = useState<ExamState>(emptyExam);
@@ -72,7 +75,22 @@ export function AdmissionCalculator({ initialDistrict }: { initialDistrict: stri
   const [status, setStatus] = useState("");
   const rule = getAdmissionRule(district);
 
-  useEffect(() => markProgress("district", district), [district]);
+  useEffect(() => {
+    if (requestedDistrict && requestedDistrict !== district) {
+      const timer = window.setTimeout(() => setDistrict(requestedDistrict), 0);
+      districtInitialized.current = true;
+      return () => window.clearTimeout(timer);
+    }
+    if (!districtInitialized.current) {
+      districtInitialized.current = true;
+      const storedDistrict = readStoredDistrict();
+      if (isAdmissionDistrict(storedDistrict)) {
+        const timer = window.setTimeout(() => setDistrict(storedDistrict), 0);
+        return () => window.clearTimeout(timer);
+      }
+    }
+    markProgress("district", district);
+  }, [district, requestedDistrict]);
 
   const missing = useMemo(() => {
     const fields: string[] = [];

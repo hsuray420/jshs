@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default async function ToolsPage({ searchParams }: { searchParams: Promise<{ district?: string }> }) {
   const params = await searchParams;
-  const initialDistrict: AdmissionDistrict = params.district && isAdmissionDistrict(params.district) ? params.district : "ct";
+  const initialDistrict: AdmissionDistrict | undefined = params.district && isAdmissionDistrict(params.district) ? params.district : undefined;
   return (
     <main className="min-h-screen jshs-page-shell">
       <SiteHeader activeHref="/tools" />
