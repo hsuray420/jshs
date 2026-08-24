@@ -63,6 +63,12 @@ test("trust and about menu items each have independent detail pages", async () =
   for (const href of expected.values()) assert.match(detailRoute, new RegExp(href.split("/").at(-1)));
 });
 
+test("資料錯誤回報使用指定的 Google 表單", async () => {
+  const reportPage = await read("app/trust/[slug]/page.tsx");
+  assert.match(reportPage, /https:\/\/forms\.gle\/qd6GuS1EFXkzjppz7/);
+  assert.match(reportPage, /填寫錯誤回報表單/);
+});
+
 test("long-form trust policies live in editable text files", async () => {
   const detailRoute = await read("app/trust/[slug]/page.tsx");
   for (const file of ["privacy", "terms", "support"]) {
