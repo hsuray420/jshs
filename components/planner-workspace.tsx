@@ -41,6 +41,7 @@ export function PlannerWorkspace({ schools, isMember }: { schools: readonly Plan
   const [status, setStatus] = useState(isMember ? "正在讀取已保存的規劃…" : "收藏與規劃需要 LINE 會員登入");
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
+  const [finalizeStatus, setFinalizeStatus] = useState("");
 
   useEffect(() => {
     let active = true;
@@ -68,6 +69,26 @@ export function PlannerWorkspace({ schools, isMember }: { schools: readonly Plan
     setState(next);
     const response = await fetch("/api/planner/state", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ state: next }) }).catch(() => null);
     if (!response?.ok) setStatus("已保存在目前裝置；跨裝置同步稍後重試");
+    return Boolean(response?.ok);
+  }
+
+  async function finalizePlanner() {
+    if (!orderedItems.length) {
+      setFinalizeStatus("請先加入至少一個校科，再確認完成志願。");
+      return;
+    }
+    setFinalizeStatus("正在保存完成志願…");
+    if (!(await saveState(state))) {
+      setFinalizeStatus("目前無法同步規劃，請稍後再試。");
+      return;
+    }
+    const response = await fetch("/api/planner/finalize", { method: "POST", headers: { accept: "application/json" } }).catch(() => null);
+    const payload = await response?.json().catch(() => null) as { ok?: boolean; notification?: { skipped?: boolean } } | null;
+    if (!response?.ok || !payload?.ok) {
+      setFinalizeStatus("完成志願保存失敗，請稍後再試。");
+      return;
+    }
+    setFinalizeStatus(payload.notification?.skipped ? "志願已保存完成；LINE 通知目前未開通或被後台暫停。" : "志願已保存完成，LINE 通知已送出。");
   }
 
   function updateMeta(id: string, patch: ItemMeta) {
@@ -128,7 +149,7 @@ export function PlannerWorkspace({ schools, isMember }: { schools: readonly Plan
 
   return <>
     <section className="jshs-hero-section"><div className="mx-auto w-[min(1160px,calc(100%-32px))] py-10 md:py-14"><p className="jshs-eyebrow">我的規劃中心 · 目前位於第 1 步／共 4 個工作區</p><h1 className="mt-3 max-w-4xl">把收藏清單升級成家庭可以一起討論的工作區。</h1><p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">候選校科、風險分層、比較資料與下一步集中在同一個地方；每個操作都保留在你的規劃，不公開到搜尋引擎。</p></div></section>
-    <section className="mx-auto w-[min(1160px,calc(100%-32px))] py-6"><div className="flex flex-wrap items-center justify-between gap-3"><span className="text-sm font-black text-[var(--jshs-primary)]">{status}</span><div className="flex flex-wrap gap-2"><button type="button" onClick={() => window.print()} className="px-3 py-2 text-sm jshs-button-secondary">列印／另存 PDF</button><button type="button" onClick={downloadSummary} className="px-3 py-2 text-sm jshs-button-secondary">下載清單</button><button type="button" onClick={() => void sharePlanner()} className="px-3 py-2 text-sm jshs-button-primary">建立只讀分享</button></div></div>{shareStatus ? <p className="mt-3 text-sm text-[var(--jshs-success)]" role="status">{shareStatus}</p> : null}</section>
+    <section className="mx-auto w-[min(1160px,calc(100%-32px))] py-6"><div className="flex flex-wrap items-center justify-between gap-3"><span className="text-sm font-black text-[var(--jshs-primary)]">{status}</span><div className="flex flex-wrap gap-2"><button type="button" onClick={() => void finalizePlanner()} className="px-3 py-2 text-sm jshs-button-primary">確認完成志願</button><button type="button" onClick={() => window.print()} className="px-3 py-2 text-sm jshs-button-secondary">列印／另存 PDF</button><button type="button" onClick={downloadSummary} className="px-3 py-2 text-sm jshs-button-secondary">下載清單</button><button type="button" onClick={() => void sharePlanner()} className="px-3 py-2 text-sm jshs-button-primary">建立只讀分享</button></div></div>{finalizeStatus ? <p className="mt-3 text-sm font-bold text-[var(--jshs-success)]" role="status">{finalizeStatus}</p> : null}{shareStatus ? <p className="mt-3 text-sm text-[var(--jshs-success)]" role="status">{shareStatus}</p> : null}</section>
     <section className="mx-auto w-[min(1160px,calc(100%-32px))] pb-12"><nav aria-label="規劃工作區" className="grid grid-cols-2 gap-2 md:grid-cols-4">{([ ["options", "我的選項", "收藏、備註與觀點"], ["risk", "風險分層", "挑戰／適中／穩定"], ["compare", "比較表", "把欄位放在一起"], ["next", "下一步", "補資料與家庭討論"]] as const).map(([id, label, description]) => <button key={id} type="button" onClick={() => setView(id)} className={`p-4 text-left jshs-button ${view === id ? "jshs-button-primary" : "jshs-button-secondary"}`}><strong className="block">{label}</strong><span className={`mt-1 block text-xs leading-5 ${view === id ? "text-white/80" : "jshs-muted-copy"}`}>{description}</span></button>)}</nav>
       <div className="mt-6">{view === "options" ? <OptionsView items={orderedItems} state={state} onMeta={updateMeta} onMove={moveItem} onDrop={dropItem} onDragStart={setDraggedId} onRemove={remove} /> : null}{view === "risk" ? <RiskView items={orderedItems} state={state} onMove={moveItem} /> : null}{view === "compare" ? <CompareView items={orderedItems} schoolMap={schoolMap} /> : null}{view === "next" ? <NextView items={orderedItems} state={state} onTask={toggleTask} /> : null}</div>
     </section>

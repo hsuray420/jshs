@@ -1,6 +1,7 @@
 /** Cloudflare Worker entry point for the vinext-starter template. */
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
+import { dispatchDueImportantDateNotifications } from "../lib/notifications";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 import guideCss from "../public/it_hs/guide.css?raw";
 import robotsText from "../public/robots.txt?raw";
@@ -153,6 +154,9 @@ const worker = {
 
     const response = await handler.fetch(request, env, ctx);
     return isPublicDocumentRequest(request, url) ? publicDocumentResponse(response) : response;
+  },
+  async scheduled(_controller: { scheduledTime: number; cron: string; type: "scheduled" }, _env: Env, ctx: ExecutionContext) {
+    ctx.waitUntil(dispatchDueImportantDateNotifications());
   },
 };
 

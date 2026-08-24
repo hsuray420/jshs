@@ -39,6 +39,12 @@ export async function ensurePlannerSchema() {
       created_at TEXT NOT NULL,
       last_used_at TEXT NOT NULL
     )`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS planner_confirmations (
+      planner_id TEXT PRIMARY KEY,
+      item_count INTEGER NOT NULL,
+      state_json TEXT NOT NULL,
+      confirmed_at TEXT NOT NULL
+    )`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_member_planners_last_used_at
       ON member_planners(last_used_at)`),
   ]);
@@ -109,4 +115,17 @@ export async function savePlannerState(plannerId: string, stateJson: string) {
     stateJson,
     new Date().toISOString(),
   ).run();
+}
+
+export async function confirmPlanner(plannerId: string, itemCount: number, stateJson: string) {
+  await ensurePlannerSchema();
+  const confirmedAt = new Date().toISOString();
+  await getD1().prepare(`INSERT INTO planner_confirmations
+    (planner_id, item_count, state_json, confirmed_at) VALUES (?, ?, ?, ?)
+    ON CONFLICT(planner_id) DO UPDATE SET
+      item_count = excluded.item_count,
+      state_json = excluded.state_json,
+      confirmed_at = excluded.confirmed_at`)
+    .bind(plannerId, itemCount, stateJson, confirmedAt).run();
+  return confirmedAt;
 }

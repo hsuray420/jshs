@@ -6,6 +6,7 @@ import {
   listLineUsers,
   listSiteSettings,
 } from "../../db/admin-store";
+import { listImportantDates, listNotificationSettings } from "../../db/notification-store";
 import { listPendingSchoolReviews } from "../../db/school-review-store";
 import {
   getAlertLineUserIds,
@@ -15,6 +16,12 @@ import {
 } from "../../lib/line";
 import { requireAdmin } from "./auth";
 import "./styles.css";
+
+const notificationControls = [
+  { eventKey: "planner_finalized", label: "志願完成通知", helper: "使用者按下確認完成志願後發送。" },
+  { eventKey: "score_calculated", label: "成績試算通知", helper: "使用者成功完成一次成績試算後發送。" },
+  { eventKey: "important_date", label: "重要日期通知", helper: "重要日期到達發送時間後，發送給已開通的會員。" },
+] as const;
 
 export const dynamic = "force-dynamic";
 
@@ -30,12 +37,14 @@ export default async function AdminPage({
 }) {
   const admin = await requireAdmin();
   const params = await searchParams;
-  const [files, settings, lineUsers, extraAdminLineUsers, pendingReviews] = await Promise.all([
+  const [files, settings, lineUsers, extraAdminLineUsers, pendingReviews, notificationSettings, importantDates] = await Promise.all([
     listAdminFiles(),
     listSiteSettings(),
     listLineUsers(),
     listExtraAdminLineUserIds(),
     listPendingSchoolReviews(),
+    listNotificationSettings(),
+    listImportantDates(true),
   ]);
   const settingsMap = new Map(settings.map((item) => [item.key, item.value]));
   const publicFiles = files.filter((file) => file.visibility === "public");
@@ -75,6 +84,9 @@ export default async function AdminPage({
           {params.updated === "line_users_invalid" ? "LINE userId 格式不正確。" : null}
           {params.updated === "review_published" ? "分享已審核並公開。" : null}
           {params.updated === "review_rejected" ? "分享已退回，不會公開。" : null}
+          {params.updated === "notifications" ? "通知設定已更新。" : null}
+          {params.updated === "important_date" ? "重要日期已更新。" : null}
+          {params.updated === "notifications_invalid" || params.updated === "important_date_invalid" ? "通知資料格式不正確，未更新。" : null}
           {params.tested === "line" ? "LINE 測試通知已送出。" : null}
         </section>
       ) : null}
@@ -85,6 +97,47 @@ export default async function AdminPage({
         <StatusCard label="學校 CSV" value={schoolCsvUpdatedAt ? "後台管理" : "內建資料"} tone="ok" />
         <StatusCard label="檔案庫" value={`${files.length} 個檔案`} tone="ok" />
         <StatusCard label="程式碼" value="可上傳" tone="ok" />
+      </section>
+
+      <section className="admin-panel">
+        <div className="admin-section-head">
+          <div>
+            <p className="admin-eyebrow">Notification Control</p>
+            <h2>通知主控台</h2>
+          </div>
+          <span className="admin-badge ok">後台可即時修改</span>
+        </div>
+        <p className="admin-muted">後台開關是第一層控管；會員仍必須在「通知與提醒」逐項開通，兩者都開啟才會推送。</p>
+        <div className="admin-grid">
+          {notificationControls.map((control) => {
+            const setting = notificationSettings.find((item) => item.event_key === control.eventKey);
+            return <form className="admin-panel" key={control.eventKey} action="/api/admin/notifications" method="post">
+              <input type="hidden" name="action" value="settings" />
+              <input type="hidden" name="event_key" value={control.eventKey} />
+              <div className="admin-section-head"><div><p className="admin-eyebrow">{control.eventKey}</p><h3>{control.label}</h3></div><span className={setting?.enabled ? "admin-badge ok" : "admin-badge warn"}>{setting?.enabled ? "後台開啟" : "後台關閉"}</span></div>
+              <p className="admin-muted">{control.helper}</p>
+              <label className="admin-checkbox"><input name="enabled" type="checkbox" defaultChecked={setting?.enabled === 1} />允許此類通知</label>
+              <label>LINE 標題<input name="title" maxLength={80} defaultValue={setting?.title || ""} required /></label>
+              <label>通知內容模板<textarea name="body_template" rows={4} maxLength={1000} defaultValue={setting?.body_template || ""} required /></label>
+              <p className="admin-muted">可用變數：{control.eventKey === "planner_finalized" ? "{count}" : control.eventKey === "score_calculated" ? "{district}、{academicYear}、{score}" : "{title}、{description}、{eventDate}"}</p>
+              <button className="admin-button" type="submit">儲存{control.label}</button>
+            </form>;
+          })}
+        </div>
+        <div className="admin-section-head"><div><p className="admin-eyebrow">Important Dates</p><h3>重要日期管理</h3></div><span className="admin-badge ok">{importantDates.length} 筆</span></div>
+        <form className="admin-inline-form" action="/api/admin/notifications" method="post">
+          <input type="hidden" name="action" value="create_date" />
+          <label>日期標題<input name="title" placeholder="例如：免試入學志願選填開始" maxLength={100} required /></label>
+          <label>日期<input name="event_date" type="date" required /></label>
+          <label>通知時間<input name="send_at" type="datetime-local" /></label>
+          <label>說明<input name="description" placeholder="給使用者的提醒內容" maxLength={1000} /></label>
+          <label className="admin-checkbox"><input name="enabled" type="checkbox" defaultChecked />啟用</label>
+          <button className="admin-button" type="submit">新增重要日期</button>
+        </form>
+        <div className="admin-table-wrap"><table><thead><tr><th>日期</th><th>通知內容</th><th>發送時間</th><th>狀態</th><th>操作</th></tr></thead><tbody>
+          {importantDates.map((item) => { const formId = `update-date-${item.id}`; return <tr key={item.id}><td><input form={formId} name="event_date" type="date" defaultValue={item.event_date} required /></td><td><input form={formId} name="title" defaultValue={item.title} maxLength={100} required /><input form={formId} name="description" defaultValue={item.description} maxLength={1000} /></td><td><input form={formId} name="send_at" type="datetime-local" defaultValue={toDatetimeLocal(item.send_at)} /></td><td><label className="admin-checkbox"><input form={formId} name="enabled" type="checkbox" defaultChecked={item.enabled === 1} />啟用</label>{item.sent_at ? <small>已發送：{formatDate(item.sent_at)}</small> : <small>尚未發送</small>}</td><td className="admin-row-actions"><form id={formId} action="/api/admin/notifications" method="post"><input type="hidden" name="action" value="update_date" /><input type="hidden" name="id" value={item.id} /><button type="submit">儲存</button></form><form action="/api/admin/notifications" method="post"><input type="hidden" name="action" value="delete_date" /><input type="hidden" name="id" value={item.id} /><button type="submit">刪除</button></form></td></tr>; })}
+          {!importantDates.length ? <tr><td colSpan={5}>尚未建立重要日期。</td></tr> : null}
+        </tbody></table></div>
       </section>
 
       <section className="admin-grid admin-grid-3">
@@ -509,4 +562,9 @@ function formatBytes(bytes: number) {
 function formatDate(value?: string) {
   if (!value) return "";
   return new Date(value).toLocaleString("zh-TW", { timeZone: "Asia/Taipei" });
+}
+
+function toDatetimeLocal(value: string) {
+  if (!value) return "";
+  return new Date(value).toLocaleString("sv-SE", { timeZone: "Asia/Taipei" }).replace(" ", "T").slice(0, 16);
 }

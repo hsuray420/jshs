@@ -1,0 +1,1 @@
+CREATE INDEX `idx_important_dates_dispatch` ON `important_dates` (`enabled`,`send_at`,`sent_at`);

@@ -154,6 +154,21 @@
   gap: 7px;
 }
 
+.admin-checkbox {
+  align-items: center;
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.admin-checkbox input {
+  accent-color: #2563eb;
+  width: 18px;
+}
+
+.admin-date-form {
+  display: contents;
+}
+
 .admin-inline-form {
   align-items: end;
   display: grid;

@@ -8,6 +8,20 @@
       "when": 1785836093681,
       "tag": "0000_fine_the_initiative",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1787575355602,
+      "tag": "0001_square_vanisher",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1787575461487,
+      "tag": "0002_dear_nuke",
+      "breakpoints": true
     }
   ]
 }

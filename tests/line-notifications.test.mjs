@@ -18,7 +18,6 @@ test("notification controls define all three admin-managed LINE events", async (
     assert.match(notifications, new RegExp(eventKey));
     assert.match(store, new RegExp(eventKey));
     assert.match(adminPage, new RegExp(eventKey));
-    assert.match(adminRoute, new RegExp(eventKey));
   }
 
   assert.match(store, /CREATE TABLE IF NOT EXISTS notification_settings/);
@@ -30,6 +29,7 @@ test("notification controls define all three admin-managed LINE events", async (
   assert.match(adminPage, /重要日期/);
   assert.match(adminPage, /通知開關|通知主控/);
   assert.match(adminRoute, /requireAdmin/);
+  assert.match(adminRoute, /upsertNotificationSetting/);
 });
 
 test("member actions send notifications only after successful operations", async () => {
@@ -38,12 +38,14 @@ test("member actions send notifications only after successful operations", async
 
   assert.match(plannerRoute, /getMemberSession/);
   assert.match(plannerRoute, /notifyMember/);
-  assert.match(plannerRoute, /isMemberNotificationEnabled/);
   assert.match(plannerRoute, /finalize|完成志願/);
   assert.match(scoreRoute, /getMemberSession/);
   assert.match(scoreRoute, /notifyMember/);
-  assert.match(scoreRoute, /isMemberNotificationEnabled/);
   assert.match(scoreRoute, /calculateAdmissionScore/);
+  const notifications = await source("lib/notifications.ts");
+  assert.match(notifications, /isMemberNotificationEnabled/);
+  assert.match(notifications, /planner_finalized/);
+  assert.match(notifications, /score_calculated/);
 });
 
 test("members can explicitly opt in or out of each LINE notification category", async () => {
