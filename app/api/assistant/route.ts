@@ -44,7 +44,15 @@ export async function POST(request: Request) {
       generationConfig: { temperature: 0.15, maxOutputTokens: 700 },
     }),
   }).catch(() => null);
-  if (!response?.ok) return json({ ok: false, error: "assistant_unavailable" }, 503, shouldSetGuestCookie ? guestId : undefined);
+  if (!response?.ok) {
+    const providerError = await response?.text().catch(() => "");
+    console.error("Gemini request failed", {
+      status: response?.status || 0,
+      model,
+      message: providerError.slice(0, 500),
+    });
+    return json({ ok: false, error: "assistant_unavailable" }, 503, shouldSetGuestCookie ? guestId : undefined);
+  }
   const payload = await response.json().catch(() => null) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> } | null;
   const answer = payload?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("").trim();
   if (!answer) return json({ ok: false, error: "assistant_empty_response" }, 503, shouldSetGuestCookie ? guestId : undefined);
