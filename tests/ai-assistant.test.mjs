@@ -48,3 +48,24 @@ test("assistant handles basic greetings locally without requiring site retrieval
   assert.match(ui, /fixed.*bottom|fixed.*right/s);
   assert.match(ui, /aria-expanded/);
 });
+
+test("assistant routes general questions separately from site education data and site help", async () => {
+  const policy = await read("lib/assistant-policy.ts");
+  const route = await read("app/api/assistant/route.ts");
+  assert.match(policy, /AssistantIntent/);
+  assert.match(policy, /GENERAL.*SITE_EDUCATION_DATA.*SITE_HELP/s);
+  assert.match(policy, /routeAssistantIntent/);
+  assert.match(route, /intent !== "GENERAL"/);
+  assert.match(route, /ROUTING_INTENT/);
+  assert.match(route, /history/);
+});
+
+test("assistant prompt keeps general model knowledge available and treats site data as context", async () => {
+  const policy = await read("lib/assistant-policy.ts");
+  const ui = await read("components/ai-assistant.tsx");
+  assert.match(policy, /一般知識/);
+  assert.match(policy, /額外上下文/);
+  assert.doesNotMatch(policy, /只能根據 CONTEXT/);
+  assert.match(ui, /問我升學問題，或任何你想問的事情/);
+  assert.match(ui, /一般 AI · 升學資料助手/);
+});
