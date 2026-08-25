@@ -530,6 +530,10 @@
 .admin-content-entries em { flex: none; font-style: normal; font-size: 12px; padding: 4px 8px; }
 .admin-content-form { display: grid; gap: 14px; }
 .admin-content-form label { display: grid; gap: 6px; }
+.admin-editor-toolbar { display: flex; align-items: end; flex-wrap: wrap; gap: 12px; padding: 14px; border: 1px solid #E5E5EA; border-radius: 16px; background: #F8F8FA; }
+.admin-editor-toolbar label { min-width: 150px; }
+.admin-editor-toolbar input[type="color"] { width: 64px; padding: 4px; cursor: pointer; }
+.admin-editor-toolbar span { padding-bottom: 10px; color: #8E8E93; font-size: 13px; }
 .admin-content-form textarea[name="body_json"], .admin-preview-json { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; line-height: 1.6; }
 .admin-button-secondary { background: #F2F2F7 !important; color: #1C1C1E !important; }
 .admin-content-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #E5E5EA; }

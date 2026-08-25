@@ -40,3 +40,15 @@ test("public content cannot expose drafts or private editor fields", async () =>
   assert.match(route, /listPublishedContent/);
   assert.doesNotMatch(route, /content_revisions/);
 });
+
+test("content publishing supports Word-like text size and color plus GitHub sync", async () => {
+  const page = await read("app/admin/content/page.tsx");
+  const route = await read("app/api/admin/content/route.ts");
+  const sync = await read("lib/github-sync.ts");
+  assert.match(page, /font_size|字級/);
+  assert.match(page, /text_color|文字顏色/);
+  assert.match(route, /fontSize|color/);
+  assert.match(route, /syncContentToGitHub/);
+  assert.match(sync, /api\.github\.com/);
+  assert.match(sync, /GITHUB_TOKEN/);
+});

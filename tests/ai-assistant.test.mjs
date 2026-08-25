@@ -37,3 +37,14 @@ test("assistant UI submits questions and renders source links and feature action
   assert.match(source, /action/);
   assert.match(source, /登入|兩次|會員/);
 });
+
+test("assistant handles basic greetings locally without requiring site retrieval", async () => {
+  const policy = await read("lib/assistant-policy.ts");
+  const route = await read("app/api/assistant/route.ts");
+  const ui = await read("components/ai-assistant.tsx");
+  assert.match(policy, /getAssistantConversationReply/);
+  assert.match(policy, /你好|嗨/);
+  assert.match(route, /getAssistantConversationReply/);
+  assert.match(ui, /fixed.*bottom|fixed.*right/s);
+  assert.match(ui, /aria-expanded/);
+});

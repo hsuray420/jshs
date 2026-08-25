@@ -3,7 +3,7 @@ import { env } from "cloudflare:workers";
 import { getMemberSession } from "../../../lib/member-auth";
 import { searchSiteKnowledge, formatAssistantContext } from "../../../lib/assistant-knowledge";
 import { consumeGuestQuestion, ASSISTANT_GUEST_COOKIE } from "../../../lib/assistant-quota";
-import { buildAssistantInstruction, getAssistantAction, getQuestionAllowance, sanitizeAssistantQuestion } from "../../../lib/assistant-policy";
+import { buildAssistantInstruction, getAssistantAction, getAssistantConversationReply, getQuestionAllowance, sanitizeAssistantQuestion } from "../../../lib/assistant-policy";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +17,8 @@ export async function POST(request: Request) {
   const member = await getMemberSession();
   const action = getAssistantAction(question);
   if (action) return json({ ok: true, answer: action.reason, sources: [], action, usage: getQuestionAllowance(Boolean(member), 0) });
+  const conversationReply = getAssistantConversationReply(question);
+  if (conversationReply) return json({ ok: true, answer: conversationReply, sources: [], usage: getQuestionAllowance(Boolean(member), 0) });
 
   const cookieStore = await cookies();
   let guestId = cookieStore.get(ASSISTANT_GUEST_COOKIE)?.value;
