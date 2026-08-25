@@ -62,20 +62,24 @@ export async function POST(request: Request) {
     ],
     generationConfig: { temperature: 0.15, maxOutputTokens: 700 },
   };
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 25_000);
+  let fetchError: unknown = null;
   const response = await fetch(endpoint, {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(requestBody),
-  }).catch(() => null);
+    signal: controller.signal,
+  }).catch((error) => { fetchError = error; return null; }).finally(() => clearTimeout(timeout));
   if (!response?.ok) {
     const providerError = response ? await response.text().catch(() => "") : "";
-    const errorCode = response?.status === 429 ? "assistant_rate_limited" : response?.status && response.status >= 500 ? "assistant_unavailable" : "assistant_unavailable";
+    const errorCode = fetchError instanceof Error && fetchError.name === "AbortError" ? "assistant_timeout" : response?.status === 429 ? "assistant_rate_limited" : "assistant_unavailable";
     console.error("Gemini request failed", {
       status: response?.status || 0,
       model,
       message: providerError.slice(0, 500),
     });
-    return json({ ok: false, error: errorCode }, response?.status === 429 ? 429 : 503, shouldSetGuestCookie ? guestId : undefined);
+    return json({ ok: false, error: errorCode }, errorCode === "assistant_rate_limited" ? 429 : 503, shouldSetGuestCookie ? guestId : undefined);
   }
   if (wantsStream) return proxyGeminiStream(response, sources, usage, intent, shouldSetGuestCookie ? guestId : undefined);
   const payload = await response.json().catch(() => null) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> } | null;
