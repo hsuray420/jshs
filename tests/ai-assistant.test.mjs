@@ -69,3 +69,9 @@ test("assistant prompt keeps general model knowledge available and treats site d
   assert.match(ui, /問我升學問題，或任何你想問的事情/);
   assert.match(ui, /一般 AI · 升學資料助手/);
 });
+
+test("assistant stream proxy parses each Gemini data line and flushes the final buffer", async () => {
+  const route = await read("app/api/assistant/route.ts");
+  assert.match(route, /event\.split\(\/\\r\?\\n/);
+  assert.match(route, /if \(buffer\.trim\(\)\) enqueueGeminiEvent/);
+});

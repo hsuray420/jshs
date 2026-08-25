@@ -100,19 +100,17 @@ function proxyGeminiStream(response: Response, sources: readonly Source[], usage
       try {
         while (true) {
           const chunk = await reader.read();
-          if (chunk.done) break;
-          buffer += decoder.decode(chunk.value, { stream: true });
+          buffer += chunk.done ? decoder.decode() : decoder.decode(chunk.value, { stream: true });
           const events = buffer.split("\n\n");
           buffer = events.pop() || "";
           for (const event of events) {
-            const data = event.replace(/^data:\s*/, "").trim();
-            if (!data || data === "[DONE]") continue;
-            const payload = JSON.parse(data) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> };
-            const delta = payload.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("");
-            if (delta) controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`));
+            enqueueGeminiEvent(event, controller, encoder);
           }
+          if (chunk.done) break;
         }
-      } catch {
+        if (buffer.trim()) enqueueGeminiEvent(buffer, controller, encoder);
+      } catch (error) {
+        console.error("Gemini stream proxy failed", error instanceof Error ? error.message : "unknown_error");
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "assistant_unavailable" })}\n\n`));
       }
       controller.enqueue(encoder.encode("data: [DONE]\n\n"));
@@ -122,6 +120,22 @@ function proxyGeminiStream(response: Response, sources: readonly Source[], usage
   const headers = new Headers({ "cache-control": "no-store", "content-type": "text/event-stream; charset=utf-8", "x-accel-buffering": "no" });
   if (guestId) headers.append("set-cookie", `${ASSISTANT_GUEST_COOKIE}=${guestId}; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax`);
   return new Response(stream, { headers });
+}
+
+function enqueueGeminiEvent(event: string, controller: ReadableStreamDefaultController<Uint8Array>, encoder: TextEncoder) {
+  for (const line of event.split(/\r?\n/u)) {
+    if (!line.startsWith("data:")) continue;
+    const data = line.replace(/^data:\s*/, "").trim();
+    if (!data || data === "[DONE]") continue;
+    const payload = JSON.parse(data) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>; error?: { code?: number; message?: string; status?: string } };
+    if (payload.error) {
+      console.error("Gemini stream provider error", payload.error);
+      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: payload.error.code === 429 ? "assistant_rate_limited" : "assistant_unavailable" })}\n\n`));
+      continue;
+    }
+    const delta = payload.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("");
+    if (delta) controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`));
+  }
 }
 
 function sanitizeHistory(value: unknown): readonly AssistantHistoryItem[] {
