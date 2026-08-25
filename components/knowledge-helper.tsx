@@ -3,7 +3,7 @@
 
 import { useMemo, useState } from "react";
 
-const terms = [
+const fallbackTerms = [
   ["超額比序", "當申請人數超過名額時，依招生區公告的項目與順序比較，不是全國共用一張表。"],
   ["序位", "依適用規則與同區申請資料產生的排序位置；本站的試算不能取代正式公告序位。"],
   ["免試入學", "不以單一入學考試分發為唯一依據，而是依各區規則與志願選填辦理。"],
@@ -13,7 +13,7 @@ const terms = [
 
 const quizOptions = ["我喜歡先理解理論，再準備未來升學", "我喜歡動手做、實作與看見作品", "我想保留普高與技職兩種可能"] as const;
 
-export function KnowledgeHelper() {
+export function KnowledgeHelper({ terms = fallbackTerms }: { terms?: readonly (readonly [string, string])[] }) {
   const [query, setQuery] = useState("");
   const [quiz, setQuiz] = useState("");
   const matches = useMemo(() => terms.filter(([title, body]) => `${title} ${body}`.includes(query.trim())), [query]);

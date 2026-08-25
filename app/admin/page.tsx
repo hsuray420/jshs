@@ -70,6 +70,7 @@ export default async function AdminPage({
         <div className="admin-actions">
           <Link href="/">看前台</Link>
           <Link href="/schools">看學校資料</Link>
+          <Link href="/admin/content">內容中心</Link>
           <a href="/admin/code/">看程式碼</a>
           <a href={admin.signOutPath}>登出</a>
         </div>
@@ -97,6 +98,7 @@ export default async function AdminPage({
         <StatusCard label="學校 CSV" value={schoolCsvUpdatedAt ? "後台管理" : "內建資料"} tone="ok" />
         <StatusCard label="檔案庫" value={`${files.length} 個檔案`} tone="ok" />
         <StatusCard label="程式碼" value="可上傳" tone="ok" />
+        <StatusCard label="內容中心" value="知識／待辦可發布" tone="ok" />
       </section>
 
       <section className="admin-panel">

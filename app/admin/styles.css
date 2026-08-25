@@ -518,3 +518,20 @@
 .admin-badge.warn { background: #FFF3E0; color: #C46A00; }
 .admin-flash, .admin-success, .admin-alert { border: 0; border-radius: 16px; }
 .admin-line-button { background: #34C759; }
+
+.admin-content-list, .admin-content-editor { min-width: 0; }
+.admin-content-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.admin-content-filters a { padding: 8px 12px; border-radius: 999px; background: #F2F2F7; color: #1C1C1E; font-size: 14px; }
+.admin-content-filters a.is-active { background: #007AFF; color: #fff; }
+.admin-content-entries { display: grid; gap: 8px; max-height: 620px; overflow: auto; }
+.admin-content-entries a { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border-radius: 14px; background: #F8F8FA; color: #1C1C1E; }
+.admin-content-entries a.is-active { background: #E8F2FF; outline: 2px solid #007AFF; }
+.admin-content-entries small { display: block; color: #8E8E93; font-size: 12px; }
+.admin-content-entries em { flex: none; font-style: normal; font-size: 12px; padding: 4px 8px; }
+.admin-content-form { display: grid; gap: 14px; }
+.admin-content-form label { display: grid; gap: 6px; }
+.admin-content-form textarea[name="body_json"], .admin-preview-json { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; line-height: 1.6; }
+.admin-button-secondary { background: #F2F2F7 !important; color: #1C1C1E !important; }
+.admin-content-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #E5E5EA; }
+.admin-content-actions button { padding: 8px 12px; border: 0; border-radius: 999px; background: #F2F2F7; color: #007AFF; cursor: pointer; }
+.admin-preview-json { overflow: auto; padding: 16px; border-radius: 14px; background: #F2F2F7; white-space: pre-wrap; }

@@ -1,0 +1,42 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+
+const root = new URL("../", import.meta.url);
+const read = (path) => readFile(new URL(path, root), "utf8");
+
+test("content center stores drafts, published state, and revisions in D1", async () => {
+  const store = await read("db/content-store.ts");
+  assert.match(store, /content_entries/);
+  assert.match(store, /content_revisions/);
+  assert.match(store, /draft/);
+  assert.match(store, /published/);
+  assert.match(store, /publishContentEntry/);
+});
+
+test("admin content editor is protected and supports preview plus publish", async () => {
+  const page = await read("app/admin/content/page.tsx");
+  const route = await read("app/api/admin/content/route.ts");
+  assert.match(page, /草稿|發布/);
+  assert.match(page, /預覽/);
+  assert.match(route, /requireAdmin/);
+  assert.match(route, /publishContentEntry/);
+  assert.match(route, /content_type/);
+});
+
+test("knowledge and schedule read mutable content with static fallbacks", async () => {
+  const knowledge = await read("app/knowledge/page.tsx");
+  const scheduleApi = await read("app/api/schedule/route.ts");
+  assert.match(knowledge, /listPublishedContent/);
+  assert.match(knowledge, /KnowledgeHelper/);
+  assert.match(scheduleApi, /listPublishedContent/);
+  assert.match(scheduleApi, /schedule_task/);
+});
+
+test("public content cannot expose drafts or private editor fields", async () => {
+  const store = await read("db/content-store.ts");
+  const route = await read("app/api/site-content/route.ts");
+  assert.match(store, /status = 'published'/);
+  assert.match(route, /listPublishedContent/);
+  assert.doesNotMatch(route, /content_revisions/);
+});
