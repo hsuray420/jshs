@@ -1,5 +1,17 @@
 {
   "version": 1,
-  "updatedAt": null,
-  "entries": {}
+  "updatedAt": "2026-08-25T12:54:29.102Z",
+  "entries": {
+    "knowledge_term:序位": {
+      "id": "system-knowledge_term-序位",
+      "content_type": "knowledge_term",
+      "slug": "序位",
+      "title": "序位",
+      "summary": "依適用規則與同區申請資料產生的排序位置；本站的試算不能取代正式公告序位。",
+      "body_json": "{\"body\":\"請輸入名詞說明。\",\"style\":{\"fontSize\":\"16\",\"color\":\"#1c1c1e\"}}",
+      "status": "published",
+      "published_at": "2026-08-25T12:54:28.433Z",
+      "updated_at": "2026-08-25T12:54:28.433Z"
+    }
+  }
 }
