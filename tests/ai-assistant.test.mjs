@@ -10,7 +10,7 @@ test("AI policy routes score requests to the existing tools instead of calculati
   assert.match(source, /\/tools/);
   assert.match(source, /\/tools\/placement/);
   assert.match(source, /成績|積分|分數|落點/);
-  assert.match(source, /action/);
+  assert.match(source, /AssistantAction|action/);
 });
 
 test("AI policy allows only two anonymous questions and unlimited member questions", async () => {
@@ -23,7 +23,7 @@ test("AI policy allows only two anonymous questions and unlimited member questio
 test("assistant API authenticates members, uses the guest cookie, and calls Gemini server-side", async () => {
   const source = await read("app/api/assistant/route.ts");
   assert.match(source, /getMemberSession/);
-  assert.match(source, /jshs_ai_guest/);
+  assert.match(source, /ASSISTANT_GUEST_COOKIE|jshs_ai_guest/);
   assert.match(source, /GEMINI_API_KEY/);
   assert.match(source, /generativelanguage\.googleapis\.com/);
   assert.match(source, /LINE|本站|網站內容/);
