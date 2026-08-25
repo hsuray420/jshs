@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AiAssistant } from "@/components/ai-assistant";
+import { getMemberSession } from "@/lib/member-auth";
 
 const googleTagId = "G-Y9298RKYMZ";
 
@@ -14,11 +16,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const member = await getMemberSession();
   return (
     <html lang="zh-TW">
       <head>
@@ -36,6 +39,7 @@ export default function RootLayout({
       </head>
       <body>
         {children}
+        <AiAssistant isMember={Boolean(member)} />
       </body>
     </html>
   );
