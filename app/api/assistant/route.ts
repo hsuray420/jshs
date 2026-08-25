@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     }),
   }).catch(() => null);
   if (!response?.ok) {
-    const providerError = await response?.text().catch(() => "");
+    const providerError = response ? await response.text().catch(() => "") : "";
     console.error("Gemini request failed", {
       status: response?.status || 0,
       model,
