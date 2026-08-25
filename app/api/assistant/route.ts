@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
   const apiKey = runtimeEnv.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
   if (!apiKey) return json({ ok: false, error: "assistant_not_configured" }, 503, shouldSetGuestCookie ? guestId : undefined);
-  const model = runtimeEnv.GEMINI_MODEL || process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const model = runtimeEnv.GEMINI_MODEL || process.env.GEMINI_MODEL || "gemini-3.6-flash";
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const response = await fetch(endpoint, {
     method: "POST",
