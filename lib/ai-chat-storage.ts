@@ -2,9 +2,11 @@ export type ChatRole = "user" | "assistant";
 
 export type ChatMessage = Readonly<{
   id: string;
+  conversationId?: string;
   role: ChatRole;
   content: string;
   createdAt: number;
+  status?: "pending" | "streaming" | "complete" | "error";
   sources?: readonly { title: string; url: string; snippet?: string }[];
   action?: { label: string; href: string; reason: string };
   error?: boolean;
@@ -114,4 +116,12 @@ export function appendMessage(conversation: ChatConversation, message: ChatMessa
 
 export function replaceLastMessage(conversation: ChatConversation, message: ChatMessage) {
   return { ...conversation, messages: conversation.messages.map((item, index, all) => index === all.length - 1 ? message : item), updatedAt: Date.now() } satisfies ChatConversation;
+}
+
+export function replaceMessage(conversation: ChatConversation, message: ChatMessage) {
+  return { ...conversation, messages: conversation.messages.map((item) => item.id === message.id ? message : item), updatedAt: Date.now() } satisfies ChatConversation;
+}
+
+export function removeMessage(conversation: ChatConversation, messageId: string) {
+  return { ...conversation, messages: conversation.messages.filter((item) => item.id !== messageId), updatedAt: Date.now() } satisfies ChatConversation;
 }
