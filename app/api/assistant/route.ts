@@ -60,7 +60,7 @@ export async function POST(request: Request) {
       ...history.map((item) => ({ role: item.role === "assistant" ? "model" : "user", parts: [{ text: item.content }] })),
       { role: "user", parts: [{ text: `ROUTING_INTENT: ${intent}\nSITE_RETRIEVAL_STATUS: ${retrievalError ? "failed" : intent === "GENERAL" ? "not_needed" : sources.length ? "found" : "empty"}\nSITE_CONTEXT:\n${formatAssistantContext(sources) || "（沒有提供本站檢索資料）"}\n\nUSER QUESTION:\n${question}` }] },
     ],
-    generationConfig: { temperature: 0.15, maxOutputTokens: 700 },
+    generationConfig: { temperature: intent === "GENERAL" ? 0.25 : 0.15, maxOutputTokens: intent === "GENERAL" ? 420 : 700 },
   };
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 25_000);
@@ -144,7 +144,7 @@ function sanitizeHistory(value: unknown): readonly AssistantHistoryItem[] {
     .filter((item): item is { role?: unknown; content?: unknown } => Boolean(item) && typeof item === "object")
     .map((item): AssistantHistoryItem => ({ role: item.role === "assistant" ? "assistant" : "user", content: sanitizeAssistantQuestion(item.content) }))
     .filter((item) => item.content.length > 0)
-    .slice(-12);
+    .slice(-6);
 }
 
 function json(body: unknown, status = 200, guestId?: string) {

@@ -24,7 +24,7 @@ function useConversation(initialId = "") {
 }
 
 async function requestAssistant(question: string, history: readonly ChatMessage[], onDone: (data: { answer: string; sources: readonly Source[]; action?: Action; usage?: { remaining?: number | null }; intent?: string }) => void, onDelta?: (answer: string) => void) {
-  const response = await fetch("/api/assistant", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question, stream: true, history: history.slice(-12).map((message) => ({ role: message.role, content: message.content })) }) });
+  const response = await fetch("/api/assistant", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question, stream: true, history: history.slice(-6).map((message) => ({ role: message.role, content: message.content.slice(0, 1200) })) }) });
   if (!response.ok) throw Object.assign(new Error("assistant_failed"), { code: (await response.json().catch(() => null) as { error?: string } | null)?.error });
   if (!response.body) return onDone(await response.json());
   const reader = response.body.getReader(); const decoder = new TextDecoder(); let payload = ""; let answer = ""; let buffer = ""; let metadata: { sources: readonly Source[]; usage?: { remaining?: number | null }; intent?: string } = { sources: [] };
