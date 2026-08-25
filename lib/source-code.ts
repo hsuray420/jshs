@@ -419,7 +419,7 @@ export const SOURCE_FILES: SourceFile[] = [
   },
   {
     "path": "content/managed-content.json",
-    "content": "{\n  \"version\": 1,\n  \"updatedAt\": null,\n  \"entries\": {}\n}\n"
+    "content": "{\n  \"version\": 1,\n  \"updatedAt\": \"2026-08-25T12:54:29.102Z\",\n  \"entries\": {\n    \"knowledge_term:序位\": {\n      \"id\": \"system-knowledge_term-序位\",\n      \"content_type\": \"knowledge_term\",\n      \"slug\": \"序位\",\n      \"title\": \"序位\",\n      \"summary\": \"依適用規則與同區申請資料產生的排序位置；本站的試算不能取代正式公告序位。\",\n      \"body_json\": \"{\\\"body\\\":\\\"請輸入名詞說明。\\\",\\\"style\\\":{\\\"fontSize\\\":\\\"16\\\",\\\"color\\\":\\\"#1c1c1e\\\"}}\",\n      \"status\": \"published\",\n      \"published_at\": \"2026-08-25T12:54:28.433Z\",\n      \"updated_at\": \"2026-08-25T12:54:28.433Z\"\n    }\n  }\n}\n"
   },
   {
     "path": "content/news.json",
