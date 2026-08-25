@@ -1,10 +1,13 @@
 import { cookies } from "next/headers";
+import { env } from "cloudflare:workers";
 import { getMemberSession } from "../../../lib/member-auth";
 import { searchSiteKnowledge, formatAssistantContext } from "../../../lib/assistant-knowledge";
 import { consumeGuestQuestion, ASSISTANT_GUEST_COOKIE } from "../../../lib/assistant-quota";
 import { buildAssistantInstruction, getAssistantAction, getQuestionAllowance, sanitizeAssistantQuestion } from "../../../lib/assistant-policy";
 
 export const dynamic = "force-dynamic";
+
+const runtimeEnv = env as typeof env & { GEMINI_API_KEY?: string; GEMINI_MODEL?: string };
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null) as { question?: unknown } | null;
@@ -31,9 +34,9 @@ export async function POST(request: Request) {
   const sources = searchSiteKnowledge(question);
   if (!sources.length) return json({ ok: true, answer: "本站目前沒有足夠資料可以確認這件事，請查看來源頁面或官方公告。", sources, usage }, 200, shouldSetGuestCookie ? guestId : undefined);
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = runtimeEnv.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
   if (!apiKey) return json({ ok: false, error: "assistant_not_configured" }, 503, shouldSetGuestCookie ? guestId : undefined);
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+  const model = runtimeEnv.GEMINI_MODEL || process.env.GEMINI_MODEL || "gemini-2.5-flash";
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const response = await fetch(endpoint, {
     method: "POST",
