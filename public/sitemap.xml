@@ -67,6 +67,60 @@
         <priority>0.9</priority>
     </url>
     <url>
+        <loc>https://jshs.cc/tools/rules</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schedule</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schedule/countdown</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schedule/timeline</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schedule/now</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schedule/tasks</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schedule/compare</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schedule/open-days</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schedule/export</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://jshs.cc/districts</loc>
         <lastmod>2026-08-14</lastmod>
         <changefreq>weekly</changefreq>

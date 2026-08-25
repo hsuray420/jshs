@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { createMemberSessionCookie } from "../../../../../lib/member-auth";
-import { exchangeLineCode, hasLineLoginConfigured, verifyLineIdToken } from "../../../../../lib/line";
+import { exchangeLineCode, getLineFriendStatus, hasLineLoginConfigured, verifyLineIdToken } from "../../../../../lib/line";
 import { upsertLineUser } from "../../../../../db/admin-store";
 
 export const dynamic = "force-dynamic";
@@ -21,12 +21,18 @@ export async function GET(request: Request) {
   try {
     const token = await exchangeLineCode({ code, origin: url.origin, callbackPath: "/api/line/login/callback" });
     const profile = await verifyLineIdToken(token.id_token || "");
+    const isFriend = await getLineFriendStatus(profile.userId);
+    if (!isFriend) {
+      await upsertLineUser({ lineUserId: profile.userId, displayName: profile.displayName, pictureUrl: profile.pictureUrl, status: "seen" });
+      return redirectTo(url, "/account?error=line_friend_required");
+    }
     await upsertLineUser({ lineUserId: profile.userId, displayName: profile.displayName, pictureUrl: profile.pictureUrl, status: "seen" });
-    await createMemberSessionCookie({ lineUserId: profile.userId, displayName: profile.displayName, pictureUrl: profile.pictureUrl });
+    await createMemberSessionCookie({ lineUserId: profile.userId, displayName: profile.displayName, pictureUrl: profile.pictureUrl, friendVerifiedAt: Date.now() });
     return redirectTo(url, "/account?registered=1");
   } catch (callbackError) {
     console.error("LINE member callback failed", callbackError);
-    return redirectTo(url, "/account?error=line_failed");
+    const errorCode = callbackError instanceof Error && callbackError.message === "line_friend_check_not_configured" ? "line_friend_check_setup" : "line_failed";
+    return redirectTo(url, `/account?error=${errorCode}`);
   }
 }
 

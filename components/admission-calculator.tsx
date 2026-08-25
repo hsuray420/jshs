@@ -153,7 +153,14 @@ export function AdmissionCalculator({ initialDistrict }: { initialDistrict?: str
     const payload = (await response?.json().catch(() => ({})) ?? {}) as { result?: ScoreResult; error?: string };
     setResult(payload.result || null);
     setStatus(response?.ok ? `已依 115 學年度${rule.label}規則完成試算。` : payload.error || "試算失敗，請稍後重試。");
-    if (response?.ok && payload.result) { markProgress("calculator", district); setStep("result"); }
+    if (response?.ok && payload.result) {
+      const snapshot = { savedAt: new Date().toISOString(), district, academicYear, result: payload.result };
+      const history = readScoreHistory();
+      window.localStorage.setItem("jshs_score_latest", JSON.stringify(snapshot));
+      window.localStorage.setItem("jshs_score_history", JSON.stringify([snapshot, ...history].slice(0, 20)));
+      markProgress("calculator", district);
+      setStep("result");
+    }
   }
 
   function nextStep() { if (step === "criteria") { void calculate(); return; } setStep(steps[Math.min(steps.findIndex(([id]) => id === step) + 1, steps.length - 1)][0]); }
@@ -171,6 +178,15 @@ export function AdmissionCalculator({ initialDistrict }: { initialDistrict?: str
       <div className="mt-7 flex flex-wrap justify-between gap-3"><button type="button" disabled={step === "context"} onClick={() => setStep(steps[Math.max(steps.findIndex(([id]) => id === step) - 1, 0)][0])} className="px-4 py-3 text-sm jshs-button-secondary">← 上一步</button><button type="button" onClick={() => step === "result" ? setStep("criteria") : nextStep()} className="px-5 py-3 text-sm jshs-button-primary">{step === "criteria" ? "產生個人積分摘要" : step === "result" ? "重新檢查資料" : "下一步 →"}</button></div>
     </div><RuleAside rule={rule} district={district} missing={missing} /></section>
   </>;
+}
+
+function readScoreHistory() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem("jshs_score_history") || "[]");
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 }
 
 function ContextStep({ district, academicYear, rule, onDistrictChange, onYearChange }: { district: AdmissionDistrict; academicYear: string; rule: AdmissionRule; onDistrictChange: (value: AdmissionDistrict) => void; onYearChange: (value: string) => void }) {

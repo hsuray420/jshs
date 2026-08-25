@@ -7,6 +7,7 @@ export type MemberSession = Readonly<{
   lineUserId: string;
   displayName: string;
   pictureUrl?: string;
+  friendVerifiedAt: number;
 }>;
 
 export async function getMemberSession(): Promise<MemberSession | null> {
@@ -16,7 +17,7 @@ export async function getMemberSession(): Promise<MemberSession | null> {
   if (!payload || !signature || !constantTimeEqual(signature, await signSession(payload))) return null;
   const data = parsePayload(payload);
   if (!data || data.expires < Date.now()) return null;
-  return { lineUserId: data.lineUserId, displayName: data.displayName || "LINE 使用者", pictureUrl: data.pictureUrl };
+  return { lineUserId: data.lineUserId, displayName: data.displayName || "LINE 使用者", pictureUrl: data.pictureUrl, friendVerifiedAt: data.friendVerifiedAt };
 }
 
 export async function createMemberSessionCookie(member: MemberSession) {
@@ -46,7 +47,7 @@ async function signSession(payload: string) {
 function parsePayload(payload: string) {
   try {
     const parsed = JSON.parse(fromBase64Url(payload));
-    return parsed && typeof parsed.lineUserId === "string" && Number.isFinite(parsed.expires) ? parsed as MemberSession & { expires: number } : null;
+    return parsed && typeof parsed.lineUserId === "string" && Number.isFinite(parsed.expires) && Number.isFinite(parsed.friendVerifiedAt) ? parsed as MemberSession & { expires: number } : null;
   } catch { return null; }
 }
 

@@ -25,7 +25,7 @@ test("LINE 會員登入完成前必須驗證官方帳號好友狀態", async () 
 
 test("算成績的每個功能都有自己的 canonical route", async () => {
   const [siteMap, tools, summary, history, placement, rules, calculator] = await Promise.all([
-    read("lib/site-map.ts"),
+    read("content/site-map.json"),
     read("app/tools/page.tsx"),
     read("app/tools/summary/page.tsx"),
     read("app/tools/history/page.tsx"),
@@ -47,7 +47,7 @@ test("重要日程的每個功能都有自己的 canonical route並完成校園�
     "countdown", "timeline", "now", "tasks", "compare", "open-days", "export",
   ];
   const [siteMap, schedule] = await Promise.all([
-    read("lib/site-map.ts"),
+    read("content/site-map.json"),
     read("components/schedule-workspace.tsx"),
   ]);
 

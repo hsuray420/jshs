@@ -26,22 +26,22 @@
       "label": "算成績", "href": "/tools", "activeHref": "/tools", "eyebrow": "先算清楚，再判斷選項", "description": "依目前就學區與學年度規則，完成會考、多元學習與比序積分整理。",
       "items": [
         { "label": "開始試算", "href": "/tools", "description": "輸入會考成績與學習表現" },
-        { "label": "積分／序位換算說明", "href": "/knowledge?topic=scoring", "description": "看每個項目的算法、上限與來源" },
-        { "label": "個人積分摘要", "href": "/tools?view=summary", "description": "查看各項分數與待補資料" },
-        { "label": "成績歷史紀錄", "href": "/tools?view=history", "description": "保存模擬考趨勢與每次試算版本" },
-        { "label": "模擬考先估落點", "href": "/tools?view=placement", "description": "用挑戰、適中、穩定區間輔助規劃" }
+        { "label": "積分／序位換算說明", "href": "/tools/rules", "description": "看每個項目的算法、上限與來源" },
+        { "label": "個人積分摘要", "href": "/tools/summary", "description": "查看各項分數與待補資料" },
+        { "label": "成績歷史紀錄", "href": "/tools/history", "description": "保存模擬考趨勢與每次試算版本" },
+        { "label": "模擬考先估落點", "href": "/tools/placement", "description": "用挑戰、適中、穩定區間輔助規劃" }
       ]
     },
     {
       "label": "時間日程", "href": "/schedule", "activeHref": "/schedule", "eyebrow": "知道現在該做什麼", "description": "全國共通時程、就學區差異、倒數、待辦與匯出行事曆集中管理。",
       "items": [
-        { "label": "全年倒數計時", "href": "/schedule#countdown", "description": "距離會考與重要節點還有多久" },
-        { "label": "重要時程總覽", "href": "/schedule#timeline", "description": "依目前地區自動帶出日期" },
-        { "label": "我現在該做什麼", "href": "/schedule#now", "description": "依日期取得下一個行動建議" },
-        { "label": "升學待辦清單", "href": "/schedule#tasks", "description": "勾選、保存並追蹤待辦" },
-        { "label": "各就學區時程差異比較", "href": "/schedule#compare", "description": "並排比較不同地區時間" },
-        { "label": "校園開放日行事曆", "href": "/schedule#open-days", "description": "整理學校參訪與開放資訊" },
-        { "label": "個人化行事曆匯出", "href": "/schedule#export", "description": "下載 ICS 加入手機或 Google Calendar" }
+        { "label": "全年倒數計時", "href": "/schedule/countdown", "description": "距離會考與重要節點還有多久" },
+        { "label": "重要時程總覽", "href": "/schedule/timeline", "description": "依目前地區自動帶出日期" },
+        { "label": "我現在該做什麼", "href": "/schedule/now", "description": "依日期取得下一個行動建議" },
+        { "label": "升學待辦清單", "href": "/schedule/tasks", "description": "勾選、保存並追蹤待辦" },
+        { "label": "各就學區時程差異比較", "href": "/schedule/compare", "description": "並排比較不同地區時間" },
+        { "label": "校園開放日行事曆", "href": "/schedule/open-days", "description": "新增、編輯與移除學校參訪日期" },
+        { "label": "個人化行事曆匯出", "href": "/schedule/export", "description": "下載 ICS 加入手機或 Google Calendar" }
       ]
     },
     {

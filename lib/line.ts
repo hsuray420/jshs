@@ -51,6 +51,20 @@ export function hasLineMessagingConfigured() {
   return Boolean(process.env.LINE_CHANNEL_ACCESS_TOKEN);
 }
 
+export async function getLineFriendStatus(userId: string) {
+  const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+  if (!token) throw new Error("line_friend_check_not_configured");
+
+  const response = await fetch(`https://api.line.me/v2/bot/profile/${encodeURIComponent(userId)}`, {
+    headers: { authorization: `Bearer ${token}` },
+  });
+  if (response.ok) return true;
+  if (response.status === 403 || response.status === 404) return false;
+
+  const detail = await response.text();
+  throw new Error(`line_friend_check_failed:${response.status}:${detail}`);
+}
+
 export function buildLineAuthorizeUrl({
   origin,
   state,
