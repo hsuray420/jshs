@@ -69,10 +69,12 @@ export function buildLineAuthorizeUrl({
   origin,
   state,
   callbackPath = "/api/admin/line/callback",
+  botPrompt = "normal",
 }: {
   origin: string;
   state: string;
   callbackPath?: string;
+  botPrompt?: "normal" | "aggressive";
 }) {
   const { channelId } = getLineLoginConfig();
   const redirectUri = `${origin}${callbackPath}`;
@@ -82,7 +84,7 @@ export function buildLineAuthorizeUrl({
     redirect_uri: redirectUri,
     state,
     scope: "profile openid",
-    bot_prompt: "normal",
+    bot_prompt: botPrompt,
   });
   return `https://access.line.me/oauth2/v2.1/authorize?${params.toString()}`;
 }

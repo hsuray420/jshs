@@ -21,7 +21,7 @@
 
 | # | 保證 | 測試 |
 |---|---|---|
-| 1 | LINE OAuth callback 在建立會員 session 前呼叫 Messaging API profile endpoint；未加好友不建立 session，舊 session 也因缺少好友驗證時間而失效。 | `tests/member-friend-gate-and-feature-routes.test.mjs` | PASS |
+| 1 | LINE OAuth callback 在建立會員 session 前呼叫 Messaging API profile endpoint；會員登入使用 `bot_prompt=aggressive`，未加好友不建立 session，舊 session 也因缺少好友驗證時間而失效。 | `tests/member-friend-gate-and-feature-routes.test.mjs` | PASS |
 | 2 | `/tools/rules`、`/tools/summary`、`/tools/history`、`/tools/placement` 是獨立頁面，試算完成後保存最新結果與最近 20 次本機紀錄。 | `tests/member-friend-gate-and-feature-routes.test.mjs` | PASS |
 | 3 | `/schedule/countdown`、`/schedule/timeline`、`/schedule/now`、`/schedule/tasks`、`/schedule/compare`、`/schedule/open-days`、`/schedule/export` 是獨立頁面。 | `tests/member-friend-gate-and-feature-routes.test.mjs` | PASS |
 | 4 | 校園開放日可新增、移除、保存至本機並與升學日期一起匯出 ICS。 | `tests/member-friend-gate-and-feature-routes.test.mjs` + typecheck | PASS |

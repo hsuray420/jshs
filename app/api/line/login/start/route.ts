@@ -10,5 +10,5 @@ export async function GET(request: Request) {
   const state = crypto.randomUUID();
   const origin = new URL(request.url).origin;
   (await cookies()).set(LINE_STATE_COOKIE, state, { httpOnly: true, maxAge: 10 * 60, path: "/", sameSite: "lax", secure: true });
-  redirect(buildLineAuthorizeUrl({ origin, state, callbackPath: "/api/line/login/callback" }));
+  redirect(buildLineAuthorizeUrl({ origin, state, callbackPath: "/api/line/login/callback", botPrompt: "aggressive" }));
 }

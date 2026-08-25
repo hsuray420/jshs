@@ -6,8 +6,9 @@ const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 
 test("LINE 會員登入完成前必須驗證官方帳號好友狀態", async () => {
-  const [line, callback, auth, account] = await Promise.all([
+  const [line, start, callback, auth, account] = await Promise.all([
     read("lib/line.ts"),
+    read("app/api/line/login/start/route.ts"),
     read("app/api/line/login/callback/route.ts"),
     read("lib/member-auth.ts"),
     read("components/account-center.tsx"),
@@ -15,6 +16,7 @@ test("LINE 會員登入完成前必須驗證官方帳號好友狀態", async () 
 
   assert.match(line, /getLineFriendStatus/);
   assert.match(line, /v2\/bot\/profile/);
+  assert.match(start, /botPrompt: "aggressive"/);
   assert.match(callback, /getLineFriendStatus/);
   assert.match(callback, /line_friend_required/);
   assert.match(callback, /friendVerifiedAt/);
