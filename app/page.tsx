@@ -3,7 +3,6 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { SiteIcon, type SiteIconName } from "@/components/site-icons";
-import { HomeProgress } from "@/components/home-progress";
 import { formatNewsDate, getFeaturedNews, type NewsArticle } from "@/lib/news";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 
@@ -47,8 +46,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      <HomeProgress />
 
       <section aria-labelledby="news-preview-title" className="mx-auto w-[min(1160px,calc(100%-32px))] py-8">
         <SectionHeading eyebrow="最新升學情報" id="news-preview-title" title="先讀懂規則，再查資料。" body="每篇標示更新日期、官方來源與下一步工具。" />

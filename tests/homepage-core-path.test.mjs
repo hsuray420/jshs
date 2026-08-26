@@ -10,7 +10,6 @@ test("homepage exposes canonical task routes and progress context", async () => 
   assert.match(home, /href="\/tools"/);
   assert.match(home, /href="\/knowledge"/);
   assert.match(home, /href="\/knowledge\/fit-quiz"/);
-  assert.match(home, /<HomeProgress/);
   assert.match(home, /jshs-task-icon/);
   assert.match(home, /tone="green"/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm#(?:calculator|analysis|home)/);
