@@ -80,6 +80,10 @@ export default async function AdminPage({
         <section className="admin-flash">
           {params.updated === "schools_csv" ? "學校 CSV 已更新。" : null}
           {params.updated === "code_upload" ? "程式包已上傳，已建立待部署/執行紀錄。" : null}
+          {params.updated === "media_synced" ? "Podcast／影片已同步到 GitHub，Actions 會測試並部署到測試與正式環境。" : null}
+          {params.updated === "media_invalid" ? "影音資料不完整或超過 25 MB，尚未上傳。" : null}
+          {params.updated === "media_type_invalid" ? "檔案格式不符合所選的 Podcast／影片類型。" : null}
+          {params.updated === "media_failed" ? "影音上傳失敗，GitHub 尚未更新；請確認 GITHUB_TOKEN 與檔案大小。" : null}
           {params.updated === "line_users_added" ? "已加入 LINE 後台管理員。" : null}
           {params.updated === "line_users_removed" ? "已移除後台新增的 LINE 管理員。" : null}
           {params.updated === "line_users_invalid" ? "LINE userId 格式不正確。" : null}
@@ -359,6 +363,7 @@ export default async function AdminPage({
           <div className="admin-link-grid">
             <a href="/admin/code/">查看所有程式碼</a>
             <a href="#code-upload">上傳程式包</a>
+            <a href="#media-upload">上傳 Podcast／影片</a>
             <a href="/api/health">伺服器健康檢查</a>
             <a href="/api/admission/calculate">後端試算 API</a>
             <a href="/api/schools.csv">學校 CSV</a>
@@ -371,6 +376,28 @@ export default async function AdminPage({
       </section>
 
       <section className="admin-grid">
+        <form
+          id="media-upload"
+          className="admin-panel"
+          action="/api/admin/media"
+          method="post"
+          encType="multipart/form-data"
+        >
+          <div className="admin-section-head">
+            <div>
+              <p className="admin-eyebrow">Media Library</p>
+              <h2>Podcast／影片上傳</h2>
+            </div>
+            <span className="admin-badge ok">GitHub 部署</span>
+          </div>
+          <p className="admin-muted">這裡只上傳你自己的影音。送出後會把檔案與媒體清單寫入 GitHub，觸發 Actions 測試、建置與 Cloudflare 部署；測試站與正式站會讀取同一份版本化內容。</p>
+          <label>內容類型<select name="kind" defaultValue="podcast"><option value="podcast">Podcast／音訊</option><option value="video">影片</option></select></label>
+          <label>標題<input name="title" maxLength={160} placeholder="例如：志願排序說明" required /></label>
+          <label>內容說明<textarea name="summary" rows={3} maxLength={1000} placeholder="給學生看到的內容摘要" /></label>
+          <label>影音檔案<input name="media" type="file" accept="audio/*,video/mp4,video/webm,video/quicktime" required /></label>
+          <button className="admin-button" type="submit">上傳並同步 GitHub</button>
+          <p className="admin-muted">單檔上限 25 MB；支援 MP3、M4A、WAV、OGG、MP4、WebM。</p>
+        </form>
         <form
           id="code-upload"
           className="admin-panel"

@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "updatedAt": "2026-08-26T13:19:00.000Z",
+  "items": [
+    {
+      "id": "admission-basics",
+      "kind": "podcast",
+      "title": "先確認就學區",
+      "summary": "先確認你的就學區，再查看適用的免試入學規則與重要日期。",
+      "src": "/media/admission-basics.m4a",
+      "mimeType": "audio/mp4"
+    },
+    {
+      "id": "volunteer-strategy",
+      "kind": "podcast",
+      "title": "挑戰、穩定、保底怎麼排",
+      "summary": "完成成績試算後，再用挑戰、穩定、保底三種方式整理志願。",
+      "src": "/media/volunteer-strategy.m4a",
+      "mimeType": "audio/mp4"
+    },
+    {
+      "id": "school-comparison",
+      "kind": "podcast",
+      "title": "比較學校與校科",
+      "summary": "比較學校時，請一起查看課程、通勤、名額與官方招生資料。",
+      "src": "/media/school-comparison.m4a",
+      "mimeType": "audio/mp4"
+    }
+  ]
+}

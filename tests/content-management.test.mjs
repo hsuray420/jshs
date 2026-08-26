@@ -52,3 +52,23 @@ test("content publishing supports Word-like text size and color plus GitHub sync
   assert.match(sync, /api\.github\.com/);
   assert.match(sync, /GITHUB_TOKEN/);
 });
+
+test("media uploads are first-party, versioned in GitHub, and rendered by native players", async () => {
+  const [admin, route, sync, workspace, manifest] = await Promise.all([
+    read("app/admin/page.tsx"),
+    read("app/api/admin/media/route.ts"),
+    read("lib/github-sync.ts"),
+    read("components/knowledge-topic-workspace.tsx"),
+    read("content/media-library.json"),
+  ]);
+  assert.match(admin, /上傳 Podcast／影片/);
+  assert.match(admin, /\/api\/admin\/media/);
+  assert.match(route, /requireAdmin/);
+  assert.match(route, /syncMediaToGitHub/);
+  assert.match(sync, /content\/media-library\.json/);
+  assert.match(sync, /mediaPath/);
+  assert.doesNotMatch(workspace, /youtube\.com/);
+  assert.match(workspace, /<video/);
+  assert.match(workspace, /<audio/);
+  assert.match(manifest, /"items"/);
+});

@@ -4,6 +4,9 @@ import type { ContentEntry } from "../db/content-store";
 type RuntimeEnv = typeof env & { GITHUB_TOKEN?: string; GITHUB_REPOSITORY?: string; GITHUB_BRANCH?: string };
 type SyncResult = Readonly<{ configured: boolean; synced: boolean; reason?: string; commitUrl?: string }>;
 
+export type MediaKind = "video" | "podcast";
+export type MediaLibraryItem = Readonly<{ id: string; kind: MediaKind; title: string; summary: string; src: string; mimeType: string }>;
+
 const runtimeEnv = env as RuntimeEnv;
 const apiBase = "https://api.github.com";
 const filePath = "content/managed-content.json";
@@ -26,6 +29,58 @@ export async function syncContentToGitHub(entry: ContentEntry): Promise<SyncResu
   if (!response?.ok) return { configured: true, synced: false, reason: "github_write_failed" };
   const payload = await response.json().catch(() => null) as { commit?: { html_url?: string } } | null;
   return { configured: true, synced: true, commitUrl: payload?.commit?.html_url };
+}
+
+export async function syncMediaToGitHub(input: { item: MediaLibraryItem; bytes: ArrayBuffer }): Promise<SyncResult> {
+  const config = getGitHubConfig();
+  if (!config) return { configured: false, synced: false, reason: "github_token_missing" };
+  const headers = githubHeaders(config.token);
+  const mediaPath = input.item.src.replace(/^\//, "");
+  const mediaUrl = `${apiBase}/repos/${config.repository}/contents/${mediaPath}`;
+  const mediaResponse = await putGitHubFile(mediaUrl, headers, {
+    message: `media: upload ${input.item.kind}/${input.item.id}`,
+    content: encodeBytes(input.bytes),
+    branch: config.branch,
+  }).catch(() => null);
+  if (!mediaResponse?.ok) return { configured: true, synced: false, reason: "github_media_write_failed" };
+
+  const manifestUrl = `${apiBase}/repos/${config.repository}/contents/content/media-library.json`;
+  const existing = await fetch(`${manifestUrl}?ref=${encodeURIComponent(config.branch)}`, { headers }).catch(() => null);
+  if (existing && !existing.ok && existing.status !== 404) return { configured: true, synced: false, reason: "github_manifest_read_failed" };
+  const existingPayload = existing?.ok ? await existing.json().catch(() => null) as { content?: string; sha?: string } | null : null;
+  const manifest = decodeMediaManifest(existingPayload?.content);
+  const items = [...manifest.items.filter((item) => item.id !== input.item.id), input.item];
+  const encoded = encodeUtf8(JSON.stringify({ version: 1, updatedAt: new Date().toISOString(), items }, null, 2) + "\n");
+  const manifestResponse = await putGitHubFile(manifestUrl, headers, {
+    message: `media: update library for ${input.item.title}`,
+    content: encoded,
+    branch: config.branch,
+    ...(existingPayload?.sha ? { sha: existingPayload.sha } : {}),
+  }).catch(() => null);
+  if (!manifestResponse?.ok) return { configured: true, synced: false, reason: "github_manifest_write_failed" };
+  const payload = await manifestResponse.json().catch(() => null) as { commit?: { html_url?: string } } | null;
+  return { configured: true, synced: true, commitUrl: payload?.commit?.html_url };
+}
+
+function getGitHubConfig() {
+  const token = runtimeEnv.GITHUB_TOKEN || process.env.GITHUB_TOKEN;
+  const repository = runtimeEnv.GITHUB_REPOSITORY || process.env.GITHUB_REPOSITORY || "hsuray420/jshs";
+  const branch = runtimeEnv.GITHUB_BRANCH || process.env.GITHUB_BRANCH || "main";
+  if (!token) return null;
+  if (!/^[\w.-]+\/[\w.-]+$/.test(repository) || !/^[\w./-]+$/.test(branch)) return null;
+  return { token, repository, branch };
+}
+
+function githubHeaders(token: string) { return { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "jshs-content-studio" }; }
+async function putGitHubFile(url: string, headers: Record<string, string>, body: Record<string, unknown>) { return fetch(url, { method: "PUT", headers: { ...headers, "content-type": "application/json" }, body: JSON.stringify(body) }); }
+function encodeBytes(bytes: ArrayBuffer) { let binary = ""; for (const byte of new Uint8Array(bytes)) binary += String.fromCharCode(byte); return btoa(binary); }
+function decodeMediaManifest(content?: string) {
+  if (!content) return { items: [] as MediaLibraryItem[] };
+  try {
+    const decoded = new TextDecoder().decode(Uint8Array.from(atob(content.replace(/\s/g, "")), (character) => character.charCodeAt(0)));
+    const parsed = JSON.parse(decoded) as { items?: MediaLibraryItem[] };
+    return { items: Array.isArray(parsed.items) ? parsed.items : [] };
+  } catch { return { items: [] as MediaLibraryItem[] }; }
 }
 
 function decodeManifest(content?: string) {
