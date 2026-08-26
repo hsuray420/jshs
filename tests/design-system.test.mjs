@@ -99,7 +99,7 @@ test("homepage task cards use icon tiles and grouped context spacing", async () 
   assert.match(home, /jshs-task-icon/);
   assert.match(home, /SiteIcon/);
   assert.doesNotMatch(home, /[▤⌂∑☷]/);
-  assert.match(home, /jshs-info-group-title/);
+  assert.match(home, /jshs-surface-card/);
   assert.doesNotMatch(home, /StatusItem[^\n]*border-b/);
   assert.doesNotMatch(home, /districtMetadata\.disclaimer[^\n]*border-t/);
 });

@@ -15,11 +15,11 @@ test("task hubs route users into the new first-party admission surfaces", async 
   assert.match(tools, /AdmissionCalculator/);
   assert.match(schools, /SchoolExplorer/);
   assert.match(planner, /PlannerWorkspace/);
-  assert.match(home, /href="\/schools\?district=ct"/);
-  assert.match(home, /href="\/tools\?district=ct"/);
-  assert.match(home, /href="\/planner"/);
-  assert.match(home, /`\/schools\?district=\$\{code\}`/);
+  assert.match(home, /href="\/tools"/);
+  assert.match(home, /href="\/knowledge"/);
+  assert.match(home, /href="\/knowledge\/fit-quiz"/);
   assert.match(home, /HomeProgress/);
+  assert.doesNotMatch(home, /districts-title|HomeDistrictPicker/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm#(?:calculator|analysis|home)/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm\?district=/);
 

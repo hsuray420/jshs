@@ -4,12 +4,11 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { SiteIcon, type SiteIconName } from "@/components/site-icons";
 import { HomeProgress } from "@/components/home-progress";
-import { HomeDistrictPicker } from "@/components/home-district-picker";
 import { formatNewsDate, getFeaturedNews, type NewsArticle } from "@/lib/news";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 
-const homeTitle = "全國國中升學資訊網｜校科查詢、積分試算與志願規劃";
-const homeDescription = "整合全台就學區學校資料、積分試算、落點分析、升學情報與志願規劃；每筆規則標示資料年度、更新日與官方來源。";
+const homeTitle = "全國國中升學資訊網｜陪你找到升學方向";
+const homeDescription = "不論是第一次探索升學，或已經知道下一步，這裡用可信資料陪你找到方向、完成試算並整理志願。";
 
 export const metadata: Metadata = {
   title: homeTitle,
@@ -26,11 +25,8 @@ export const metadata: Metadata = {
   twitter: { card: "summary", title: homeTitle, description: homeDescription },
 };
 
-type District = (typeof districtMetadata.districts)[keyof typeof districtMetadata.districts];
-const districts = Object.entries(districtMetadata.districts) as Array<[string, District]>;
 const keyTimeline = districtMetadata.timelineDefaults.ready;
 const latestNews = getFeaturedNews(3);
-const districtOptions = districts.map(([code, district]) => ({ code, label: district.label, academicYear: district.academicYear, dataStatus: district.dataStatus, updatedAt: district.updatedAt, calculator: district.calculator }));
 
 export default function HomePage() {
   return (
@@ -38,34 +34,17 @@ export default function HomePage() {
       <SiteHeader />
 
       <section className="border-b jshs-hero-section">
-        <div className="mx-auto grid w-[min(1160px,calc(100%-32px))] gap-8 pb-8 pt-12 md:grid-cols-[1fr_340px] md:pb-12 md:pt-16">
+        <div className="mx-auto w-[min(1160px,calc(100%-32px))] pb-10 pt-12 md:pb-16 md:pt-20">
           <div>
-            <p className="jshs-eyebrow">全國國中升學資訊網</p>
-            <h1 className="mt-3 max-w-3xl text-4xl leading-tight md:text-6xl">從下一步開始。</h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 jshs-muted-copy">不必一次讀完所有升學資訊。先完成現在最需要的一件事，再沿著清楚的路徑繼續。</p>
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
-              <TaskCard icon="knowledge" tone="blue" title="讀懂規則" body="會考、入學規則與重要日期。" href="/news#latest" action="閱讀指南" />
-              <TaskCard icon="school" tone="green" title="找校科" body="搜尋學校、科系、群科與學制分類。" href="/schools?district=ct" action="搜尋學校" />
-              <TaskCard icon="calculator" tone="blue" title="算積分" body="輸入成績，查看可核對的試算結果。" href="/tools?district=ct" action="開始試算" />
-              <TaskCard icon="planner" tone="green" title="排志願" body="整理挑戰、適中與穩定的選項。" href="/planner" action="打開規劃" />
+            <p className="jshs-eyebrow">給正在陪孩子找方向的你</p>
+            <h1 className="mt-3 max-w-4xl text-4xl leading-tight md:text-6xl">先別急，來到這裡，就能找到下一步。</h1>
+            <p className="mt-5 max-w-3xl text-base leading-8 jshs-muted-copy md:text-lg">升學資訊很多，但你不需要一次懂完。家長可以放心，孩子可以從現在的疑問開始；我們會陪你把方向、分數、學校和志願，一步一步整理清楚。</p>
+            <div className="mt-8 grid gap-4 md:grid-cols-3">
+              <TaskCard icon="planner" tone="blue" title="我已經知道要做什麼" body="直接進入工具，完成成績試算、查學校科系或整理志願。" href="/tools" action="直接開始" />
+              <TaskCard icon="knowledge" tone="green" title="我第一次來，不知道要做什麼" body="先用簡單導覽建立全貌，再決定從哪一件事開始。" href="/knowledge" action="先了解一下" />
+              <TaskCard icon="sparkle" tone="blue" title="我想先找到適合的方向" body="從學制分類、群科與未來路徑探索，慢慢縮小選擇。" href="/knowledge/fit-quiz" action="探索我的方向" />
             </div>
           </div>
-          <aside className="p-[14px] jshs-surface-card">
-            <div className="flex items-center justify-between gap-3"><div><p className="jshs-eyebrow">你的使用情境</p><h2 className="mt-2">先選就學區。</h2></div><span className="jshs-icon-tile is-success" aria-hidden="true"><SiteIcon name="shield" size={18} /></span></div>
-            <p className="mt-3 text-sm leading-6 jshs-muted-copy">資料年度、可用工具與重要日期會依選擇的地區調整。</p>
-            <div className="mt-5 grid gap-5 text-sm">
-              <div>
-                <p className="jshs-info-group-title">就學區資訊</p>
-                <dl className="mt-2 grid gap-2"><StatusItem label="就學區" value={`${districts.length} 區`} /><StatusItem label="可查學校" value="全國資料" /></dl>
-              </div>
-              <div>
-                <p className="jshs-info-group-title">資料與試算</p>
-                <dl className="mt-2 grid gap-2"><StatusItem label="可試算" value="五區已建置" /><StatusItem label="更新日" value={districtMetadata.updatedAt} /></dl>
-              </div>
-            </div>
-            <p className="mt-5 text-xs leading-6 jshs-muted-copy">{districtMetadata.disclaimer}</p>
-            <HomeDistrictPicker options={districtOptions} />
-          </aside>
         </div>
       </section>
 
@@ -85,11 +64,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="districts" aria-labelledby="districts-title" className="mx-auto w-[min(1160px,calc(100%-32px))] py-8">
-        <SectionHeading eyebrow="選擇就學區" id="districts-title" title="15 區資料入口。" body="先確認適用區域，再進入學校查詢或工具。" />
-        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{districts.map(([code, district]) => <a key={code} className="group p-5 jshs-surface-card" href={`/schools?district=${code}`}><div className="flex items-start justify-between gap-3"><span className="text-xs font-extrabold tracking-[.12em] text-[var(--jshs-primary)]">{code.toUpperCase()}</span><span className="rounded-full bg-[var(--jshs-muted-surface)] px-2.5 py-1 text-xs font-bold text-[var(--jshs-muted)]">{district.academicYear} 學年度</span></div><strong className="mt-3 block text-xl">{district.label}</strong><small className="mt-1 block min-h-10 text-sm jshs-muted-copy">{district.areas}</small><b className="mt-4 flex items-center justify-between text-sm text-[var(--jshs-primary)]">開啟學校查詢 <span className="transition group-hover:translate-x-1">→</span></b></a>)}</div>
-        <Link className="mt-5 inline-block text-sm font-black text-[var(--jshs-primary)]" href="/districts">查看全部就學區狀態 →</Link>
-      </section>
       <SiteFooter />
     </main>
   );
@@ -105,8 +79,4 @@ function TaskCard({ icon, tone, title, body, href, action }: { icon: SiteIconNam
 
 function NewsPreview({ article }: { article: NewsArticle }) {
   return <Link href={`/news/${article.slug}`} className="group flex min-h-56 flex-col p-5 jshs-surface-card"><div className="flex items-center justify-between gap-3 text-xs font-black"><span className="text-[var(--jshs-primary)]">{article.category}</span><span className="text-[var(--jshs-muted)]">更新 {formatNewsDate(article.updatedAt)}</span></div><h3 className="mt-4 text-xl font-black leading-snug">{article.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 jshs-muted-copy">{article.description}</p><span className="mt-3 text-xs font-bold text-[var(--jshs-muted)]">來源：{article.sources[0]?.label || "官方公告"}</span><b className="mt-auto pt-6 text-sm text-[var(--jshs-primary)]">閱讀完整指南 <span className="inline-block transition group-hover:translate-x-1">→</span></b></Link>;
-}
-
-function StatusItem({ label, value }: { label: string; value: string | number }) {
-  return <div className="flex items-center justify-between gap-4 py-1"><dt className="text-[var(--jshs-muted)]">{label}</dt><dd className="font-medium text-[var(--jshs-primary)]">{value}</dd></div>;
 }
