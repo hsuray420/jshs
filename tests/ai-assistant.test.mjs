@@ -106,3 +106,8 @@ test("assistant only accepts a completed provider stream and rejects truncation"
   assert.match(route, /!providerFinished/);
   assert.match(ui, /if \(!completed \|\| !answer\) throw/);
 });
+
+test("assistant client uses the unary provider path so completed replies are validated before display", async () => {
+  const ui = await read("components/ai-assistant.tsx");
+  assert.match(ui, /question, stream: false, history/);
+});

@@ -23,7 +23,7 @@ function makeMessage(conversationId: string, role: ChatMessage["role"], content:
 function logDebug(event: string, details: Record<string, string | number | undefined>) { if (process.env.NODE_ENV === "development") console.debug(`[AI ${event}]`, details); }
 
 async function requestAssistant(question: string, history: readonly ChatMessage[], signal: AbortSignal, onDelta: (answer: string) => void): Promise<ChatResult> {
-  const response = await fetch("/api/assistant", { method: "POST", headers: { "content-type": "application/json" }, signal, body: JSON.stringify({ question, stream: true, history: history.filter(isUsableHistoryMessage).slice(-6).map(({ role, content }) => ({ role, content: content.slice(0, 1200) })) }) });
+  const response = await fetch("/api/assistant", { method: "POST", headers: { "content-type": "application/json" }, signal, body: JSON.stringify({ question, stream: false, history: history.filter(isUsableHistoryMessage).slice(-6).map(({ role, content }) => ({ role, content: content.slice(0, 1200) })) }) });
   const contentType = response.headers.get("content-type") || "";
   if (!response.ok) { const body = await response.json().catch(() => null) as { error?: string } | null; const error = new Error("assistant_failed") as ChatError; error.code = body?.error; error.status = response.status; throw error; }
   if (!contentType.includes("text/event-stream") || !response.body) return await response.json() as ChatResult;
