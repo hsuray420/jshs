@@ -42,7 +42,7 @@ export function getAssistantAction(question: string): AssistantAction | null {
 
 export function getAssistantConversationReply(question: string): string | null {
   const normalized = question.replace(/[\s，。！？、,.!?]/gu, "").toLocaleLowerCase("zh-TW");
-  if (/^(你好|您好|嗨|哈囉|hello|hi)$/iu.test(normalized)) {
+  if (/^(你好|您好|嗨|哈囉|hello|hallo|hi)$/iu.test(normalized)) {
     return "你好！我是全國國中升學資訊網的小助手，可以陪你查本站的升學規則、學校、日程與知識。你想先了解哪一項？";
   }
   if (/^(謝謝|感謝|謝啦|thanks)$/iu.test(normalized)) {

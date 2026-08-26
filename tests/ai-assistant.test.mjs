@@ -49,6 +49,11 @@ test("assistant handles basic greetings locally without requiring site retrieval
   assert.match(ui, /aria-expanded/);
 });
 
+test("assistant handles English greetings locally so they receive a complete reply", async () => {
+  const policy = await read("lib/assistant-policy.ts");
+  assert.match(policy, /hello\|hallo\|hi/);
+});
+
 test("assistant routes general questions separately from site education data and site help", async () => {
   const policy = await read("lib/assistant-policy.ts");
   const route = await read("app/api/assistant/route.ts");
