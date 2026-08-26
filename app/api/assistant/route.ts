@@ -60,7 +60,7 @@ export async function POST(request: Request) {
       ...history.map((item) => ({ role: item.role === "assistant" ? "model" : "user", parts: [{ text: item.content }] })),
       { role: "user", parts: [{ text: `ROUTING_INTENT: ${intent}\nSITE_RETRIEVAL_STATUS: ${retrievalError ? "failed" : intent === "GENERAL" ? "not_needed" : sources.length ? "found" : "empty"}\nSITE_CONTEXT:\n${formatAssistantContext(sources) || "（沒有提供本站檢索資料）"}\n\nUSER QUESTION:\n${question}` }] },
     ],
-    generationConfig: { temperature: intent === "GENERAL" ? 0.25 : 0.15, maxOutputTokens: intent === "GENERAL" ? 420 : 700 },
+    generationConfig: { temperature: intent === "GENERAL" ? 0.25 : 0.15, maxOutputTokens: intent === "GENERAL" ? 900 : 1400 },
   };
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 25_000);
@@ -82,8 +82,10 @@ export async function POST(request: Request) {
     return json({ ok: false, error: errorCode }, errorCode === "assistant_rate_limited" ? 429 : 503, shouldSetGuestCookie ? guestId : undefined);
   }
   if (wantsStream) return proxyGeminiStream(response, sources, usage, intent, shouldSetGuestCookie ? guestId : undefined);
-  const payload = await response.json().catch(() => null) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }> } | null;
+  const payload = await response.json().catch(() => null) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> }; finishReason?: string }> } | null;
+  const finishReason = payload?.candidates?.[0]?.finishReason;
   const answer = payload?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("").trim();
+  if (finishReason && finishReason !== "STOP") return json({ ok: false, error: finishReason === "MAX_TOKENS" ? "assistant_stream_incomplete" : "assistant_unavailable" }, 503, shouldSetGuestCookie ? guestId : undefined);
   if (!answer) return json({ ok: false, error: "assistant_empty_response" }, 503, shouldSetGuestCookie ? guestId : undefined);
   return json({ ok: true, answer, sources: intent === "GENERAL" ? [] : sources, intent, usage }, 200, shouldSetGuestCookie ? guestId : undefined);
 }
@@ -95,24 +97,38 @@ function proxyGeminiStream(response: Response, sources: readonly Source[], usage
     async start(controller) {
       controller.enqueue(encoder.encode(`data: ${JSON.stringify({ meta: { sources: intent === "GENERAL" ? [] : sources, intent, usage } })}\n\n`));
       const reader = response.body?.getReader();
-      if (!reader) { controller.enqueue(encoder.encode("data: [DONE]\n\n")); controller.close(); return; }
+      if (!reader) { controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "assistant_stream_incomplete" })}\n\n`)); controller.enqueue(encoder.encode("data: [DONE]\n\n")); controller.close(); return; }
       let buffer = "";
+      let providerFinished = false;
+      let providerFinishReason = "";
+      let providerError = "";
+      let streamFailed = false;
       try {
         while (true) {
           const chunk = await reader.read();
           buffer += chunk.done ? decoder.decode() : decoder.decode(chunk.value, { stream: true });
-          const events = buffer.split("\n\n");
+          const events = buffer.split(/\r?\n\r?\n/u);
           buffer = events.pop() || "";
           for (const event of events) {
-            enqueueGeminiEvent(event, controller, encoder);
+            const result = enqueueGeminiEvent(event, controller, encoder);
+            if (result.finishReason) { providerFinished = true; providerFinishReason = result.finishReason; }
+            if (result.errorCode) providerError = result.errorCode;
           }
           if (chunk.done) break;
         }
-        if (buffer.trim()) enqueueGeminiEvent(buffer, controller, encoder);
+        if (buffer.trim()) {
+          const result = enqueueGeminiEvent(buffer, controller, encoder);
+          if (result.finishReason) { providerFinished = true; providerFinishReason = result.finishReason; }
+          if (result.errorCode) providerError = result.errorCode;
+        }
       } catch (error) {
+        streamFailed = true;
         console.error("Gemini stream proxy failed", error instanceof Error ? error.message : "unknown_error");
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "assistant_unavailable" })}\n\n`));
       }
+      if (!streamFailed && providerError) controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: providerError })}\n\n`));
+      if (!streamFailed && !providerError && !providerFinished) controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "assistant_stream_incomplete" })}\n\n`));
+      if (!streamFailed && !providerError && providerFinishReason && providerFinishReason !== "STOP") controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: providerFinishReason === "MAX_TOKENS" ? "assistant_stream_incomplete" : "assistant_unavailable" })}\n\n`));
       controller.enqueue(encoder.encode("data: [DONE]\n\n"));
       controller.close();
     },
@@ -122,20 +138,24 @@ function proxyGeminiStream(response: Response, sources: readonly Source[], usage
   return new Response(stream, { headers });
 }
 
-function enqueueGeminiEvent(event: string, controller: ReadableStreamDefaultController<Uint8Array>, encoder: TextEncoder) {
+function enqueueGeminiEvent(event: string, controller: ReadableStreamDefaultController<Uint8Array>, encoder: TextEncoder): { finishReason?: string; errorCode?: string } {
+  let finishReason = "";
+  let errorCode = "";
   for (const line of event.split(/\r?\n/u)) {
     if (!line.startsWith("data:")) continue;
     const data = line.replace(/^data:\s*/, "").trim();
     if (!data || data === "[DONE]") continue;
-    const payload = JSON.parse(data) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>; error?: { code?: number; message?: string; status?: string } };
+    const payload = JSON.parse(data) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> }; finishReason?: string }>; error?: { code?: number; message?: string; status?: string } };
     if (payload.error) {
       console.error("Gemini stream provider error", payload.error);
-      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: payload.error.code === 429 ? "assistant_rate_limited" : "assistant_unavailable" })}\n\n`));
+      errorCode = payload.error.code === 429 ? "assistant_rate_limited" : "assistant_unavailable";
       continue;
     }
+    if (payload.candidates?.[0]?.finishReason) finishReason = payload.candidates[0].finishReason;
     const delta = payload.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("");
     if (delta) controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`));
   }
+  return { finishReason, errorCode };
 }
 
 function sanitizeHistory(value: unknown): readonly AssistantHistoryItem[] {

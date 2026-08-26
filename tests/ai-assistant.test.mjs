@@ -86,7 +86,7 @@ test("assistant sends the current question once and isolates general replies fro
 test("assistant stream proxy parses each Gemini data line and flushes the final buffer", async () => {
   const route = await read("app/api/assistant/route.ts");
   assert.match(route, /event\.split\(\/\\r\?\\n/);
-  assert.match(route, /if \(buffer\.trim\(\)\) enqueueGeminiEvent/);
+  assert.match(route, /if \(buffer\.trim\(\)\) \{/);
 });
 
 test("assistant keeps the composer at the bottom and limits general request context", async () => {
@@ -95,5 +95,14 @@ test("assistant keeps the composer at the bottom and limits general request cont
   const route = await read("app/api/assistant/route.ts");
   assert.match(css, /\.ai-chat-window > form \{[^}]*order: 3/);
   assert.match(ui, /history\.slice\(-6\)/);
-  assert.match(route, /intent === "GENERAL" \? 420 : 700/);
+  assert.match(route, /intent === "GENERAL" \? 900 : 1400/);
+});
+
+test("assistant only accepts a completed provider stream and rejects truncation", async () => {
+  const route = await read("app/api/assistant/route.ts");
+  const ui = await read("components/ai-assistant.tsx");
+  assert.match(route, /finishReason/);
+  assert.match(route, /assistant_stream_incomplete/);
+  assert.match(route, /!providerFinished/);
+  assert.match(ui, /if \(!completed \|\| !answer\) throw/);
 });
