@@ -13,4 +13,7 @@ test("升學知識每個入口都接到可操作工作區", async () => {
   assert.match(workspace, /onClick/);
   assert.match(workspace, /placeholder="例如：序位、群科、志願"/);
   assert.match(workspace, /請完成三題/);
+  assert.match(workspace, /videoEmbedUrl/);
+  assert.match(workspace, /controls preload="metadata"/);
+  for (const source of ["admission-basics.m4a", "volunteer-strategy.m4a", "school-comparison.m4a"]) assert.match(workspace, new RegExp(source));
 });
