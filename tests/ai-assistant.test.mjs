@@ -111,3 +111,12 @@ test("assistant client uses the unary provider path so completed replies are val
   const ui = await read("components/ai-assistant.tsx");
   assert.match(ui, /question, stream: false, history/);
 });
+
+test("assistant shows rotating thinking states while waiting for a complete reply", async () => {
+  const ui = await read("components/ai-assistant.tsx");
+  const css = await read("app/globals.css");
+  assert.match(ui, /正在思考|正在整理|正在檢查/);
+  assert.match(ui, /setInterval/);
+  assert.match(ui, /aria-live="polite"/);
+  assert.match(css, /ai-chat-thinking/);
+});
