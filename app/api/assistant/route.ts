@@ -60,7 +60,7 @@ export async function POST(request: Request) {
       ...history.map((item) => ({ role: item.role === "assistant" ? "model" : "user", parts: [{ text: item.content }] })),
       { role: "user", parts: [{ text: `ROUTING_INTENT: ${intent}\nSITE_RETRIEVAL_STATUS: ${retrievalError ? "failed" : intent === "GENERAL" ? "not_needed" : sources.length ? "found" : "empty"}\nSITE_CONTEXT:\n${formatAssistantContext(sources) || "（沒有提供本站檢索資料）"}\n\nUSER QUESTION:\n${question}` }] },
     ],
-    generationConfig: { temperature: intent === "GENERAL" ? 0.25 : 0.15, maxOutputTokens: intent === "GENERAL" ? 900 : 1400 },
+    generationConfig: { temperature: intent === "GENERAL" ? 0.25 : 0.15, maxOutputTokens: 2048 },
   };
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 25_000);

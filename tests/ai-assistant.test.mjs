@@ -95,7 +95,7 @@ test("assistant keeps the composer at the bottom and limits general request cont
   const route = await read("app/api/assistant/route.ts");
   assert.match(css, /\.ai-chat-window > form \{[^}]*order: 3/);
   assert.match(ui, /history\.slice\(-6\)/);
-  assert.match(route, /intent === "GENERAL" \? 900 : 1400/);
+  assert.match(route, /maxOutputTokens: 2048/);
 });
 
 test("assistant only accepts a completed provider stream and rejects truncation", async () => {
