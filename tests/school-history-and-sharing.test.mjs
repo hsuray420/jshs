@@ -13,10 +13,10 @@ test("查學校選單提供查詢、歷年、分享、地圖、費用與通勤�
   assert.ok(labels.includes("全國校科查詢"));
   assert.ok(labels.includes("歷年錄取成績查詢"));
   for (const [label, href] of [
-    ["學長姐分享", "/schools?view=alumni"],
-    ["學校地圖", "/schools?view=map"],
-    ["費用試算", "/schools?view=cost"],
-    ["通勤比較", "/schools?view=commute"],
+    ["學長姐分享", "/schools/alumni"],
+    ["學校地圖", "/schools/map"],
+    ["費用試算", "/schools/cost"],
+    ["通勤比較", "/schools/commute"],
   ]) {
     assert.equal(items.find((item) => item.label === label)?.href, href);
   }

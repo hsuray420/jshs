@@ -364,7 +364,7 @@ export default async function AdminPage({
             <a href="/api/schools.csv">學校 CSV</a>
             <a href="/tools">積分試算</a>
             <Link href="/schools">學校查詢</Link>
-            <a href="/planner">志願清單</a>
+            <Link href="/planner">志願清單</Link>
           </div>
           <p className="admin-muted">LINE 密鑰、管理員名單與告警接收者使用環境變數保護。</p>
         </section>
