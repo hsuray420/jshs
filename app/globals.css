@@ -346,6 +346,7 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 }
 
 /* AI product surface: shared by the site-wide widget and /ai. */
+.ai-chat-beta { display: inline-block; margin-left: 0.3rem; padding: 0.12rem 0.4rem; border: 1px solid currentColor; border-radius: 999px; font-size: 0.65em; font-weight: 800; letter-spacing: 0.04em; vertical-align: middle; }
 /* AI chat surface. Full and floating shells share the same chat core. */
 .ai-chat-root {
   --ai-page: #F7F8FA;

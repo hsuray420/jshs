@@ -481,6 +481,9 @@
   .h-px {
     height: 1px;
   }
+  .max-h-\[560px\] {
+    max-height: 560px;
+  }
   .max-h-\[min\(520px\,calc\(100vh-160px\)\)\] {
     max-height: min(520px, calc(100vh - 160px));
   }
@@ -570,6 +573,9 @@
   }
   .w-\[min\(1240px\,calc\(100\%-24px\)\)\] {
     width: min(1240px, calc(100% - 24px));
+  }
+  .w-fit {
+    width: fit-content;
   }
   .w-full {
     width: 100%;
@@ -759,6 +765,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  .overflow-auto {
+    overflow: auto;
   }
   .overflow-hidden {
     overflow: hidden;

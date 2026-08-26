@@ -97,9 +97,8 @@ export function AdmissionCalculator({ initialDistrict }: { initialDistrict?: str
     if (academicYear !== "115") fields.push("目前只有 115 學年度規則");
     subjects.forEach(([key, label]) => { if (!exam[key]) fields.push(`${label}會考標示`); });
     if (writingLevel === "" || Number(writingLevel) < 0 || Number(writingLevel) > 6) fields.push("作文級分（0–6）");
-    if (!criteria.choiceText.trim()) fields.push("志願序（可先填校科代碼）");
     return fields;
-  }, [academicYear, criteria.choiceText, exam, writingLevel]);
+  }, [academicYear, exam, writingLevel]);
 
   function updateCriteria<Key extends keyof CriteriaState>(key: Key, value: CriteriaState[Key]) {
     setCriteria((current) => ({ ...current, [key]: value }));
@@ -109,11 +108,6 @@ export function AdmissionCalculator({ initialDistrict }: { initialDistrict?: str
     if (missing.some((item) => item.includes("會考") || item.includes("作文"))) {
       setStatus("先補齊五科會考與作文級分，才能產生可解釋的結果。");
       setStep("exam");
-      return;
-    }
-    if (!criteria.choiceText.trim()) {
-      setStatus("請至少填入一個志願，系統才知道要套用哪一段志願序分數。");
-      setStep("criteria");
       return;
     }
     setStatus("正在依規則計算…");
@@ -200,7 +194,7 @@ function ExamStep({ district, exam, writingLevel, onExamChange, onWritingChange 
 
 function CriteriaStep({ district, rule, criteria, updateCriteria }: { district: AdmissionDistrict; rule: AdmissionRule; criteria: CriteriaState; updateCriteria: <Key extends keyof CriteriaState>(key: Key, value: CriteriaState[Key]) => void }) {
   const setBalanced = (key: string, value: boolean) => updateCriteria("balanced", { ...criteria.balanced, [key]: value });
-  return <div><p className="jshs-eyebrow">比序補充</p><h2 className="mt-2">補上會影響結果的資料</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">每個欄位旁邊都寫了「它在算什麼」。不確定時可先填 0，結果會保留待補資料提醒。</p><label className="mt-6 grid gap-2 text-sm font-black text-[var(--jshs-primary)]">志願序（空格、逗號或頓號分隔；校科可寫成學校代碼/科別代碼）<input value={criteria.choiceText} onChange={(event) => updateCriteria("choiceText", event.target.value)} placeholder="例如：063C02 063C03 050314" /><small className="font-normal leading-5 jshs-muted-copy">志願序會決定你拿到哪一段分數；同校連續多科依各區規則處理。</small></label><div className="mt-7">{renderDistrictFields(district, criteria, updateCriteria, setBalanced)}</div><p className="mt-6 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-xs leading-6 jshs-muted-copy">本區總分：{rule.totalScore} 分。所有輸入只做規則試算，不等於正式審查認定。</p></div>;
+  return <div><p className="jshs-eyebrow">比序補充（可選）</p><h2 className="mt-2">補上會影響結果的資料</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">先完成一次成績試算即可；志願序可以留到「我的志願」再填寫。</p><label className="mt-6 grid gap-2 text-sm font-black text-[var(--jshs-primary)]">志願序（可稍後填寫）<input value={criteria.choiceText} onChange={(event) => updateCriteria("choiceText", event.target.value)} placeholder="可先留白，之後在我的志願排序" /><small className="font-normal leading-5 jshs-muted-copy">留白時先以第 1 志願試算，之後再用成績結果做選校依據。</small></label><div className="mt-7">{renderDistrictFields(district, criteria, updateCriteria, setBalanced)}</div><p className="mt-6 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-xs leading-6 jshs-muted-copy">本區總分：{rule.totalScore} 分。所有輸入只做規則試算，不等於正式審查認定。</p></div>;
 }
 
 function renderDistrictFields(district: AdmissionDistrict, criteria: CriteriaState, updateCriteria: CriteriaStepProps["updateCriteria"], setBalanced: (key: string, value: boolean) => void) {
