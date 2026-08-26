@@ -30,7 +30,7 @@ export const GRADE_RANK_MAP = {
   C: 1,
 } as const;
 
-export type AdmissionDistrict = "tp" | "ct" | "tainan" | "kaohsiung" | "taoyuan-lienchiang";
+export type AdmissionDistrict = "tp" | "ct" | "ilan" | "taoyuan-lienchiang" | "hsinchu-miaoli" | "changhua" | "yunlin" | "chiayi" | "tainan" | "kaohsiung" | "pingtung" | "hualien" | "taitung" | "penghu" | "kinmen";
 export type ExamGrade = keyof typeof EXAM_SCORE_MAP;
 export type EconomicStatus = "NONE" | "LOWER_MIDDLE_INCOME" | "LOW_INCOME";
 
@@ -45,7 +45,22 @@ export type AdmissionRule = Readonly<{
   tieBreakers: readonly string[];
 }>;
 
+const referenceRule = (code: AdmissionDistrict, label: string, totalScore = 100): AdmissionRule => ({
+  code,
+  label,
+  academicYear: "115",
+  totalScore,
+  sourceNote: `依 Notebook 提供的 ${label}規則報告建立逐項輸入版；正式計分仍請以${label}免試入學委員會最新簡章核對。`,
+  categories: [
+    category("preferenceScore", "志願序小計", 30, "請依本區報告與當年度簡章，輸入志願序項目的實際小計。"),
+    category("multipleLearningScore", "多元學習表現小計", 40, "請依本區報告逐項加總後，輸入多元學習表現小計。"),
+    category("examPerformanceScore", "國中教育會考小計", 30, "請依本區會考折算表輸入會考小計；五科標示仍會保留供同分比序參考。"),
+  ],
+  tieBreakers: ["依本區簡章公告之第一順位", "依本區簡章公告之第二順位", "依本區簡章公告之第三順位", "會考標示與科目順序", "志願序", "名額與超額比序規則"],
+});
+
 const category = (key: string, label: string, max: number, description: string): ScoreCategory => ({ key, label, max, description });
+const REFERENCE_DISTRICTS = new Set<AdmissionDistrict>(["ilan", "hsinchu-miaoli", "changhua", "yunlin", "chiayi", "pingtung", "hualien", "taitung", "penghu", "kinmen"]);
 
 export const ADMISSION_RULES: Record<AdmissionDistrict, AdmissionRule> = {
   tp: {
@@ -101,6 +116,16 @@ export const ADMISSION_RULES: Record<AdmissionDistrict, AdmissionRule> = {
     ],
     tieBreakers: ["低收入戶", "適性輔導", "多元學習表現", "會考總積分", "志願序", "會考標示"],
   },
+  ilan: referenceRule("ilan", "宜蘭區"),
+  "hsinchu-miaoli": referenceRule("hsinchu-miaoli", "竹苗區"),
+  changhua: referenceRule("changhua", "彰化區", 135),
+  yunlin: referenceRule("yunlin", "雲林區"),
+  chiayi: referenceRule("chiayi", "嘉義區"),
+  pingtung: referenceRule("pingtung", "屏東區"),
+  hualien: referenceRule("hualien", "花蓮區"),
+  taitung: referenceRule("taitung", "臺東區"),
+  penghu: referenceRule("penghu", "澎湖區"),
+  kinmen: referenceRule("kinmen", "金門區", 60),
 };
 
 export type EnrollmentDistrictStatus = string;
@@ -127,6 +152,7 @@ export type AdmissionScoreInput = {
   careerGoalMatches?: boolean;
   disciplineAfterCancellation?: { warnings?: number; minorDemerits?: number; majorDemerits?: number };
   rewards?: { majorMerits?: number; minorMerits?: number; commendations?: number };
+  manualCategoryScores?: { preferenceScore?: number; multipleLearningScore?: number; examPerformanceScore?: number };
   exam?: { chineseGrade?: ExamGrade; mathGrade?: ExamGrade; englishGrade?: ExamGrade; socialGrade?: ExamGrade; scienceGrade?: ExamGrade; writingLevel?: number; violationPoints?: number };
 };
 
@@ -148,7 +174,7 @@ export function calculateAdmissionScore(input: AdmissionScoreInput) {
   const assignedChoices = assignPreferenceSequences(choices, rule.code);
   const preferenceSequence = assignedChoices[0]?.preferenceSequence ?? 1;
   const preferenceScore = calculatePreferenceScore(preferenceSequence, rule.code);
-  const exam = calculateExam(rule.code, input.exam);
+  const exam = calculateExam(rule.code, input.exam, input.manualCategoryScores);
   const otherItems = calculateDistrictItems(rule.code, input, preferenceScore);
   const totalScore = roundToTenth(Math.min(rule.totalScore, otherItems.otherItemsTotal + exam.examPerformanceScore));
 
@@ -163,7 +189,12 @@ export function calculateAdmissionScore(input: AdmissionScoreInput) {
     totalScore,
     storageTenths: Object.fromEntries(Object.entries({ ...otherItems, examPerformanceScore: exam.examPerformanceScore, totalScore }).map(([key, value]) => [key, Math.round(value * 10)])),
     comparisonKeys: { totalScore, ...otherItems, examPerformanceScore: exam.examPerformanceScore, examTotalPoints: exam.examTotalPoints, subjectScores: subjectMap(exam.grades, exam.scoreMap), subjectGradeRanks: subjectMap(exam.grades, GRADE_RANK_MAP), ...calculateGradeMarkerCounts(exam.grades), schoolSequence: preferenceSequence, choiceSequence: 1 },
-    perChoiceResults: assignedChoices.map((choice, index) => ({ ...choice, choiceSequence: index + 1, preferenceScore: calculatePreferenceScore(choice.preferenceSequence, rule.code), totalScore: roundToTenth(Math.min(rule.totalScore, otherItems.otherItemsTotal - preferenceScore + calculatePreferenceScore(choice.preferenceSequence, rule.code) + exam.examPerformanceScore)) })),
+    perChoiceResults: assignedChoices.map((choice, index) => {
+      const referencePreferenceScore = (otherItems as { preferenceScore?: number }).preferenceScore ?? 0;
+      const choicePreferenceScore = REFERENCE_DISTRICTS.has(rule.code) ? referencePreferenceScore : calculatePreferenceScore(choice.preferenceSequence, rule.code);
+      const basePreferenceScore = REFERENCE_DISTRICTS.has(rule.code) ? referencePreferenceScore : preferenceScore;
+      return { ...choice, choiceSequence: index + 1, preferenceScore: choicePreferenceScore, totalScore: roundToTenth(Math.min(rule.totalScore, otherItems.otherItemsTotal - basePreferenceScore + choicePreferenceScore + exam.examPerformanceScore)) };
+    }),
   };
 }
 
@@ -210,6 +241,14 @@ function calculateDistrictItems(district: AdmissionDistrict, input: AdmissionSco
     return itemResult({ preferenceScore, balancedLearningScore, serviceLearningScore, fitnessScore, certificationScore, contestScore, rewardScore, leadershipScore, multipleLearningScore, otherItemsTotal: preferenceScore + multipleLearningScore });
   }
 
+  if (district === "taoyuan-lienchiang") return calculateLegacyTaoyuanItems(input, preferenceScore);
+
+  const manualPreferenceScore = Math.min(30, nonNegative(input.manualCategoryScores?.preferenceScore));
+  const multipleLearningScore = Math.min(40, nonNegative(input.manualCategoryScores?.multipleLearningScore));
+  return itemResult({ preferenceScore: manualPreferenceScore, multipleLearningScore, otherItemsTotal: manualPreferenceScore + multipleLearningScore });
+}
+
+function calculateLegacyTaoyuanItems(input: AdmissionScoreInput, preferenceScore: number) {
   const graduationScore = input.graduationEligible ? 6 : 0;
   const careerGoalScore = input.careerGoalMatches ? 6 : 0;
   const nearbyEnrollmentScore = isNearby(input.enrollmentDistrictStatus, "TL") ? 5 : 0;
@@ -223,13 +262,15 @@ function calculateDistrictItems(district: AdmissionDistrict, input: AdmissionSco
   return itemResult({ preferenceScore, graduationScore, careerGoalScore, nearbyEnrollmentScore, rewardScore, conductScore, contestScore, fitnessScore, adaptationScore, multipleLearningScore, otherItemsTotal: adaptationScore + multipleLearningScore });
 }
 
-function calculateExam(district: AdmissionDistrict, examInput: AdmissionScoreInput["exam"] = {}) {
+function calculateExam(district: AdmissionDistrict, examInput: AdmissionScoreInput["exam"] = {}, manualCategoryScores?: AdmissionScoreInput["manualCategoryScores"]) {
   const grades = [examInput.chineseGrade, examInput.mathGrade, examInput.englishGrade, examInput.socialGrade, examInput.scienceGrade];
   const scoreMap = district === "tp" || district === "tainan" ? GRADE_RANK_MAP : EXAM_SCORE_MAP;
   const examAcademicScore = grades.reduce((sum, grade) => sum + (grade ? scoreMap[grade] : 0), 0);
   const writingScore = calculateWritingScore(district, examInput.writingLevel);
   const examMax = ADMISSION_RULES[district].categories.find((item) => item.key === "examPerformanceScore")?.max ?? 0;
-  const examPerformanceScore = Math.min(examMax, roundToTenth(examAcademicScore + writingScore));
+  const examPerformanceScore = district !== "tp" && district !== "ct" && district !== "tainan" && district !== "kaohsiung" && district !== "taoyuan-lienchiang"
+    ? Math.min(examMax, nonNegative(manualCategoryScores?.examPerformanceScore))
+    : Math.min(examMax, roundToTenth(examAcademicScore + writingScore));
   const examTotalPoints = calculateTiePoints(district, grades, examInput.writingLevel);
   return { grades, scoreMap, examAcademicScore, writingScore, examPerformanceScore, examTotalPoints };
 }

@@ -8,8 +8,8 @@ export async function GET() {
     endpoint: "/api/admission/calculate",
     method: "POST",
     scoreStorage: "tenths",
-    districts: ["tp", "ct", "tainan", "kaohsiung", "taoyuan-lienchiang"],
-    note: "POST AdmissionScoreInput JSON to calculate the selected district's score, rule explanation, comparison keys, and per-choice results.",
+    districts: ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "chiayi", "tainan", "kaohsiung", "pingtung", "hualien", "taitung", "penghu", "kinmen"],
+    note: "POST AdmissionScoreInput JSON to calculate the selected district's score, rule explanation, comparison keys, and per-choice results. Reference-mode districts accept manualCategoryScores from the Notebook report.",
   });
 }
 

@@ -82,7 +82,7 @@ test("district metadata exposes feature availability and authoritative context",
   assert.equal(metadata.districts.ct.schools, true);
   assert.equal(metadata.districts.ct.calculator, true);
   assert.equal(metadata.districts.tp.analysis, true);
-  assert.equal(metadata.districts.ilan.calculator, false);
+  assert.equal(metadata.districts.ilan.calculator, true);
   assert.match(metadata.officialDirectory.url, /^https:\/\//);
   assert.ok(metadata.timelineDefaults.ready.every((item) => item.date && item.status));
   assert.match(metadata.disclaimer, /最新公告/);

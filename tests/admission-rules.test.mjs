@@ -112,3 +112,12 @@ test("特殊身分與資料不足不會讓分數超出上限", () => {
 
   assert.throws(() => calculateAdmissionScore({ district: "unknown" }), /Unsupported admission district/);
 });
+
+test("15 個就學區都能完成一次透明的成績試算", () => {
+  const districts = ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "chiayi", "tainan", "kaohsiung", "pingtung", "hualien", "taitung", "penghu", "kinmen"];
+  for (const district of districts) {
+    const result = calculateAdmissionScore({ district, manualCategoryScores: { preferenceScore: 10, multipleLearningScore: 20, examPerformanceScore: 15 }, exam: { writingLevel: 3 } });
+    assert.equal(result.district, district);
+    assert.ok(result.totalScore >= 0 && result.totalScore <= result.rule.totalScore, district);
+  }
+});
