@@ -70,6 +70,14 @@ test("assistant prompt keeps general model knowledge available and treats site d
   assert.match(ui, /一般 AI · 升學資料助手/);
 });
 
+test("assistant sends the current question once and isolates general replies from prior site context", async () => {
+  const policy = await read("lib/assistant-policy.ts");
+  const ui = await read("components/ai-assistant.tsx");
+  assert.match(policy, /只針對本次 USER QUESTION/);
+  assert.match(ui, /historySource = isRetry/);
+  assert.match(ui, /current question out of history/);
+});
+
 test("assistant stream proxy parses each Gemini data line and flushes the final buffer", async () => {
   const route = await read("app/api/assistant/route.ts");
   assert.match(route, /event\.split\(\/\\r\?\\n/);
