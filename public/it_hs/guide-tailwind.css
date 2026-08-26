@@ -1597,6 +1597,16 @@
       grid-template-columns: 1fr 340px;
     }
   }
+  .md\:grid-cols-\[260px_1fr\] {
+    @media (width >= 48rem) {
+      grid-template-columns: 260px 1fr;
+    }
+  }
+  .md\:grid-cols-\[280px_1fr\] {
+    @media (width >= 48rem) {
+      grid-template-columns: 280px 1fr;
+    }
+  }
   .md\:flex-row {
     @media (width >= 48rem) {
       flex-direction: row;

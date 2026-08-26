@@ -8,12 +8,12 @@ import { listPublishedContent, parseContentBody } from "@/db/content-store";
 export const metadata: Metadata = { title: "升學知識｜免試入學、名詞百科與學制探索", description: "用三分鐘入門、名詞百科、迷思破解與學制適合度探索，建立自己的升學判斷基礎。", alternates: { canonical: "/knowledge" } };
 
 const knowledgeCards = [
-  ["免試入學", "3 分鐘看懂免試入學", "先理解就學區、規則、積分與志願的關係，再進入適用地區。", "/news/rules"],
-  ["迷思", "常見迷思破解", "分清楚官方規則、歷年參考、推估與不能保證的事情。", "/trust"],
-  ["經驗", "過來人經驗談", "把選校時常遇到的學習、通勤、家庭討論問題整理成提問。", "/news/parents"],
-  ["影音", "短影音系列", "每次只理解一個概念：適合在通勤或等待時快速複習。", "/news"],
-  ["podcast", "Podcast／語音版", "把文章轉成可以朗讀的重點，先聽結論再回看來源。", "/news"],
-  ["科系地圖", "未來銜接大學科系地圖", "從學制與群科看後續可能路徑，不把任何一條路說成唯一答案。", "/news/career"],
+  ["免試入學", "3 分鐘看懂免試入學", "先理解就學區、規則、積分與志願的關係，再進入適用地區。", "/knowledge/admission-basics"],
+  ["迷思", "常見迷思破解", "分清楚官方規則、歷年參考、推估與不能保證的事情。", "/knowledge/misconceptions"],
+  ["經驗", "過來人經驗談", "把選校時常遇到的學習、通勤、家庭討論問題整理成提問。", "/knowledge/alumni-stories"],
+  ["影音", "短影音系列", "每次只理解一個概念：適合在通勤或等待時快速複習。", "/knowledge/videos"],
+  ["podcast", "Podcast／語音版", "把文章轉成可以朗讀的重點，先聽結論再回看來源。", "/knowledge/podcast"],
+  ["科系地圖", "未來銜接大學科系地圖", "從學制與群科看後續可能路徑，不把任何一條路說成唯一答案。", "/knowledge/career-map"],
 ] as const;
 
 export default async function KnowledgePage() {

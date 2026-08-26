@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { IndependentSupportPage, type SupportPage } from "@/components/independent-support-page";
+import type { SupportPage } from "@/components/independent-support-page";
+import { KnowledgeTopicWorkspace, type Topic } from "@/components/knowledge-topic-workspace";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -17,4 +18,4 @@ const pages: Record<string, SupportPage> = {
 export const dynamicParams = false;
 export function generateStaticParams() { return Object.keys(pages).map((topic) => ({ topic })); }
 export async function generateMetadata({ params }: { params: Promise<{ topic: string }> }): Promise<Metadata> { const { topic } = await params; const page = pages[topic]; return page ? { title: `${page.title}｜升學知識`, description: page.description, alternates: { canonical: `/knowledge/${topic}` } } : {}; }
-export default async function KnowledgeTopicPage({ params }: { params: Promise<{ topic: string }> }) { const { topic } = await params; const page = pages[topic]; if (!page) return null; return <><SiteHeader activeHref="/knowledge" /><IndependentSupportPage page={page} /><SiteFooter /></>; }
+export default async function KnowledgeTopicPage({ params }: { params: Promise<{ topic: string }> }) { const { topic } = await params; const page = pages[topic]; if (!page) return null; return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/knowledge" /><KnowledgeTopicWorkspace topic={topic as Topic} /><SiteFooter /></main>; }
