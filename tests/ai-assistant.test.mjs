@@ -20,13 +20,17 @@ test("AI policy allows only two anonymous questions and unlimited member questio
   assert.match(source, /unlimited/);
 });
 
-test("assistant API authenticates members, uses the guest cookie, and calls Gemini server-side", async () => {
+test("assistant API authenticates members, uses the guest cookie, and calls Workers AI server-side", async () => {
   const source = await read("app/api/assistant/route.ts");
+  const wrangler = await read("wrangler.jsonc");
   assert.match(source, /getMemberSession/);
   assert.match(source, /ASSISTANT_GUEST_COOKIE|jshs_ai_guest/);
-  assert.match(source, /GEMINI_API_KEY/);
-  assert.match(source, /generativelanguage\.googleapis\.com/);
+  assert.match(source, /runtimeEnv\.AI|ai\.run/);
+  assert.match(source, /WORKERS_AI_MODEL/);
+  assert.match(source, /@cf\/meta\/llama-3\.1-8b-instruct-fast/);
   assert.match(source, /LINE|本站|網站內容/);
+  assert.doesNotMatch(source, /GEMINI_API_KEY|generativelanguage\.googleapis\.com/);
+  assert.match(wrangler, /"ai"\s*:\s*\{\s*"binding"\s*:\s*"AI"/s);
   assert.doesNotMatch(source, /calculateAdmissionScore/);
 });
 
@@ -83,10 +87,11 @@ test("assistant sends the current question once and isolates general replies fro
   assert.match(ui, /current question out of history/);
 });
 
-test("assistant stream proxy parses each Gemini data line and flushes the final buffer", async () => {
+test("assistant provider returns one complete Workers AI answer instead of a fragile provider stream", async () => {
   const route = await read("app/api/assistant/route.ts");
-  assert.match(route, /event\.split\(\/\\r\?\\n/);
-  assert.match(route, /if \(buffer\.trim\(\)\) \{/);
+  assert.match(route, /await ai\.run/);
+  assert.match(route, /extractWorkersAnswer/);
+  assert.doesNotMatch(route, /proxyGeminiStream/);
 });
 
 test("assistant keeps the composer at the bottom and limits general request context", async () => {
@@ -95,16 +100,13 @@ test("assistant keeps the composer at the bottom and limits general request cont
   const route = await read("app/api/assistant/route.ts");
   assert.match(css, /\.ai-chat-window > form \{[^}]*order: 3/);
   assert.match(ui, /history\.slice\(-6\)/);
-  assert.match(route, /maxOutputTokens: 2048/);
+  assert.match(route, /max_tokens: 2048/);
 });
 
-test("assistant only accepts a completed provider stream and rejects truncation", async () => {
+test("assistant rejects an empty Workers AI answer before it reaches the UI", async () => {
   const route = await read("app/api/assistant/route.ts");
-  const ui = await read("components/ai-assistant.tsx");
-  assert.match(route, /finishReason/);
-  assert.match(route, /assistant_stream_incomplete/);
-  assert.match(route, /!providerFinished/);
-  assert.match(ui, /if \(!completed \|\| !answer\) throw/);
+  assert.match(route, /assistant_empty_response/);
+  assert.match(route, /!answer/);
 });
 
 test("assistant client uses the unary provider path so completed replies are validated before display", async () => {

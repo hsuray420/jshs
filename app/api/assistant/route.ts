@@ -7,12 +7,14 @@ import { buildAssistantInstruction, buildAssistantSearchQuery, getAssistantActio
 
 export const dynamic = "force-dynamic";
 
-const runtimeEnv = env as typeof env & { GEMINI_API_KEY?: string; GEMINI_MODEL?: string };
+const runtimeEnv = env as typeof env & {
+  AI?: { run(model: string, input: Record<string, unknown>): Promise<unknown> };
+  WORKERS_AI_MODEL?: string;
+};
 type Source = Readonly<{ title: string; url: string; snippet: string }>;
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null) as { question?: unknown; stream?: boolean; history?: unknown } | null;
-  const wantsStream = body?.stream === true;
   const question = sanitizeAssistantQuestion(body?.question);
   const history = sanitizeHistory(body?.history);
   if (question.length < 2) return json({ ok: false, error: "question_too_short" }, 400);
@@ -48,114 +50,36 @@ export async function POST(request: Request) {
     }
   }
 
-  const apiKey = runtimeEnv.GEMINI_API_KEY || process.env.GEMINI_API_KEY;
-  if (!apiKey) return json({ ok: false, error: "assistant_not_configured" }, 503, shouldSetGuestCookie ? guestId : undefined);
-  const model = runtimeEnv.GEMINI_MODEL || process.env.GEMINI_MODEL || "gemini-3.6-flash";
-  const endpoint = wantsStream
-    ? `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:streamGenerateContent?alt=sse&key=${encodeURIComponent(apiKey)}`
-    : `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
-  const requestBody = {
-    systemInstruction: { parts: [{ text: buildAssistantInstruction() }] },
-    contents: [
-      ...history.map((item) => ({ role: item.role === "assistant" ? "model" : "user", parts: [{ text: item.content }] })),
-      { role: "user", parts: [{ text: `ROUTING_INTENT: ${intent}\nSITE_RETRIEVAL_STATUS: ${retrievalError ? "failed" : intent === "GENERAL" ? "not_needed" : sources.length ? "found" : "empty"}\nSITE_CONTEXT:\n${formatAssistantContext(sources) || "（沒有提供本站檢索資料）"}\n\nUSER QUESTION:\n${question}` }] },
+  const ai = runtimeEnv.AI;
+  if (!ai) return json({ ok: false, error: "assistant_not_configured" }, 503, shouldSetGuestCookie ? guestId : undefined);
+  const model = runtimeEnv.WORKERS_AI_MODEL || "@cf/meta/llama-3.1-8b-instruct-fast";
+  const prompt = `ROUTING_INTENT: ${intent}\nSITE_RETRIEVAL_STATUS: ${retrievalError ? "failed" : intent === "GENERAL" ? "not_needed" : sources.length ? "found" : "empty"}\nSITE_CONTEXT:\n${formatAssistantContext(sources) || "（沒有提供本站檢索資料）"}\n\nUSER QUESTION:\n${question}`;
+  const payload = await ai.run(model, {
+    messages: [
+      { role: "system", content: buildAssistantInstruction() },
+      ...history.map((item) => ({ role: item.role, content: item.content })),
+      { role: "user", content: prompt },
     ],
-    generationConfig: { temperature: intent === "GENERAL" ? 0.25 : 0.15, maxOutputTokens: 2048 },
-  };
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 25_000);
-  let fetchError: unknown = null;
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify(requestBody),
-    signal: controller.signal,
-  }).catch((error) => { fetchError = error; return null; }).finally(() => clearTimeout(timeout));
-  if (!response?.ok) {
-    const providerError = response ? await response.text().catch(() => "") : "";
-    const errorCode = fetchError instanceof Error && fetchError.name === "AbortError" ? "assistant_timeout" : response?.status === 429 ? "assistant_rate_limited" : "assistant_unavailable";
-    console.error("Gemini request failed", {
-      status: response?.status || 0,
-      model,
-      message: providerError.slice(0, 500),
-    });
-    return json({ ok: false, error: errorCode }, errorCode === "assistant_rate_limited" ? 429 : 503, shouldSetGuestCookie ? guestId : undefined);
-  }
-  if (wantsStream) return proxyGeminiStream(response, sources, usage, intent, shouldSetGuestCookie ? guestId : undefined);
-  const payload = await response.json().catch(() => null) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> }; finishReason?: string }> } | null;
-  const finishReason = payload?.candidates?.[0]?.finishReason;
-  const answer = payload?.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("").trim();
-  if (finishReason && finishReason !== "STOP") return json({ ok: false, error: finishReason === "MAX_TOKENS" ? "assistant_stream_incomplete" : "assistant_unavailable" }, 503, shouldSetGuestCookie ? guestId : undefined);
+    temperature: intent === "GENERAL" ? 0.25 : 0.15,
+    max_tokens: 2048,
+  }).catch((error) => {
+    console.error("Workers AI request failed", error instanceof Error ? error.message : "unknown_error");
+    return null;
+  });
+  const answer = extractWorkersAnswer(payload);
   if (!answer) return json({ ok: false, error: "assistant_empty_response" }, 503, shouldSetGuestCookie ? guestId : undefined);
   return json({ ok: true, answer, sources: intent === "GENERAL" ? [] : sources, intent, usage }, 200, shouldSetGuestCookie ? guestId : undefined);
 }
 
-function proxyGeminiStream(response: Response, sources: readonly Source[], usage: unknown, intent: string, guestId?: string) {
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder();
-  const stream = new ReadableStream({
-    async start(controller) {
-      controller.enqueue(encoder.encode(`data: ${JSON.stringify({ meta: { sources: intent === "GENERAL" ? [] : sources, intent, usage } })}\n\n`));
-      const reader = response.body?.getReader();
-      if (!reader) { controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "assistant_stream_incomplete" })}\n\n`)); controller.enqueue(encoder.encode("data: [DONE]\n\n")); controller.close(); return; }
-      let buffer = "";
-      let providerFinished = false;
-      let providerFinishReason = "";
-      let providerError = "";
-      let streamFailed = false;
-      try {
-        while (true) {
-          const chunk = await reader.read();
-          buffer += chunk.done ? decoder.decode() : decoder.decode(chunk.value, { stream: true });
-          const events = buffer.split(/\r?\n\r?\n/u);
-          buffer = events.pop() || "";
-          for (const event of events) {
-            const result = enqueueGeminiEvent(event, controller, encoder);
-            if (result.finishReason) { providerFinished = true; providerFinishReason = result.finishReason; }
-            if (result.errorCode) providerError = result.errorCode;
-          }
-          if (chunk.done) break;
-        }
-        if (buffer.trim()) {
-          const result = enqueueGeminiEvent(buffer, controller, encoder);
-          if (result.finishReason) { providerFinished = true; providerFinishReason = result.finishReason; }
-          if (result.errorCode) providerError = result.errorCode;
-        }
-      } catch (error) {
-        streamFailed = true;
-        console.error("Gemini stream proxy failed", error instanceof Error ? error.message : "unknown_error");
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "assistant_unavailable" })}\n\n`));
-      }
-      if (!streamFailed && providerError) controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: providerError })}\n\n`));
-      if (!streamFailed && !providerError && !providerFinished) controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: "assistant_stream_incomplete" })}\n\n`));
-      if (!streamFailed && !providerError && providerFinishReason && providerFinishReason !== "STOP") controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: providerFinishReason === "MAX_TOKENS" ? "assistant_stream_incomplete" : "assistant_unavailable" })}\n\n`));
-      controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-      controller.close();
-    },
-  });
-  const headers = new Headers({ "cache-control": "no-store", "content-type": "text/event-stream; charset=utf-8", "x-accel-buffering": "no" });
-  if (guestId) headers.append("set-cookie", `${ASSISTANT_GUEST_COOKIE}=${guestId}; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax`);
-  return new Response(stream, { headers });
-}
-
-function enqueueGeminiEvent(event: string, controller: ReadableStreamDefaultController<Uint8Array>, encoder: TextEncoder): { finishReason?: string; errorCode?: string } {
-  let finishReason = "";
-  let errorCode = "";
-  for (const line of event.split(/\r?\n/u)) {
-    if (!line.startsWith("data:")) continue;
-    const data = line.replace(/^data:\s*/, "").trim();
-    if (!data || data === "[DONE]") continue;
-    const payload = JSON.parse(data) as { candidates?: Array<{ content?: { parts?: Array<{ text?: string }> }; finishReason?: string }>; error?: { code?: number; message?: string; status?: string } };
-    if (payload.error) {
-      console.error("Gemini stream provider error", payload.error);
-      errorCode = payload.error.code === 429 ? "assistant_rate_limited" : "assistant_unavailable";
-      continue;
-    }
-    if (payload.candidates?.[0]?.finishReason) finishReason = payload.candidates[0].finishReason;
-    const delta = payload.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("");
-    if (delta) controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta })}\n\n`));
-  }
-  return { finishReason, errorCode };
+function extractWorkersAnswer(payload: unknown): string {
+  if (typeof payload === "string") return payload.trim();
+  if (!payload || typeof payload !== "object") return "";
+  const record = payload as { response?: unknown; result?: unknown; choices?: Array<{ message?: { content?: unknown } }> };
+  if (typeof record.response === "string") return record.response.trim();
+  if (typeof record.result === "string") return record.result.trim();
+  if (record.result && typeof record.result === "object" && typeof (record.result as { response?: unknown }).response === "string") return ((record.result as { response: string }).response).trim();
+  const content = record.choices?.[0]?.message?.content;
+  return typeof content === "string" ? content.trim() : "";
 }
 
 function sanitizeHistory(value: unknown): readonly AssistantHistoryItem[] {
