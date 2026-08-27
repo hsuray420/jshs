@@ -322,6 +322,10 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 
 .jshs-mobile-group summary::-webkit-details-marker { display: none; }
 .jshs-mobile-group summary::marker { content: ""; }
+.jshs-mobile-group { min-width: 0; width: 100%; }
+.jshs-mobile-group summary { min-width: 0; }
+.jshs-mobile-group summary > span { min-width: 0; }
+.jshs-mobile-group .jshs-menu-destination { min-width: 0; overflow-wrap: anywhere; }
 .jshs-mobile-group summary > svg { transition: transform 150ms ease; }
 .jshs-mobile-group[open] summary > svg { transform: rotate(180deg); }
 
