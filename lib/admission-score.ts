@@ -55,7 +55,7 @@ export type AdmissionRule = Readonly<{
   verificationStatus?: string;
 }>;
 
-type ResearchField = Readonly<{ field_id: string; label: string; input_type: string; helper_text?: string; options?: readonly { label: string; value: unknown; score?: number | null }[]; validation?: { required?: boolean } }>;
+type ResearchField = Readonly<{ field_id: string; label: string; input_type: string; category?: string; subcategory?: string; helper_text?: string; official_rule?: string; conditions?: readonly string[]; adopted_period?: string; score_cap?: number; evidence_description?: string; options?: readonly { label: string; value: unknown; score?: number | null }[]; validation?: { required?: boolean; min_items?: number } }>;
 type ResearchRule = { district_name: string; academic_year: number; total_score_max: number; version: string; categories: readonly { category_id: string; label: string; score_cap: number; calculation: string }[]; tie_breaking_rules: readonly { field: string }[]; fields: readonly ResearchField[]; verification_status: string };
 
 function researchRule(data: ResearchRule, code: AdmissionDistrict): AdmissionRule {

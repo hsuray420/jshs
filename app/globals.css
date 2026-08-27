@@ -286,6 +286,28 @@ main table { border-collapse: collapse; color: var(--text-primary); width: 100%;
 }
 .admission-rule-form .admission-field-group + .admission-field-group { margin-top: 36px; }
 .admission-rule-form select { font-weight: 400 !important; }
+.admission-section { overflow: visible; border: 1px solid var(--border-light); border-radius: var(--radius-lg); background: var(--bg-page); }
+.admission-section > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px; cursor: pointer; list-style: none; font-size: 20px; font-weight: 700; }
+.admission-section > summary::-webkit-details-marker { display: none; }
+.admission-section > summary::before { content: "⌄"; order: 2; color: var(--text-secondary); }
+.admission-section:not([open]) > summary::before { content: "›"; }
+.admission-section-cap { margin-left: auto; color: var(--text-secondary); font-size: 15px; font-weight: 600; }
+.admission-section-body { padding: 0 20px 20px; }
+.admission-subsection { border-top: 1px solid var(--border-light); padding: 18px 0 4px; }
+.admission-subsection h4 { margin-bottom: 14px; color: var(--text-secondary); font-size: 16px; font-weight: 700; }
+.admission-field-row { min-width: 0; }
+.admission-field-heading { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+.admission-rule-help { position: relative; display: inline-block; color: var(--brand-primary); }
+.admission-rule-help > summary { display: grid; place-items: center; width: 28px; height: 28px; cursor: pointer; list-style: none; }
+.admission-rule-help > summary::-webkit-details-marker { display: none; }
+.admission-rule-popover { position: absolute; z-index: 20; top: 32px; left: 0; width: min(360px, calc(100vw - 48px)); padding: 16px; border: 1px solid var(--border-light); border-radius: var(--radius-md); background: white; box-shadow: var(--shadow-card); color: var(--text-primary); font-size: 14px; line-height: 1.65; }
+.admission-rule-popover p { margin-top: 8px; }
+.admission-rule-popover small { display: block; margin-top: 10px; color: var(--text-secondary); }
+.admission-field-short-help { display: block; margin-top: 8px; color: var(--text-secondary) !important; font-size: 15px !important; line-height: 1.5 !important; }
+.admission-summary { z-index: 2; }
+.preference-row { display: grid; grid-template-columns: 28px minmax(0, 1fr) minmax(0, 1fr) auto; align-items: center; gap: 8px; }
+.preference-row button { color: #9f2f3f; font-size: 14px; }
+.admission-semester-row { display: grid !important; grid-template-columns: 52px minmax(0, 1fr); align-items: center; gap: 8px !important; font-size: 16px !important; font-weight: 600 !important; }
 @media (max-width: 640px) {
   .admission-rule-form .admission-field-label,
   .admission-rule-form .admission-field-group,
@@ -293,6 +315,13 @@ main table { border-collapse: collapse; color: var(--text-primary); width: 100%;
   .admission-rule-form fieldset label { font-size: 17px; }
   .admission-rule-form .admission-field-helper,
   .admission-rule-form small { font-size: 15px !important; line-height: 1.6 !important; }
+  .admission-section > summary { padding: 16px; font-size: 18px; }
+  .admission-section-body { padding: 0 16px 16px; }
+  .admission-summary { order: -1; }
+  .admission-rule-popover { position: fixed; top: auto; right: 16px; bottom: 16px; left: 16px; width: auto; }
+  .preference-row { grid-template-columns: 24px minmax(0, 1fr); }
+  .preference-row select:nth-of-type(2), .preference-row button { grid-column: 2; }
+  .preference-row button { grid-column: 2; justify-self: start; }
 }
 .jshs-chip { border-radius: var(--radius-full); background: var(--brand-tint); color: var(--brand-primary); display: inline-flex; font-size: 12px; font-weight: var(--font-weight-strong); padding: 4px 10px; }
 .jshs-data-tag { border-radius: var(--radius-full); display: inline-flex; font-size: 12px; font-weight: var(--font-weight-strong); padding: 4px 10px; }

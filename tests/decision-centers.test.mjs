@@ -12,6 +12,14 @@ test("calculator follows explain-as-you-fill flow and labels rule context", asyn
   assert.match(source, /\/api\/admission\/calculate/);
 });
 
+test("admission calculator uses structured sections and fact-based controls", async () => {
+  const source = await read("components/admission-calculator.tsx");
+  for (const component of ["AdmissionSection", "RuleHelpPopover", "PreferenceList", "SemesterSelector"]) assert.match(source, new RegExp(component));
+  assert.doesNotMatch(source, /以逗號分隔/);
+  assert.doesNotMatch(source, /<input type="number"/);
+  assert.match(source, /<select value=\{writingLevel\}/);
+});
+
 test("planner exposes four workspaces, ordering, comparison, family summary and private share", async () => {
   const [planner, page, share] = await Promise.all([
     read("components/planner-workspace.tsx"),
