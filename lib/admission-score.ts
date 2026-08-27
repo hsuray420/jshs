@@ -61,11 +61,54 @@ type ResearchRule = { district_name: string; academic_year: number; total_score_
 function researchRule(data: ResearchRule, code: AdmissionDistrict): AdmissionRule {
   return {
     code, label: data.district_name, academicYear: String(data.academic_year), totalScore: data.total_score_max,
-    sourceNote: `研究資料 ${data.version}；正式送出前仍須核對官方簡章。`,
-    categories: data.categories.map((item) => ({ key: item.category_id, label: item.label, max: item.score_cap, description: item.calculation })),
+    sourceNote: "依本區官方規則資料整理；正式送出前仍須核對當年度官方簡章。",
+    categories: data.categories.map((item) => ({ key: item.category_id, label: item.label, max: item.score_cap, description: `${item.label}依本區官方規則換算，最高採計${item.score_cap}分。` })),
     tieBreakers: data.tie_breaking_rules.map((item) => item.field), sourceId: `${code}-115-research-json`, fields: data.fields,
     verificationStatus: data.verification_status,
   };
+}
+
+const DERIVED_FIELD_LABELS: Readonly<Record<string, string>> = {
+  total_score: "總積分",
+  preference_score: "志願序積分",
+  nearby_score: "就近入學積分",
+  nearby_enrollment_score: "就近入學積分",
+  economic_weakness_score: "經濟弱勢積分",
+  raw_choice_order: "原始志願順序",
+  writing_grade: "寫作測驗級分",
+  exam_violation_points: "會考違規扣點",
+  exam_total_points: "會考總積點",
+  exam_performance_score: "會考表現分數",
+  preference_choices: "志願清單",
+  chinese_exam_grade: "國文會考成績",
+  math_exam_grade: "數學會考成績",
+  english_exam_grade: "英語會考成績",
+  social_exam_grade: "社會會考成績",
+  science_exam_grade: "自然會考成績",
+  competition_results: "競賽得獎紀錄",
+  fitness_session_results: "體適能檢測結果",
+  catalog_id: "官方競賽項目",
+  result_date: "成績公布日期",
+  proof_submission_date: "證明繳交日期",
+  participant_count: "參賽人數",
+  test_date: "體適能檢測日期",
+};
+
+function normalizedFieldId(fieldId: string) {
+  return fieldId.replace(/\[\d+\]/g, "").split(".").pop() || fieldId;
+}
+
+/** Converts rule/configuration identifiers into safe, human-readable UI copy. */
+export function resolveAdmissionFieldLabel(fieldId: string, rule: AdmissionRule): string {
+  if (/[\u3400-\u9fff]/.test(fieldId)) return fieldId;
+  const exact = rule.fields?.find((field) => field.field_id === fieldId)?.label;
+  if (exact) return exact;
+  const normalized = normalizedFieldId(fieldId);
+  return DERIVED_FIELD_LABELS[fieldId] || DERIVED_FIELD_LABELS[normalized] || "必要資料";
+}
+
+export function resolveAdmissionMissingFieldLabels(fieldIds: readonly string[], rule: AdmissionRule): string[] {
+  return [...new Set(fieldIds.map((fieldId) => resolveAdmissionFieldLabel(fieldId, rule)))];
 }
 
 const referenceRule = (code: AdmissionDistrict, label: string, totalScore = 100): AdmissionRule => ({

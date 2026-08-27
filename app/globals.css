@@ -265,6 +265,35 @@ main table { border-collapse: collapse; color: var(--text-primary); width: 100%;
 }
 
 .jshs-muted-copy { color: var(--text-secondary) !important; }
+
+.admission-rule-form .admission-field-group,
+.admission-rule-form > .grid > label,
+.admission-rule-form fieldset label {
+  font-size: 18px;
+  line-height: 1.45;
+  font-weight: 600;
+  gap: 8px;
+}
+.admission-rule-form .admission-field-label { display: block; font-size: 18px; line-height: 1.45; font-weight: 600; }
+.admission-rule-form .admission-field-helper,
+.admission-rule-form small {
+  display: block;
+  margin-top: 10px;
+  color: var(--text-secondary) !important;
+  font-size: 16px !important;
+  line-height: 1.65 !important;
+  font-weight: 400 !important;
+}
+.admission-rule-form .admission-field-group + .admission-field-group { margin-top: 36px; }
+.admission-rule-form select { font-weight: 400 !important; }
+@media (max-width: 640px) {
+  .admission-rule-form .admission-field-label,
+  .admission-rule-form .admission-field-group,
+  .admission-rule-form > .grid > label,
+  .admission-rule-form fieldset label { font-size: 17px; }
+  .admission-rule-form .admission-field-helper,
+  .admission-rule-form small { font-size: 15px !important; line-height: 1.6 !important; }
+}
 .jshs-chip { border-radius: var(--radius-full); background: var(--brand-tint); color: var(--brand-primary); display: inline-flex; font-size: 12px; font-weight: var(--font-weight-strong); padding: 4px 10px; }
 .jshs-data-tag { border-radius: var(--radius-full); display: inline-flex; font-size: 12px; font-weight: var(--font-weight-strong); padding: 4px 10px; }
 .jshs-data-tag.is-verified { background: var(--success-tint); color: var(--success-hover); }
