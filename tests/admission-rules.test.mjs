@@ -133,6 +133,16 @@ test("中投與彰化的規則 metadata 直接來自研究 JSON", () => {
   assert.equal(chc.rule.fields.some((field) => field.field_id === "competition_results"), true);
 });
 
+test("基北、桃連、高雄使用各自的 115 研究 JSON 與欄位 schema", () => {
+  for (const [district, sourceId, fieldId] of [["tp", "tp-115-research-json", "service_hours_112_s1"], ["taoyuan-lienchiang", "taoyuan-lienchiang-115-research-json", "graduation_status"], ["kaohsiung", "kaohsiung-115-research-json", "credential_results"]]) {
+    const result = calculateAdmissionScore({ district, ruleValues: {}, exam: {} });
+    assert.equal(result.rule.sourceId, sourceId);
+    assert.equal(result.rule.academicYear, "115");
+    assert.equal(result.rule.fields.some((field) => field.field_id === fieldId), true);
+    assert.match(result.rule.verificationStatus, /verified/);
+  }
+});
+
 test("研究 JSON 的必填欄位缺漏時回傳 incomplete，不把缺漏當成零分", () => {
   const result = calculateAdmissionScore({ district: "ct", exam: { writingLevel: 6 } });
   assert.equal(result.status, "incomplete");

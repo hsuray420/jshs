@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.1.0",
+  "academic_year": 115,
+  "district_id": "ttk",
+  "district_name": "基北區",
+  "version": "115.2026-02-23.revised",
+  "coverage": ["臺北市", "新北市", "基隆市"],
+  "authority": {
+    "competent_authorities": ["臺北市政府教育局", "新北市政府教育局", "基隆市政府教育處"],
+    "committee": "115學年度基北區高級中等學校免試入學委員會",
+    "organizer": "臺北市立復興高級中學",
+    "official_website": "https://ttk.entry.edu.tw"
+  },
+  "common_district_rules": [
+    {"rule_id":"ttk_tyc_common","source_area":"新北市林口區、樹林區、鶯歌區、新莊區、泰山區","destination_area":"桃園市蘆竹區、龜山區、八德區核定招生學校","direction":"two_way","source_ids":["TTK-115-004"]},
+    {"rule_id":"ttk_iln_common","source_area":"新北市貢寮區、雙溪區、坪林區","destination_area":"宜蘭縣頭城鎮核定招生學校","direction":"outbound_from_ttk","source_ids":["TTK-115-004"]}
+  ],
+  "total_score_max": 108,
+  "categories": [
+    {"category_id":"preference","label":"志願序","score_cap":36,"calculation":"score_by_effective_preference_rank"},
+    {"category_id":"multiple_learning","label":"多元學習表現","score_cap":36,"calculation":"balanced_learning_score + service_learning_score"},
+    {"category_id":"exam","label":"國中教育會考","score_cap":36,"calculation":"sum(five_subject_mark_scores) + writing_score"}
+  ],
+  "fields": [
+    {
+      "field_id":"preference_choices","label":"志願清單","category":"志願序","subcategory":"選填順序","input_type":"multi_select","options":[],"unit":"志願","min":1,"max":30,"score_per_unit":null,"score_cap":36,
+      "calculation":"effective_rank=collapse_consecutive_departments_with_same_school(raw_choices); score=effective_rank<=5?36:effective_rank<=10?35:effective_rank<=15?34:effective_rank<=20?33:32",
+      "conditions":["同一學校兩個以上科別須連續選填才視為同一志願"],"dependencies":["school_id","department_id","raw_choice_order"],"mutually_exclusive":[],"adopted_period":"115學年度正式志願選填期間","evidence_required":false,"evidence_description":"由正式報名系統志願清單認定。",
+      "helper_text":"最多30個志願；同校兩個以上科別連續選填才合併為同一志願。第1～5志願36分，之後每5志願降1分，第21～30志願32分。","official_rule":"志願序上限36分，依有效志願序分五段計分。",
+      "validation":{"required":true,"type":"array","min_items":1,"max_items":30,"unique_items":true,"error_message":"請選填1～30個不重複志願。"},"source_ids":["TTK-115-002"]
+    },
+    {
+      "field_id":"balanced_health_pe_passed","label":"健康與體育領域達標","category":"多元學習表現","subcategory":"均衡學習","input_type":"boolean","options":[{"label":"未達標","value":false,"score":0},{"label":"達標","value":true,"score":6}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":6,"calculation":"score=first_five_semester_average>=official_passing_threshold?6:0","conditions":["前五學期領域平均成績達及格標準"],"dependencies":["official_transcript"],"mutually_exclusive":[],"adopted_period":"112學年度七上至114學年度九上，共前五學期","evidence_required":false,"evidence_description":"由國中成績系統認定。","helper_text":"以前五學期健康與體育領域平均成績判定；達正式及格標準計6分，未達不計分。","official_rule":"健康與體育前五學期平均及格者6分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否達標。"},"source_ids":["TTK-115-002"]
+    },
+    {
+      "field_id":"balanced_arts_passed","label":"藝術領域達標","category":"多元學習表現","subcategory":"均衡學習","input_type":"boolean","options":[{"label":"未達標","value":false,"score":0},{"label":"達標","value":true,"score":6}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":6,"calculation":"score=first_five_semester_average>=official_passing_threshold?6:0","conditions":["前五學期領域平均成績達及格標準"],"dependencies":["official_transcript"],"mutually_exclusive":[],"adopted_period":"112學年度七上至114學年度九上，共前五學期","evidence_required":false,"evidence_description":"由國中成績系統認定。","helper_text":"以前五學期藝術領域平均成績判定；達正式及格標準計6分，未達不計分。","official_rule":"藝術前五學期平均及格者6分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否達標。"},"source_ids":["TTK-115-002"]
+    },
+    {
+      "field_id":"balanced_integrated_passed","label":"綜合活動領域達標","category":"多元學習表現","subcategory":"均衡學習","input_type":"boolean","options":[{"label":"未達標","value":false,"score":0},{"label":"達標","value":true,"score":6}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":6,"calculation":"score=first_five_semester_average>=official_passing_threshold?6:0","conditions":["前五學期領域平均成績達及格標準"],"dependencies":["official_transcript"],"mutually_exclusive":[],"adopted_period":"112學年度七上至114學年度九上，共前五學期","evidence_required":false,"evidence_description":"由國中成績系統認定。","helper_text":"以前五學期綜合活動領域平均成績判定；達正式及格標準計6分，未達不計分。","official_rule":"綜合活動前五學期平均及格者6分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否達標。"},"source_ids":["TTK-115-002"]
+    },
+    {
+      "field_id":"balanced_technology_passed","label":"科技領域達標","category":"多元學習表現","subcategory":"均衡學習","input_type":"boolean","options":[{"label":"未達標","value":false,"score":0},{"label":"達標","value":true,"score":6}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":6,"calculation":"score=first_five_semester_average>=official_passing_threshold?6:0","conditions":["前五學期領域平均成績達及格標準"],"dependencies":["official_transcript"],"mutually_exclusive":[],"adopted_period":"112學年度七上至114學年度九上，共前五學期","evidence_required":false,"evidence_description":"由國中成績系統認定。","helper_text":"以前五學期科技領域平均成績判定；達正式及格標準計6分，未達不計分。","official_rule":"科技前五學期平均及格者6分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否達標。"},"source_ids":["TTK-115-002"]
+    },
+    {
+      "field_id":"service_hours_112_s1","label":"七上服務學習時數","category":"多元學習表現","subcategory":"服務學習","input_type":"hours","options":[],"unit":"小時","min":0,"max":null,"score_per_unit":null,"score_cap":4,"calculation":"score=hours>=6?4:0","conditions":["須由國中認證","單一學期滿6小時"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"112學年度上學期（2023-08-01至2024-01-31）","evidence_required":false,"evidence_description":"由國中認證紀錄認定。","helper_text":"本學期經學校認證滿6小時計4分；未滿6小時不計。不同學期的不足時數不得合併判定。","official_rule":"每學期服務滿6小時以上計4分。","validation":{"required":true,"type":"decimal","min":0,"error_message":"請輸入0以上的時數。"},"source_ids":["TTK-115-002","TTK-115-003"]
+    },
+    {
+      "field_id":"service_hours_112_s2","label":"七下服務學習時數","category":"多元學習表現","subcategory":"服務學習","input_type":"hours","options":[],"unit":"小時","min":0,"max":null,"score_per_unit":null,"score_cap":4,"calculation":"score=hours>=6?4:0","conditions":["須由國中認證","單一學期滿6小時"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"112學年度下學期（2024-02-01至2024-07-31）","evidence_required":false,"evidence_description":"由國中認證紀錄認定。","helper_text":"本學期經學校認證滿6小時計4分；未滿6小時不計。不同學期的不足時數不得合併判定。","official_rule":"每學期服務滿6小時以上計4分。","validation":{"required":true,"type":"decimal","min":0,"error_message":"請輸入0以上的時數。"},"source_ids":["TTK-115-002","TTK-115-003"]
+    },
+    {
+      "field_id":"service_hours_113_s1","label":"八上服務學習時數","category":"多元學習表現","subcategory":"服務學習","input_type":"hours","options":[],"unit":"小時","min":0,"max":null,"score_per_unit":null,"score_cap":4,"calculation":"score=hours>=6?4:0","conditions":["須由國中認證","單一學期滿6小時"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"113學年度上學期（2024-08-01至2025-01-31）","evidence_required":false,"evidence_description":"由國中認證紀錄認定。","helper_text":"本學期經學校認證滿6小時計4分；未滿6小時不計。不同學期的不足時數不得合併判定。","official_rule":"每學期服務滿6小時以上計4分。","validation":{"required":true,"type":"decimal","min":0,"error_message":"請輸入0以上的時數。"},"source_ids":["TTK-115-002","TTK-115-003"]
+    },
+    {
+      "field_id":"service_hours_113_s2","label":"八下服務學習時數","category":"多元學習表現","subcategory":"服務學習","input_type":"hours","options":[],"unit":"小時","min":0,"max":null,"score_per_unit":null,"score_cap":4,"calculation":"score=hours>=6?4:0","conditions":["須由國中認證","單一學期滿6小時"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"113學年度下學期（2025-02-01至2025-07-31）","evidence_required":false,"evidence_description":"由國中認證紀錄認定。","helper_text":"本學期經學校認證滿6小時計4分；未滿6小時不計。不同學期的不足時數不得合併判定。","official_rule":"每學期服務滿6小時以上計4分。","validation":{"required":true,"type":"decimal","min":0,"error_message":"請輸入0以上的時數。"},"source_ids":["TTK-115-002","TTK-115-003"]
+    },
+    {
+      "field_id":"service_hours_114_s1","label":"九上服務學習時數","category":"多元學習表現","subcategory":"服務學習","input_type":"hours","options":[],"unit":"小時","min":0,"max":null,"score_per_unit":null,"score_cap":4,"calculation":"score=hours>=6?4:0","conditions":["須由國中認證","單一學期滿6小時"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"114學年度上學期（2025-08-01至2026-01-31）","evidence_required":false,"evidence_description":"由國中認證紀錄認定。","helper_text":"本學期經學校認證滿6小時計4分；未滿6小時不計。五學期最多採計任三個達標學期，共12分。","official_rule":"每學期服務滿6小時以上計4分；服務學習上限12分。","validation":{"required":true,"type":"decimal","min":0,"error_message":"請輸入0以上的時數。"},"source_ids":["TTK-115-002","TTK-115-003"]
+    },
+    {
+      "field_id":"chinese_exam_level","label":"國文會考完整標示","category":"國中教育會考","subcategory":"五科","input_type":"grade","options":[{"label":"A++","value":"A++","score":7},{"label":"A+","value":"A+","score":6},{"label":"A","value":"A","score":5},{"label":"B++","value":"B++","score":4},{"label":"B+","value":"B+","score":3},{"label":"B","value":"B","score":2},{"label":"C","value":"C","score":1}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":7,"calculation":"score=lookup(level)","conditions":[],"dependencies":[],"mutually_exclusive":[],"adopted_period":"115年國中教育會考","evidence_required":false,"evidence_description":"會考成績單。","helper_text":"請依成績單選完整標示；基北區A++到C依序換算7、6、5、4、3、2、1分。","official_rule":"五科各依完整等級標示換算1至7分。","validation":{"required":true,"type":"string","enum":["A++","A+","A","B++","B+","B","C"],"error_message":"請選擇有效標示。"},"source_ids":["TTK-115-002"]
+    },
+    {
+      "field_id":"english_exam_level","label":"英語會考完整標示","category":"國中教育會考","subcategory":"五科","input_type":"grade","options":[{"label":"A++","value":"A++","score":7},{"label":"A+","value":"A+","score":6},{"label":"A","value":"A","score":5},{"label":"B++","value":"B++","score":4},{"label":"B+","value":"B+","score":3},{"label":"B","value":"B","score":2},{"label":"C","value":"C","score":1}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":7,"calculation":"score=lookup(level)","conditions":[],"dependencies":[],"mutually_exclusive":[],"adopted_period":"115年國中教育會考","evidence_required":false,"evidence_description":"會考成績單。","helper_text":"請依成績單選完整標示；完整標示直接影響總積分，也會在同分時依志願群科指定科序再比。","official_rule":"五科各依完整等級標示換算1至7分。","validation":{"required":true,"type":"string","enum":["A++","A+","A","B++","B+","B","C"],"error_message":"請選擇有效標示。"},"source_ids":["TTK-115-002"]
+    },
+    {
+      "field_id":"math_exam_level","label":"數學會考完整標示","category":"國中教育會考","subcategory":"五科","input_type":"grade","options":[{"label":"A++","value":"A++","score":7},{"label":"A+","value":"A+","score":6},{"label":"A","value":"A","score":5},{"label":"B++","value":"B++","score":4},{"label":"B+","value":"B+","score":3},{"label":"B","value":"B","score":2},{"label":"C","value":"C","score":1}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":7,"calculation":"score=lookup(level)","conditions":[],"dependencies":[],"mutually_exclusive":[],"adopted_period":"115年國中教育會考","evidence_required":false,"evidence_description":"會考成績單。","helper_text":"請依成績單選完整標示；完整標示直接影響總積分，也會在同分時依志願群科指定科序再比。","official_rule":"五科各依完整等級標示換算1至7分。","validation":{"required":true,"type":"string","enum":["A++","A+","A","B++","B+","B","C"],"error_message":"請選擇有效標示。"},"source_ids":["TTK-115-002"]
+    },
+    {
+      "field_id":"social_exam_level","label":"社會會考完整標示","category":"國中教育會考","subcategory":"五科","input_type":"grade","options":[{"label":"A++","value":"A++","score":7},{"label":"A+","value":"A+","score":6},{"label":"A","value":"A","score":5},{"label":"B++","value":"B++","score":4},{"label":"B+","value":"B+","score":3},{"label":"B","value":"B","score":2},{"label":"C","value":"C","score":1}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":7,"calculation":"score=lookup(level)","conditions":[],"dependencies":[],"mutually_exclusive":[],"adopted_period":"115年國中教育會考","evidence_required":false,"evidence_description":"會考成績單。","helper_text":"請依成績單選完整標示；完整標示直接影響總積分，也會在同分時依志願群科指定科序再比。","official_rule":"五科各依完整等級標示換算1至7分。","validation":{"required":true,"type":"string","enum":["A++","A+","A","B++","B+","B","C"],"error_message":"請選擇有效標示。"},"source_ids":["TTK-115-002"]
+    },
+    {
+      "field_id":"science_exam_level","label":"自然會考完整標示","category":"國中教育會考","subcategory":"五科","input_type":"grade","options":[{"label":"A++","value":"A++","score":7},{"label":"A+","value":"A+","score":6},{"label":"A","value":"A","score":5},{"label":"B++","value":"B++","score":4},{"label":"B+","value":"B+","score":3},{"label":"B","value":"B","score":2},{"label":"C","value":"C","score":1}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":7,"calculation":"score=lookup(level)","conditions":[],"dependencies":[],"mutually_exclusive":[],"adopted_period":"115年國中教育會考","evidence_required":false,"evidence_description":"會考成績單。","helper_text":"請依成績單選完整標示；完整標示直接影響總積分，也會在同分時依志願群科指定科序再比。","official_rule":"五科各依完整等級標示換算1至7分。","validation":{"required":true,"type":"string","enum":["A++","A+","A","B++","B+","B","C"],"error_message":"請選擇有效標示。"},"source_ids":["TTK-115-002"]
+    },
+    {
+      "field_id":"writing_grade","label":"寫作測驗級分","category":"國中教育會考","subcategory":"寫作測驗","input_type":"select","options":[{"label":"1級分","value":1,"score":0.1},{"label":"2級分","value":2,"score":0.2},{"label":"3級分","value":3,"score":0.4},{"label":"4級分","value":4,"score":0.6},{"label":"5級分","value":5,"score":0.8},{"label":"6級分","value":6,"score":1}],"unit":"級分","min":1,"max":6,"score_per_unit":null,"score_cap":1,"calculation":"score={1:0.1,2:0.2,3:0.4,4:0.6,5:0.8,6:1}[grade]","conditions":[],"dependencies":[],"mutually_exclusive":[],"adopted_period":"115年國中教育會考","evidence_required":false,"evidence_description":"會考成績單。","helper_text":"寫作測驗會納入基北區108分總積分；1至6級分依序換算0.1、0.2、0.4、0.6、0.8、1分。","official_rule":"寫作1至6級分換算0.1至1分。","validation":{"required":true,"type":"integer","min":1,"max":6,"error_message":"請選擇1～6級分。"},"source_ids":["TTK-115-002"]
+    }
+  ],
+  "exam_scoring": {
+    "subjects":["chinese","english","math","social","science"],
+    "subject_scale":{"A++":7,"A+":6,"A":5,"B++":4,"B+":3,"B":2,"C":1},
+    "five_subject_cap":35,
+    "writing_scale":{"1":0.1,"2":0.2,"3":0.4,"4":0.6,"5":0.8,"6":1},
+    "writing_in_total_score":true,
+    "total_cap":36
+  },
+  "preference_scoring":{"enabled":true,"max_choices":30,"grouping_method":"同校兩個以上科別連續選填視為同一志願","ranges":[{"from":1,"to":5,"score":36},{"from":6,"to":10,"score":35},{"from":11,"to":15,"score":34},{"from":16,"to":20,"score":33},{"from":21,"to":30,"score":32}],"minimum_score":32},
+  "calculation_engine": {
+    "balanced_learning_score":"6*count(true among four balanced fields)",
+    "service_learning_score":"min(4*count(service_semester_hours>=6),12)",
+    "exam_score":"sum(five subject lookup scores)+writing lookup score",
+    "total_score":"preference_score+balanced_learning_score+service_learning_score+exam_score",
+    "rounding":"none; decimal exact",
+    "missing_data":"必填欄位缺漏時回傳 total_score=null, status=incomplete"
+  },
+  "tie_breaking_rules": [
+    {"priority":1,"field":"total_score","comparison":"numeric_desc","higher_is_better":true,"description":"總積分高者優先","source_ids":["TTK-115-005"]},
+    {"priority":2,"field":"multiple_learning_score","comparison":"numeric_desc","higher_is_better":true,"description":"多元學習表現積分高者優先","source_ids":["TTK-115-005"]},
+    {"priority":3,"field":"exam_score","comparison":"numeric_desc","higher_is_better":true,"description":"國中教育會考積分高者優先","source_ids":["TTK-115-005"]},
+    {"priority":4,"field":"preference_score","comparison":"numeric_desc","higher_is_better":true,"description":"志願序積分高者優先","source_ids":["TTK-115-005"]},
+    {"priority":5,"field":"program_subject_order","comparison":"lexicographic_subject_marks_desc","higher_is_better":true,"description":"依該志願學校／群科於招生名額表訂定的科目順序，逐科比較會考完整等級標示；不可寫死全區科序","source_ids":["TTK-115-005"]}
+  ],
+  "tie_break_terminal_rule":{"rule":"115官方流程圖在逐科比較後的最終處理文字未由可擷取文字確認","status":"needs_official_confirmation","source_ids":["TTK-115-005"]},
+  "special_identity_rules":[{"identity_types":["原住民","身心障礙學生","蒙藏學生","政府派赴國外工作人員子女","境外優秀科學技術人才子女","僑生","退伍軍人等依法優待者"],"included_in_general_score":false,"requires_special_identity_module":true,"source_ids":["TTK-115-002"]}],
+  "sources": [
+    {"source_id":"TTK-115-001","district":"基北區","academic_year":115,"document_title":"115學年度基北區高級中等學校免試入學簡章（修正版公告）","issuing_authority":"115學年度基北區高級中等學校免試入學委員會","document_type":"招生簡章公告","publication_date":"2026-02-23","page":null,"section":"最新消息／簡章修正版","official_url":"https://ttk.entry.edu.tw/NoExamImitate_TP/NoExamImitate/Apps/Page/Public/News.aspx?SEQNO=9","accessed_date":"2026-08-27","notes":"正式修正版公告。"},
+    {"source_id":"TTK-115-002","district":"基北區","academic_year":115,"document_title":"115學年度免試入學比序項目積分對照表","issuing_authority":"臺北市政府教育局","document_type":"官方積分對照網頁","publication_date":null,"page":null,"section":"111學年度後入學之學生適用","official_url":"https://12basic.tp.edu.tw/conslt/%E8%B6%85%E9%A1%8D%E6%AF%94%E5%BA%8F/","accessed_date":"2026-08-27","notes":"HTML無頁碼；明列115採計期間、各項分數及特殊身分註記。"},
+    {"source_id":"TTK-115-003","district":"基北區","academic_year":115,"document_title":"基北區免試入學服務學習時數認證及轉換採計原則","issuing_authority":"基北區三市教育主管機關","document_type":"採計原則","publication_date":null,"page":null,"section":"學期區間與認證期限","official_url":"https://12basic.tp.edu.tw/conslt/%E6%9C%8D%E5%8B%99%E5%AD%B8%E7%BF%92/","accessed_date":"2026-08-27","notes":"與115官方積分網頁交叉使用。"},
+    {"source_id":"TTK-115-004","district":"基北區","academic_year":115,"document_title":"115學年度各直轄市、縣（市）高級中等學校就學區及共同就學區劃定結果","issuing_authority":"教育部國民及學前教育署","document_type":"就學區劃定結果","publication_date":"2025-06-03","page":null,"section":"基北區、桃連區、宜蘭區","official_url":"https://www.ccvs.kh.edu.tw/p/16-1000-15906.php","accessed_date":"2026-08-27","notes":"共同就學區與114相同；學校級清單仍應匯入官方招生名額表。"},
+    {"source_id":"TTK-115-005","district":"基北區","academic_year":115,"document_title":"基北區免試入學超額比序作業說明圖","issuing_authority":"臺北市政府教育局","document_type":"官方流程圖","publication_date":null,"page":null,"section":"超額比序順次","official_url":"https://12basic.tp.edu.tw/wp-content/uploads/doc/general/pic_004.png","accessed_date":"2026-08-27","notes":"各科順序依招生名額表中志願學校／群科訂定。"}
+  ],
+  "source_excerpts_by_field":[
+    {"field_ids":["preference_choices"],"source_id":"TTK-115-002","quote":"同校、兩個以上科別連續選填，則視為同一志願。"},
+    {"field_ids":["balanced_health_pe_passed","balanced_arts_passed","balanced_integrated_passed","balanced_technology_passed"],"source_id":"TTK-115-002","quote":"每一領域得6分，滿分24分。"},
+    {"field_ids":["service_hours_112_s1","service_hours_112_s2","service_hours_113_s1","service_hours_113_s2","service_hours_114_s1"],"source_id":"TTK-115-002","quote":"每學期服務滿6小時以上：4分。"},
+    {"field_ids":["chinese_exam_level","english_exam_level","math_exam_level","social_exam_level","science_exam_level"],"source_id":"TTK-115-002","quote":"各科按等級加標示轉換積分1–7分。"},
+    {"field_ids":["writing_grade"],"source_id":"TTK-115-002","quote":"寫作測驗1-6級分轉換積分0.1–1分。"}
+  ],
+  "changes_from_previous_year":[{"item":"共同就學區範圍","change_type":"no_change_confirmed","description":"教育部115劃定結果標示與114相同。","source_ids":["TTK-115-004"]},{"item":"其他計分及同分規則","change_type":"unknown","description":"未找到115官方逐項差異表，不宣稱未變。","source_ids":[]}],
+  "verification":{"score_total_verified":true,"field_coverage_verified":true,"tie_break_verified":false,"academic_year_verified":true,"unresolved_items":["逐科比較後仍同分的官方最終處理文字待由115修正版簡章頁面人工複核","共同就學區學校級對照需由115招生名額表匯入reference table"]},
+  "verification_status":"verified_with_explicit_unresolved_items"
+}
