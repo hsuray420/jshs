@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { IndependentSupportPage, type SupportPage } from "@/components/independent-support-page";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { NotificationFeatureWorkspace } from "@/components/notification-feature-workspace";
+import { getMemberSession } from "../../../lib/member-auth";
 
 const pages: Record<string, SupportPage> = {
   push: { eyebrow: "通知與提醒", title: "分數到手機推播", description: "管理重要成績與規劃狀態提醒。", sections: [{ title: "開通方式", body: "登入會員後，在通知中心逐項開通想接收的提醒；預設全部關閉。" }, { title: "提醒範圍", body: "通知只會在對應事件完成且你已主動開通時送出。" }], action: { label: "管理通知設定", href: "/notifications" } },
@@ -12,4 +14,4 @@ const pages: Record<string, SupportPage> = {
 export const dynamicParams = false;
 export function generateStaticParams() { return Object.keys(pages).map((feature) => ({ feature })); }
 export async function generateMetadata({ params }: { params: Promise<{ feature: string }> }): Promise<Metadata> { const { feature } = await params; const page = pages[feature]; return page ? { title: `${page.title}｜通知與提醒`, description: page.description, alternates: { canonical: `/notifications/${feature}` }, robots: { index: false, follow: false } } : {}; }
-export default async function NotificationFeaturePage({ params }: { params: Promise<{ feature: string }> }) { const { feature } = await params; const page = pages[feature]; if (!page) return null; return <><SiteHeader activeHref="/notifications" /><IndependentSupportPage page={page} /><SiteFooter /></>; }
+export default async function NotificationFeaturePage({ params }: { params: Promise<{ feature: string }> }) { const { feature } = await params; const page = pages[feature]; if (!page) return null; const member = await getMemberSession(); return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/notifications" /><IndependentSupportPage page={page} /><NotificationFeatureWorkspace feature={feature as "push" | "line" | "email" | "calendar"} isMember={Boolean(member)} /><SiteFooter /></main>; }

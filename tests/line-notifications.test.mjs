@@ -75,6 +75,15 @@ test("members can explicitly opt in or out of each LINE notification category", 
   assert.match(notificationUi, /LINE 登入/);
 });
 
+test("notification child routes render feature-specific working controls", async () => {
+  const page = await source("app/notifications/[feature]/page.tsx");
+  const workspace = await source("components/notification-feature-workspace.tsx");
+  assert.match(page, /NotificationFeatureWorkspace/);
+  assert.match(workspace, /weekly_report_enabled/);
+  assert.match(workspace, /schedule\/open-days/);
+  assert.match(workspace, /officialLineUrl/);
+});
+
 test("important-date notifications are scheduled and exposed to the schedule page", async () => {
   const worker = await source("worker/index.ts");
   const wrangler = await source("wrangler.jsonc");
