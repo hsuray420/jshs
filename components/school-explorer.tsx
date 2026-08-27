@@ -5,6 +5,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { SchoolDirectoryRecord } from "@/lib/school-directory";
 import { readStoredDistrict } from "@/lib/district-context";
 import { markProgress } from "@/lib/progress";
+import { EmptyState, ErrorState, LoadingState } from "@/components/ui/status";
+import { PageContainer } from "@/components/ui/layout";
 
 type SchoolExplorerRecord = Pick<SchoolDirectoryRecord, "districtCode" | "districtLabel" | "academicYear" | "dataStatus" | "sourceName" | "code" | "name" | "ownership" | "program" | "city" | "area" | "website" | "departmentsRaw" | "groups" | "hasQuota" | "hasHistoricalData">;
 
@@ -132,14 +134,14 @@ export function SchoolExplorer({
   return (
     <>
       <section className="border-b jshs-hero-section">
-        <div className="mx-auto w-[min(1180px,calc(100%-32px))] py-12 md:py-16">
+        <PageContainer className="py-12 md:py-16">
           <p className="jshs-eyebrow">找校科中心</p>
           <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-6xl">把校科，放進同一個全國查詢。</h1>
           <p className="mt-5 max-w-3xl text-lg leading-8 jshs-muted-copy">用同一套全國校科查詢篩選學校名稱、科系、群科、縣市、學制分類與招生條件。</p>
-        </div>
+        </PageContainer>
       </section>
 
-      <section className="mx-auto w-[min(1180px,calc(100%-32px))] py-8 md:py-12">
+      <PageContainer as="section" className="py-8 md:py-12">
         <div className="grid gap-5 p-5 jshs-surface-card md:p-7">
           <label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">
             搜尋學校名稱、科系、群科、縣市、學校代碼
@@ -173,8 +175,9 @@ export function SchoolExplorer({
         </div>
         {saveMessage ? <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-900" role="status">{saveMessage} <a className="ml-1 underline" href="/api/line/login/start">使用 LINE 登入</a></p> : null}
 
-        {!loaded ? <div className="mt-6 p-8 text-center jshs-surface-card">正在載入學校資料…</div> : null}
-        {loadError ? <div className="mt-6 p-8 text-center jshs-surface-card"><h2 className="text-xl">學校資料暫時無法載入</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">請重新整理頁面；如果問題持續，請稍後再試。</p></div> : null}
+        {!loaded ? <div className="mt-6"><LoadingState label="正在載入學校資料…" /></div> : null}
+        {loadError ? <div className="mt-6"><ErrorState /></div> : null}
+        {loaded && !loadError && !filteredSchools.length ? <div className="mt-6"><EmptyState title="找不到符合條件的學校" description="試著清除一個條件，或換一個學校、科系與縣市關鍵字。" action={<button type="button" onClick={clearFilters} className="px-4 py-3 text-sm jshs-button-secondary">清除條件</button>} /></div> : null}
         {loaded && !loadError ? <div className="mt-6 grid gap-4 lg:grid-cols-2">
           {filteredSchools.slice(0, 120).map((school) => {
             const key = `${school.districtCode}:${school.code}`;
@@ -190,7 +193,7 @@ export function SchoolExplorer({
           })}
         </div> : null}
         {loaded && !loadError && filteredSchools.length > 120 ? <p className="mt-6 text-center text-sm font-bold text-slate-500">目前先顯示前 120 筆；請用條件繼續縮小範圍。</p> : null}
-      </section>
+      </PageContainer>
     </>
   );
 }

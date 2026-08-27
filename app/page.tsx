@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteIcon, type SiteIconName } from "@/components/site-icons";
 import { formatNewsDate, getFeaturedNews, type NewsArticle } from "@/lib/news";
 import districtMetadata from "../public/it_hs/district-metadata.json";
+import { PageContainer } from "@/components/ui/layout";
 
 const homeTitle = "全國國中升學資訊網｜陪你找到升學方向";
 const homeDescription = "不論是第一次探索升學，或已經知道下一步，這裡用可信資料陪你找到方向、完成試算並整理志願。";
@@ -33,7 +34,7 @@ export default function HomePage() {
       <SiteHeader />
 
       <section className="border-b jshs-hero-section">
-        <div className="mx-auto w-[min(1160px,calc(100%-32px))] pb-10 pt-12 md:pb-16 md:pt-20">
+        <PageContainer size="wide" className="pb-10 pt-12 md:pb-16 md:pt-20">
           <div>
             <p className="jshs-eyebrow">給正在陪孩子找方向的你</p>
             <h1 className="mt-3 max-w-4xl text-4xl leading-tight md:text-6xl">先別急，來到這裡，就能找到下一步。</h1>
@@ -44,21 +45,21 @@ export default function HomePage() {
               <TaskCard icon="sparkle" tone="blue" title="我想先找到適合的方向" body="從學制分類、群科與未來路徑探索，慢慢縮小選擇。" href="/knowledge/fit-quiz" action="探索我的方向" />
             </div>
           </div>
-        </div>
+        </PageContainer>
       </section>
 
-      <section aria-labelledby="news-preview-title" className="mx-auto w-[min(1160px,calc(100%-32px))] py-8">
+      <PageContainer as="section" aria-labelledby="news-preview-title" className="py-8">
         <SectionHeading eyebrow="最新升學情報" id="news-preview-title" title="先讀懂規則，再查資料。" body="每篇標示更新日期、官方來源與下一步工具。" />
         <div className="mt-6 grid gap-3 lg:grid-cols-3">{latestNews.slice(0, 3).map((article) => <NewsPreview key={article.slug} article={article} />)}</div>
         <Link className="mt-5 inline-block text-sm font-black text-[var(--jshs-primary)]" href="/news">前往全部升學情報 →</Link>
-      </section>
+      </PageContainer>
 
       <section aria-labelledby="timeline-title" className="border-y border-[var(--jshs-border)] py-8 jshs-section-subtle">
-        <div className="mx-auto w-[min(1160px,calc(100%-32px))]">
+        <PageContainer>
           <SectionHeading eyebrow="重要時程" id="timeline-title" title="只看已標示狀態的日期。" body="各區正式日期仍以招生單位最新公告為準。" />
           <div className="mt-6 grid gap-3 md:grid-cols-2">{keyTimeline.map((item) => <article key={item.title} className="p-5 jshs-surface-card"><span className="text-sm font-extrabold text-[var(--jshs-primary)]">{item.date}</span><h3 className="mt-2 text-lg font-black">{item.title}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{item.detail}</p><span className="mt-4 jshs-chip">{item.status}</span></article>)}</div>
           <Link className="mt-5 inline-block text-sm font-black text-[var(--jshs-primary)]" href="/news/exam">查看完整會考準備 →</Link>
-        </div>
+        </PageContainer>
       </section>
 
       <SiteFooter />

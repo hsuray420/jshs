@@ -36,7 +36,8 @@ export default async function RootLayout({
         />
       </head>
       <body>
-        {children}
+        <a className="jshs-skip-link" href="#main-content">跳到主要內容</a>
+        <div id="main-content">{children}</div>
         <AiAssistant />
       </body>
     </html>

@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { menuGroups } from "@/lib/site-map";
+import { PageContainer } from "@/components/ui/layout";
 
 export function SiteFooter() {
   return (
     <footer className="border-t border-[var(--border-light)] bg-white py-10 jshs-section">
-      <div className="mx-auto w-[min(1180px,calc(100%-32px))]">
+      <PageContainer>
         <div className="grid gap-8 lg:grid-cols-[1.1fr_2fr]">
           <div>
             <div className="flex items-center gap-3"><span className="jshs-icon-tile" aria-hidden="true">↗</span><b className="text-[var(--text-primary)]">全國國中升學資訊網</b></div>
@@ -25,7 +26,7 @@ export function SiteFooter() {
           <span>招生資訊請以各主管機關最新公告為準。</span>
           <span>網站功能依資料校核狀態逐步開放。</span>
         </div>
-      </div>
+      </PageContainer>
     </footer>
   );
 }

@@ -44,6 +44,23 @@
   --font-size-h3: 18px;
   --font-size-nav: 18px;
 
+  /* Shared responsive layout contract. Keep these values in one place so
+     route components do not invent their own container and spacing rules. */
+  --content-max: 1180px;
+  --content-wide-max: 1240px;
+  --content-narrow-max: 760px;
+  --page-gutter: 16px;
+  --tap-target: 44px;
+  --header-height: 64px;
+  --mobile-nav-height: 68px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --z-header: 40;
+  --z-mobile-nav: 50;
+  --z-drawer: 80;
+  --z-ai: 94;
+  --focus-ring: 0 0 0 3px rgb(0 122 255 / 20%);
+
   --jshs-background: var(--bg-page);
   --jshs-foreground: var(--text-primary);
   --jshs-page: var(--bg-page);
