@@ -6,12 +6,12 @@ export type AdmissionScheduleItem = {
   title: string;
   description: string;
   status: AdmissionScheduleStatus;
-  sourcePages: "I" | "II";
+  sourcePages: "I" | "II" | "i" | "ii" | "iii";
 };
 
 const confirmed = (item: Omit<AdmissionScheduleItem, "status">): AdmissionScheduleItem => ({ ...item, status: "confirmed" });
 
-export const districtAdmissionSchedules: Record<"ct" | "changhua", AdmissionScheduleItem[]> = {
+export const districtAdmissionSchedules: Record<string, AdmissionScheduleItem[]> = {
   changhua: [
     confirmed({ id: "ch-115-order-survey", eventDate: "2025-12-22", title: "簡章及報名表訂購調查（集體）", description: "114 年 12 月 22 日至 115 年 1 月 2 日；由承辦學校國立秀水高級工業職業學校辦理。", sourcePages: "I" }),
     confirmed({ id: "ch-115-individual-purchase", eventDate: "2026-03-25", title: "簡章及報名表購買（個別）", description: "115 年 3 月 25 日至 115 年 6 月 26 日；可至承辦學校購買或由彰化區委員會網站下載。", sourcePages: "I" }),
@@ -52,8 +52,33 @@ export const districtAdmissionSchedules: Record<"ct" | "changhua", AdmissionSche
     confirmed({ id: "ct-115-withdrawal", eventDate: "2026-07-13", title: "已報到學生聲明放棄錄取資格", description: "115 年 7 月 13 日下午 2 時前；向各錄取學校辦理。", sourcePages: "II" }),
     confirmed({ id: "ct-115-complaint", eventDate: "2026-07-13", title: "申訴期限", description: "115 年 7 月 13 日下午 4 時前；向國立中興大學附屬臺中高級農業職業學校免試入學委員會提出。", sourcePages: "II" }),
   ],
+  tp: [
+    confirmed({ id: "tp-115-change", eventDate: "2026-04-23", title: "變更就學區申請", description: "115年4月23日9時至4月30日16時；來源簡章頁 i。", sourcePages: "i" }),
+    confirmed({ id: "tp-115-multi-review", eventDate: "2026-06-02", title: "多元學習表現積分複查", description: "115年6月2日13時至16時；來源簡章頁 ii。", sourcePages: "ii" }),
+    confirmed({ id: "tp-115-preference", eventDate: "2026-06-09", title: "模擬志願選填", description: "115年6月9日8時至6月16日12時；來源簡章頁 ii。", sourcePages: "ii" }),
+    confirmed({ id: "tp-115-quota", eventDate: "2026-06-18", title: "公告實際招生名額及個人序位", description: "115年6月18日12時後公告，個人序位查詢至6月25日12時；來源簡章頁 ii、iii。", sourcePages: "iii" }),
+    confirmed({ id: "tp-115-registration", eventDate: "2026-06-27", title: "個別報名", description: "115年6月27日9時至16時、6月28日9時至12時；集體報名為6月29日至30日；來源簡章頁 iii。", sourcePages: "iii" }),
+    confirmed({ id: "tp-115-placement", eventDate: "2026-07-07", title: "分發結果公告", description: "115年7月7日11時；來源簡章頁 iii。", sourcePages: "iii" }),
+    confirmed({ id: "tp-115-report", eventDate: "2026-07-09", title: "報到", description: "115年7月9日9時至11時；來源簡章頁 iii。", sourcePages: "iii" }),
+  ],
+  "taoyuan-lienchiang": [
+    confirmed({ id: "tyc-115-change", eventDate: "2026-04-23", title: "變更就學區申請", description: "115年4月23日至4月30日；來源簡章頁 I。", sourcePages: "I" }),
+    confirmed({ id: "tyc-115-score-upload", eventDate: "2026-05-25", title: "國中端上傳多元學習表現積分", description: "115年5月25日16時30分前；來源簡章頁 I。", sourcePages: "I" }),
+    confirmed({ id: "tyc-115-choice", eventDate: "2026-06-18", title: "網路選填志願及個人序位查詢", description: "115年6月18日12時後至6月25日12時；來源簡章頁 I。", sourcePages: "I" }),
+    confirmed({ id: "tyc-115-registration", eventDate: "2026-06-29", title: "報名", description: "115年6月29日至30日，8時30分至12時、13時30分至16時30分；來源簡章頁 II。", sourcePages: "II" }),
+    confirmed({ id: "tyc-115-placement", eventDate: "2026-07-07", title: "分發結果公告", description: "115年7月7日11時；來源簡章頁 II。", sourcePages: "II" }),
+    confirmed({ id: "tyc-115-report", eventDate: "2026-07-09", title: "報到", description: "115年7月9日9時至11時；來源簡章頁 II。", sourcePages: "II" }),
+  ],
+  kaohsiung: [
+    confirmed({ id: "kh-115-change", eventDate: "2026-04-23", title: "變更就學區申請", description: "115年4月23日至4月30日；來源簡章頁 I。", sourcePages: "I" }),
+    confirmed({ id: "kh-115-score-review", eventDate: "2026-06-05", title: "比序積分查詢", description: "115年6月5日12時後；複查為6月8日至9日中午12時；來源簡章頁 I。", sourcePages: "I" }),
+    confirmed({ id: "kh-115-quota", eventDate: "2026-06-18", title: "公告實際招生名額及個人序位", description: "115年6月18日17時後至6月24日12時；來源簡章頁 I。", sourcePages: "I" }),
+    confirmed({ id: "kh-115-registration", eventDate: "2026-06-28", title: "個別報名", description: "115年6月28日至30日，8時30分至12時、13時30分至16時；集體報名為6月29日至30日；來源簡章頁 II。", sourcePages: "II" }),
+    confirmed({ id: "kh-115-placement", eventDate: "2026-07-07", title: "分發結果公告", description: "115年7月7日11時；來源簡章頁 II。", sourcePages: "II" }),
+    confirmed({ id: "kh-115-report", eventDate: "2026-07-09", title: "報到", description: "115年7月9日9時至11時；來源簡章頁 II。", sourcePages: "II" }),
+  ],
 };
 
 export function getDistrictAdmissionSchedule(district: string) {
-  return district === "ct" || district === "changhua" ? districtAdmissionSchedules[district] : [];
+  return districtAdmissionSchedules[district] ?? [];
 }

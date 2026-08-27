@@ -65,7 +65,7 @@ function researchRule(data: ResearchRule, code: AdmissionDistrict): AdmissionRul
   return {
     code, label: data.district_name, academicYear: String(data.academic_year), totalScore: data.total_score_max,
     sourceNote: "依本區官方規則資料整理；正式送出前仍須核對當年度官方簡章。",
-    categories: data.categories.map((item) => ({ key: item.category_id, label: item.label, max: item.score_cap, description: `${item.label}依本區官方規則換算，最高採計${item.score_cap}分。` })),
+    categories: data.categories.map((item) => ({ key: ({ exam: "examPerformanceScore", multiple_learning: "multipleLearningScore", multiple_development: "multipleLearningScore", adaptive_guidance: "adaptationScore" } as Record<string, string>)[item.category_id] ?? item.category_id, label: item.label, max: item.score_cap, description: `${item.label}依本區官方規則換算，最高採計${item.score_cap}分。` })),
     tieBreakers: data.tie_breaking_rules.map((item) => item.field), sourceId: `${code}-115-research-json`, fields: data.fields,
     verificationStatus: data.verification_status,
   };
@@ -281,13 +281,17 @@ function calculateResearchScore(input: AdmissionScoreInput, rule: AdmissionRule)
     if (!field.validation?.required || values[field.field_id] === undefined) return Boolean(field.validation?.required);
     const minItems = (field.validation as { min_items?: number }).min_items;
     const listValue = values[field.field_id];
+    if (field.field_id === "exam_full_marks") {
+      const marks = listValue as Record<string, unknown>;
+      return !marks || typeof marks !== "object" || ["chinese", "math", "english", "social", "science"].some((key) => !marks[key]);
+    }
     return minItems !== undefined && (!Array.isArray(listValue) || (listValue as unknown[]).length < minItems);
   }).map((field) => field.field_id);
   if (rule.code === "changhua") missingFields.push(...validateChanghuaStructuredFields(values));
   const gradeKeys = rule.code === "tp" || rule.code === "taoyuan-lienchiang" || rule.code === "kaohsiung"
     ? ["chinese_exam_level", "math_exam_level", "english_exam_level", "social_exam_level", "science_exam_level"]
     : ["chinese_exam_grade", "math_exam_grade", "english_exam_grade", "social_exam_grade", "science_exam_grade"];
-  const grades = gradeKeys.map((key) => values[key]) as Array<ExamGrade | undefined>;
+  const grades = gradeKeys.map((key) => normalizeResearchExamGrade(values[key])) as Array<ExamGrade | undefined>;
   if (missingFields.length) {
     const examPerformanceScore = grades.reduce((sum, grade) => sum + (grade ? (rule.code === "changhua" ? CHANGHUA_EXAM_SCORE_MAP[grade] : examScoreForResearch(rule.code, grade)) : 0), 0);
     const assigned = assignPreferenceSequences((values.preference_choices as Array<{ schoolId: string; departmentId?: string }> | undefined) ?? input.choiceList ?? [], rule.code);
@@ -297,19 +301,26 @@ function calculateResearchScore(input: AdmissionScoreInput, rule: AdmissionRule)
   const assigned = assignPreferenceSequences(choices, rule.code);
   const rank = assigned[0]?.preferenceSequence ?? 1;
   const preferenceScore = rule.code === "changhua" ? (rank <= 20 ? 45 : 44) : calculatePreferenceScore(rank, "ct");
-  const examGrades = gradeKeys.map((key) => values[key] as ExamGrade);
+  const examGrades = gradeKeys.map((key) => normalizeResearchExamGrade(values[key]) as ExamGrade);
   const examScores = examGrades.map((grade) => rule.code === "changhua" ? CHANGHUA_EXAM_SCORE_MAP[grade] ?? 0 : examScoreForResearch(rule.code, grade));
   const writing = Number(values.writing_grade ?? 0);
   const violation = Number(values.exam_violation_points ?? 0);
   const examPerformanceScore = rule.code === "changhua" && values.exam_disposition === "exam_component_zero" ? 0 : Math.max(0, examScores.reduce((a, b) => a + b, 0) + examWritingScore(rule.code, writing) - violation * (rule.code === "changhua" || rule.code === "kaohsiung" ? 0.3 : 0));
   const examTotalPoints = examGrades.reduce((sum, grade) => sum + (EXAM_POINT_MAP[grade] ?? 0), 0) + writing;
-  const otherItems = rule.code === "ct" ? calculateResearchCt(values, preferenceScore) : rule.code === "changhua" ? calculateResearchChc(values, preferenceScore) : rule.code === "tp" ? calculateResearchTtk(values, preferenceScore) : rule.code === "taoyuan-lienchiang" ? calculateResearchTyc(values, preferenceScore) : calculateResearchKh(values, preferenceScore);
+  const calculatedItems = rule.code === "ct" ? calculateResearchCt(values, preferenceScore) : rule.code === "changhua" ? calculateResearchChc(values, preferenceScore) : rule.code === "tp" ? calculateResearchTtk(values, preferenceScore) : rule.code === "taoyuan-lienchiang" ? calculateResearchTyc(values, preferenceScore) : calculateResearchKh(values, preferenceScore);
+  const calculated = calculatedItems as Record<string, number>;
+  const otherItems = { ...calculated, otherItemsTotal: calculated.otherItemsTotal ?? 0, multipleLearningScore: calculated.multipleLearningScore ?? calculated.multiple_learning ?? 0, adaptationScore: calculated.adaptationScore ?? calculated.adaptive_guidance ?? 0 };
   const totalScore = Math.min(rule.totalScore, otherItems.otherItemsTotal + examPerformanceScore);
   return { district: rule.code, rule, status: "complete" as const, totalScore, missingFields: [], otherItems, exam: { examPerformanceScore, examTotalPoints, writingScore: 0 }, comparisonKeys: { totalScore, examTotalPoints }, perChoiceResults: assigned.map((choice, index) => ({ ...choice, choiceSequence: index + 1, preferenceScore, totalScore: Math.min(rule.totalScore, otherItems.otherItemsTotal - preferenceScore + (rule.code === "changhua" ? (choice.preferenceSequence <= 20 ? 45 : 44) : calculatePreferenceScore(choice.preferenceSequence, "ct")) + examPerformanceScore) })) };
 }
 
 function examScoreForResearch(district: AdmissionDistrict, grade: ExamGrade) {
   return district === "tp" ? GRADE_RANK_MAP[grade] : EXAM_SCORE_MAP[grade];
+}
+
+function normalizeResearchExamGrade(value: unknown): ExamGrade | undefined {
+  if (["A++", "A+", "A", "B++", "B+", "B", "C"].includes(String(value))) return value as ExamGrade;
+  return undefined;
 }
 
 function examWritingScore(district: AdmissionDistrict, writing: number) {
@@ -336,8 +347,9 @@ function calculateResearchTyc(values: Record<string, unknown>, preferenceScore: 
   const fitness = values.fitness_any_item_qualified === true ? 6 : 0;
   const language = ["indigenous_initial_plus", "hakka_initial_plus", "taiwanese_initial_plus"].includes(String(values.local_language_certificate)) ? 2 : 0;
   const adaptive = graduation + preferenceScore + career + nearby;
-  const multiple = Math.min(35, balanced + morality + service + talent + fitness + language);
-  return { adaptive_guidance: adaptive, multiple_learning: multiple, otherItemsTotal: adaptive + multiple };
+  const multipleRaw = balanced + morality + service + talent + fitness + language;
+  const multiple = Math.min(35, multipleRaw);
+  return { adaptive_guidance: adaptive, multiple_learning_raw: multipleRaw, multiple_learning: multiple, otherItemsTotal: adaptive + multiple };
 }
 
 function calculateResearchKh(values: Record<string, unknown>, preferenceScore: number) {

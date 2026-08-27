@@ -5,7 +5,7 @@ import { getDistrictLabel, readStoredDistrict, subscribeToDistrict, type Distric
 import { getDistrictAdmissionSchedule } from "@/lib/admission-schedules";
 
 export type ScheduleView = "overview" | "countdown" | "timeline" | "now" | "tasks" | "compare" | "open-days" | "export";
-type ImportantDate = { id: string; title: string; description: string; eventDate: string; sendAt?: string; status?: "confirmed"; sourcePages?: "I" | "II" };
+type ImportantDate = { id: string; title: string; description: string; eventDate: string; sendAt?: string; status?: "confirmed"; sourcePages?: "I" | "II" | "i" | "ii" | "iii" };
 type OpenDay = { id: string; school: string; eventDate: string; url: string; notes: string };
 
 const targetDate = new Date("2027-05-15T08:00:00+08:00");
