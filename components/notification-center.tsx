@@ -2,19 +2,21 @@
 
 import { useEffect, useState } from "react";
 
-type PreferenceKey = "planner_finalized_enabled" | "score_calculated_enabled" | "important_date_enabled";
+type PreferenceKey = "planner_finalized_enabled" | "score_calculated_enabled" | "important_date_enabled" | "weekly_report_enabled";
 type Preferences = Record<PreferenceKey, boolean>;
 
 const settings: readonly [PreferenceKey, string, string][] = [
   ["planner_finalized_enabled", "志願完成通知", "每次按下「確認完成志願」後，收到保存結果。"],
   ["score_calculated_enabled", "成績試算通知", "每次成功完成成績試算後，收到試算摘要。"],
   ["important_date_enabled", "重要日期通知", "重要升學日期到期前，收到後台發布的提醒。"],
+  ["weekly_report_enabled", "LINE 每週摘要", "每週收到試算、志願與重要日期的進度摘要。"],
 ];
 
 const emptyPreferences: Preferences = {
   planner_finalized_enabled: false,
   score_calculated_enabled: false,
   important_date_enabled: false,
+  weekly_report_enabled: false,
 };
 
 export function NotificationCenter({ isMember }: { isMember: boolean }) {

@@ -21,15 +21,15 @@ const districts: Array<[AdmissionDistrict, string]> = [
   ["tp", "基北區"], ["ct", "中投區"], ["tainan", "臺南區"], ["kaohsiung", "高雄區"], ["taoyuan-lienchiang", "桃連區"],
 ];
 
-export function ScoreSummaryWorkspace() {
+export function ScoreSummaryWorkspace({ isMember }: { isMember: boolean }) {
   const [latest, setLatest] = useState<SavedScore | null>(null);
-  useSavedScore(setLatest);
+  useSavedScore(setLatest, isMember);
   return <ScoreShell eyebrow="個人積分摘要" title="把最近一次試算，整理成可核對的摘要。"><ScoreState latest={latest} empty="還沒有完成的試算。先輸入一次成績，這裡會自動保存最近結果。" /></ScoreShell>;
 }
 
-export function ScoreHistoryWorkspace() {
+export function ScoreHistoryWorkspace({ isMember }: { isMember: boolean }) {
   const [history, setHistory] = useState<SavedScore[]>([]);
-  useScoreHistory(setHistory);
+  useScoreHistory(setHistory, isMember);
   function clearHistory() {
     window.localStorage.removeItem("jshs_score_history");
     window.localStorage.removeItem("jshs_score_latest");
@@ -38,9 +38,9 @@ export function ScoreHistoryWorkspace() {
   return <ScoreShell eyebrow="成績歷史紀錄" title="每一次試算都留下年度與規則版本。"><section className="mx-auto w-[min(1120px,calc(100%-32px))] pb-12"><div className="mb-5 flex flex-wrap items-center justify-between gap-3"><p className="text-sm leading-6 jshs-muted-copy">只保存在目前瀏覽器，不會把成績上傳到公開頁面。</p><button type="button" onClick={clearHistory} className="px-4 py-2 text-sm jshs-button-secondary">清除本機紀錄</button></div>{history.length ? <div className="grid gap-3">{history.map((item) => <article key={`${item.savedAt}-${item.district}`} className="flex flex-wrap items-center justify-between gap-4 p-5 jshs-surface-card"><div><p className="text-sm font-black text-[var(--jshs-primary)]">{item.result.rule.label} · {item.academicYear} 學年度</p><p className="mt-1 text-xs jshs-muted-copy">{new Date(item.savedAt).toLocaleString("zh-TW")}</p></div><div className="text-right"><strong className="block text-3xl text-[var(--jshs-primary)]">{item.result.totalScore}</strong><span className="text-xs jshs-muted-copy">滿分 {item.result.rule.totalScore}</span></div></article>)}</div> : <EmptyScoreState text="還沒有歷史紀錄。" />}</section></ScoreShell>;
 }
 
-export function ScorePlacementWorkspace() {
+export function ScorePlacementWorkspace({ isMember }: { isMember: boolean }) {
   const [latest, setLatest] = useState<SavedScore | null>(null);
-  useSavedScore(setLatest);
+  useSavedScore(setLatest, isMember);
   const band = latest ? placementBand(latest.result.totalScore, latest.result.rule.totalScore) : null;
   return <ScoreShell eyebrow="模擬考先估落點" title="先用分數區間整理挑戰、適中與穩定選項。"><section className="mx-auto w-[min(1120px,calc(100%-32px))] pb-12">{latest && band ? <><div className="p-6 jshs-surface-card"><p className="jshs-eyebrow">目前試算分層</p><h2 className="mt-2 text-3xl">{band.label}</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">{latest.result.rule.label} · {latest.result.totalScore}／{latest.result.rule.totalScore} 分。這是以目前輸入做的規劃分層，不是錄取機率或正式落點。</p></div><div className="mt-4 grid gap-3 md:grid-cols-3">{["挑戰：高於目前分數的校科", "適中：接近目前分數的校科", "穩定：低於目前分數的校科"].map((label) => <article key={label} className="p-5 jshs-surface-card"><h3>{label.split("：")[0]}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{label.split("：")[1]}，請到學校資料查看來源、年度與參考分數。</p></article>)}</div><Link className="mt-5 inline-flex px-4 py-3 text-sm jshs-button-primary" href={`/schools?district=${latest.district}`}>依這次結果查校科 →</Link></> : <EmptyScoreState text="先完成一次成績試算，才能建立初步落點分層。" />}</section></ScoreShell>;
 }
@@ -63,22 +63,46 @@ function ScoreState({ latest, empty }: { latest: SavedScore | null; empty: strin
 
 function EmptyScoreState({ text }: { text: string }) { return <div className="mt-5 p-6 jshs-surface-card"><p className="text-sm leading-7 jshs-muted-copy">{text}</p><Link className="mt-5 inline-flex px-4 py-3 text-sm jshs-button-primary" href="/tools">開始試算 →</Link></div>; }
 
-function useSavedScore(setValue: (value: SavedScore | null) => void) {
+function useSavedScore(setValue: (value: SavedScore | null) => void, isMember: boolean) {
   useEffect(() => {
+    if (isMember) {
+      fetch("/api/admission/scores", { headers: { accept: "application/json" } })
+        .then((response) => response.ok ? response.json() as Promise<{ snapshots?: MemberScoreSnapshot[] }> : { snapshots: [] })
+        .then((payload) => setValue(parseMemberScore(payload.snapshots)?.[0] || null))
+        .catch(() => setValue(null));
+      return;
+    }
     try {
       const history = JSON.parse(window.localStorage.getItem("jshs_score_history") || "[]") as SavedScore[];
       setValue(history[0] || JSON.parse(window.localStorage.getItem("jshs_score_latest") || "null"));
     } catch { setValue(null); }
-  }, [setValue]);
+  }, [isMember, setValue]);
 }
 
-function useScoreHistory(setValue: (value: SavedScore[]) => void) {
+function useScoreHistory(setValue: (value: SavedScore[]) => void, isMember: boolean) {
   useEffect(() => {
+    if (isMember) {
+      fetch("/api/admission/scores", { headers: { accept: "application/json" } })
+        .then((response) => response.ok ? response.json() as Promise<{ snapshots?: MemberScoreSnapshot[] }> : { snapshots: [] })
+        .then((payload) => setValue(parseMemberScore(payload.snapshots) || []))
+        .catch(() => setValue([]));
+      return;
+    }
     try {
       const history = JSON.parse(window.localStorage.getItem("jshs_score_history") || "[]") as SavedScore[];
       setValue(Array.isArray(history) ? history : []);
     } catch { setValue([]); }
-  }, [setValue]);
+  }, [isMember, setValue]);
+}
+
+type MemberScoreSnapshot = { district: string; academic_year: string; total_score: number; result_json: string; created_at: string };
+function parseMemberScore(snapshots: readonly MemberScoreSnapshot[] | undefined) {
+  return (snapshots || []).flatMap((snapshot) => {
+    try {
+      const result = JSON.parse(snapshot.result_json) as SavedScore["result"];
+      return [{ savedAt: snapshot.created_at, district: snapshot.district as AdmissionDistrict, academicYear: snapshot.academic_year, result }];
+    } catch { return []; }
+  });
 }
 
 function placementBand(score: number, max: number) {

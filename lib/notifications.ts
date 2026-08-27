@@ -4,15 +4,14 @@ import {
   isMemberNotificationEnabled,
   listDueImportantDates,
   listOptedInLineUserIds,
+  listWeeklyReportLineUserIds,
   markImportantDateSent,
   MAX_TEMPLATE_LENGTH,
-  type NotificationEventKey,
 } from "../db/notification-store";
 
 export const MAX_BODY_LENGTH = 4000;
 export { MAX_TEMPLATE_LENGTH };
-const MEMBER_EVENT_KEYS = ["planner_finalized", "score_calculated"] as const;
-type MemberNotificationEventKey = (typeof MEMBER_EVENT_KEYS)[number];
+type MemberNotificationEventKey = "planner_finalized" | "score_calculated";
 
 type TemplateValues = Record<string, string | number | undefined>;
 
@@ -78,6 +77,17 @@ export async function dispatchDueImportantDateNotifications() {
     if (dateSent === recipients.length) await markImportantDateSent(importantDate.id);
   }
   return { ok: true, processed: dates.length, sent, skipped };
+}
+
+export async function dispatchWeeklyReportNotifications() {
+  const recipients = await listWeeklyReportLineUserIds();
+  if (!recipients.length) return { ok: true, sent: 0, skipped: 0 };
+  let sent = 0;
+  for (const lineUserId of recipients) {
+    const result = await deliverLineText(lineUserId, "JSHS LINE 每週摘要", "本週升學摘要已整理完成。請回到 JSHS 查看你的成績試算、志願規劃與重要日期；正式規則仍以官方公告為準。");
+    if (result.ok) sent += 1;
+  }
+  return { ok: true, sent, skipped: recipients.length - sent };
 }
 
 export async function notifyLineAdminsForTest(text: string, fallbackUserId?: string) {

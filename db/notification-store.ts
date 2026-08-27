@@ -7,7 +7,7 @@ export const NOTIFICATION_EVENT_KEYS = [
 ] as const;
 
 export type NotificationEventKey = (typeof NOTIFICATION_EVENT_KEYS)[number];
-export type NotificationPreferenceKey = `${NotificationEventKey}_enabled`;
+export type NotificationPreferenceKey = `${NotificationEventKey}_enabled` | "weekly_report_enabled";
 
 export type NotificationSetting = {
   event_key: NotificationEventKey;
@@ -23,6 +23,7 @@ export type MemberNotificationPreferences = {
   planner_finalized_enabled: number;
   score_calculated_enabled: number;
   important_date_enabled: number;
+  weekly_report_enabled: number;
   updated_at: string;
 };
 
@@ -82,6 +83,7 @@ export async function ensureNotificationSchema() {
       planner_finalized_enabled INTEGER NOT NULL DEFAULT 0,
       score_calculated_enabled INTEGER NOT NULL DEFAULT 0,
       important_date_enabled INTEGER NOT NULL DEFAULT 0,
+      weekly_report_enabled INTEGER NOT NULL DEFAULT 0,
       updated_at TEXT NOT NULL
     )`),
     db.prepare(`CREATE TABLE IF NOT EXISTS important_dates (
@@ -100,6 +102,10 @@ export async function ensureNotificationSchema() {
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_important_dates_dispatch
       ON important_dates(enabled, send_at, sent_at)`),
   ]);
+  const preferenceColumns = await db.prepare("PRAGMA table_info(member_notification_preferences)").all<{ name: string }>();
+  if (!(preferenceColumns.results ?? []).some((column) => column.name === "weekly_report_enabled")) {
+    await db.prepare("ALTER TABLE member_notification_preferences ADD COLUMN weekly_report_enabled INTEGER NOT NULL DEFAULT 0").run();
+  }
 
   const now = new Date().toISOString();
   await db.batch(NOTIFICATION_EVENT_KEYS.map((eventKey) => {
@@ -158,6 +164,7 @@ export async function getMemberNotificationPreferences(lineUserId: string): Prom
     planner_finalized_enabled: 0,
     score_calculated_enabled: 0,
     important_date_enabled: 0,
+    weekly_report_enabled: 0,
     updated_at: "",
   };
 }
@@ -171,17 +178,19 @@ export async function updateMemberNotificationPreferences(
     planner_finalized_enabled: patch.planner_finalized_enabled ?? Boolean(current.planner_finalized_enabled),
     score_calculated_enabled: patch.score_calculated_enabled ?? Boolean(current.score_calculated_enabled),
     important_date_enabled: patch.important_date_enabled ?? Boolean(current.important_date_enabled),
+    weekly_report_enabled: patch.weekly_report_enabled ?? Boolean(current.weekly_report_enabled),
   };
   await getD1().prepare(`INSERT INTO member_notification_preferences
-    (line_user_id, planner_finalized_enabled, score_calculated_enabled, important_date_enabled, updated_at)
-    VALUES (?, ?, ?, ?, ?)
+    (line_user_id, planner_finalized_enabled, score_calculated_enabled, important_date_enabled, weekly_report_enabled, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?)
     ON CONFLICT(line_user_id) DO UPDATE SET
       planner_finalized_enabled = excluded.planner_finalized_enabled,
       score_calculated_enabled = excluded.score_calculated_enabled,
       important_date_enabled = excluded.important_date_enabled,
+      weekly_report_enabled = excluded.weekly_report_enabled,
       updated_at = excluded.updated_at`)
     .bind(lineUserId, next.planner_finalized_enabled ? 1 : 0, next.score_calculated_enabled ? 1 : 0,
-      next.important_date_enabled ? 1 : 0, new Date().toISOString()).run();
+      next.important_date_enabled ? 1 : 0, next.weekly_report_enabled ? 1 : 0, new Date().toISOString()).run();
   return getMemberNotificationPreferences(lineUserId);
 }
 
@@ -198,6 +207,12 @@ export async function listOptedInLineUserIds(eventKey: NotificationEventKey) {
     WHERE ${preferenceColumn} = 1`).all<{ line_user_id: string }>();
   const optedInIds = new Set((optedIn.results ?? []).map((item) => item.line_user_id));
   return users.filter((user) => user.status !== "blocked" && optedInIds.has(user.line_user_id)).map((user) => user.line_user_id);
+}
+
+export async function listWeeklyReportLineUserIds() {
+  await ensureNotificationSchema();
+  const result = await getD1().prepare(`SELECT line_user_id FROM member_notification_preferences WHERE weekly_report_enabled = 1`).all<{ line_user_id: string }>();
+  return (result.results ?? []).map((item) => item.line_user_id);
 }
 
 export async function listImportantDates(includeDisabled = false) {

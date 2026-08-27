@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { readLocalPlanner, writeLocalPlanner } from "@/lib/planner-local";
 
 type Tier = "challenge" | "balanced" | "stable";
 
@@ -20,18 +21,27 @@ export function SchoolDecisionActions({
   schoolCode,
   schoolName,
   departments,
+  isMember,
 }: {
   district: string;
   schoolCode: string;
   schoolName: string;
   departments: string;
+  isMember: boolean;
 }) {
   const [tier, setTier] = useState<Tier>("balanced");
   const [notes, setNotes] = useState("");
-  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error" | "member_required">("idle");
+  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "saved_local" | "error" | "member_required">("idle");
 
   async function saveSchool() {
     setStatus("saving");
+    if (!isMember && typeof window !== "undefined") {
+      const item = { id: crypto.randomUUID(), district, school_code: schoolCode, school_name: schoolName, department: departments, tier, notes, created_at: new Date().toISOString() };
+      const items = [...readLocalPlanner().items, item];
+      writeLocalPlanner(items, { order: items.map((entry) => entry.id) });
+      setStatus("saved_local");
+      return;
+    }
     const response = await fetch("/api/planner", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -65,7 +75,7 @@ export function SchoolDecisionActions({
           {status === "saving" ? "儲存中…" : status === "saved" ? `已加入${tierLabels[tier]}` : "加入規劃"}
         </button>
       </div>
-      {status === "member_required" ? <p className="mt-3 text-sm font-bold text-amber-800" role="status">收藏需要 LINE 會員登入。<a className="ml-1 underline" href="/api/line/login/start">使用 LINE 登入</a></p> : null}
+      {status === "saved_local" ? <p className="mt-3 text-sm font-bold text-emerald-700" role="status">已保存於目前裝置；登入 LINE 後才能跨裝置同步。</p> : null}
       {status === "error" ? <p className="mt-3 text-sm font-bold text-red-700" role="status">暫時無法儲存，請稍後再試。</p> : null}
     </div>
   );

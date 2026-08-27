@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { readLocalPlanner, writeLocalPlanner } from "@/lib/planner-local";
 
 export type PlannerSchoolSummary = Readonly<{
   district: string;
@@ -35,10 +36,10 @@ const taskCatalog = [
 ] as const;
 
 export function PlannerWorkspace({ schools, isMember }: { schools: readonly PlannerSchoolSummary[]; isMember: boolean }) {
-  const [items, setItems] = useState<PlannerItem[]>([]);
-  const [state, setState] = useState<PlannerState>({ itemMeta: {}, tasks: {} });
+  const [items, setItems] = useState<PlannerItem[]>(() => isMember ? [] : readLocalPlanner().items as PlannerItem[]);
+  const [state, setState] = useState<PlannerState>(() => isMember ? { itemMeta: {}, tasks: {} } : readLocalPlanner().state as PlannerState);
   const [view, setView] = useState<View>("options");
-  const [status, setStatus] = useState(isMember ? "正在讀取已保存的規劃…" : "收藏與規劃需要 LINE 會員登入");
+  const [status, setStatus] = useState(isMember ? "正在讀取已保存的規劃…" : "目前使用裝置保存；登入 LINE 後可跨裝置同步");
   const [draggedId, setDraggedId] = useState<string | null>(null);
   const [shareStatus, setShareStatus] = useState("");
   const [finalizeStatus, setFinalizeStatus] = useState("");
@@ -67,6 +68,11 @@ export function PlannerWorkspace({ schools, isMember }: { schools: readonly Plan
 
   async function saveState(next: PlannerState) {
     setState(next);
+    if (!isMember) {
+      writeLocalPlanner(items, next);
+      setStatus("已保存於目前裝置；登入 LINE 後才能跨裝置同步");
+      return true;
+    }
     const response = await fetch("/api/planner/state", { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify({ state: next }) }).catch(() => null);
     if (!response?.ok) setStatus("已保存在目前裝置；跨裝置同步稍後重試");
     return Boolean(response?.ok);
@@ -78,6 +84,11 @@ export function PlannerWorkspace({ schools, isMember }: { schools: readonly Plan
       return;
     }
     setFinalizeStatus("正在保存完成志願…");
+    if (!isMember) {
+      await saveState(state);
+      setFinalizeStatus("志願已保存於目前裝置；登入 LINE 後才能跨裝置同步。");
+      return;
+    }
     if (!(await saveState(state))) {
       setFinalizeStatus("目前無法同步規劃，請稍後再試。");
       return;
@@ -123,6 +134,12 @@ export function PlannerWorkspace({ schools, isMember }: { schools: readonly Plan
   }
 
   async function remove(id: string) {
+    if (!isMember) {
+      const nextItems = items.filter((item) => item.id !== id);
+      setItems(nextItems);
+      writeLocalPlanner(nextItems, state);
+      return;
+    }
     const response = await fetch("/api/planner", { method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ id }) }).catch(() => null);
     if (response?.ok) setItems((current) => current.filter((item) => item.id !== id));
   }
@@ -141,11 +158,6 @@ export function PlannerWorkspace({ schools, isMember }: { schools: readonly Plan
     await navigator.clipboard?.writeText(url);
     setShareStatus("只讀分享連結已複製；內容不會被搜尋引擎建立索引。");
   }
-
-  if (!isMember) return <>
-    <section className="jshs-hero-section"><div className="mx-auto w-[min(1160px,calc(100%-32px))] py-10 md:py-14"><p className="jshs-eyebrow">我的規劃中心</p><h1 className="mt-3 max-w-4xl">登入後，才能保存你的升學規劃。</h1><p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">學校查詢與資料瀏覽可以匿名使用；收藏校科、備註、排序與跨裝置同步會綁定你的 LINE 會員。</p></div></section>
-    <section className="mx-auto w-[min(1160px,calc(100%-32px))] py-12"><div className="max-w-2xl p-6 jshs-surface-card"><p className="text-sm font-bold text-slate-600">目前尚未登入</p><h2 className="mt-2 text-2xl font-black">使用 LINE 登入，開啟我的志願</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">登入後收藏會安全保存在你的會員規劃中，不會公開給搜尋引擎。</p><a href="/api/line/login/start" className="mt-5 inline-flex px-4 py-3 text-sm jshs-button-primary">使用 LINE 登入</a></div></section>
-  </>;
 
   return <>
     <section className="jshs-hero-section"><div className="mx-auto w-[min(1160px,calc(100%-32px))] py-10 md:py-14"><p className="jshs-eyebrow">我的規劃中心 · 目前位於第 1 步／共 4 個工作區</p><h1 className="mt-3 max-w-4xl">把收藏清單升級成家庭可以一起討論的工作區。</h1><p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">候選校科、風險分層、比較資料與下一步集中在同一個地方；每個操作都保留在你的規劃，不公開到搜尋引擎。</p></div></section>

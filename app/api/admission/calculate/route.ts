@@ -1,4 +1,5 @@
 import { calculateAdmissionScore, isAdmissionDistrict, type AdmissionScoreInput } from "../../../../lib/admission-score";
+import { createMemberScoreSnapshot } from "../../../../db/score-store";
 import { getMemberSession } from "../../../../lib/member-auth";
 import { notifyMember } from "../../../../lib/notifications";
 
@@ -22,6 +23,17 @@ export async function POST(request: Request) {
     }
     const result = calculateAdmissionScore({ ...input, district });
     const member = await getMemberSession();
+    if (member) {
+      await createMemberScoreSnapshot({
+        id: crypto.randomUUID(),
+        line_user_id: member.lineUserId,
+        district,
+        academic_year: result.rule.academicYear,
+        total_score: result.totalScore,
+        result_json: JSON.stringify(result),
+        created_at: new Date().toISOString(),
+      });
+    }
     const notification = member ? await notifyMember({
       eventKey: "score_calculated",
       lineUserId: member.lineUserId,

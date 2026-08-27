@@ -69,7 +69,7 @@ const defaultCriteria: CriteriaState = {
   manualPreferenceScore: "0", manualMultipleLearningScore: "0", manualExamScore: "0",
 };
 
-export function AdmissionCalculator({ initialDistrict }: { initialDistrict?: string }) {
+export function AdmissionCalculator({ initialDistrict, isMember }: { initialDistrict?: string; isMember: boolean }) {
   const requestedDistrict = initialDistrict && isAdmissionDistrict(initialDistrict) ? initialDistrict : undefined;
   const [district, setDistrict] = useState<AdmissionDistrict>(requestedDistrict || "ct");
   const districtInitialized = useRef(Boolean(requestedDistrict));
@@ -158,8 +158,10 @@ export function AdmissionCalculator({ initialDistrict }: { initialDistrict?: str
     if (response?.ok && payload.result) {
       const snapshot = { savedAt: new Date().toISOString(), district, academicYear, result: payload.result };
       const history = readScoreHistory();
-      window.localStorage.setItem("jshs_score_latest", JSON.stringify(snapshot));
-      window.localStorage.setItem("jshs_score_history", JSON.stringify([snapshot, ...history].slice(0, 20)));
+      if (!isMember) {
+        window.localStorage.setItem("jshs_score_latest", JSON.stringify(snapshot));
+        window.localStorage.setItem("jshs_score_history", JSON.stringify([snapshot, ...history].slice(0, 20)));
+      }
       markProgress("calculator", district);
       setStep("result");
     }

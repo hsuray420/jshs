@@ -1,4 +1,4 @@
-import { getOrCreateMemberPlanner, getPlannerState, savePlannerState } from "../../../../db/planner-store";
+import { createPlannerVersion, getOrCreateMemberPlanner, getPlannerState, listPlannerItems, listPlannerVersions, savePlannerState } from "../../../../db/planner-store";
 import { getMemberSession } from "../../../../lib/member-auth";
 
 export const dynamic = "force-dynamic";
@@ -29,7 +29,18 @@ export async function PUT(request: Request) {
   }
 
   await savePlannerState(plannerId, stateJson);
+  const items = await listPlannerItems(plannerId);
+  await createPlannerVersion(plannerId, stateJson, items.length);
   return plannerResponse({ ok: true }, plannerId);
+}
+
+export async function OPTIONS() { return new Response(null, { status: 204 }); }
+
+export async function PATCH() {
+  const plannerId = await memberPlanner();
+  if (!plannerId) return memberRequired();
+  const versions = await listPlannerVersions(plannerId);
+  return plannerResponse({ ok: true, versions: versions.map((version) => ({ ...version, state: parseState(version.state_json) })) }, plannerId);
 }
 
 function parseState(stateJson: string | null) {

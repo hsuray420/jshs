@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AiAssistant } from "@/components/ai-assistant";
+import { getMemberSession } from "@/lib/member-auth";
 
 const googleTagId = "G-Y9298RKYMZ";
 
@@ -38,7 +39,7 @@ export default async function RootLayout({
       <body>
         <a className="jshs-skip-link" href="#main-content">跳到主要內容</a>
         <div id="main-content">{children}</div>
-        <AiAssistant />
+        <AiAssistant isMember={Boolean(await getMemberSession())} />
       </body>
     </html>
   );

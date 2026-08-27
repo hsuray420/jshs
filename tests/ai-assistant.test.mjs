@@ -114,6 +114,18 @@ test("assistant client uses the unary provider path so completed replies are val
   assert.match(ui, /question, stream: false, history/);
 });
 
+test("會員 AI 對話寫入 D1，訪客對話留在本機", async () => {
+  const [layout, client, api, store] = await Promise.all([
+    read("app/layout.tsx"), read("components/ai-assistant.tsx"), read("app/api/assistant/conversations/route.ts"), read("db/ai-conversation-store.ts"),
+  ]);
+  assert.match(layout, /getMemberSession/);
+  assert.match(client, /\/api\/assistant\/conversations/);
+  assert.match(api, /getMemberSession/);
+  assert.match(api, /member_required/);
+  assert.match(store, /CREATE TABLE IF NOT EXISTS member_ai_conversations/);
+  assert.match(client, /getAllConversations/);
+});
+
 test("assistant shows rotating thinking states while waiting for a complete reply", async () => {
   const ui = await read("components/ai-assistant.tsx");
   const css = await read("app/globals.css");

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { IndependentSupportPage, type SupportPage } from "@/components/independent-support-page";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { PlannerVersions } from "@/components/planner-versions";
+import { getMemberSession } from "../../../lib/member-auth";
+import { OfficialPlatformLinks } from "@/components/official-platform-links";
 
 const pages: Record<string, SupportPage> = {
   check: { eyebrow: "我的志願", title: "排序與健檢", description: "確認志願順序、三層分布與送出前需要補的資料。", sections: [{ title: "健檢原則", body: "每份志願都應包含願意就讀的選項，並同時檢查挑戰、穩定與保底分布。" }, { title: "開始調整", body: "你可以用系統推薦快速建立清單，也可以在自選排序頁逐一加入學校並上下移動。" }], action: { label: "前往自選排序", href: "/planner/custom" } },
@@ -12,4 +15,4 @@ const pages: Record<string, SupportPage> = {
 export const dynamicParams = false;
 export function generateStaticParams() { return Object.keys(pages).map((feature) => ({ feature })); }
 export async function generateMetadata({ params }: { params: Promise<{ feature: string }> }): Promise<Metadata> { const { feature } = await params; const page = pages[feature]; return page ? { title: `${page.title}｜我的志願`, description: page.description, alternates: { canonical: `/planner/${feature}` }, robots: { index: false, follow: false } } : {}; }
-export default async function PlannerFeaturePage({ params }: { params: Promise<{ feature: string }> }) { const { feature } = await params; const page = pages[feature]; if (!page) return null; return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/planner" /><IndependentSupportPage page={page} /><SiteFooter /></main>; }
+export default async function PlannerFeaturePage({ params }: { params: Promise<{ feature: string }> }) { const { feature } = await params; const page = pages[feature]; if (!page) return null; const member = await getMemberSession(); return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/planner" />{feature === "versions" ? <><IndependentSupportPage page={page} /><section className="mx-auto w-[min(1120px,calc(100%-32px))] pb-12"><div className="p-6 jshs-surface-card"><PlannerVersions isMember={Boolean(member)} /></div></section></> : feature === "official-platform" ? <><IndependentSupportPage page={page} /><OfficialPlatformLinks /></> : <IndependentSupportPage page={page} />}<SiteFooter /></main>; }

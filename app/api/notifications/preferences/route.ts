@@ -7,6 +7,7 @@ const preferenceKeys: readonly NotificationPreferenceKey[] = [
   "planner_finalized_enabled",
   "score_calculated_enabled",
   "important_date_enabled",
+  "weekly_report_enabled",
 ];
 
 export async function GET() {

@@ -6,6 +6,7 @@ import { SchoolDecisionActions } from "@/components/school-decision-actions";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getRelatedSchools, getSchoolDirectoryRecord, schoolDirectory } from "@/lib/school-directory";
+import { getMemberSession } from "@/lib/member-auth";
 
 type SchoolPageProps = { params: Promise<{ district: string; code: string }> };
 
@@ -58,7 +59,7 @@ export default async function SchoolDetailPage({ params }: SchoolPageProps) {
 
           <SchoolSection id="life" title="生活條件" eyebrow="LIFE & COMMUTE"><div><dl className="grid gap-4 text-sm sm:grid-cols-[120px_1fr]"><dt className="font-black text-slate-500">地址</dt><dd className="font-bold leading-6">{school.address || "資料未提供"}</dd><dt className="font-black text-slate-500">電話</dt><dd className="font-bold leading-6">{school.phone || "資料未提供"}</dd><dt className="font-black text-slate-500">交通方式</dt><dd className="font-bold leading-6">{school.transport || "CSV 尚未提供，請以學校官方資料確認"}</dd><dt className="font-black text-slate-500">通勤資訊</dt><dd className="font-bold leading-6">{school.commuteInfo || "CSV 尚未提供，請用家庭實際出發地確認"}</dd><dt className="font-black text-slate-500">住宿資訊</dt><dd className="font-bold leading-6">{school.boardingInfo || "CSV 尚未提供，請以學校官方資料確認"}</dd><dt className="font-black text-slate-500">生活資料來源</dt><dd className="font-bold leading-6">{school.lifeSource || "CSV 尚未提供，請以學校官方資料確認"}</dd></dl></div><p className="mt-5 text-xs leading-6 text-slate-500">地址來源：{school.sourceName}；{school.lifeSource ? `生活資料來源：${school.lifeSource}；` : "生活資料尚未由 CSV 提供；"}</p></SchoolSection>
 
-          <SchoolSection id="decision" title="決策操作" eyebrow="DECISION"><SchoolDecisionActions district={school.districtCode} schoolCode={school.code} schoolName={school.name} departments={school.departmentsRaw} /></SchoolSection>
+          <SchoolSection id="decision" title="決策操作" eyebrow="DECISION"><SchoolDecisionActions district={school.districtCode} schoolCode={school.code} schoolName={school.name} departments={school.departmentsRaw} isMember={Boolean(await getMemberSession())} /></SchoolSection>
         </div>
 
         <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start"><section className="p-6 jshs-surface-card"><p className="jshs-eyebrow">資料信任</p><h2 className="mt-3 text-2xl font-black">先確認版本，再做規劃。</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">本站整理到 {school.updatedAt}；名額、資格、簡章與報名日期仍以官方最新公告為準。</p><Link className="mt-5 inline-flex px-4 py-3 text-sm jshs-button-secondary" href={`/schools?district=${school.districtCode}&q=${encodeURIComponent(school.code)}`}>返回搜尋結果 →</Link></section><section className="p-6 jshs-surface-card"><p className="jshs-eyebrow">同區延伸探索</p><div className="mt-4 grid gap-2">{relatedSchools.map((related) => <Link key={`${related.districtCode}-${related.code}`} href={`/schools/${related.districtCode}/${related.code}`} className="rounded-2xl border border-[var(--jshs-border)] p-4 hover:bg-[var(--jshs-muted-surface)]"><b className="block text-sm text-[var(--jshs-primary)]">{related.name}</b><span className="mt-1 block text-xs leading-5 text-slate-500">{related.districtLabel} · {related.area} · {related.program}</span></Link>)}</div></section></aside>

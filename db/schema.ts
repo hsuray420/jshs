@@ -34,6 +34,7 @@ export const memberNotificationPreferences = sqliteTable("member_notification_pr
   plannerFinalizedEnabled: integer("planner_finalized_enabled").notNull().default(0),
   scoreCalculatedEnabled: integer("score_calculated_enabled").notNull().default(0),
   importantDateEnabled: integer("important_date_enabled").notNull().default(0),
+  weeklyReportEnabled: integer("weekly_report_enabled").notNull().default(0),
   updatedAt: text("updated_at").notNull(),
 });
 

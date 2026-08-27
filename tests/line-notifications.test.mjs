@@ -48,6 +48,19 @@ test("member actions send notifications only after successful operations", async
   assert.match(notifications, /score_calculated/);
 });
 
+test("會員試算結果會寫入 D1，未登入不寫入會員資料庫", async () => {
+  const scoreRoute = await source("app/api/admission/calculate/route.ts");
+  const scoreStore = await source("db/score-store.ts");
+  const scoreApi = await source("app/api/admission/scores/route.ts");
+
+  assert.match(scoreRoute, /getMemberSession/);
+  assert.match(scoreRoute, /createMemberScoreSnapshot/);
+  assert.match(scoreStore, /CREATE TABLE IF NOT EXISTS member_score_history/);
+  assert.match(scoreStore, /line_user_id/);
+  assert.match(scoreApi, /getMemberSession/);
+  assert.match(scoreApi, /member_required/);
+});
+
 test("members can explicitly opt in or out of each LINE notification category", async () => {
   const preferencesRoute = await source("app/api/notifications/preferences/route.ts");
   const notificationUi = await source("components/notification-center.tsx");

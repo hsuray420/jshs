@@ -45,6 +45,15 @@ export async function ensurePlannerSchema() {
       state_json TEXT NOT NULL,
       confirmed_at TEXT NOT NULL
     )`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS planner_versions (
+      id TEXT PRIMARY KEY,
+      planner_id TEXT NOT NULL,
+      state_json TEXT NOT NULL,
+      item_count INTEGER NOT NULL,
+      created_at TEXT NOT NULL
+    )`),
+    db.prepare(`CREATE INDEX IF NOT EXISTS idx_planner_versions_planner_created
+      ON planner_versions(planner_id, created_at DESC)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_member_planners_last_used_at
       ON member_planners(last_used_at)`),
   ]);
@@ -115,6 +124,19 @@ export async function savePlannerState(plannerId: string, stateJson: string) {
     stateJson,
     new Date().toISOString(),
   ).run();
+}
+
+export async function createPlannerVersion(plannerId: string, stateJson: string, itemCount: number) {
+  await ensurePlannerSchema();
+  await getD1().prepare(`INSERT INTO planner_versions (id, planner_id, state_json, item_count, created_at)
+    VALUES (?, ?, ?, ?, ?)`).bind(crypto.randomUUID(), plannerId, stateJson, itemCount, new Date().toISOString()).run();
+}
+
+export async function listPlannerVersions(plannerId: string) {
+  await ensurePlannerSchema();
+  const result = await getD1().prepare(`SELECT id, planner_id, state_json, item_count, created_at
+    FROM planner_versions WHERE planner_id = ? ORDER BY created_at DESC LIMIT 30`).bind(plannerId).all<{ id: string; planner_id: string; state_json: string; item_count: number; created_at: string }>();
+  return result.results ?? [];
 }
 
 export async function confirmPlanner(plannerId: string, itemCount: number, stateJson: string) {
