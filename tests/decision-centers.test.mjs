@@ -41,3 +41,18 @@ test("search and trust centers are real routes and discoverable", async () => {
   assert.match(sitemap, /entry\("\/search"/);
   assert.match(sitemap, /entry\("\/trust"/);
 });
+
+test("CT and Changhua timelines contain only source-confirmed page I/II fields", async () => {
+  const [schedule, workspace, metadata] = await Promise.all([
+    read("lib/admission-schedules.ts"),
+    read("components/schedule-workspace.tsx"),
+    read("public/it_hs/district-metadata.json"),
+  ]);
+  for (const label of ["ct-115-preference", "ct-115-placement", "ch-115-preference", "ch-115-placement", "sourcePages", "confirmed"]) assert.match(schedule, new RegExp(label));
+  assert.match(workspace, /getDistrictAdmissionSchedule/);
+  assert.match(workspace, /項目、日期、說明與來源頁碼均已逐欄核對/);
+  const districts = JSON.parse(metadata).districts;
+  assert.equal(districts.ct.dataStatus, "ready");
+  assert.equal(districts.changhua.dataStatus, "ready");
+  assert.notEqual(districts.yunlin.dataStatus, "ready");
+});
