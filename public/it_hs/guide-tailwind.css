@@ -17,6 +17,7 @@
     --color-emerald-200: oklch(90.5% 0.093 164.15);
     --color-emerald-700: oklch(50.8% 0.118 165.612);
     --color-emerald-800: oklch(43.2% 0.095 166.913);
+    --color-emerald-950: oklch(26.2% 0.051 172.552);
     --color-blue-200: oklch(88.2% 0.059 254.128);
     --color-rose-500: oklch(64.5% 0.246 16.439);
     --color-slate-100: oklch(96.8% 0.007 247.896);
@@ -1291,6 +1292,9 @@
   }
   .text-emerald-800 {
     color: var(--color-emerald-800);
+  }
+  .text-emerald-950 {
+    color: var(--color-emerald-950);
   }
   .text-neo-accent {
     color: var(--color-neo-accent);
