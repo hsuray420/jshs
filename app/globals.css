@@ -85,11 +85,13 @@ main :where([class*="backdrop"], [style*="backdrop-filter"]) {
   backdrop-filter: none !important;
 }
 
-.jshs-container { margin-inline: auto; max-width: var(--content-max); padding-inline: var(--page-gutter); width: 100%; }
+.jshs-container { margin-inline: auto; max-width: var(--content-max); min-width: 0; padding-inline: var(--page-gutter); width: 100%; }
+.jshs-container > * { min-width: 0; }
 .jshs-container-wide { max-width: var(--content-wide-max); }
 .jshs-container-narrow { max-width: var(--content-narrow-max); }
 .jshs-section { padding-block: clamp(32px, 5vw, 64px); }
 .jshs-responsive-grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
+.jshs-local-scroll { max-width: 100%; min-width: 0; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; }
 .jshs-skip-link { background: var(--brand-primary); border-radius: 0 0 10px 10px; color: white; left: 12px; padding: 8px 12px; position: fixed; top: 0; transform: translateY(-150%); z-index: calc(var(--z-drawer) + 1); }
 .jshs-skip-link:focus { transform: translateY(0); }
 .jshs-state-card { align-items: center; background: var(--bg-elevated); border: 1px solid var(--border-light); border-radius: var(--radius-lg); color: var(--text-secondary); display: flex; flex-direction: column; gap: 8px; justify-content: center; min-height: 140px; padding: 24px; text-align: center; }
