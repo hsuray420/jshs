@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { calculateAdmissionScore, assignPreferenceSequences } from "../lib/admission-score.ts";
+import { CHANGHUA_COMPETITION_CATALOG, calculateAdmissionScore, assignPreferenceSequences } from "../lib/admission-score.ts";
 
 const perfectExam = {
   chineseGrade: "A++",
@@ -120,4 +120,39 @@ test("15 個就學區都能完成一次透明的成績試算", () => {
     assert.equal(result.district, district);
     assert.ok(result.totalScore >= 0 && result.totalScore <= result.rule.totalScore, district);
   }
+});
+
+test("中投與彰化的規則 metadata 直接來自研究 JSON", () => {
+  const ct = calculateAdmissionScore({ district: "ct" });
+  const chc = calculateAdmissionScore({ district: "changhua" });
+  assert.equal(ct.rule.sourceId, "ct-115-research-json");
+  assert.equal(chc.rule.sourceId, "changhua-115-research-json");
+  assert.equal(ct.rule.totalScore, 100);
+  assert.equal(chc.rule.totalScore, 135);
+  assert.equal(ct.rule.fields.some((field) => field.field_id === "service_hours_by_semester"), true);
+  assert.equal(chc.rule.fields.some((field) => field.field_id === "competition_results"), true);
+});
+
+test("研究 JSON 的必填欄位缺漏時回傳 incomplete，不把缺漏當成零分", () => {
+  const result = calculateAdmissionScore({ district: "ct", exam: { writingLevel: 6 } });
+  assert.equal(result.status, "incomplete");
+  assert.equal(result.totalScore, null);
+  assert.ok(result.missingFields.includes("chinese_exam_grade"));
+  assert.ok(result.missingFields.includes("service_hours_by_semester"));
+});
+
+test("彰化競賽只能採計官方 catalog，體適能只取同次檢測最佳三項", () => {
+  assert.equal(CHANGHUA_COMPETITION_CATALOG.length, 159);
+  const result = calculateAdmissionScore({ district: "changhua", ruleValues: {
+    preference_choices: [{ schoolId: "s" }], economic_weakness_status: "low_income", nearby_eligibility: "approved_common", cadre_semesters: 4, service_hours: 20,
+    major_merit_count: 2, minor_merit_count: 1, commendation_count: 1, no_discipline_record: true, no_truancy_record: true,
+    balanced_passing_domain_count_by_semester: { g7_s1: 3, g7_s2: 3, g8_s1: 3, g8_s2: 3, g9_s1: 3 }, excellent_club_semesters: ["g7_s1", "g7_s2", "g8_s1", "g8_s2"],
+    competition_results: [{ catalog_id: "national-01", level: "national", rank: "first", participant_count: 3, result_date: "2026-04-01", proof_submission_date: "2026-04-20" }],
+    fitness_session_results: { test_date: "2026-03-01", flexibility: "bronze_or_above", muscular_endurance: "medium_or_needs_improvement", explosive_power: "bronze_or_above", cardiorespiratory: "no_score" },
+    chinese_exam_grade: "A++", math_exam_grade: "A++", english_exam_grade: "A++", social_exam_grade: "A++", science_exam_grade: "A++", writing_grade: 6, exam_disposition: "normal", exam_violation_points: 0,
+  } });
+  assert.equal(result.status, "complete");
+  assert.equal(result.otherItems.competition_score, 5);
+  assert.equal(result.otherItems.fitness_score, 5);
+  assert.equal(result.totalScore, 135);
 });

@@ -18,7 +18,7 @@ type SavedScore = {
 };
 
 const districts: Array<[AdmissionDistrict, string]> = [
-  ["tp", "基北區"], ["ct", "中投區"], ["tainan", "臺南區"], ["kaohsiung", "高雄區"], ["taoyuan-lienchiang", "桃連區"],
+  ["tp", "基北區"], ["ilan", "宜蘭區"], ["taoyuan-lienchiang", "桃連區"], ["hsinchu-miaoli", "竹苗區"], ["ct", "中投區"], ["changhua", "彰化區"], ["yunlin", "雲林區"], ["chiayi", "嘉義區"], ["tainan", "臺南區"], ["kaohsiung", "高雄區"], ["pingtung", "屏東區"], ["hualien", "花蓮區"], ["taitung", "臺東區"], ["penghu", "澎湖區"], ["kinmen", "金門區"],
 ];
 
 export function ScoreSummaryWorkspace({ isMember }: { isMember: boolean }) {

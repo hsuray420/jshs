@@ -22,6 +22,10 @@ export async function POST(request: Request) {
       return Response.json({ ok: false, error: "不支援的就學區，請重新選擇。" }, { status: 400 });
     }
     const result = calculateAdmissionScore({ ...input, district });
+    if ("status" in result && result.status === "incomplete") {
+      return Response.json({ ok: false, error: "請補齊研究規則要求的欄位後再試算。", result }, { status: 422 });
+    }
+    if (result.totalScore === null) return Response.json({ ok: false, error: "請補齊試算欄位。", result }, { status: 422 });
     const member = await getMemberSession();
     if (member) {
       await createMemberScoreSnapshot({

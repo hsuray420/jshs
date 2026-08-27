@@ -1,0 +1,547 @@
+{
+  "schema_version": "1.0.0",
+  "academic_year": 115,
+  "district_id": "chc",
+  "district_name": "彰化區",
+  "version": "115.2026-02-10.rev1",
+  "rule_effective_scope": "115學年度彰化區高級中等學校免試入學",
+  "coverage": ["彰化縣"],
+  "authority": {
+    "competent_authority": "彰化縣政府教育處",
+    "committee": "115學年度彰化區高級中等學校免試入學委員會",
+    "organizer": "國立秀水高級工業職業學校",
+    "official_website": "https://chc.entry.edu.tw"
+  },
+  "common_district_rules": [
+    {
+      "rule_id": "chc_ct_fenyuan",
+      "reciprocal_areas": ["彰化縣芬園鄉", "臺中市霧峰區、烏日區及南投縣南投市、草屯鎮"],
+      "score_effect": "符合核定共同就學區者，就近入學7分",
+      "source_ids": ["CH-115-005"]
+    },
+    {
+      "rule_id": "chc_ct_ershui_zhushan",
+      "reciprocal_areas": ["彰化縣二水鄉", "南投縣竹山鎮"],
+      "score_effect": "符合核定共同就學區者，就近入學7分",
+      "source_ids": ["CH-115-005"]
+    },
+    {
+      "rule_id": "chc_ct_tianzhong_mingjian",
+      "reciprocal_areas": ["彰化縣田中鎮", "南投縣名間鄉"],
+      "score_effect": "符合核定共同就學區者，就近入學7分",
+      "source_ids": ["CH-115-005"]
+    },
+    {
+      "rule_id": "chc_yunlin_west",
+      "source_areas": ["彰化縣大城鄉", "二水鄉", "竹塘鄉", "埤頭鄉", "溪州鄉", "北斗鎮", "田尾鄉"],
+      "destination_areas": ["雲林縣二崙鄉", "西螺鎮", "林內鄉"],
+      "score_effect": "符合核定共同就學區者，就近入學7分",
+      "source_ids": ["CH-115-005"]
+    }
+  ],
+  "total_score_max": 135,
+  "categories": [
+    {"category_id": "preference", "label": "志願序", "score_cap": 45, "raw_subitem_cap_sum": 45, "calculation": "preference_score(target_choice)"},
+    {"category_id": "identity", "label": "身分別", "score_cap": 9, "raw_subitem_cap_sum": 9, "calculation": "economic_weakness_score + nearby_score"},
+    {"category_id": "character_service", "label": "品德服務", "score_cap": 20, "raw_subitem_cap_sum": 22, "calculation": "min(service_learning_score + reward_score + life_education_score, 20)"},
+    {"category_id": "excellent_performance", "label": "績優表現", "score_cap": 16, "raw_subitem_cap_sum": 22, "calculation": "min(balanced_learning_score + club_score + competition_score + fitness_score, 16)"},
+    {"category_id": "exam", "label": "國中教育會考", "score_cap": 45, "raw_subitem_cap_sum": 45, "calculation": "exam_score_after_violation"}
+  ],
+  "fields": [
+    {
+      "field_id": "preference_choices",
+      "label": "志願清單",
+      "category": "志願序",
+      "subcategory": "選填順序",
+      "input_type": "multi_select",
+      "options": [],
+      "unit": "志願",
+      "min": 1,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 45,
+      "calculation": "effective_rank = collapse_consecutive_same_school_same_vocational_cluster(raw_choices); score = effective_rank <= 20 ? 45 : 44",
+      "conditions": ["同校且同職群之科別連續選填，視為同一志願序積分", "第1～20志願45分，第21志願起44分"],
+      "dependencies": ["school_id", "department_id", "vocational_cluster_id", "raw_choice_order"],
+      "mutually_exclusive": [],
+      "adopted_period": "115學年度正式志願選填期間",
+      "evidence_required": false,
+      "evidence_description": "由正式報名系統的志願清單認定。",
+      "helper_text": "同一學校、同一職群的科別若連續選填，計分時視為同一志願序；第1～20志願45分，第21志願起44分。",
+      "official_rule": "同校同職群連續選填視為同一志願序；1～20志願45分，21志願以後44分。",
+      "validation": {"required": true, "type": "array", "min_items": 1, "max_items": null, "unique_items": true, "error_message": "請至少選填1個不重複志願。"},
+      "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "economic_weakness_status",
+      "label": "經濟弱勢身分",
+      "category": "身分別",
+      "subcategory": "經濟弱勢",
+      "input_type": "select",
+      "options": [
+        {"label": "非低收入戶或中低收入戶", "value": "none", "score": 0},
+        {"label": "中低收入戶", "value": "middle_low_income", "score": 1},
+        {"label": "低收入戶", "value": "low_income", "score": 2}
+      ],
+      "unit": "分", "min": null, "max": null, "score_per_unit": null, "score_cap": 2,
+      "calculation": "score = option.score",
+      "conditions": ["持有鄉、鎮、市、區公所核發之115年度有效證明", "逾115年5月6日才補件者僅能申請報名費減免，不得調整積分"],
+      "dependencies": ["proof_valid_on_review_date", "proof_submission_date"],
+      "mutually_exclusive": ["none", "middle_low_income", "low_income"],
+      "adopted_period": "115年度；積分審查文件應於115年5月5日至5月6日送審",
+      "evidence_required": true,
+      "evidence_description": "鄉、鎮、市、區公所核發之115年度低收入戶或中低收入戶證明；須在積分審查期限內提出。",
+      "helper_text": "中低收入戶1分、低收入戶2分。證明須為公所核發的115年度有效文件；5月6日後補件不能回頭調整積分。",
+      "official_rule": "中低收入戶1分、低收入戶2分；逾審查期限補件不調整積分。",
+      "validation": {"required": true, "type": "string", "enum": ["none", "middle_low_income", "low_income"], "error_message": "請選擇一項經濟弱勢身分。"},
+      "conditional_notice": {"when": "economic_weakness_status != 'none'", "message": "請在115年5月5日至5月6日積分審查時提出115年度有效證明。"},
+      "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "nearby_eligibility",
+      "label": "就近入學資格",
+      "category": "身分別",
+      "subcategory": "就近入學",
+      "input_type": "radio",
+      "options": [
+        {"label": "不符合", "value": "none", "score": 0},
+        {"label": "符合彰化區一般就學區", "value": "chc_general", "score": 7},
+        {"label": "符合核定共同就學區", "value": "approved_common", "score": 7},
+        {"label": "變更就學區至彰化區且已核准", "value": "approved_district_change", "score": 7}
+      ],
+      "unit": "分", "min": null, "max": null, "score_per_unit": null, "score_cap": 7,
+      "calculation": "score = option.score",
+      "conditions": ["共同就學區須符合官方來源地區與可報名學校對照", "核准變更就學區至彰化區不影響就近入學積分"],
+      "dependencies": ["junior_high_school_id", "target_school_id", "district_change_approval"],
+      "mutually_exclusive": ["none", "chc_general", "approved_common", "approved_district_change"],
+      "adopted_period": "115學年度免試入學報名資格審查時",
+      "evidence_required": false,
+      "evidence_description": "由學籍、共同就學區對照或變更就學區核准結果認定。",
+      "helper_text": "符合彰化區、核定共同就學區，或已核准變更就學區至彰化區者，均計7分；共同就學區仍須核對來源地區與目標學校。",
+      "official_rule": "符合本區或核定共同／變更就學區資格者，就近入學7分。",
+      "validation": {"required": true, "type": "string", "enum": ["none", "chc_general", "approved_common", "approved_district_change"], "error_message": "請選擇一項就近入學資格。"},
+      "source_ids": ["CH-115-002", "CH-115-005", "CH-115-010"]
+    },
+    {
+      "field_id": "cadre_semesters",
+      "label": "擔任幹部完整學期數",
+      "category": "品德服務",
+      "subcategory": "服務學習－幹部",
+      "input_type": "semester_count",
+      "options": [],
+      "unit": "學期", "min": 0, "max": 6, "score_per_unit": 2, "score_cap": 8,
+      "calculation": "service_raw += cadre_semesters * 2; service_learning_score = min(service_raw, 8)",
+      "conditions": ["班級、社團或學校幹部", "須完整擔任一學期", "由學校正式認證"],
+      "dependencies": ["service_hours"], "mutually_exclusive": [],
+      "adopted_period": "七年級上至九年級下，共六學期；以學校完成認證之國中階段紀錄為準",
+      "evidence_required": true, "evidence_description": "學校核章之班級、社團或學校幹部完整學期紀錄。",
+      "helper_text": "班級、社團或學校幹部須完整擔任一學期才計2分；與服務時數合併後，服務學習最高8分。",
+      "official_rule": "擔任班級、社團或學校幹部滿一學期，每學期2分。",
+      "validation": {"required": true, "type": "integer", "min": 0, "max": 6, "error_message": "請輸入0～6之間的整數。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "service_hours",
+      "label": "服務學習時數",
+      "category": "品德服務", "subcategory": "服務學習－時數", "input_type": "hours", "options": [],
+      "unit": "小時", "min": 0, "max": null, "score_per_unit": 0.1, "score_cap": 8,
+      "calculation": "service_raw += floor(service_hours) * 0.1; service_learning_score = min(service_raw, 8)",
+      "conditions": ["每完成1小時計0.1分", "僅採計經學校認定為優良之服務學習表現", "未滿1小時部分不計"],
+      "dependencies": ["cadre_semesters"], "mutually_exclusive": [],
+      "adopted_period": "國中階段；以115學年度積分審查前由學校完成認證之紀錄為準",
+      "evidence_required": true, "evidence_description": "學校核章或校務系統認證之服務學習時數與優良認定。",
+      "helper_text": "僅填學校認定為優良的服務學習時數；每滿1小時0.1分，未滿1小時不計。與幹部積分合併最高8分。",
+      "official_rule": "服務學習表現優良者，每滿1小時計0.1分。",
+      "validation": {"required": true, "type": "decimal", "min": 0, "error_message": "請輸入0以上的服務時數。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "major_merit_count", "label": "大功次數", "category": "品德服務", "subcategory": "獎勵紀錄", "input_type": "integer", "options": [],
+      "unit": "次", "min": 0, "max": null, "score_per_unit": 4.5, "score_cap": 6,
+      "calculation": "reward_raw += major_merit_count*4.5; reward_score = min(reward_raw, 6)",
+      "conditions": ["先辦理功過相抵", "同一事蹟若已在其他項目計分，不得重複採計"], "dependencies": ["minor_merit_count", "commendation_count"], "mutually_exclusive": [],
+      "adopted_period": "國中階段；以115學年度積分審查前正式紀錄為準", "evidence_required": false, "evidence_description": "由學校正式獎懲紀錄認定。",
+      "helper_text": "每次大功4.5分；先依校方規則辦理功過相抵，且已在其他比序項目計分的同一事蹟不能重複。獎勵最高6分。",
+      "official_rule": "大功每次4.5分，獎勵紀錄最高6分。", "validation": {"required": true, "type": "integer", "min": 0, "error_message": "請輸入0以上整數。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "minor_merit_count", "label": "小功次數", "category": "品德服務", "subcategory": "獎勵紀錄", "input_type": "integer", "options": [],
+      "unit": "次", "min": 0, "max": null, "score_per_unit": 1.5, "score_cap": 6,
+      "calculation": "reward_raw += minor_merit_count*1.5; reward_score = min(reward_raw, 6)",
+      "conditions": ["先辦理功過相抵", "同一事蹟若已在其他項目計分，不得重複採計"], "dependencies": ["major_merit_count", "commendation_count"], "mutually_exclusive": [],
+      "adopted_period": "國中階段；以115學年度積分審查前正式紀錄為準", "evidence_required": false, "evidence_description": "由學校正式獎懲紀錄認定。",
+      "helper_text": "每次小功1.5分；先辦理功過相抵，同一事蹟不得在不同項目重複計分。與大功、嘉獎合計最高6分。",
+      "official_rule": "小功每次1.5分，獎勵紀錄最高6分。", "validation": {"required": true, "type": "integer", "min": 0, "error_message": "請輸入0以上整數。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "commendation_count", "label": "嘉獎次數", "category": "品德服務", "subcategory": "獎勵紀錄", "input_type": "integer", "options": [],
+      "unit": "次", "min": 0, "max": null, "score_per_unit": 0.5, "score_cap": 6,
+      "calculation": "reward_raw += commendation_count*0.5; reward_score = min(reward_raw, 6)",
+      "conditions": ["先辦理功過相抵", "同一事蹟若已在其他項目計分，不得重複採計"], "dependencies": ["major_merit_count", "minor_merit_count"], "mutually_exclusive": [],
+      "adopted_period": "國中階段；以115學年度積分審查前正式紀錄為準", "evidence_required": false, "evidence_description": "由學校正式獎懲紀錄認定。",
+      "helper_text": "每次嘉獎0.5分；先辦理功過相抵，同一事蹟不得重複計分。與大功、小功合計最高6分。",
+      "official_rule": "嘉獎每次0.5分，獎勵紀錄最高6分。", "validation": {"required": true, "type": "integer", "min": 0, "error_message": "請輸入0以上整數。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "no_discipline_record", "label": "無處分紀錄", "category": "品德服務", "subcategory": "生活教育", "input_type": "boolean",
+      "options": [{"label": "不符合", "value": false, "score": 0}, {"label": "符合（含銷過後）", "value": true, "score": 6}],
+      "unit": "分", "min": null, "max": null, "score_per_unit": null, "score_cap": 6,
+      "calculation": "score = no_discipline_record ? 6 : 0", "conditions": ["無處分紀錄或完成銷過後無處分紀錄"], "dependencies": ["official_discipline_record", "demerit_cancellation_record"], "mutually_exclusive": [],
+      "adopted_period": "國中階段；以115學年度積分審查前正式紀錄為準", "evidence_required": false, "evidence_description": "由學校正式獎懲及銷過紀錄認定。",
+      "helper_text": "國中階段無處分紀錄，或已依校方規定完成銷過後無處分紀錄，計6分；請以學校正式資料為準。",
+      "official_rule": "無處分紀錄（含銷過後）計6分。", "validation": {"required": true, "type": "boolean", "error_message": "請依學校正式紀錄選擇。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "no_truancy_record", "label": "無曠課紀錄", "category": "品德服務", "subcategory": "生活教育", "input_type": "boolean",
+      "options": [{"label": "有曠課紀錄", "value": false, "score": 0}, {"label": "無曠課紀錄", "value": true, "score": 2}],
+      "unit": "分", "min": null, "max": null, "score_per_unit": null, "score_cap": 2,
+      "calculation": "score = no_truancy_record ? 2 : 0", "conditions": ["以學校正式出缺席紀錄認定"], "dependencies": ["official_attendance_record"], "mutually_exclusive": [],
+      "adopted_period": "國中階段；以115學年度積分審查前正式紀錄為準", "evidence_required": false, "evidence_description": "由學校正式出缺席紀錄認定。",
+      "helper_text": "國中階段正式出缺席紀錄中沒有曠課，計2分；是否請假、遲到等不自行推算，依校方系統的曠課欄位判定。",
+      "official_rule": "無曠課紀錄計2分。", "validation": {"required": true, "type": "boolean", "error_message": "請依學校正式出缺席紀錄選擇。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "balanced_passing_domain_count_by_semester",
+      "label": "各學期四領域及格數",
+      "category": "績優表現", "subcategory": "均衡學習", "input_type": "count", "options": [],
+      "unit": "領域/學期", "min": 0, "max": 4, "score_per_unit": null, "score_cap": 6,
+      "calculation": "qualified = count([g7_s1,g7_s2,g8_s1,g8_s2,g9_s1] >= 3); score = qualified>=5?6:(qualified==4?4:(qualified==3?2:0))",
+      "conditions": ["每學期健康與體育、藝術、綜合活動、科技四領域中至少三領域及格，該學期才達標"],
+      "dependencies": ["official_transcript"], "mutually_exclusive": [],
+      "adopted_period": "七年級上、七年級下、八年級上、八年級下、九年級上，共前五學期",
+      "evidence_required": false, "evidence_description": "由學校前五學期正式領域成績逐學期判定。",
+      "helper_text": "請逐學期填四個指定領域中及格的領域數；每學期至少3領域及格才算達標。達標5學期6分、4學期4分、3學期2分。",
+      "official_rule": "前五學期每學期四指定領域至少三領域及格；達標5／4／3學期分別6／4／2分。",
+      "validation": {"required": true, "type": "object", "keys": ["g7_s1", "g7_s2", "g8_s1", "g8_s2", "g9_s1"], "value_type": "integer", "min": 0, "max": 4, "error_message": "每學期請輸入0～4之間的整數。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "excellent_club_semesters",
+      "label": "社團參與表現優良學期",
+      "category": "績優表現", "subcategory": "社團參與", "input_type": "multi_select",
+      "options": [
+        {"label": "七年級上學期", "value": "g7_s1", "score": 1}, {"label": "七年級下學期", "value": "g7_s2", "score": 1},
+        {"label": "八年級上學期", "value": "g8_s1", "score": 1}, {"label": "八年級下學期", "value": "g8_s2", "score": 1},
+        {"label": "九年級上學期", "value": "g9_s1", "score": 1}
+      ],
+      "unit": "學期", "min": 0, "max": 5, "score_per_unit": 1, "score_cap": 4,
+      "calculation": "score = min(count(distinct excellent semesters), 4)",
+      "conditions": ["必須為校內社團參與且由學校認定表現優良", "同學期多個社團仍只算一學期"], "dependencies": ["school_certification"], "mutually_exclusive": [],
+      "adopted_period": "七年級上至九年級上，共前五學期", "evidence_required": true, "evidence_description": "學校核章之逐學期校內社團表現優良紀錄。",
+      "helper_text": "只有校內社團且經學校認定表現優良的學期才算；每學期1分，同學期多個社團仍算一次，最高4分。",
+      "official_rule": "前五學期校內社團參與表現優良者，每學期1分，最高4分。",
+      "validation": {"required": true, "type": "array", "max_items": 5, "unique_items": true, "error_message": "請勾選有學校正式優良認定的學期。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "competition_results",
+      "label": "符合採計清單的競賽得獎紀錄",
+      "category": "績優表現", "subcategory": "競賽表現", "input_type": "multi_select", "options": [],
+      "unit": "筆", "min": 0, "max": null, "score_per_unit": null, "score_cap": 6,
+      "calculation": "record_score = level_rank_map[level][rank] * (participation_mode=='team' ? 0.5 : 1); score = min(sum(unique_eligible_records.record_score), 6)",
+      "conditions": ["競賽名稱必須列於115入學適用的官方正面表列清單", "國際／全國／縣級分別依名次換算", "3人以下按個人、4人以上按團體；團體按個人積分二分之一", "只有參加證明而未獲認可名次不計分"],
+      "dependencies": ["competition_catalog_id", "competition_level", "rank", "participant_count", "result_announcement_date", "proof_submission_date"],
+      "mutually_exclusive": [],
+      "adopted_period": "競賽須於115年4月24日前辦畢、成績於115年4月29日前公布，證明於115年5月1日前繳交國中端",
+      "evidence_required": true,
+      "evidence_description": "官方競賽獎狀或成績證明，且競賽須在適用清單內；國際／全國清單採114年12月31日修正版，縣級採114學年度清單（明定適用115學年度入學）。",
+      "helper_text": "先搜尋官方採計清單，再填競賽層級、名次與參賽人數。4人以上按團體只得個人分數一半；未列清單或只有參加證明不計分。",
+      "official_rule": "競賽採正面表列；依國際、全國、縣級與名次計分，團體積分為個人二分之一，最高6分。",
+      "validation": {"required": true, "type": "array", "item_required_keys": ["catalog_id", "level", "rank", "participant_count", "result_date", "proof_submission_date"], "unique_by": ["catalog_id", "award_id"], "error_message": "每筆競賽須選官方清單項目並填完整名次、參賽人數與日期。"},
+      "level_rank_score_map": {
+        "international": {"first": 6, "second": 5, "third": 4, "other_official_award": 3},
+        "national": {"first": 5, "second": 4, "third": 3, "other_official_award": 2},
+        "county": {"first": 4, "second": 3, "third": 2, "other_official_award": 1}
+      },
+      "catalog_rule": {"mode": "positive_list", "catalog_source_ids": ["CH-115-006"], "reject_if_not_listed": true},
+      "source_ids": ["CH-115-002", "CH-115-006", "CH-115-007"]
+    },
+    {
+      "field_id": "fitness_session_results",
+      "label": "同一次體適能檢測四項結果",
+      "category": "績優表現", "subcategory": "體適能", "input_type": "grade",
+      "options": [
+        {"label": "銅牌以上", "value": "bronze_or_above", "score": 2},
+        {"label": "中等或待加強", "value": "medium_or_needs_improvement", "score": 1},
+        {"label": "未達可採計結果／未檢測且無核准證明", "value": "no_score", "score": 0},
+        {"label": "身心障礙、特殊教育或重大傷病核准比照銅牌", "value": "approved_exemption_bronze", "score": 2},
+        {"label": "體弱核准免測，比照待加強", "value": "approved_exemption_needs_improvement", "score": 1}
+      ],
+      "unit": "等第", "min": null, "max": null, "score_per_unit": null, "score_cap": 6,
+      "calculation": "metric_scores = [flexibility, muscular_endurance, explosive_power, cardiorespiratory]; score = sum(top_3(metric_scores))",
+      "conditions": ["四領域為柔軟度、肌力與肌耐力、瞬發力、心肺耐力", "任選三項", "三項必須來自同一次檢測", "BMI不採計", "可採國中七至九年級最佳一次檢測"],
+      "dependencies": ["test_date", "flexibility", "muscular_endurance", "explosive_power", "cardiorespiratory", "exemption_evidence"],
+      "mutually_exclusive": [],
+      "adopted_period": "七至九年級；從正式紀錄選最佳一次檢測，所採三項必須同一次",
+      "evidence_required": true,
+      "evidence_description": "教育部認可體適能檢測站成績或學校核章紀錄；免測比照計分須附身心障礙、特殊教育、重大傷病或體弱證明。",
+      "helper_text": "請選同一次檢測的四項等第，系統取其中最佳三項；不可混用不同日期，BMI不計。銅牌以上每項2分，其餘可採計等第1分。",
+      "official_rule": "四項體適能任選同一次檢測三項；銅牌以上每項2分，中等或待加強每項1分，最高6分。",
+      "validation": {"required": true, "type": "object", "required_keys": ["test_date", "flexibility", "muscular_endurance", "explosive_power", "cardiorespiratory"], "same_session_required": true, "error_message": "請填同一次檢測日期的四項結果。"},
+      "conditional_notice": {"when": "any result startsWith 'approved_exemption_'", "message": "請準備符合官方規定的免測或比照計分證明。"},
+      "source_ids": ["CH-115-002", "CH-115-004"]
+    },
+    {
+      "field_id": "exam_subject_grade_group",
+      "label": "會考五科完整等級標示群組",
+      "category": "國中教育會考", "subcategory": "國文、數學、英語、社會、自然", "input_type": "calculated",
+      "options": [
+        {"label": "A++", "value": "A++", "score": 9}, {"label": "A+", "value": "A+", "score": 8}, {"label": "A", "value": "A", "score": 7},
+        {"label": "B++", "value": "B++", "score": 6}, {"label": "B+", "value": "B+", "score": 5}, {"label": "B", "value": "B", "score": 4},
+        {"label": "C", "value": "C", "score": 3}
+      ],
+      "unit": "等級", "min": null, "max": null, "score_per_unit": null, "score_cap": 45,
+      "calculation": "exam_raw = sum(score_map[chinese,math,english,social,science])",
+      "conditions": ["五科完整標示直接影響總積分", "只採115年國中教育會考成績"],
+      "dependencies": ["chinese", "math", "english", "social", "science", "exam_disposition", "exam_violation_points"], "mutually_exclusive": [],
+      "adopted_period": "115年國中教育會考", "evidence_required": true, "evidence_description": "115年國中教育會考成績通知單。",
+      "helper_text": "請逐科輸入完整標示；彰化區A++到C直接換算9、8、7、6、5、4、3分，五科最高45分。",
+      "official_rule": "五科A++、A+、A、B++、B+、B、C各換算9至3分。",
+      "validation": {"required": false, "type": "calculated", "error_message": ""},
+      "ui_group_members": ["chinese_exam_grade", "math_exam_grade", "english_exam_grade", "social_exam_grade", "science_exam_grade"],
+      "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "chinese_exam_grade", "label": "國文會考等級標示", "category": "國中教育會考", "subcategory": "國文", "input_type": "grade",
+      "options": [{"label": "A++", "value": "A++", "score": 9}, {"label": "A+", "value": "A+", "score": 8}, {"label": "A", "value": "A", "score": 7}, {"label": "B++", "value": "B++", "score": 6}, {"label": "B+", "value": "B+", "score": 5}, {"label": "B", "value": "B", "score": 4}, {"label": "C", "value": "C", "score": 3}],
+      "unit": "等級", "min": null, "max": null, "score_per_unit": null, "score_cap": 9, "calculation": "score=subject_score_map[value]", "conditions": ["完整標示直接計入總分"], "dependencies": ["exam_disposition", "exam_violation_points"], "mutually_exclusive": [], "adopted_period": "115年國中教育會考", "evidence_required": true, "evidence_description": "115年會考成績通知單。", "helper_text": "國文A++至C依序為9、8、7、6、5、4、3分，完整標示直接影響總積分與同分比序。", "official_rule": "國文A++至C換算9至3分。", "validation": {"required": true, "type": "string", "enum": ["A++", "A+", "A", "B++", "B+", "B", "C"], "error_message": "請選擇國文完整標示。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "math_exam_grade", "label": "數學會考等級標示", "category": "國中教育會考", "subcategory": "數學", "input_type": "grade",
+      "options": [{"label": "A++", "value": "A++", "score": 9}, {"label": "A+", "value": "A+", "score": 8}, {"label": "A", "value": "A", "score": 7}, {"label": "B++", "value": "B++", "score": 6}, {"label": "B+", "value": "B+", "score": 5}, {"label": "B", "value": "B", "score": 4}, {"label": "C", "value": "C", "score": 3}],
+      "unit": "等級", "min": null, "max": null, "score_per_unit": null, "score_cap": 9, "calculation": "score=subject_score_map[value]", "conditions": ["完整標示直接計入總分"], "dependencies": ["exam_disposition", "exam_violation_points"], "mutually_exclusive": [], "adopted_period": "115年國中教育會考", "evidence_required": true, "evidence_description": "115年會考成績通知單。", "helper_text": "數學A++至C依序為9、8、7、6、5、4、3分，完整標示直接影響總積分與同分比序。", "official_rule": "數學A++至C換算9至3分。", "validation": {"required": true, "type": "string", "enum": ["A++", "A+", "A", "B++", "B+", "B", "C"], "error_message": "請選擇數學完整標示。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "english_exam_grade", "label": "英語會考等級標示", "category": "國中教育會考", "subcategory": "英語", "input_type": "grade",
+      "options": [{"label": "A++", "value": "A++", "score": 9}, {"label": "A+", "value": "A+", "score": 8}, {"label": "A", "value": "A", "score": 7}, {"label": "B++", "value": "B++", "score": 6}, {"label": "B+", "value": "B+", "score": 5}, {"label": "B", "value": "B", "score": 4}, {"label": "C", "value": "C", "score": 3}],
+      "unit": "等級", "min": null, "max": null, "score_per_unit": null, "score_cap": 9, "calculation": "score=subject_score_map[value]", "conditions": ["完整標示直接計入總分"], "dependencies": ["exam_disposition", "exam_violation_points"], "mutually_exclusive": [], "adopted_period": "115年國中教育會考", "evidence_required": true, "evidence_description": "115年會考成績通知單。", "helper_text": "英語A++至C依序為9、8、7、6、5、4、3分，完整標示直接影響總積分與同分比序。", "official_rule": "英語A++至C換算9至3分。", "validation": {"required": true, "type": "string", "enum": ["A++", "A+", "A", "B++", "B+", "B", "C"], "error_message": "請選擇英語完整標示。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "social_exam_grade", "label": "社會會考等級標示", "category": "國中教育會考", "subcategory": "社會", "input_type": "grade",
+      "options": [{"label": "A++", "value": "A++", "score": 9}, {"label": "A+", "value": "A+", "score": 8}, {"label": "A", "value": "A", "score": 7}, {"label": "B++", "value": "B++", "score": 6}, {"label": "B+", "value": "B+", "score": 5}, {"label": "B", "value": "B", "score": 4}, {"label": "C", "value": "C", "score": 3}],
+      "unit": "等級", "min": null, "max": null, "score_per_unit": null, "score_cap": 9, "calculation": "score=subject_score_map[value]", "conditions": ["完整標示直接計入總分"], "dependencies": ["exam_disposition", "exam_violation_points"], "mutually_exclusive": [], "adopted_period": "115年國中教育會考", "evidence_required": true, "evidence_description": "115年會考成績通知單。", "helper_text": "社會A++至C依序為9、8、7、6、5、4、3分，完整標示直接影響總積分與同分比序。", "official_rule": "社會A++至C換算9至3分。", "validation": {"required": true, "type": "string", "enum": ["A++", "A+", "A", "B++", "B+", "B", "C"], "error_message": "請選擇社會完整標示。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "science_exam_grade", "label": "自然會考等級標示", "category": "國中教育會考", "subcategory": "自然", "input_type": "grade",
+      "options": [{"label": "A++", "value": "A++", "score": 9}, {"label": "A+", "value": "A+", "score": 8}, {"label": "A", "value": "A", "score": 7}, {"label": "B++", "value": "B++", "score": 6}, {"label": "B+", "value": "B+", "score": 5}, {"label": "B", "value": "B", "score": 4}, {"label": "C", "value": "C", "score": 3}],
+      "unit": "等級", "min": null, "max": null, "score_per_unit": null, "score_cap": 9, "calculation": "score=subject_score_map[value]", "conditions": ["完整標示直接計入總分"], "dependencies": ["exam_disposition", "exam_violation_points"], "mutually_exclusive": [], "adopted_period": "115年國中教育會考", "evidence_required": true, "evidence_description": "115年會考成績通知單。", "helper_text": "自然A++至C依序為9、8、7、6、5、4、3分，完整標示直接影響總積分與同分比序。", "official_rule": "自然A++至C換算9至3分。", "validation": {"required": true, "type": "string", "enum": ["A++", "A+", "A", "B++", "B+", "B", "C"], "error_message": "請選擇自然完整標示。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "writing_grade", "label": "寫作測驗級分", "category": "國中教育會考", "subcategory": "寫作測驗", "input_type": "grade",
+      "options": [{"label": "一級分", "value": 1, "score": 0}, {"label": "二級分", "value": 2, "score": 0}, {"label": "三級分", "value": 3, "score": 0}, {"label": "四級分", "value": 4, "score": 0}, {"label": "五級分", "value": 5, "score": 0}, {"label": "六級分", "value": 6, "score": 0}],
+      "unit": "級分", "min": 1, "max": 6, "score_per_unit": 0, "score_cap": 0,
+      "calculation": "total_score_contribution = 0; tie_break_value = writing_grade",
+      "conditions": ["不列入135分總積分", "總積分與就近入學積分同分後，以寫作級分比較"], "dependencies": ["exam_subject_grades"], "mutually_exclusive": [],
+      "adopted_period": "115年國中教育會考", "evidence_required": true, "evidence_description": "115年國中教育會考成績通知單。",
+      "helper_text": "寫作級分不加進135分總積分，但在總分及就近入學積分同分後優先比較，因此仍須輸入。",
+      "official_rule": "寫作不計總積分，列為同分超額比序項目。",
+      "validation": {"required": true, "type": "integer", "min": 1, "max": 6, "error_message": "請選擇1～6級分。"}, "source_ids": ["CH-115-003"]
+    },
+    {
+      "field_id": "exam_disposition", "label": "會考重大違規處分", "category": "國中教育會考", "subcategory": "違規處理", "input_type": "radio",
+      "options": [{"label": "無取消資格或科目不予計列情形", "value": "normal", "score": null}, {"label": "有取消考試資格或科目不予計列情形", "value": "exam_component_zero", "score": 0}],
+      "unit": "狀態", "min": null, "max": null, "score_per_unit": null, "score_cap": null,
+      "calculation": "if exam_disposition == 'exam_component_zero' then exam_score_after_violation = 0",
+      "conditions": ["依115年國中教育會考正式違規處分認定"], "dependencies": ["exam_subject_grades", "exam_violation_points"], "mutually_exclusive": ["normal", "exam_component_zero"],
+      "adopted_period": "115年國中教育會考", "evidence_required": true, "evidence_description": "會考正式違規處理通知。",
+      "helper_text": "只有收到正式通知，確認取消考試資格或有科目不予計列時才選第二項；彰化區此時教育會考積分以0分計。",
+      "official_rule": "重大違規致取消考試資格或科目不予計列者，本區教育會考積分以0分計。",
+      "validation": {"required": true, "type": "string", "enum": ["normal", "exam_component_zero"], "error_message": "請依正式違規處理結果選擇。"}, "source_ids": ["CH-115-002"]
+    },
+    {
+      "field_id": "exam_violation_points", "label": "會考一般違規點數", "category": "國中教育會考", "subcategory": "違規扣分", "input_type": "integer", "options": [],
+      "unit": "點", "min": 0, "max": null, "score_per_unit": -0.45, "score_cap": null,
+      "calculation": "if exam_disposition=='normal' then exam_score_after_violation = exam_raw - exam_violation_points * (45*0.01) else 0",
+      "conditions": ["每1點扣本區會考總積分上限45分的1%", "只扣會考總積分，不扣單科積分"],
+      "dependencies": ["exam_subject_grades", "exam_disposition"], "mutually_exclusive": [],
+      "adopted_period": "115年國中教育會考", "evidence_required": true, "evidence_description": "會考正式違規處理或成績通知資料。",
+      "helper_text": "沒有正式違規點數請填0。每1點扣會考積分0.45分，只扣會考總積分，不改動同分比序使用的各科原始積分。",
+      "official_rule": "一般違規每1點扣本區會考總積分上限1%，即0.45分；不另扣單科積分。",
+      "validation": {"required": true, "type": "integer", "min": 0, "error_message": "請輸入0以上整數；沒有違規請填0。"}, "source_ids": ["CH-115-002"]
+    }
+  ],
+  "exam_scoring": {
+    "subjects": ["chinese", "math", "english", "social", "science"],
+    "subject_score_map": {"A++": 9, "A+": 8, "A": 7, "B++": 6, "B+": 5, "B": 4, "C": 3},
+    "subject_score_cap": 9,
+    "score_cap": 45,
+    "writing_in_total_score": false,
+    "violation_deduction_per_point": 0.45,
+    "violation_affects_subject_scores": false,
+    "severe_violation_behavior": "exam_component_zero",
+    "calculation": "exam_raw=sum(five subjects); exam_score=exam_disposition=='exam_component_zero'?0:exam_raw-0.45*violation_points",
+    "missing_data_behavior": "return null and status=incomplete; never coerce missing grade to zero",
+    "rounding": "不四捨五入；以十進位精確值保存與比較"
+  },
+  "preference_scoring": {
+    "enabled": true,
+    "max_choices": null,
+    "grouping_method": "同校同職群科別連續選填視為同一志願序積分",
+    "ranges": [{"from": 1, "to": 20, "score": 45}, {"from": 21, "to": null, "score": 44}],
+    "minimum_score": 44,
+    "included_in_total_score": true,
+    "used_again_in_tie_break": true,
+    "source_ids": ["CH-115-002"],
+    "verification_status": "needs_official_confirmation_for_max_choices"
+  },
+  "competition_scoring": {
+    "score_cap": 6,
+    "team_threshold": 4,
+    "individual_threshold_max": 3,
+    "team_multiplier": 0.5,
+    "catalog_mode": "positive_list",
+    "international_national_catalog_version": "114-12-31修正版（115學年度入學適用）",
+    "county_catalog_version": "114學年度縣級競賽採計項目（明定115學年度入學適用）",
+    "competition_end_deadline": "2026-04-24",
+    "result_announcement_deadline": "2026-04-29",
+    "proof_submission_deadline": "2026-05-01",
+    "source_ids": ["CH-115-006", "CH-115-007"]
+  },
+  "calculation_engine": {
+    "preference_score": "effective_preference_rank<=20?45:44",
+    "identity_score": "economic_weakness_score + nearby_score",
+    "service_learning_score": "min(cadre_semesters*2 + floor(service_hours)*0.1, 8)",
+    "reward_score": "min(major_merit_count*4.5 + minor_merit_count*1.5 + commendation_count*0.5, 6)",
+    "life_education_score": "(no_discipline_record?6:0) + (no_truancy_record?2:0)",
+    "character_service_score": "min(service_learning_score + reward_score + life_education_score, 20)",
+    "balanced_learning_score": "qualified=number of first-five semesters with >=3 passing target domains; qualified>=5?6:qualified==4?4:qualified==3?2:0",
+    "club_score": "min(excellent_club_semesters.length, 4)",
+    "competition_score": "min(sum(eligible competition record score * team multiplier), 6)",
+    "fitness_score": "sum(top 3 scores from one test session)",
+    "excellent_performance_score": "min(balanced_learning_score + club_score + competition_score + fitness_score, 16)",
+    "exam_score": "exam_disposition=='exam_component_zero'?0:sum(subject_scores)-exam_violation_points*0.45",
+    "total_score": "preference_score + identity_score + character_service_score + excellent_performance_score + exam_score",
+    "category_caps": {"preference": 45, "identity": 9, "service_learning": 8, "reward": 6, "life_education": 8, "character_service": 20, "balanced_learning": 6, "club": 4, "competition": 6, "fitness": 6, "excellent_performance": 16, "exam": 45},
+    "total_score_max": 135,
+    "rounding": "不四捨五入；服務0.1分與違規0.45分均以十進位精確值保存",
+    "overflow": "子項先封頂，再套用品德服務20分與績優表現16分的大項上限；超額不得移作其他項目",
+    "missing_data": "任何必填計分欄位缺漏時，總分回傳null並標記incomplete"
+  },
+  "tie_breaking_rules": [
+    {"priority": 1, "field": "total_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "總積分", "source_ids": ["CH-115-003"]},
+    {"priority": 2, "field": "preference_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "志願序積分", "source_ids": ["CH-115-003"]},
+    {"priority": 3, "field": "nearby_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "就近入學積分", "source_ids": ["CH-115-003"]},
+    {"priority": 4, "field": "writing_grade", "comparison": "numeric_desc", "higher_is_better": true, "description": "寫作測驗級分", "source_ids": ["CH-115-003"]},
+    {"priority": 5, "field": "raw_choice_order", "comparison": "numeric_asc", "higher_is_better": false, "description": "志願序順位，數字較小優先", "source_ids": ["CH-115-003"]},
+    {"priority": 6, "field": "economic_weakness_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "經濟弱勢積分", "source_ids": ["CH-115-003"]},
+    {"priority": 7, "field": "balanced_learning_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "均衡學習積分", "source_ids": ["CH-115-003"]},
+    {"priority": 8, "field": "service_learning_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "服務學習積分", "source_ids": ["CH-115-003"]},
+    {"priority": 9, "field": "life_education_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "生活教育積分", "source_ids": ["CH-115-003"]},
+    {"priority": 10, "field": "competition_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "競賽表現積分", "source_ids": ["CH-115-003"]},
+    {"priority": 11, "field": "reward_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "獎勵紀錄積分", "source_ids": ["CH-115-003"]},
+    {"priority": 12, "field": "fitness_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "體適能積分", "source_ids": ["CH-115-003"]},
+    {"priority": 13, "field": "club_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "社團參與積分", "source_ids": ["CH-115-003"]},
+    {"priority": 14, "field": "exam_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "教育會考總積分", "source_ids": ["CH-115-003"]},
+    {"priority": 15, "field": "chinese_subject_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "國文科積分", "source_ids": ["CH-115-003"]},
+    {"priority": 16, "field": "math_subject_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "數學科積分", "source_ids": ["CH-115-003"]},
+    {"priority": 17, "field": "english_subject_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "英語科積分", "source_ids": ["CH-115-003"]},
+    {"priority": 18, "field": "science_subject_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "自然科積分", "source_ids": ["CH-115-003"]},
+    {"priority": 19, "field": "social_subject_score", "comparison": "numeric_desc", "higher_is_better": true, "description": "社會科積分", "source_ids": ["CH-115-003"]}
+  ],
+  "tie_break_terminal_rule": "比較至最後一項仍同分時，報主管機關辦理增額或其他適當處理；不得由系統自行抽籤。",
+  "special_identity_rules": [
+    {"identity": "原住民學生", "included_in_general_score": false, "requires_special_identity_module": true, "treatment": "依法規辦理外加名額或升學優待，不加進一般135分公式。", "source_ids": ["CH-115-008"]},
+    {"identity": "身心障礙學生", "included_in_general_score": false, "requires_special_identity_module": true, "treatment": "依法規辦理外加名額或升學優待；體適能免測比照計分屬一般比序欄位中的證明規則，兩者不可混為同一加分。", "source_ids": ["CH-115-008"]},
+    {"identity": "其他依法享有升學優待者", "included_in_general_score": false, "requires_special_identity_module": true, "treatment": "依各身分類別法規與簡章附錄另行處理。", "source_ids": ["CH-115-008"]}
+  ],
+  "changes_from_previous_year": {
+    "latest_115_revision": {
+      "date": "2026-02-10",
+      "type": "招生科別與名額資料修正",
+      "details": ["刪除彰化縣私立文興高中綜合高中學程之應用日語學程", "優先免試名額表之埔心國中名額由1更正為2"],
+      "affects_general_scoring_formula": false,
+      "source_ids": ["CH-115-009"]
+    },
+    "score_changes_from_114": null,
+    "period_changes_from_114": null,
+    "tie_break_changes_from_114": null,
+    "official_comparison_status": "needs_official_confirmation",
+    "note": "官方修正公告可確認115年2月10日修正不影響一般超額比序公式；未找到115對114的逐條變更表，因此不宣稱核心計分與114完全相同。"
+  },
+  "sources": [
+    {
+      "source_id": "CH-115-001", "district": "彰化區", "academic_year": 115,
+      "document_title": "115學年度彰化區高級中等學校免試入學簡章（2026-02-10修正）", "issuing_authority": "115學年度彰化區高級中等學校免試入學委員會",
+      "document_type": "招生簡章", "publication_date": "2026-02-10", "approval_date": "2026-02-09", "page": "封面及簡章總則", "section": "封面、壹至參",
+      "official_url": "https://chc.entry.edu.tw/NoExamImitate_CH/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0%E5%AF%A9%E6%9F%A5%E9%80%9A%E9%81%8E%E7%89%88_08%E5%BD%B0%E5%8C%96%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260210%7B649de72726331c2a%7D%7Ba63e93ac%7D.pdf&SEQNO=14",
+      "accessed_date": "2026-08-27", "notes": "最新第1次修正版；PDF內部舊檔名不代表學年度，應以封面與核定文號判定。"
+    },
+    {
+      "source_id": "CH-115-002", "district": "彰化區", "academic_year": 115,
+      "document_title": "115學年度彰化區高級中等學校免試入學簡章（2026-02-10修正）", "issuing_authority": "115學年度彰化區高級中等學校免試入學委員會",
+      "document_type": "招生簡章", "publication_date": "2026-02-10", "page": "簡章第35～38頁", "section": "彰化區免試入學超額比序項目積分對照表",
+      "official_url": "https://chc.entry.edu.tw/NoExamImitate_CH/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0%E5%AF%A9%E6%9F%A5%E9%80%9A%E9%81%8E%E7%89%88_08%E5%BD%B0%E5%8C%96%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260210%7B649de72726331c2a%7D%7Ba63e93ac%7D.pdf&SEQNO=14",
+      "accessed_date": "2026-08-27", "notes": "一般積分欄位與會考違規處理主來源。"
+    },
+    {
+      "source_id": "CH-115-003", "district": "彰化區", "academic_year": 115,
+      "document_title": "115學年度彰化區高級中等學校免試入學簡章（2026-02-10修正）", "issuing_authority": "115學年度彰化區高級中等學校免試入學委員會",
+      "document_type": "招生簡章", "publication_date": "2026-02-10", "page": "簡章第6～7頁", "section": "同分超額比序順次",
+      "official_url": "https://chc.entry.edu.tw/NoExamImitate_CH/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0%E5%AF%A9%E6%9F%A5%E9%80%9A%E9%81%8E%E7%89%88_08%E5%BD%B0%E5%8C%96%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260210%7B649de72726331c2a%7D%7Ba63e93ac%7D.pdf&SEQNO=14",
+      "accessed_date": "2026-08-27", "notes": "完整19順位與最後仍同分處理。"
+    },
+    {
+      "source_id": "CH-115-004", "district": "彰化區", "academic_year": 115,
+      "document_title": "彰化區免試入學多元學習表現積分採計操作方式", "issuing_authority": "彰化縣政府教育處",
+      "document_type": "官方操作規定", "publication_date": "2025-04-11", "page": "體適能項目說明頁", "section": "體適能積分採計",
+      "official_url": "https://sites.google.com/chc.edu.tw/k12/%E6%AF%94%E5%BA%8F%E9%A0%85%E7%9B%AE", "accessed_date": "2026-08-27",
+      "notes": "說明同一次檢測、四項任選三項、七至九年級最佳一次與證明方式。"
+    },
+    {
+      "source_id": "CH-115-005", "district": "彰化區", "academic_year": 115,
+      "document_title": "115學年度高級中等學校就學區（包括共同就學區）", "issuing_authority": "教育部國民及學前教育署",
+      "document_type": "就學區核定資料", "publication_date": "2025-06-03", "page": "彰化區共同就學區表", "section": "彰化區與中投區、雲林區共同就學區",
+      "official_url": "https://sites.google.com/chc.edu.tw/k12", "accessed_date": "2026-08-27", "notes": "共同就學區區域映射。"
+    },
+    {
+      "source_id": "CH-115-006", "district": "彰化區", "academic_year": 115,
+      "document_title": "彰化區免試入學競賽採計項目官方清單", "issuing_authority": "彰化縣政府教育處",
+      "document_type": "正面表列清單", "publication_date": "2025-12-31（國際／全國修正日）", "page": "各清單全頁", "section": "115學年度入學適用之競賽採計項目",
+      "official_url": "https://sites.google.com/chc.edu.tw/k12/%E6%AF%94%E5%BA%8F%E9%A0%85%E7%9B%AE", "accessed_date": "2026-08-27",
+      "notes": "國際與全國採1141231修正版；縣級採114學年度清單，該清單公告明定適用115學年度入學。網站目前另列115學年度縣級清單，屬後續年度資料，不得誤套本年度。"
+    },
+    {
+      "source_id": "CH-115-007", "district": "彰化區", "academic_year": 115,
+      "document_title": "115學年度彰化區免試入學競賽表現項目採計截止日公告", "issuing_authority": "彰化縣政府教育處",
+      "document_type": "官方公告", "publication_date": "2025-04-29", "page": "公告本文", "section": "競賽完成、成績公布與證明繳交期限",
+      "official_url": "https://sites.google.com/chc.edu.tw/k12/%E6%AF%94%E5%BA%8F%E9%A0%85%E7%9B%AE", "accessed_date": "2026-08-27",
+      "notes": "競賽4/24前辦畢、4/29前公布、5/1前交國中端。"
+    },
+    {
+      "source_id": "CH-115-008", "district": "彰化區", "academic_year": 115,
+      "document_title": "115學年度彰化區高級中等學校免試入學簡章（2026-02-10修正）", "issuing_authority": "115學年度彰化區高級中等學校免試入學委員會",
+      "document_type": "招生簡章附錄", "publication_date": "2026-02-10", "page": "特殊身分升學優待附錄", "section": "各類特殊身分學生升學優待",
+      "official_url": "https://chc.entry.edu.tw/NoExamImitate_CH/NoExamImitate/Apps/Page/Public/News.aspx?SEQNO=14", "accessed_date": "2026-08-27", "notes": "不得混入一般135分公式。"
+    },
+    {
+      "source_id": "CH-115-009", "district": "彰化區", "academic_year": 115,
+      "document_title": "115學年度彰化區高級中等學校免試入學簡章【20260210修正】公告", "issuing_authority": "115學年度彰化區高級中等學校免試入學委員會",
+      "document_type": "修正公告", "publication_date": "2026-02-10", "page": "公告本文", "section": "修正內容說明",
+      "official_url": "https://chc.entry.edu.tw/NoExamImitate_CH/NoExamImitate/Apps/Page/Public/News.aspx?SEQNO=14", "accessed_date": "2026-08-27", "notes": "修正應用日語學程與優免埔心國中名額；未修改一般超額比序計分。"
+    },
+    {
+      "source_id": "CH-115-010", "district": "彰化區", "academic_year": 115,
+      "document_title": "彰化縣十二年國民基本教育資訊網－比序項目常見問答", "issuing_authority": "彰化縣政府教育處",
+      "document_type": "官方FAQ", "publication_date": null, "page": "網頁Q3～Q5", "section": "變更就學區、競賽認定、會考採計",
+      "official_url": "https://sites.google.com/chc.edu.tw/k12/%E5%B8%B8%E8%A6%8B%E5%95%8F%E7%AD%94%E9%9B%86/%E6%AF%94%E5%BA%8F%E9%A0%85%E7%9B%AE", "accessed_date": "2026-08-27", "notes": "核准變更就學區不影響就近入學積分；競賽採正面表列；會考只採入學當年度。"
+    }
+  ],
+  "verification_status": "verified_with_limited_unresolved_items",
+  "verification": {
+    "score_total_verified": true,
+    "field_coverage_verified": true,
+    "tie_break_verified": true,
+    "academic_year_verified": true,
+    "checks": {
+      "category_max_sum": "45+9+20+16+45=135",
+      "character_raw_vs_cap": "8+6+8=22，再套大項上限20",
+      "excellent_raw_vs_cap": "6+4+6+6=22，再套大項上限16",
+      "writing_not_in_total": true,
+      "special_identity_not_in_general_total": true,
+      "latest_revised_guide_used": true
+    },
+    "unresolved_items": [
+      "115學年度正式簡章沒有在規則段明載可選填志願總數；max_choices保持null，不以表格列數推測。",
+      "官方正面表列競賽清單應在部署時完整匯入competition_catalog資料表；本檔提供版本、入口、截止日與計分引擎，未複製清單全部名稱。",
+      "競賽同一作品或同一賽事多項獎次的重複採計細節未在已取得的115規則中完整列明；資料匯入時應標記duplicate_event_policy=needs_official_confirmation。",
+      "一般違規點數的理論最大值與會考積分最低界線未明定，max保持null。",
+      "未找到115對114逐條官方變更表；除2026-02-10修正公告明列事項外，不宣稱其他規則未變。"
+    ]
+  }
+}
