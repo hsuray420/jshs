@@ -1,0 +1,139 @@
+{
+  "academic_year":115,
+  "district_id":"iln",
+  "district_name":"宜蘭區",
+  "version":"115.2026-01-15",
+  "coverage":["宜蘭縣"],
+  "common_district_rules":[
+    {"area":"臺中市和平區","rule":"可跨入宜蘭區全區就讀，依宜蘭區比序項目計分。","source_ids":["ILN-115-006"]},
+    {"area":"新北市貢寮區、雙溪區、坪林區","rule":"僅可使用國立頭城家商提供之共同就學區科別與名額，不是宜蘭全區全面開放。","source_ids":["ILN-115-006"]}
+  ],
+  "authority":"宜蘭縣政府／教育部國民及學前教育署",
+  "committee":"115學年度宜蘭區高級中等學校免試入學委員會（國立頭城高級家事商業職業學校）",
+  "official_website":"https://iln.entry.edu.tw",
+  "formal_brochure":"115學年度宜蘭區高級中等學校免試入學簡章",
+  "approval_dates":["2025-12-22","2026-01-02"],
+  "total_score_max":46,
+  "total_score_max_note":"46為未加權基準；步驟一、二依目標校科最多54.5分，步驟三一律回到未加權46分。",
+  "categories":[
+    {"category_id":"non_exam","label":"非會考積分","raw_score_max":31,"score_cap":31},
+    {"category_id":"exam","label":"國中教育會考","raw_score_max":15,"score_cap":15}
+  ],
+  "fields":[
+    {
+      "field_id":"graduation_qualification","label":"畢業資格","category":"基本資格與表現","subcategory":"畢業資格","input_type":"boolean",
+      "options":[{"label":"符合畢業資格","value":true,"score":3},{"label":"不符合","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":3,"calculation":"score = graduation_qualification ? 3 : 0",
+      "conditions":["八大領域至少四領域總平均丙等以上","扣除核准假別後出席至少三分之二","獎懲相抵後未滿三大過"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中六學期；資料採計至115年5月31日24:00",
+      "evidence_required":true,"evidence_description":"國中六學期成績、出缺席與獎懲資料，由學校認定畢業資格。","helper_text":"請依學校核定的畢業資格填答；須同時符合成績、出席及獎懲三項條件，符合計3分。",
+      "official_rule":"符合畢業資格3分，不符合0分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否符合畢業資格"},"source_ids":["ILN-115-002"]
+    },
+    {"field_id":"balanced_health_pe","label":"健康與體育領域及格","category":"均衡學習","subcategory":"領域成績","input_type":"boolean","options":[{"label":"及格","value":true,"score":1.5},{"label":"不及格","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":1.5,"calculation":"score = balanced_health_pe ? 1.5 : 0","conditions":["以官方成績資料顯示該領域及格"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中六學期；資料採計至115年5月31日24:00","evidence_required":true,"evidence_description":"國中六學期領域成績單。","helper_text":"健康與體育領域及格計1.5分；使用六學期正式成績，請不要自行以單一學期推算。","official_rule":"健康與體育等四領域，每一及格領域1.5分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否及格"},"source_ids":["ILN-115-002","ILN-115-007"]},
+    {"field_id":"balanced_arts","label":"藝術領域及格","category":"均衡學習","subcategory":"領域成績","input_type":"boolean","options":[{"label":"及格","value":true,"score":1.5},{"label":"不及格","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":1.5,"calculation":"score = balanced_arts ? 1.5 : 0","conditions":["以官方成績資料顯示該領域及格"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中六學期；至115年5月31日24:00","evidence_required":true,"evidence_description":"國中六學期領域成績單。","helper_text":"藝術領域及格計1.5分；使用六學期正式成績，由學校成績資料判定是否符合。","official_rule":"藝術等四領域，每一及格領域1.5分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否及格"},"source_ids":["ILN-115-002","ILN-115-007"]},
+    {"field_id":"balanced_integrated","label":"綜合活動領域及格","category":"均衡學習","subcategory":"領域成績","input_type":"boolean","options":[{"label":"及格","value":true,"score":1.5},{"label":"不及格","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":1.5,"calculation":"score = balanced_integrated ? 1.5 : 0","conditions":["以官方成績資料顯示該領域及格"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中六學期；至115年5月31日24:00","evidence_required":true,"evidence_description":"國中六學期領域成績單。","helper_text":"綜合活動領域及格計1.5分；使用六學期正式成績，由學校成績資料判定是否符合。","official_rule":"綜合活動等四領域，每一及格領域1.5分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否及格"},"source_ids":["ILN-115-002","ILN-115-007"]},
+    {"field_id":"balanced_technology","label":"科技領域及格","category":"均衡學習","subcategory":"領域成績","input_type":"boolean","options":[{"label":"及格","value":true,"score":1.5},{"label":"不及格","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":1.5,"calculation":"score = balanced_technology ? 1.5 : 0","conditions":["以官方成績資料顯示該領域及格"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中六學期；至115年5月31日24:00","evidence_required":true,"evidence_description":"國中六學期領域成績單。","helper_text":"科技領域及格計1.5分；使用六學期正式成績，由學校成績資料判定是否符合。","official_rule":"科技等四領域，每一及格領域1.5分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否及格"},"source_ids":["ILN-115-002","ILN-115-007"]},
+    {
+      "field_id":"discipline_status","label":"德行表現","category":"德行表現","subcategory":"獎懲狀態","input_type":"radio",
+      "options":[{"label":"無警告以上處分紀錄（含銷過後）","value":"no_warning_or_above","score":5},{"label":"無小過以上處分紀錄（含銷過後）","value":"no_minor_demerit_or_above","score":3},{"label":"其他","value":"other","score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":5,"calculation":"score = option.score",
+      "conditions":["以銷過後紀錄判定"],"dependencies":[],"mutually_exclusive":["no_warning_or_above","no_minor_demerit_or_above","other"],"adopted_period":"國中六學期；資料採計至115年5月31日24:00","evidence_required":true,"evidence_description":"學校獎懲與銷過後紀錄。",
+      "helper_text":"以採計期限前完成銷過後的紀錄判定：無警告以上5分；無小過以上3分；其他0分。",
+      "official_rule":"無警告以上紀錄5分；無小過以上紀錄3分；均包含銷過後結果。","validation":{"required":true,"type":"string","allowed_values":["no_warning_or_above","no_minor_demerit_or_above","other"],"error_message":"請選擇銷過後的德行狀態"},"source_ids":["ILN-115-002"]
+    },
+    {"field_id":"class_cadre_semesters","label":"班級幹部符合學期數","category":"服務表現","subcategory":"班級幹部","input_type":"semester_count","options":[],"unit":"學期","min":0,"max":6,"score_per_unit":1,"score_cap":3,"calculation":"score = min(class_cadre_semesters,3)","conditions":["完整任職一學期且表現優良"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中就讀學期；資料採計至115年4月30日24:00","evidence_required":true,"evidence_description":"學校幹部任職與表現優良紀錄。","helper_text":"班級幹部完整任職一學期且表現優良才算1分；班級幹部子項最多3分，未滿整學期不計。","official_rule":"班級幹部每一完整且表現優良學期1分，子項上限3分。","validation":{"required":true,"type":"integer","min":0,"max":6,"error_message":"請輸入0～6之間的整數"},"source_ids":["ILN-115-002"]},
+    {"field_id":"club_cadre_semesters","label":"社團幹部符合學期數","category":"服務表現","subcategory":"社團幹部","input_type":"semester_count","options":[],"unit":"學期","min":0,"max":6,"score_per_unit":1,"score_cap":2,"calculation":"score = min(club_cadre_semesters,2)","conditions":["完整任職一學期且表現優良"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中就讀學期；資料採計至115年4月30日24:00","evidence_required":true,"evidence_description":"學校社團幹部任職與表現優良紀錄。","helper_text":"只有社團幹部完整任職一學期且表現優良才算1分；一般參加社團不等於本項，子項最多2分。","official_rule":"社團幹部每一完整且表現優良學期1分，子項上限2分。","validation":{"required":true,"type":"integer","min":0,"max":6,"error_message":"請輸入0～6之間的整數"},"source_ids":["ILN-115-002"]},
+    {"field_id":"volunteer_semesters","label":"志工符合學期數","category":"服務表現","subcategory":"志工服務","input_type":"semester_count","options":[],"unit":"學期","min":0,"max":6,"score_per_unit":1,"score_cap":3,"calculation":"score = min(volunteer_semesters,3)","conditions":["完成一學期且表現優良"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中就讀學期；資料採計至115年4月30日24:00","evidence_required":true,"evidence_description":"學校認定的志工服務與表現優良紀錄。","helper_text":"志工完成一學期且表現優良計1分，子項最多3分；可與班級或社團幹部同時採計，但全項封頂5分。","official_rule":"志工每一完整且表現優良學期1分，子項上限3分；可與幹部併計。","validation":{"required":true,"type":"integer","min":0,"max":6,"error_message":"請輸入0～6之間的整數"},"source_ids":["ILN-115-002"]},
+    {
+      "field_id":"competition_achievements","label":"競賽得獎紀錄","category":"競賽表現","subcategory":"正式競賽","input_type":"multi_select",
+      "options":[{"label":"縣市／區域個人第1名或特優","value":"local_1","score":0.5},{"label":"縣市／區域個人第2名或優等","value":"local_2","score":0.3},{"label":"縣市／區域個人第3名","value":"local_3","score":0.2},{"label":"全國／國際個人第1名或特優","value":"national_1","score":1},{"label":"全國／國際個人第2名或優等","value":"national_2","score":0.8},{"label":"全國／國際個人第3名或甲等","value":"national_3","score":0.6},{"label":"全國／國際個人第4名","value":"national_4","score":0.4},{"label":"全國／國際個人第5名至入選等","value":"national_5_selected","score":0.2}],
+      "unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":3,"calculation":"apply same_event_best_only; group_award_score = individual_score/2; category_score=min(sum,2); score=min(sum(three_category_scores),3)",
+      "conditions":["只採官方正面表列或經認定競賽","分語文社會、科學數學、藝術技能三類，各類最多2分","團體獎按個人獎二分之一","同年度同競賽縣級及全國級擇優一次"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"資料採計至115年4月30日24:00",
+      "evidence_required":true,"evidence_description":"官方獎狀及必要的競賽認定資料；每筆須另存競賽類別、個人／團體、年度與競賽識別碼。",
+      "helper_text":"逐筆加入官方可採計獎項；同一競賽擇優、團體分數減半，每類最多2分，三類合計最多3分。",
+      "official_rule":"三類競賽各上限2分、總上限3分；團體按個人二分之一，同競賽擇優。","validation":{"required":false,"type":"array","error_message":"請逐筆選擇並補齊競賽類別與個人／團體資料"},"source_ids":["ILN-115-002","ILN-115-008"]
+    },
+    {"field_id":"fitness_flexibility_qualified","label":"柔軟度達標","category":"體適能","subcategory":"單項門檻","input_type":"boolean","options":[{"label":"曾達標","value":true,"score":0.6},{"label":"未達標","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":0.6,"calculation":"score = value?0.6:0","conditions":["任一學期達教育部門檻即可"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中就讀期間；資料採計至115年4月30日24:00","evidence_required":true,"evidence_description":"體適能成績證明。","helper_text":"柔軟度只要在任一採計學期達教育部門檻，即計0.6分；不同學期重複達標不重複加分。","official_rule":"四項體適能各任一學期達門檻0.6分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否曾達標"},"source_ids":["ILN-115-002"]},
+    {"field_id":"fitness_muscular_endurance_qualified","label":"肌耐力達標","category":"體適能","subcategory":"單項門檻","input_type":"boolean","options":[{"label":"曾達標","value":true,"score":0.6},{"label":"未達標","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":0.6,"calculation":"score=value?0.6:0","conditions":["任一學期達門檻"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中期間；至115年4月30日24:00","evidence_required":true,"evidence_description":"體適能成績證明。","helper_text":"肌耐力只要在任一採計學期達教育部門檻，即計0.6分；不同學期重複達標不重複加分。","official_rule":"四項體適能各任一學期達門檻0.6分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否曾達標"},"source_ids":["ILN-115-002"]},
+    {"field_id":"fitness_explosive_power_qualified","label":"瞬發力達標","category":"體適能","subcategory":"單項門檻","input_type":"boolean","options":[{"label":"曾達標","value":true,"score":0.6},{"label":"未達標","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":0.6,"calculation":"score=value?0.6:0","conditions":["任一學期達門檻"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中期間；至115年4月30日24:00","evidence_required":true,"evidence_description":"體適能成績證明。","helper_text":"瞬發力只要在任一採計學期達教育部門檻，即計0.6分；不同學期重複達標不重複加分。","official_rule":"四項體適能各任一學期達門檻0.6分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否曾達標"},"source_ids":["ILN-115-002"]},
+    {"field_id":"fitness_cardiorespiratory_qualified","label":"心肺適能達標","category":"體適能","subcategory":"單項門檻","input_type":"boolean","options":[{"label":"曾達標","value":true,"score":0.6},{"label":"未達標","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":0.6,"calculation":"score=value?0.6:0","conditions":["任一學期達門檻"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"國中期間；至115年4月30日24:00","evidence_required":true,"evidence_description":"體適能成績證明。","helper_text":"心肺適能只要在任一採計學期達教育部門檻，即計0.6分；不同學期重複達標不重複加分。","official_rule":"四項體適能各任一學期達門檻0.6分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否曾達標"},"source_ids":["ILN-115-002"]},
+    {"field_id":"fitness_medal","label":"體適能總成績獎章","category":"體適能","subcategory":"獎章加分","input_type":"radio","options":[{"label":"無金銀牌","value":"none","score":0},{"label":"銀牌","value":"silver","score":0.3},{"label":"金牌","value":"gold","score":0.6}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":0.6,"calculation":"score=option.score","conditions":["單一整體成績獎章，金銀擇一"],"dependencies":[],"mutually_exclusive":["none","silver","gold"],"adopted_period":"國中期間；至115年4月30日24:00","evidence_required":true,"evidence_description":"體適能金牌或銀牌證明。","helper_text":"整體體適能金牌另加0.6分、銀牌另加0.3分，兩者擇一；與四個單項達標分數合計後封頂3分。","official_rule":"體適能金牌加0.6分、銀牌加0.3分，全項上限3分。","validation":{"required":true,"type":"string","allowed_values":["none","silver","gold"],"error_message":"請選擇獎章狀態"},"source_ids":["ILN-115-002"]},
+    {"field_id":"adaptive_student_choice_match","label":"符合我的志願","category":"適性發展","subcategory":"學生志願","input_type":"boolean","options":[{"label":"符合","value":true,"score":2},{"label":"不符合","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":2,"calculation":"score=value?2:0","conditions":["需針對目前目標校科判定"],"dependencies":["target_school_program"],"mutually_exclusive":[],"adopted_period":"以生涯發展紀錄手冊與正式志願選填資料為準","evidence_required":true,"evidence_description":"生涯發展紀錄手冊／生涯發展規劃書。","helper_text":"此欄要對每一個目標校科分別判斷；目標符合你在生涯規劃書中的志願時，該志願計2分。","official_rule":"符合『我的志願』2分。","validation":{"required":true,"type":"boolean","error_message":"請選擇此目標校科是否符合我的志願"},"source_ids":["ILN-115-002"]},
+    {"field_id":"adaptive_parent_suggestion_match","label":"符合家長建議","category":"適性發展","subcategory":"家長建議","input_type":"boolean","options":[{"label":"符合","value":true,"score":2},{"label":"不符合","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":2,"calculation":"score=value?2:0","conditions":["針對目前目標校科"],"dependencies":["target_school_program"],"mutually_exclusive":[],"adopted_period":"以生涯發展規劃書為準","evidence_required":true,"evidence_description":"生涯發展紀錄手冊中家長建議。","helper_text":"此欄對每一個目標校科分別判斷；目標符合生涯規劃書中的家長建議時，該志願計2分。","official_rule":"符合家長建議2分。","validation":{"required":true,"type":"boolean","error_message":"請選擇此目標校科是否符合家長建議"},"source_ids":["ILN-115-002"]},
+    {"field_id":"adaptive_guidance_suggestion_match","label":"符合輔導小組建議","category":"適性發展","subcategory":"輔導建議","input_type":"boolean","options":[{"label":"符合","value":true,"score":2},{"label":"不符合","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":2,"calculation":"score=value?2:0","conditions":["針對目前目標校科"],"dependencies":["target_school_program"],"mutually_exclusive":[],"adopted_period":"以生涯發展規劃書為準","evidence_required":true,"evidence_description":"生涯發展紀錄手冊中輔導小組建議。","helper_text":"此欄對每一個目標校科分別判斷；目標符合輔導小組建議時，該志願計2分。","official_rule":"符合輔導小組建議2分。","validation":{"required":true,"type":"boolean","error_message":"請選擇此目標校科是否符合輔導建議"},"source_ids":["ILN-115-002"]},
+    {"field_id":"economic_tiebreak_status","label":"經濟弱勢身分（同分比序）","category":"同分比序","subcategory":"低收／中低收","input_type":"select","options":[{"label":"無","value":"none","score":0},{"label":"中低收入戶","value":"middle_low_income","score":0},{"label":"低收入戶","value":"low_income","score":0}],"unit":null,"min":null,"max":null,"score_per_unit":null,"score_cap":0,"calculation":"not included in total; create low_income_flag and middle_low_income_flag","conditions":["只用於同分比序，低收入戶順位先於中低收入戶"],"dependencies":[],"mutually_exclusive":["none","middle_low_income","low_income"],"adopted_period":"證明有效期限須涵蓋報名日期","evidence_required":true,"evidence_description":"公所核發且有效期限涵蓋報名日期的證明。","helper_text":"這項不加進46分，只在同分時使用；先比較低收入戶，再比較中低收入戶，須持報名時有效證明。","official_rule":"低收入戶與中低收入戶分列同分比序順位，不列總積分。","validation":{"required":true,"type":"string","allowed_values":["none","middle_low_income","low_income"],"error_message":"請選擇經濟弱勢身分"},"source_ids":["ILN-115-003","ILN-115-009"]}
+  ],
+  "derived_scores":{
+    "balanced_learning_score":"min(sum([health_pe,arts,integrated,technology] * 1.5),6)",
+    "service_score":"min(min(class_cadre_semesters,3)+min(club_cadre_semesters,2)+min(volunteer_semesters,3),5)",
+    "fitness_score":"min(0.6*sum(four_qualified_flags)+fitness_medal_score,3)",
+    "adaptive_score":"2*sum([student_match,parent_match,guidance_match])",
+    "base_total":"graduation_score + balanced_learning_score + discipline_score + service_score + competition_score + fitness_score + adaptive_score + exam_score"
+  },
+  "exam_scoring":{
+    "subjects":["chinese","english","math","social","science"],
+    "field_template":{"input_type":"grade","options":[{"label":"A++","value":"A++","score":3},{"label":"A+","value":"A+","score":3},{"label":"A","value":"A","score":3},{"label":"B++","value":"B++","score":2.6},{"label":"B+","value":"B+","score":2.3},{"label":"B","value":"B","score":2},{"label":"C","value":"C","score":1}],"score_cap":3,"validation":{"required":true,"allowed_values":["A++","A+","A","B++","B+","B","C"]}},
+    "calculation":"exam_score = max(sum(subject_score)-exam_violation_deduction,0)","score_cap":15,
+    "violation":{"options":[{"label":"無記點","value":0,"deduction":0},{"label":"違規1點","value":1,"deduction":0.15},{"label":"違規2點","value":2,"deduction":0.3}],"applies_to":"exam total only"},
+    "writing":{"score_in_total":false,"tie_break_only":true},
+    "helper_text":"五科各依完整標示換算；A++、A+、A總分都算3分。寫作與完整標示不加總，只在同分時比較。",
+    "source_ids":["ILN-115-002","ILN-115-003"]
+  },
+  "preference_scoring":{"enabled":false,"max_choices":null,"grouping_method":null,"ranges":[],"minimum_score":null,"score_cap":0,"rule":"志願序不直接換成總積分；步驟一、二先處理第一志願，步驟三再依全部志願分發。","source_ids":["ILN-115-003"]},
+  "program_weighting":{
+    "applies_to_stages":[1,2],"not_applied_to_stage":3,"multiplier":1.5,"base_multiplier":1,
+    "max_weighted_non_exam_items":2,"max_weighted_exam_subjects":2,"max_observed_total":54.5,
+    "rules":[
+      {"targets":["宜蘭高中全部","羅東高中全部","蘭陽女中全部"],"non_exam":["balanced_learning_score","discipline_score"],"exam":["english","math"]},
+      {"targets":["中道高中全部","蘇澳海事全部"],"non_exam":["balanced_learning_score","discipline_score"],"exam":[]},
+      {"targets":["羅東高商餐飲管理科"],"non_exam":["balanced_learning_score","discipline_score"],"exam":["english"]},
+      {"targets":["宜蘭高商綜合高中","宜蘭高商資訊科"],"non_exam":["balanced_learning_score","discipline_score"],"exam":["english","math"]},
+      {"targets":["宜蘭高商國際貿易科","宜蘭高商資料處理科","宜蘭高商多媒體設計科","宜蘭高商應用英語科","宜蘭高商應用日語科"],"non_exam":["balanced_learning_score","discipline_score"],"exam":["chinese","english"]},
+      {"targets":["南澳高中全部","慈心華德福全部","慧燈高中全部","羅東高商非餐飲管理科","頭城家商全部","羅東高工全部","各校進修部"],"non_exam":[],"exam":[]}
+    ],
+    "calculation":"stage12_score(target)=base_total + 0.5*sum(target.weighted_non_exam_scores) + 0.5*sum(target.weighted_exam_subject_scores); stage3_score=base_total",
+    "constraint":"加權後教育會考積分仍不得超過總積分三分之一。",
+    "source_ids":["ILN-115-002","ILN-115-004"]
+  },
+  "allocation_stages":[
+    {"stage":1,"scope":"具九上宜蘭縣學校成績且符合分配資格者之第一志願","score":"target-specific weighted score","source_ids":["ILN-115-003"]},
+    {"stage":2,"scope":"其餘學生之第一志願","score":"target-specific weighted score","source_ids":["ILN-115-003"]},
+    {"stage":3,"scope":"尚未錄取者之所有志願","score":"unweighted base total","source_ids":["ILN-115-003"]}
+  ],
+  "total_formula":"base_total = graduation_score + balanced_learning_score + discipline_score + service_score + competition_score + fitness_score + adaptive_score + exam_score; stages_1_2 add target-specific 50% weights; stage_3 uses base_total only",
+  "rounding":{"rule":"表列至0.1分；未見另行四捨五入規定","decimal_places":1},
+  "missing_data_policy":"不得用0代替；回傳null。目標校科未選定時，適性發展與加權後總分皆不得計算。",
+  "tie_breaking_rules":[
+    {"priority":1,"field":"total_score_for_stage","comparison":"numeric_desc","higher_is_better":true,"description":"該分發步驟適用之總積分","source_ids":["ILN-115-003"]},
+    {"priority":2,"field":"graduation_score","comparison":"numeric_desc","higher_is_better":true,"description":"畢業資格積分","source_ids":["ILN-115-003"]},
+    {"priority":3,"field":"balanced_learning_score","comparison":"numeric_desc","higher_is_better":true,"description":"均衡學習積分","source_ids":["ILN-115-003"]},
+    {"priority":4,"field":"discipline_score","comparison":"numeric_desc","higher_is_better":true,"description":"德行表現積分","source_ids":["ILN-115-003"]},
+    {"priority":5,"field":"service_score","comparison":"numeric_desc","higher_is_better":true,"description":"服務表現積分","source_ids":["ILN-115-003"]},
+    {"priority":6,"field":"low_income_flag","comparison":"boolean_true_first","higher_is_better":true,"description":"低收入戶","source_ids":["ILN-115-003"]},
+    {"priority":7,"field":"middle_low_income_flag","comparison":"boolean_true_first","higher_is_better":true,"description":"中低收入戶","source_ids":["ILN-115-003"]},
+    {"priority":8,"field":"fitness_score","comparison":"numeric_desc","higher_is_better":true,"description":"體適能積分","source_ids":["ILN-115-003"]},
+    {"priority":9,"field":"adaptive_score","comparison":"numeric_desc","higher_is_better":true,"description":"適性發展積分","source_ids":["ILN-115-003"]},
+    {"priority":10,"field":"competition_score","comparison":"numeric_desc","higher_is_better":true,"description":"競賽表現積分","source_ids":["ILN-115-003"]},
+    {"priority":11,"field":"exam_score","comparison":"numeric_desc","higher_is_better":true,"description":"會考總積分","source_ids":["ILN-115-003"]},
+    {"priority":12,"field":"writing_grade","comparison":"numeric_desc","higher_is_better":true,"description":"寫作測驗級分","source_ids":["ILN-115-003"]},
+    {"priority":13,"field":"chinese_score","comparison":"numeric_desc","higher_is_better":true,"description":"國文積分","source_ids":["ILN-115-003"]},
+    {"priority":14,"field":"english_score","comparison":"numeric_desc","higher_is_better":true,"description":"英語積分","source_ids":["ILN-115-003"]},
+    {"priority":15,"field":"math_score","comparison":"numeric_desc","higher_is_better":true,"description":"數學積分","source_ids":["ILN-115-003"]},
+    {"priority":16,"field":"social_score","comparison":"numeric_desc","higher_is_better":true,"description":"社會積分","source_ids":["ILN-115-003"]},
+    {"priority":17,"field":"science_score","comparison":"numeric_desc","higher_is_better":true,"description":"自然積分","source_ids":["ILN-115-003"]},
+    {"priority":18,"field":"subject_full_marks","comparison":"ordered_subject_grade_desc","higher_is_better":true,"description":"依國文、英語、數學、社會、自然逐科比較A++＞A+＞A＞B++＞B+＞B＞C","source_ids":["ILN-115-003"]}
+  ],
+  "tie_exhausted_action":"增額錄取。",
+  "special_identity_rules":[{"requires_special_identity_module":true,"identities":["身心障礙學生","原住民學生","僑生","蒙藏學生","政府派赴國外工作人員子女","境外優秀科學技術人才子女","退伍軍人"],"rule":"依法定外加名額與優待處理，不納入一般46分基準公式。","source_ids":["ILN-115-005"]}],
+  "changes_from_previous_year":{"comparison_to_114":"needs_official_confirmation","notes":"未取得官方逐條修正對照；不得宣稱計分未變。"},
+  "sources":[
+    {"source_id":"ILN-115-001","district":"宜蘭區","academic_year":115,"document_title":"115學年度宜蘭區高級中等學校免試入學簡章","issuing_authority":"115學年度宜蘭區高級中等學校免試入學委員會","document_type":"招生簡章","publication_date":"2026-01-15","page":1,"section":"招生對象及名額","official_url":"https://iln.entry.edu.tw/NoExamImitate_IL/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0_03%E5%AE%9C%E8%98%AD%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260105%7Bd97204078cec9102%7D%7Bcc6c218b%7D.pdf&SEQNO=3","accessed_date":"2026-08-28","quote_snippet":"本區（宜蘭縣）及共同就學區（臺中市和平區）","notes":"教育部115-01-02核定／備查"},
+    {"source_id":"ILN-115-002","district":"宜蘭區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-01-15","page":"14-15","section":"比序項目及積分採計／積分表","official_url":"https://iln.entry.edu.tw/NoExamImitate_IL/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0_03%E5%AE%9C%E8%98%AD%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260105%7Bd97204078cec9102%7D%7Bcc6c218b%7D.pdf&SEQNO=3","accessed_date":"2026-08-28","quote_snippet":"每一及格領域1.5分","notes":"欄位、上限、期間與加權原則"},
+    {"source_id":"ILN-115-003","district":"宜蘭區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-01-15","page":"14-15","section":"錄取方式與同分比序","official_url":"https://iln.entry.edu.tw/NoExamImitate_IL/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0_03%E5%AE%9C%E8%98%AD%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260105%7Bd97204078cec9102%7D%7Bcc6c218b%7D.pdf&SEQNO=3","accessed_date":"2026-08-28","quote_snippet":"經前款各順次比序後仍同分者，增額錄取","notes":"三步驟與18個順位"},
+    {"source_id":"ILN-115-004","district":"宜蘭區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-01-15","page":16,"section":"各校各科加權項目表","official_url":"https://iln.entry.edu.tw/NoExamImitate_IL/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0_03%E5%AE%9C%E8%98%AD%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260105%7Bd97204078cec9102%7D%7Bcc6c218b%7D.pdf&SEQNO=3","accessed_date":"2026-08-28","quote_snippet":"加權百分之五十","notes":"目標校科加權矩陣"},
+    {"source_id":"ILN-115-005","district":"宜蘭區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-01-15","page":"37-40","section":"特殊身分學生升學優待標準","official_url":"https://iln.entry.edu.tw/NoExamImitate_IL/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0_03%E5%AE%9C%E8%98%AD%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260105%7Bd97204078cec9102%7D%7Bcc6c218b%7D.pdf&SEQNO=3","accessed_date":"2026-08-28","quote_snippet":"特殊身分學生之名額依其相關法規辦理","notes":"特殊模組"},
+    {"source_id":"ILN-115-006","district":"宜蘭區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-01-15","page":43,"section":"共同就學區入學方式規劃","official_url":"https://iln.entry.edu.tw/NoExamImitate_IL/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0_03%E5%AE%9C%E8%98%AD%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260105%7Bd97204078cec9102%7D%7Bcc6c218b%7D.pdf&SEQNO=3","accessed_date":"2026-08-28","quote_snippet":"臺中市和平區為共同就學區","notes":"和平全區開放；新北三區限頭城家商名額"},
+    {"source_id":"ILN-115-007","district":"宜蘭區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-01-15","page":5,"section":"個別報名應繳資料","official_url":"https://iln.entry.edu.tw/NoExamImitate_IL/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0_03%E5%AE%9C%E8%98%AD%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260105%7Bd97204078cec9102%7D%7Bcc6c218b%7D.pdf&SEQNO=3","accessed_date":"2026-08-28","quote_snippet":"國中成績單（六學期）","notes":"六學期成績依據"},
+    {"source_id":"ILN-115-008","district":"宜蘭區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-01-15","page":15,"section":"競賽表現註釋","official_url":"https://iln.entry.edu.tw/NoExamImitate_IL/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0_03%E5%AE%9C%E8%98%AD%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260105%7Bd97204078cec9102%7D%7Bcc6c218b%7D.pdf&SEQNO=3","accessed_date":"2026-08-28","quote_snippet":"團體……以個人分數二分之一計算","notes":"競賽三類、同賽擇優"},
+    {"source_id":"ILN-115-009","district":"宜蘭區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-01-15","page":36,"section":"各種身分學生應繳證明文件表","official_url":"https://iln.entry.edu.tw/NoExamImitate_IL/NoExamImitate/Apps/Action/GetFile.ashx?FILE=115%E7%B0%A1%E7%AB%A0_03%E5%AE%9C%E8%98%AD%E5%8D%80_AU%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8-20260105%7Bd97204078cec9102%7D%7Bcc6c218b%7D.pdf&SEQNO=3","accessed_date":"2026-08-28","quote_snippet":"證明文件有效期限應涵蓋報名日期","notes":"低收／中低收證明"}
+  ],
+  "verification_status":"verified_with_target_specific_calculation",
+  "verification":{"score_total_verified":true,"field_coverage_verified":true,"tie_break_verified":true,"academic_year_verified":true,"unresolved_items":["官方簡章未設定志願數量上限，JSON保留null","完整競賽正面清單需依官方認定表另建資料庫","114與115差異未取得官方逐條對照"]}
+}

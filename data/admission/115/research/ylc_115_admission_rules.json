@@ -1,0 +1,147 @@
+{
+  "academic_year": 115,
+  "district_id": "ylc",
+  "district_name": "雲林區",
+  "version": "115.2026-04-28-revised",
+  "coverage": ["雲林縣"],
+  "common_district_rules": [
+    {
+      "area": "嘉義縣六腳鄉、新港鄉、民雄鄉、溪口鄉、大林鎮、梅山鄉、朴子市、東石鄉、阿里山鄉、太保市",
+      "rule": "該共同就學區學生得依雲林區規則報名；實際可選校科與共同就學區名額仍應依簡章招生名額表。",
+      "source_ids": ["YLC-115-001"]
+    }
+  ],
+  "authority": "雲林縣政府／教育部國民及學前教育署",
+  "committee": "115學年度雲林區高級中等學校免試入學委員會（國立虎尾高級農工職業學校）",
+  "official_website": "https://ylc.entry.edu.tw",
+  "formal_brochure": "115學年度雲林區高級中等學校免試入學簡章（115年4月修正版）",
+  "approval_dates": ["2026-01-12", "2026-04-28"],
+  "total_score_max": 90,
+  "categories": [
+    {"category_id":"preference","label":"志願序","raw_score_max":8,"score_cap":8},
+    {"category_id":"non_exam","label":"非志願序及會考項目","raw_score_max":57,"score_cap":52,"group_caps":[{"fields":["reward_score","competition_score","fitness_score"],"score_cap":25}]},
+    {"category_id":"exam","label":"國中教育會考","raw_score_max":30,"score_cap":30}
+  ],
+  "fields": [
+    {
+      "field_id":"economic_status","label":"經濟弱勢資格","category":"扶助弱勢","subcategory":"經濟弱勢","input_type":"select",
+      "options":[{"label":"無上述身分","value":"none","score":0},{"label":"中低收入戶","value":"middle_low_income","score":1},{"label":"低收入戶","value":"low_income","score":1}],
+      "unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":1,"calculation":"score = option.score",
+      "conditions":["資格須於115年5月13日採計截止時成立"],"dependencies":[],"mutually_exclusive":["none","middle_low_income","low_income"],
+      "adopted_period":"身分採計截止：115年5月13日","evidence_required":true,"evidence_description":"鄉（鎮、市、區）公所核發且有效期限涵蓋報名日期之低收入戶或中低收入戶證明；個別報名另依簡章繳件。",
+      "helper_text":"低收入戶與中低收入戶本項都計1分，請依報名時有效的公所證明選擇；兩種身分不可同時選。",
+      "official_rule":"低收入戶或中低收入戶均採計1分，上限1分。","validation":{"required":true,"type":"string","allowed_values":["none","middle_low_income","low_income"],"error_message":"請選擇一種經濟弱勢資格"},
+      "conditional_notice":[{"when":"economic_status != 'none'","message":"請確認證明文件有效期限涵蓋正式報名日期。"}],"source_ids":["YLC-115-002","YLC-115-006"]
+    },
+    {
+      "field_id":"nearby_eligibility","label":"就近入學資格","category":"就近入學","subcategory":"就學區資格","input_type":"boolean",
+      "options":[{"label":"符合","value":true,"score":5},{"label":"不符合","value":false,"score":0}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":5,"calculation":"score = nearby_eligibility ? 5 : 0",
+      "conditions":["免試就學區、共同就學區或獲准變更就學區"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"以正式報名資格審查結果為準","evidence_required":true,"evidence_description":"由學籍、共同就學區或變更就學區核准資料認定。",
+      "helper_text":"雲林區、簡章所列共同就學區，或已獲准變更到雲林區者計5分；請依正式資格審查結果填答。",
+      "official_rule":"符合免試就學區、共同就學區或變更就學區者5分。","validation":{"required":true,"type":"boolean","error_message":"請選擇是否符合就近入學資格"},"source_ids":["YLC-115-002","YLC-115-007"]
+    },
+    {
+      "field_id":"no_truancy_semesters","label":"無曠課學期數","category":"多元學習表現","subcategory":"出缺席紀錄","input_type":"semester_count",
+      "options":[],"unit":"學期","min":0,"max":5,"score_per_unit":1,"score_cap":5,"calculation":"score = min(no_truancy_semesters * 1, 5)",
+      "conditions":["只有整學期無曠課才算該學期"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"七年級上學期至九年級上學期，共5學期；採計截止115年2月10日",
+      "evidence_required":true,"evidence_description":"學校出缺席紀錄。","helper_text":"採計七上至九上共5學期；每一學期完全沒有曠課計1分，有曠課的學期不計，最高5分。",
+      "official_rule":"每學期無曠課者得1分，共5分。","validation":{"required":true,"type":"integer","min":0,"max":5,"error_message":"請輸入0～5之間的整數"},"source_ids":["YLC-115-002","YLC-115-006"]
+    },
+    {
+      "field_id":"discipline_status","label":"無記過紀錄","category":"多元學習表現","subcategory":"獎懲紀錄","input_type":"radio",
+      "options":[{"label":"銷過後無警告以上紀錄","value":"no_warning_or_above","score":5},{"label":"銷過後未累積至小過（含）以上","value":"below_minor_demerit","score":1},{"label":"其他","value":"other","score":0}],
+      "unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":5,"calculation":"score = option.score","conditions":["以銷過後紀錄判定"],"dependencies":[],"mutually_exclusive":["no_warning_or_above","below_minor_demerit","other"],
+      "adopted_period":"七年級上學期至九年級上學期；採計截止115年2月10日","evidence_required":true,"evidence_description":"學校獎懲明細及銷過後紀錄。",
+      "helper_text":"以採計期限內完成銷過後的紀錄判定：無警告以上計5分；未累積到小過以上計1分；其他0分。",
+      "official_rule":"銷過後無警告以上紀錄5分；銷過後無累積至小過（含）以上1分。","validation":{"required":true,"type":"string","allowed_values":["no_warning_or_above","below_minor_demerit","other"],"error_message":"請選擇銷過後的獎懲狀態"},"source_ids":["YLC-115-002","YLC-115-006"]
+    },
+    {
+      "field_id":"balanced_qualified_domain_count","label":"均衡學習符合領域數","category":"多元學習表現","subcategory":"均衡學習","input_type":"select",
+      "options":[{"label":"0個領域","value":0,"score":0},{"label":"1個領域","value":1,"score":3},{"label":"2個領域","value":2,"score":6},{"label":"3個領域","value":3,"score":9}],"unit":"領域","min":0,"max":3,"score_per_unit":3,"score_cap":9,"calculation":"score = balanced_qualified_domain_count * 3",
+      "conditions":["每個符合領域3分"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"七年級上學期至九年級上學期；採計截止115年2月10日",
+      "evidence_required":true,"evidence_description":"在學期間領域成績單；各領域名稱與符合門檻須依雲林區補充說明審查。",
+      "helper_text":"簡章只列每個符合領域3分、最多3個；領域名稱與達標定義未在本簡章展開，請以學校審查值匯入。",
+      "official_rule":"每領域符合者各3分，上限9分。","validation":{"required":true,"type":"integer","min":0,"max":3,"error_message":"請選擇0～3個符合領域"},"source_ids":["YLC-115-002","YLC-115-006"]
+    },
+    {
+      "field_id":"remote_school_class_band","label":"偏遠小校班級級距","category":"扶助弱勢","subcategory":"偏遠小校","input_type":"radio",
+      "options":[{"label":"非偏遠小校／不符合","value":"none","score":0},{"label":"8至12班","value":"eight_to_twelve","score":1},{"label":"7班以下","value":"seven_or_less","score":2}],"unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":2,"calculation":"score = option.score",
+      "conditions":["須屬官方認定偏遠小校","114年8月1日（含）後才轉入偏遠小校者不採計"],"dependencies":[],"mutually_exclusive":["none","eight_to_twelve","seven_or_less"],"adopted_period":"七年級上學期至九年級上學期；轉學生另適用114年8月1日門檻",
+      "evidence_required":true,"evidence_description":"畢業國中及班級數／轉入日期之學籍資料。","helper_text":"官方認定偏遠小校7班以下計2分、8至12班計1分；114年8月1日後才轉入者不採計。",
+      "official_rule":"偏遠小校7班以下2分、8至12班1分；特定晚轉入者不採計。","validation":{"required":true,"type":"string","allowed_values":["none","eight_to_twelve","seven_or_less"],"error_message":"請選擇偏遠小校班級級距"},"source_ids":["YLC-115-002","YLC-115-008"]
+    },
+    {"field_id":"major_merit_count","label":"大功支數","category":"多元學習表現","subcategory":"獎勵紀錄","input_type":"count","options":[],"unit":"支","min":0,"max":null,"score_per_unit":4.5,"score_cap":15,"calculation":"reward_raw += major_merit_count * 4.5","conditions":[],"dependencies":[],"mutually_exclusive":[],"adopted_period":"七年級上學期至九年級上學期；採計截止115年2月10日","evidence_required":true,"evidence_description":"加蓋學校證明章之獎懲明細紀錄表。","helper_text":"輸入採計期間內的大功支數，每支4.5分；獎勵紀錄小計最高15分，並另受三項合計25分上限限制。","official_rule":"大功每支4.5分，獎勵紀錄最高15分。","validation":{"required":true,"type":"integer","min":0,"error_message":"請輸入0以上整數"},"source_ids":["YLC-115-002","YLC-115-006"]},
+    {"field_id":"minor_merit_count","label":"小功支數","category":"多元學習表現","subcategory":"獎勵紀錄","input_type":"count","options":[],"unit":"支","min":0,"max":null,"score_per_unit":1.5,"score_cap":15,"calculation":"reward_raw += minor_merit_count * 1.5","conditions":[],"dependencies":[],"mutually_exclusive":[],"adopted_period":"七年級上學期至九年級上學期；採計截止115年2月10日","evidence_required":true,"evidence_description":"加蓋學校證明章之獎懲明細紀錄表。","helper_text":"輸入採計期間內的小功支數，每支1.5分；系統會和大功、嘉獎相加後將獎勵紀錄封頂15分。","official_rule":"小功每支1.5分，獎勵紀錄最高15分。","validation":{"required":true,"type":"integer","min":0,"error_message":"請輸入0以上整數"},"source_ids":["YLC-115-002","YLC-115-006"]},
+    {"field_id":"commendation_count","label":"嘉獎支數","category":"多元學習表現","subcategory":"獎勵紀錄","input_type":"count","options":[],"unit":"支","min":0,"max":null,"score_per_unit":0.5,"score_cap":15,"calculation":"reward_raw += commendation_count * 0.5","conditions":[],"dependencies":[],"mutually_exclusive":[],"adopted_period":"七年級上學期至九年級上學期；採計截止115年2月10日","evidence_required":true,"evidence_description":"加蓋學校證明章之獎懲明細紀錄表。","helper_text":"輸入採計期間內的嘉獎支數，每支0.5分；系統會和大功、小功相加後將獎勵紀錄封頂15分。","official_rule":"嘉獎每支0.5分，獎勵紀錄最高15分。","validation":{"required":true,"type":"integer","min":0,"error_message":"請輸入0以上整數"},"source_ids":["YLC-115-002","YLC-115-006"]},
+    {
+      "field_id":"competition_achievements","label":"競賽得獎紀錄","category":"多元學習表現","subcategory":"競賽成績","input_type":"multi_select",
+      "options":[{"label":"國際第1至4名","value":"international_1_4","score":7},{"label":"全國第1名","value":"national_1","score":7},{"label":"全國第2名","value":"national_2","score":6},{"label":"全國第3名","value":"national_3","score":5},{"label":"全國第4名至入選","value":"national_4_selected","score":4},{"label":"全縣第1名","value":"county_1","score":3},{"label":"全縣第2名","value":"county_2","score":2},{"label":"全縣第3名","value":"county_3","score":1},{"label":"全縣第4、5、6名","value":"county_4_6","score":0.5}],
+      "unit":"分","min":null,"max":null,"score_per_unit":null,"score_cap":9,"calculation":"competition_score = min(sum(selected_achievement.score), 9)",
+      "conditions":["競賽須符合雲林區競賽採計參照表；同一競賽或團體換算等細則不得僅依本欄推定"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"採計截止115年2月10日",
+      "evidence_required":true,"evidence_description":"獎狀影本並加蓋國中證明章；競賽須列於官方採計參照表。","helper_text":"逐筆加入符合官方參照表的得獎紀錄，系統依層級名次加總並封頂9分；未列入者不要自行選入。",
+      "official_rule":"國際、全國、全縣依名次給0.5至7分，競賽成績最高9分。","validation":{"required":false,"type":"array","error_message":"請選擇官方可採計的競賽名次"},"source_ids":["YLC-115-002","YLC-115-006","YLC-115-009"]
+    },
+    {
+      "field_id":"fitness_qualified_item_count","label":"體適能達門檻項目數","category":"多元學習表現","subcategory":"體適能","input_type":"select",
+      "options":[{"label":"0項","value":0,"score":0},{"label":"1項","value":1,"score":3},{"label":"2項以上","value":2,"score":6}],"unit":"項","min":0,"max":2,"score_per_unit":3,"score_cap":6,"calculation":"fitness_score = min(fitness_qualified_item_count * 3, 6)",
+      "conditions":["須達官方門檻標準"],"dependencies":[],"mutually_exclusive":[],"adopted_period":"七年級上學期至九年級上學期；採計截止115年2月10日",
+      "evidence_required":true,"evidence_description":"體適能檢測成績證明。","helper_text":"每一項達官方門檻計3分，2項即達6分上限；本簡章未列測驗項目與門檻，應以校方審查結果匯入。",
+      "official_rule":"任一項成績達門檻標準者得3分，最高6分。","validation":{"required":true,"type":"integer","min":0,"max":2,"error_message":"請選擇0、1或2項以上"},"source_ids":["YLC-115-002","YLC-115-006"]
+    }
+  ],
+  "derived_scores": {
+    "reward_score":"min(major_merit_count*4.5 + minor_merit_count*1.5 + commendation_count*0.5, 15)",
+    "competition_score":"min(sum(competition_achievements.score), 9)",
+    "fitness_score":"min(fitness_qualified_item_count*3, 6)",
+    "reward_competition_fitness_score":"min(reward_score + competition_score + fitness_score, 25)"
+  },
+  "exam_scoring": {
+    "subjects":["chinese","english","math","science","social"],
+    "field_template":{"input_type":"grade","options":[{"label":"A++","value":"A++","score":6},{"label":"A+","value":"A+","score":6},{"label":"A","value":"A","score":6},{"label":"B++","value":"B++","score":5},{"label":"B+","value":"B+","score":4.5},{"label":"B","value":"B","score":4},{"label":"C","value":"C","score":2}],"score_cap":6,"validation":{"required":true,"allowed_values":["A++","A+","A","B++","B+","B","C"]}},
+    "calculation":"exam_raw = sum(score(subject_grade)); exam_score = max(exam_raw - exam_violation_deduction, 0)",
+    "score_cap":30,
+    "violation":{"input_type":"radio","options":[{"label":"無記點","value":0,"deduction":0},{"label":"違規1點","value":1,"deduction":0.3},{"label":"違規2點","value":2,"deduction":0.6}],"applies_to":"exam total only"},
+    "writing":{"input_type":"grade","score_in_total":false,"tie_break_only":true,"conversion_for_unordered_mark_count":{"6":"A++","5":"A+","4":"A","3":"B++","2":"B+","1":"B","0":"C"}},
+    "helper_text":"五科各依完整標示換算；A++、A+、A在總積分都算6分，但同分時仍比較完整標示。寫作不加進90分。",
+    "source_ids":["YLC-115-002","YLC-115-003"]
+  },
+  "preference_scoring": {
+    "enabled":true,"max_choices":50,"grouping_method":"簡章僅確認志願序位；校科群組細節須依官方選填系統欄位確認",
+    "ranges":[{"from":1,"to":10,"score":8},{"from":11,"to":20,"score":7},{"from":21,"to":30,"score":6},{"from":31,"to":40,"score":5},{"from":41,"to":50,"score":4}],"minimum_score":4,"score_cap":8,"source_ids":["YLC-115-002"]
+  },
+  "total_formula":"total_score = preference_score + economic_score + nearby_score + attendance_score + discipline_score + balanced_score + remote_school_score + min(reward_score + competition_score + fitness_score, 25) + exam_score",
+  "rounding":{"rule":"各表列分值直接相加；簡章未規定另行四捨五入","decimal_places":1},
+  "missing_data_policy":"不得當作0分；回傳null並標示needs_official_confirmation，只有使用者明確選擇『不符合／無』才計0分。",
+  "tie_breaking_rules": [
+    {"priority":1,"field":"total_score","comparison":"numeric_desc","higher_is_better":true,"description":"總積分","source_ids":["YLC-115-003"]},
+    {"priority":2,"field":"preference_score","comparison":"numeric_desc","higher_is_better":true,"description":"志願序積分","source_ids":["YLC-115-003"]},
+    {"priority":3,"field":"economic_score","comparison":"numeric_desc","higher_is_better":true,"description":"經濟弱勢積分","source_ids":["YLC-115-003"]},
+    {"priority":4,"field":"nearby_score","comparison":"numeric_desc","higher_is_better":true,"description":"就近入學積分","source_ids":["YLC-115-003"]},
+    {"priority":5,"field":"attendance_score","comparison":"numeric_desc","higher_is_better":true,"description":"出缺席紀錄積分","source_ids":["YLC-115-003"]},
+    {"priority":6,"field":"discipline_score","comparison":"numeric_desc","higher_is_better":true,"description":"無記過紀錄積分","source_ids":["YLC-115-003"]},
+    {"priority":7,"field":"balanced_score","comparison":"numeric_desc","higher_is_better":true,"description":"均衡學習積分","source_ids":["YLC-115-003"]},
+    {"priority":8,"field":"remote_school_score","comparison":"numeric_desc","higher_is_better":true,"description":"偏遠小校積分","source_ids":["YLC-115-003"]},
+    {"priority":9,"field":"reward_score","comparison":"numeric_desc","higher_is_better":true,"description":"獎勵紀錄積分（比較子項原分，不比較三項封頂後合計）","source_ids":["YLC-115-003"]},
+    {"priority":10,"field":"competition_score","comparison":"numeric_desc","higher_is_better":true,"description":"競賽成績積分","source_ids":["YLC-115-003"]},
+    {"priority":11,"field":"fitness_score","comparison":"numeric_desc","higher_is_better":true,"description":"體適能積分","source_ids":["YLC-115-003"]},
+    {"priority":12,"field":"exam_score","comparison":"numeric_desc","higher_is_better":true,"description":"教育會考積分","source_ids":["YLC-115-003"]},
+    {"priority":13,"field":"exam_mark_counts_with_writing","comparison":"lexicographic_desc","higher_is_better":true,"description":"含寫作換算後，不分科依A++、A+、A、B++、B+、B、C數量逐級比較","source_ids":["YLC-115-003"]},
+    {"priority":14,"field":"exam_subject_marks","comparison":"ordered_subject_grade_desc","higher_is_better":true,"description":"國文→英語→數學→自然→社會，逐科比較A++至C","source_ids":["YLC-115-003"]}
+  ],
+  "tie_exhausted_action":"不抽籤；報請主管機關核准增額錄取或其他適當處理。",
+  "special_identity_rules":[{"requires_special_identity_module":true,"identities":["身心障礙學生","原住民學生","蒙藏學生","政府派赴國外工作人員子女","境外優秀科學技術人才子女","僑生","退伍軍人"],"rule":"特殊身分依各升學優待法規處理，不納入一般生90分公式。","source_ids":["YLC-115-004"]}],
+  "changes_from_previous_year":{"comparison_to_114":"needs_official_confirmation","confirmed_115_revision":{"date":"2026-04-28","scope":"西螺農工綜合高中學程設立電子商務學程、停辦應用英語學程","scoring_change":false,"source_ids":["YLC-115-005"]}},
+  "sources": [
+    {"source_id":"YLC-115-001","district":"雲林區","academic_year":115,"document_title":"115學年度雲林區高級中等學校免試入學簡章（115年4月修正版）","issuing_authority":"115學年度雲林區高級中等學校免試入學委員會","document_type":"招生簡章","publication_date":"2026-04","page":1,"section":"招生對象及名額","official_url":"https://sges.ylc.edu.tw/News_Content.aspx?n=109698&s=373462","accessed_date":"2026-08-28","quote_snippet":"本區（雲林縣）及共同就學區……學生，均得報名參加","notes":"使用者提供之官方修正版PDF"},
+    {"source_id":"YLC-115-002","district":"雲林區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-04","page":9,"section":"比序項目積分對照表","official_url":"https://sges.ylc.edu.tw/News_Content.aspx?n=109698&s=373462","accessed_date":"2026-08-28","quote_snippet":"合計積分90分","notes":"積分表"},
+    {"source_id":"YLC-115-003","district":"雲林區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-04","page":10,"section":"比序方式","official_url":"https://sges.ylc.edu.tw/News_Content.aspx?n=109698&s=373462","accessed_date":"2026-08-28","quote_snippet":"依下列順次進行比序","notes":"完整同分順序與寫作換算"},
+    {"source_id":"YLC-115-004","district":"雲林區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-04","page":"27-30,39","section":"特殊身分學生升學優待／審查原則","official_url":"https://sges.ylc.edu.tw/News_Content.aspx?n=109698&s=373462","accessed_date":"2026-08-28","quote_snippet":"特殊身分生免試入學優待依相關……辦法辦理","notes":"不併入一般公式"},
+    {"source_id":"YLC-115-005","district":"雲林區","academic_year":115,"document_title":"修正115學年度雲林區高級中等學校免試入學簡章","issuing_authority":"雲林縣政府教育處／雲林區免試入學委員會","document_type":"修正公告","publication_date":"2026-04-30","page":null,"section":"修正說明","official_url":"https://sges.ylc.edu.tw/News_Content.aspx?n=109698&s=373462","accessed_date":"2026-08-28","quote_snippet":"設立……電子商務學程及停辦……應用英語學程","notes":"修正不涉及比序計分"},
+    {"source_id":"YLC-115-006","district":"雲林區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-04","page":51,"section":"比序項目積分確認表","official_url":"https://sges.ylc.edu.tw/News_Content.aspx?n=109698&s=373462","accessed_date":"2026-08-28","quote_snippet":"獎勵紀錄＋競賽成績＋體適能","notes":"確認三項合計最高25分及證明欄位"},
+    {"source_id":"YLC-115-007","district":"雲林區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-04","page":7,"section":"積分採計","official_url":"https://sges.ylc.edu.tw/News_Content.aspx?n=109698&s=373462","accessed_date":"2026-08-28","quote_snippet":"採計學期為國中一年級上學期至國中三年級上學期","notes":"一般項目截止115-02-10；經濟弱勢截止115-05-13"},
+    {"source_id":"YLC-115-008","district":"雲林區","academic_year":115,"document_title":"同上","issuing_authority":"同上","document_type":"招生簡章","publication_date":"2026-04","page":39,"section":"轉學生審查原則","official_url":"https://sges.ylc.edu.tw/News_Content.aspx?n=109698&s=373462","accessed_date":"2026-08-28","quote_snippet":"114年8月1日（含）以後才轉入……不予採計","notes":"偏遠小校轉學生限制"},
+    {"source_id":"YLC-115-009","district":"雲林區","academic_year":115,"document_title":"雲林區十二年國民基本教育免試入學比序項目採計作業補充說明及競賽採計參照表","issuing_authority":"雲林縣政府","document_type":"補充說明","publication_date":null,"page":null,"section":"競賽採計參照表","official_url":"https://education.ylc.edu.tw","accessed_date":"2026-08-28","quote_snippet":"簡章註明依……補充說明辦理","notes":"本次附件未含該獨立文件；競賽可採計清單需另匯入"}
+  ],
+  "verification_status":"partially_verified",
+  "verification":{"score_total_verified":true,"field_coverage_verified":true,"tie_break_verified":true,"academic_year_verified":true,"unresolved_items":["均衡學習三個領域名稱與達標定義未在本簡章積分表展開","體適能項目名稱與門檻未在本簡章展開","競賽採計參照表的正面清單與重複／團體認定須另匯入官方補充說明","志願選填之同校同群群組方法未在本簡章積分頁明示"]}
+}

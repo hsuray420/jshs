@@ -143,6 +143,33 @@ test("基北、桃連、高雄使用各自的 115 研究 JSON 與欄位 schema",
   }
 });
 
+test("宜蘭、竹苗、雲林使用暫存研究 JSON 進行實際計分", () => {
+  const fullExam = { chineseGrade: "A++", englishGrade: "A+", mathGrade: "A", socialGrade: "B++", scienceGrade: "B+", writingLevel: 6 };
+  const iln = calculateAdmissionScore({ district: "ilan", ruleValues: {
+    graduation_qualification: true, balanced_health_pe: true, balanced_arts: true, balanced_integrated: true, balanced_technology: true,
+    discipline_status: "no_warning_or_above", class_cadre_semesters: 3, club_cadre_semesters: 2, volunteer_semesters: 3,
+    competition_achievements: [], fitness_flexibility_qualified: true, fitness_muscular_endurance_qualified: true, fitness_explosive_power_qualified: true, fitness_cardiorespiratory_qualified: true,
+    fitness_medal: "gold", adaptive_student_choice_match: true, adaptive_parent_suggestion_match: true, adaptive_guidance_suggestion_match: true, economic_tiebreak_status: "none",
+    chinese_exam_grade: fullExam.chineseGrade, english_exam_grade: fullExam.englishGrade, math_exam_grade: fullExam.mathGrade, social_exam_grade: fullExam.socialGrade, science_exam_grade: fullExam.scienceGrade, writing_grade: 6, exam_violation_points: 0,
+  }});
+  assert.equal(iln.totalScore, 46);
+  assert.equal(iln.status, "complete");
+
+  const hhm = calculateAdmissionScore({ district: "hsinchu-miaoli", ruleValues: {
+    disadvantaged_qualifications: ["remote_school"], nearby_eligibility: true, preference_rank: 1,
+    balanced_health_pe: true, balanced_arts: true, balanced_integrated: true, balanced_technology: true, discipline_clear: true, no_truancy_semesters: 6,
+    major_merit_count: 1, minor_merit_count: 1, commendation_count: 1, service_hours_grade7_first: 6, service_hours_grade7_second: 6, service_hours_grade8_first: 6, service_hours_grade8_second: 6, service_hours_grade9_first: 6, local_language_certificate: "none",
+    chinese_exam_grade: fullExam.chineseGrade, english_exam_grade: fullExam.englishGrade, math_exam_grade: fullExam.mathGrade, social_exam_grade: fullExam.socialGrade, science_exam_grade: fullExam.scienceGrade, writing_grade: 6, exam_violation_points: 0,
+  }});
+  assert.equal(hhm.totalScore, 94.5);
+
+  const ylc = calculateAdmissionScore({ district: "yunlin", ruleValues: {
+    economic_status: "low_income", nearby_eligibility: true, preference_rank: 1, no_truancy_semesters: 5, discipline_status: "no_warning_or_above", balanced_qualified_domain_count: 3, remote_school_class_band: "seven_or_less", major_merit_count: 3, minor_merit_count: 2, commendation_count: 2, competition_achievements: ["national_1"], fitness_qualified_item_count: 2,
+    chinese_exam_grade: fullExam.chineseGrade, english_exam_grade: fullExam.englishGrade, math_exam_grade: fullExam.mathGrade, social_exam_grade: fullExam.socialGrade, science_exam_grade: fullExam.scienceGrade, writing_grade: 6, exam_violation_points: 0,
+  }});
+  assert.equal(ylc.totalScore, 86);
+});
+
 test("研究 JSON 的必填欄位缺漏時回傳 incomplete，不把缺漏當成零分", () => {
   const result = calculateAdmissionScore({ district: "ct", exam: { writingLevel: 6 } });
   assert.equal(result.status, "incomplete");
