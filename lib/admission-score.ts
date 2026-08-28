@@ -9,6 +9,13 @@ import khResearch from "../data/admission/115/research/kh_115_admission_rules.js
 import ilnResearch from "../data/admission/115/research/iln_115_admission_rules.json" with { type: "json" };
 import hhmResearch from "../data/admission/115/research/hhm_115_admission_rules.json" with { type: "json" };
 import ylcResearch from "../data/admission/115/research/ylc_115_admission_rules.json" with { type: "json" };
+import cycResearch from "../data/admission/115/research/cyc_115_admission_rules.json" with { type: "json" };
+import tnnResearch from "../data/admission/115/research/tnn_115_admission_rules.json" with { type: "json" };
+import ptcResearch from "../data/admission/115/research/ptc_115_admission_rules.json" with { type: "json" };
+import hlcResearch from "../data/admission/115/research/hlc_115_admission_rules.json" with { type: "json" };
+import tttResearch from "../data/admission/115/research/ttt_115_admission_rules.json" with { type: "json" };
+import phcResearch from "../data/admission/115/research/phc_115_admission_rules.json" with { type: "json" };
+import kmnResearch from "../data/admission/115/research/kmn_115_admission_rules.json" with { type: "json" };
 
 export const CHANGHUA_COMPETITION_CATALOG = changhuaCompetitionCatalog.items;
 
@@ -48,7 +55,7 @@ export type ExamGrade = keyof typeof EXAM_SCORE_MAP;
 export type EconomicStatus = "NONE" | "LOWER_MIDDLE_INCOME" | "LOW_INCOME";
 
 /** Only districts backed by an explicitly supplied 115 MD/JSON rule source may calculate. */
-export const SOURCE_BACKED_ADMISSION_DISTRICTS = ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "kaohsiung"] as const;
+export const SOURCE_BACKED_ADMISSION_DISTRICTS = ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "chiayi", "tainan", "kaohsiung", "pingtung", "hualien", "taitung", "penghu", "kinmen"] as const;
 
 export type ScoreCategory = Readonly<{ key: string; label: string; max: number; description: string; calculation?: string }>;
 export type AdmissionRule = Readonly<{
@@ -62,20 +69,22 @@ export type AdmissionRule = Readonly<{
   sourceId?: string;
   fields?: readonly ResearchField[];
   preferenceScoring?: Readonly<ResearchPreferenceScoring>;
+  examScoring?: Readonly<ResearchExamScoring>;
   verificationStatus?: string;
 }>;
 
-type ResearchPreferenceScoring = Readonly<{ enabled?: boolean; max_choices?: number | null; grouping_method?: string | null; minimum_score?: number | null; score_cap?: number; ranges?: readonly { from: number; to: number; score: number }[] }>;
+type ResearchPreferenceScoring = Readonly<{ enabled?: boolean; max_choices?: number | null; grouping_method?: string | null; minimum_score?: number | null; score_cap?: number; ranges?: readonly { from: number; to: number | null; score: number }[] }>;
+type ResearchExamScoring = Readonly<{ subject_options?: readonly { value: string; score: number }[]; writing_options?: readonly { value: string; score: number }[]; score_cap?: number; base_score_cap?: number; writing_in_total?: boolean; violation_deduction?: { one_point?: number } }>;
 export type ResearchField = Readonly<{ field_id: string; label: string; input_type: string; category?: string; subcategory?: string; helper_text?: string; official_rule?: string; conditions?: readonly string[]; adopted_period?: string; score_cap?: number; evidence_description?: string; calculation?: string; options?: readonly { label: string; value: unknown; score?: number | null }[]; validation?: { required?: boolean; min?: number; max?: number; min_items?: number } }>;
-type ResearchRule = { district_name: string; academic_year: number; total_score_max: number; version: string; categories: readonly { category_id: string; label: string; score_cap: number; calculation: string }[]; tie_breaking_rules: readonly { field: string }[]; fields: readonly ResearchField[]; verification_status: string; preference_scoring?: ResearchPreferenceScoring; sources?: readonly unknown[] };
+type ResearchRule = { district_name: string; academic_year: number; total_score_max: number; version: string; categories: readonly { category_id?: string; id?: string; label?: string; score_cap: number; calculation?: string }[]; tie_breaking_rules: readonly { field: string }[]; fields: readonly ResearchField[]; verification_status: string; preference_scoring?: ResearchPreferenceScoring; exam_scoring?: ResearchExamScoring; sources?: readonly unknown[] };
 
 function researchRule(data: ResearchRule, code: AdmissionDistrict): AdmissionRule {
   return {
     code, label: data.district_name, academicYear: String(data.academic_year), totalScore: data.total_score_max,
     sourceNote: "依本區官方規則資料整理；正式送出前仍須核對當年度官方簡章。",
-    categories: data.categories.map((item) => ({ key: ({ exam: "examPerformanceScore", multiple_learning: "multipleLearningScore", multiple_development: "multipleLearningScore", adaptive_guidance: "adaptationScore" } as Record<string, string>)[item.category_id] ?? item.category_id, label: item.label, max: item.score_cap, description: `${item.label}依本區官方規則換算，最高採計${item.score_cap}分。`, calculation: item.calculation })),
+    categories: data.categories.map((item) => { const id = item.category_id ?? item.id ?? "other"; const label = item.label ?? id; return { key: ({ exam: "examPerformanceScore", multiple_learning: "multipleLearningScore", multiple_development: "multipleLearningScore", adaptive_guidance: "adaptationScore" } as Record<string, string>)[id] ?? id, label, max: item.score_cap, description: `${label}依本區官方規則換算，最高採計${item.score_cap}分。`, calculation: item.calculation }; }),
     tieBreakers: data.tie_breaking_rules.map((item) => item.field), sourceId: `${code}-115-research-json`, fields: data.fields, preferenceScoring: data.preference_scoring,
-    verificationStatus: data.verification_status,
+    examScoring: data.exam_scoring, verificationStatus: data.verification_status,
   };
 }
 
@@ -213,6 +222,13 @@ ADMISSION_RULES.changhua = researchRule(changhuaResearch as unknown as ResearchR
 ADMISSION_RULES.ilan = researchRule(ilnResearch as unknown as ResearchRule, "ilan");
 ADMISSION_RULES["hsinchu-miaoli"] = researchRule(hhmResearch as unknown as ResearchRule, "hsinchu-miaoli");
 ADMISSION_RULES.yunlin = researchRule(ylcResearch as unknown as ResearchRule, "yunlin");
+ADMISSION_RULES.chiayi = researchRule(cycResearch as unknown as ResearchRule, "chiayi");
+ADMISSION_RULES.tainan = researchRule(tnnResearch as unknown as ResearchRule, "tainan");
+ADMISSION_RULES.pingtung = researchRule(ptcResearch as unknown as ResearchRule, "pingtung");
+ADMISSION_RULES.hualien = researchRule(hlcResearch as unknown as ResearchRule, "hualien");
+ADMISSION_RULES.taitung = researchRule(tttResearch as unknown as ResearchRule, "taitung");
+ADMISSION_RULES.penghu = researchRule(phcResearch as unknown as ResearchRule, "penghu");
+ADMISSION_RULES.kinmen = researchRule(kmnResearch as unknown as ResearchRule, "kinmen");
 
 export type EnrollmentDistrictStatus = string;
 export type AdmissionScoreInput = {
@@ -302,7 +318,7 @@ function calculateResearchScore(input: AdmissionScoreInput, rule: AdmissionRule)
     }
     return minItems !== undefined && (!Array.isArray(listValue) || (listValue as unknown[]).length < minItems);
   }).map((field) => field.field_id);
-  if (rule.preferenceScoring?.enabled && !(rule.fields ?? []).some((field) => field.field_id === "preference_choices") && values.preference_rank === undefined) missingFields.push("preference_rank");
+  if (rule.preferenceScoring?.enabled && !(rule.fields ?? []).some((field) => field.field_id === "preference_choices") && values.preference_rank === undefined && values.preference_group_rank === undefined) missingFields.push("preference_rank");
   if (rule.code === "changhua") missingFields.push(...validateChanghuaStructuredFields(values));
   const gradeKeys = rule.code === "tp" || rule.code === "taoyuan-lienchiang" || rule.code === "kaohsiung"
     ? ["chinese_exam_level", "math_exam_level", "english_exam_level", "social_exam_level", "science_exam_level"]
@@ -316,14 +332,16 @@ function calculateResearchScore(input: AdmissionScoreInput, rule: AdmissionRule)
   const choices = (values.preference_choices as Array<{ schoolId: string; departmentId?: string; vocationalClusterId?: string }> | undefined) ?? input.choiceList ?? [];
   const assigned = assignPreferenceSequences(choices, rule.code);
   const rank = assigned[0]?.preferenceSequence ?? 1;
-  const preferenceScore = researchPreferenceScore(rule.code, values, rank);
+  const preferenceScore = ["chiayi", "tainan", "pingtung", "hualien", "taitung", "penghu", "kinmen"].includes(rule.code) ? preferenceScoreFromRule(rule, values, rank) : researchPreferenceScore(rule.code, values, rank);
   const examGrades = gradeKeys.map((key) => normalizeResearchExamGrade(values[key]) as ExamGrade);
-  const examScores = examGrades.map((grade) => rule.code === "changhua" ? CHANGHUA_EXAM_SCORE_MAP[grade] ?? 0 : examScoreForResearch(rule.code, grade));
+  const usesNewDistrictExam = ["chiayi", "tainan", "pingtung", "hualien", "taitung", "penghu", "kinmen"].includes(rule.code);
+  const examScores = examGrades.map((grade) => rule.code === "changhua" ? CHANGHUA_EXAM_SCORE_MAP[grade] ?? 0 : usesNewDistrictExam ? researchExamSubjectScore(rule, grade) : examScoreForResearch(rule.code, grade));
   const writing = Number(values.writing_grade ?? 0);
   const violation = Number(values.exam_violation_points ?? 0);
-  const examPerformanceScore = rule.code === "changhua" && values.exam_disposition === "exam_component_zero" ? 0 : Math.max(0, examScores.reduce((a, b) => a + b, 0) + examWritingScore(rule.code, writing) - violation * (rule.code === "changhua" || rule.code === "kaohsiung" ? 0.3 : 0));
+  const examRawScore = examScores.reduce((a, b) => a + b, 0) + (usesNewDistrictExam ? researchExamWritingScore(rule, writing) : examWritingScore(rule.code, writing));
+  const examPerformanceScore = rule.code === "changhua" && values.exam_disposition === "exam_component_zero" ? 0 : Math.max(0, (usesNewDistrictExam ? Math.min(rule.examScoring?.score_cap ?? rule.examScoring?.base_score_cap ?? Infinity, examRawScore) - violation * researchExamViolationDeduction(rule) : examRawScore - violation * (rule.code === "changhua" || rule.code === "kaohsiung" ? .3 : 0)));
   const examTotalPoints = examGrades.reduce((sum, grade) => sum + (EXAM_POINT_MAP[grade] ?? 0), 0) + writing;
-  const calculatedItems = rule.code === "ct" ? calculateResearchCt(values, preferenceScore) : rule.code === "changhua" ? calculateResearchChc(values, preferenceScore) : rule.code === "tp" ? calculateResearchTtk(values, preferenceScore) : rule.code === "taoyuan-lienchiang" ? calculateResearchTyc(values, preferenceScore) : rule.code === "kaohsiung" ? calculateResearchKh(values, preferenceScore) : rule.code === "ilan" ? calculateResearchIln(values) : rule.code === "hsinchu-miaoli" ? calculateResearchHhm(values) : calculateResearchYlc(values);
+  const calculatedItems = rule.code === "ct" ? calculateResearchCt(values, preferenceScore) : rule.code === "changhua" ? calculateResearchChc(values, preferenceScore) : rule.code === "tp" ? calculateResearchTtk(values, preferenceScore) : rule.code === "taoyuan-lienchiang" ? calculateResearchTyc(values, preferenceScore) : rule.code === "kaohsiung" ? calculateResearchKh(values, preferenceScore) : rule.code === "ilan" ? calculateResearchIln(values) : rule.code === "hsinchu-miaoli" ? calculateResearchHhm(values) : rule.code === "yunlin" ? calculateResearchYlc(values) : calculateNewDistrictResearch(rule, values, preferenceScore);
   const calculated = calculatedItems as Record<string, number>;
   const otherItems = { ...calculated, otherItemsTotal: calculated.otherItemsTotal ?? 0, multipleLearningScore: calculated.multipleLearningScore ?? calculated.multiple_learning ?? 0, adaptationScore: calculated.adaptationScore ?? calculated.adaptive_guidance ?? 0 };
   const totalScore = Math.min(rule.totalScore, otherItems.otherItemsTotal + examPerformanceScore);
@@ -342,8 +360,30 @@ function researchPreferenceScore(district: AdmissionDistrict, values: Record<str
   return ranges.find(([from, to]) => selectedRank >= from && selectedRank <= to)?.[2] ?? 0;
 }
 
+function preferenceScoreFromRule(rule: AdmissionRule, values: Record<string, unknown>, fallbackRank: number) {
+  const field = rule.code === "tainan" || rule.code === "taitung" ? "preference_group_rank" : "preference_rank";
+  const rank = Math.max(1, integerValue(values[field] ?? fallbackRank));
+  const range = rule.preferenceScoring?.ranges?.find(({ from, to }) => rank >= from && (to === null || rank <= to));
+  return range?.score ?? rule.preferenceScoring?.minimum_score ?? 0;
+}
+
 function examScoreForResearch(district: AdmissionDistrict, grade: ExamGrade) {
   return district === "tp" ? GRADE_RANK_MAP[grade] : EXAM_SCORE_MAP[grade];
+}
+
+function researchExamSubjectScore(rule: AdmissionRule, grade: ExamGrade) {
+  const configured = rule.examScoring?.subject_options?.find((option) => option.value === grade)?.score;
+  return configured ?? examScoreForResearch(rule.code, grade);
+}
+
+function researchExamWritingScore(rule: AdmissionRule, writing: number) {
+  if (rule.examScoring?.writing_in_total === false) return 0;
+  const configured = rule.examScoring?.writing_options?.find((option) => option.value === String(clamp(writing, 0, 6)))?.score;
+  return configured ?? examWritingScore(rule.code, writing);
+}
+
+function researchExamViolationDeduction(rule: AdmissionRule) {
+  return rule.examScoring?.violation_deduction?.one_point ?? (rule.code === "changhua" || rule.code === "kaohsiung" ? .3 : 0);
 }
 
 function normalizeResearchExamGrade(value: unknown): ExamGrade | undefined {
@@ -437,6 +477,104 @@ function calculateResearchYlc(values: Record<string, unknown>) {
   return { preference: preference, non_exam: nonExam, otherItemsTotal: nonExam };
 }
 
+function calculateNewDistrictResearch(rule: AdmissionRule, values: Record<string, unknown>, preferenceScore: number) {
+  const option = (fieldId: string) => optionScore(values[fieldId], rule.fields?.find((field) => field.field_id === fieldId)?.options);
+  const records = (fieldId: string, cap: number) => Math.min(cap, sumScores(values[fieldId]));
+  const fitness = (fieldId: string, multiplier: number, cap: number, extraKey?: string) => {
+    const value = values[fieldId];
+    if (typeof value === "number") return Math.min(cap, Math.max(0, value));
+    if (!value || typeof value !== "object") return 0;
+    const record = value as Record<string, unknown>;
+    if (record.special === true) return cap;
+    return Math.min(cap, integerValue(record.qualified_items) * multiplier + Number(record[extraKey ?? "medal_bonus"] ?? record.medal_bonus ?? 0) + (record.completed_all === true ? 2 : 0));
+  };
+
+  if (rule.code === "chiayi") {
+    const balanced = ["balanced_health_pe", "balanced_arts", "balanced_integrated", "balanced_technology"].filter((id) => values[id] === true).length * 3;
+    const adaptive = ["adaptive_parent_matches", "adaptive_teacher_matches", "adaptive_counselor_matches"].filter((id) => values[id] === true).length * 2;
+    const morality = Math.min(12, option("discipline_status") + integerValue(values.major_merit_count) * 9 + integerValue(values.minor_merit_count) * 3 + integerValue(values.commendation_count));
+    const service = Math.min(8, Math.floor(Number(values.service_learning_hours) / 2));
+    const fitnessScore = fitness("fitness_result", 3, 10);
+    const competition = records("competition_records", 10);
+    const multiple = Math.min(26, morality + service + fitnessScore + competition);
+    const lowIncome = option("low_income_status");
+    return { preference_score: preferenceScore, low_income_score: lowIncome, balanced_score: balanced, adaptive_score: adaptive, morality_score: morality, service_score: service, fitness_score: fitnessScore, competition_score: competition, multiple_score: multiple, otherItemsTotal: preferenceScore + lowIncome + balanced + adaptive + multiple };
+  }
+
+  if (rule.code === "tainan") {
+    const competition = records("competition_records", 10);
+    const reward = Math.min(15, Math.max(0, (values.no_remaining_punishment === true ? 3 : 0) + integerValue(values.major_merit_count) * 4.5 + integerValue(values.minor_merit_count) * 1.5 + integerValue(values.commendation_count) * .5 - integerValue(values.major_demerit_count) * 4.5 - integerValue(values.minor_demerit_count) * 1.5 - integerValue(values.warning_count) * .5));
+    const club = Math.min(15, [1, 2, 3, 4, 5].filter((n) => values[`club_semester_${n}_qualified`] === true).length * 3);
+    const service = Math.min(15, Number(values.service_learning_hours) * .3);
+    const fitnessScore = option("fitness_band");
+    const language = option("language_certificate");
+    const multiple = Math.min(50, competition + reward + club + service + fitnessScore + language);
+    const nearby = values.nearby_eligibility === true ? 10 : 0;
+    return { preference_score: preferenceScore, competition_score: competition, reward_score: reward, club_score: club, service_score: service, fitness_score: fitnessScore, language_score: language, multiple_score: multiple, nearby_score: nearby, otherItemsTotal: preferenceScore + multiple + nearby };
+  }
+
+  if (rule.code === "pingtung") {
+    const graduation = values.graduation_qualified === true ? 2 : 0;
+    const balanced = Math.min(9, integerValue(values.balanced_qualified_domain_count) * 3);
+    const service = Math.min(10, integerValue(values.class_cadre_semesters) * 3 + integerValue(values.club_president_semesters) * 2 + integerValue(values.special_service_semesters) * 2);
+    const discipline = option("discipline_status");
+    const competition = records("competition_records", 10);
+    const fitnessScore = fitness("fitness_status", 2, 10);
+    const language = values.local_language_certificate === true ? 2 : 0;
+    const multiple = Math.min(28, service + discipline + competition + fitnessScore + language);
+    const adaptive = ["adaptive_parent", "adaptive_teacher", "adaptive_counselor"].filter((id) => values[id] === true).length * 2;
+    const economic = option("economic_status");
+    return { graduation_score: graduation, preference_score: preferenceScore, balanced_score: balanced, service_score: service, discipline_score: discipline, competition_score: competition, fitness_score: fitnessScore, language_score: language, multiple_score: multiple, adaptive_score: adaptive, economic_score: economic, otherItemsTotal: graduation + preferenceScore + balanced + multiple + adaptive + economic };
+  }
+
+  if (rule.code === "hualien") {
+    const balanced = Math.min(16, integerValue(values.balanced_qualified_domains) * 4);
+    const discipline = values.no_minor_demerit === true ? 9 : 0;
+    const cadre = values.cadre_qualified === true ? 9 : 0;
+    const competition = records("competition_records", 15);
+    const fitnessScore = fitness("fitness_result", 2, 9);
+    const targetSchool = Math.min(15, Number(values.target_school_other_score) || 0);
+    const multiple = Math.min(47, balanced + discipline + cadre + competition + fitnessScore + targetSchool);
+    const lowIncome = values.low_income_status === true ? 3 : 0;
+    return { adaptive_preference_score: preferenceScore, balanced_score: balanced, discipline_score: discipline, cadre_score: cadre, competition_score: competition, fitness_score: fitnessScore, target_school_other_score: targetSchool, multiple_score: multiple, low_income_score: lowIncome, otherItemsTotal: preferenceScore + multiple + lowIncome };
+  }
+
+  if (rule.code === "taitung") {
+    const service = Math.min(12, integerValue(values.cadre_semesters) * 3 + (Array.isArray(values.service_hours_by_semester) ? values.service_hours_by_semester.reduce((sum, hours) => sum + Math.min(Number(hours) * .125, 3), 0) : 0));
+    const reward = Math.min(15, integerValue(values.major_merit_count) * 4.5 + integerValue(values.minor_merit_count) * 1.5 + integerValue(values.commendation_count) * .5);
+    const noPunishment = values.no_punishment === true ? 5 : 0;
+    const balanced = Math.min(20, integerValue(values.balanced_qualified_domains) * 5);
+    const fitnessScore = Math.min(6, integerValue(values.fitness_qualified_items) * 1.5);
+    const multiple = Math.min(58, service + reward + noPunishment + balanced + fitnessScore);
+    return { preference_score: preferenceScore, service_score: service, reward_score: reward, no_punishment_score: noPunishment, balanced_score: balanced, fitness_score: fitnessScore, multiple_score: multiple, otherItemsTotal: preferenceScore + multiple };
+  }
+
+  if (rule.code === "penghu") {
+    const cadre = Math.min(3, integerValue(values.cadre_semesters));
+    const rewards = Math.min(10, rewardInputScore(values.reward_score_inputs));
+    const discipline = option("discipline_status");
+    const service = Math.min(2, integerValue(values.school_service_semesters_20h) * .5 + Math.floor(Number(values.external_service_hours) / 20) * .5);
+    const moralityService = Math.min(20, cadre + rewards + discipline + service);
+    const balanced = Math.min(3, integerValue(values.balanced_qualified_domains));
+    const competition = records("competition_records", 15);
+    const fitnessScore = fitness("fitness_result", 2, 8, "pr50_items");
+    const language = Math.min(8, sumScores(values.language_certificates));
+    const multiple = Math.min(26, balanced + competition + fitnessScore + language);
+    const other = Math.min(4, option("adaptive_plan_status") + (values.technical_arts_class === true ? 1 : 0) + Math.min(2, integerValue(values.club_semesters_20h) * .5));
+    return { preference_score: preferenceScore, cadre_score: cadre, reward_score: rewards, discipline_score: discipline, service_score: service, morality_service_score: moralityService, balanced_score: balanced, competition_score: competition, fitness_score: fitnessScore, language_score: language, multiple_score: multiple, other_score: other, otherItemsTotal: preferenceScore + moralityService + multiple + other };
+  }
+
+  const graduation = values.graduation_qualified === true ? 3 : 0;
+  const balanced = Math.min(8, integerValue(values.balanced_qualified_domains) * 2);
+  const morality = option("morality_status");
+  const service = Math.min(4, integerValue(values.cadre_semesters) * .5 + Math.floor(Number(values.service_hours) / 9) * .5);
+  const competition = records("competition_records", 6);
+  const fitnessScore = fitness("fitness_result", .5, 3);
+  const nearby = values.nearby_eligibility === true ? 1 : 0;
+  const weak = option("economic_status");
+  return { graduation_score: graduation, preference_score: preferenceScore, balanced_score: balanced, morality_score: morality, service_score: service, competition_score: competition, fitness_score: fitnessScore, nearby_score: nearby, weak_score: weak, otherItemsTotal: graduation + preferenceScore + balanced + morality + service + competition + fitnessScore + nearby + weak };
+}
+
 function integerValue(value: unknown) { const number = Number(value); return Number.isFinite(number) ? Math.max(0, Math.floor(number)) : 0; }
 
 function selectedOptionScore(value: unknown, options?: readonly { value: unknown; score?: number | null }[]) {
@@ -461,6 +599,12 @@ function researchFieldOptions(data: unknown, fieldId: string): readonly { label:
 
 function enumScore(value: unknown, values: string[], scores: number[]) { const index = values.indexOf(String(value)); return index >= 0 ? scores[index] : 0; }
 function sumScores(value: unknown) { return Array.isArray(value) ? value.reduce((sum, item) => sum + (typeof item === "object" && item ? Number((item as { score?: unknown }).score ?? 0) : Number(item) || 0), 0) : 0; }
+function rewardInputScore(value: unknown) {
+  if (Array.isArray(value)) return sumScores(value);
+  if (!value || typeof value !== "object") return 0;
+  const record = value as Record<string, unknown>;
+  return integerValue(record.major) * 4.5 + integerValue(record.minor) * 1.5 + integerValue(record.commendation) * .5;
+}
 
 function legacyResearchValues(input: AdmissionScoreInput, district: AdmissionDistrict): Record<string, unknown> {
   const exam = input.exam ?? {};

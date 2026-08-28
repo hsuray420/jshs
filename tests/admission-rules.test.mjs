@@ -17,13 +17,13 @@ function choices(count, prefix = "school") {
 }
 
 test("只有有研究 MD/JSON 的區域開放積分試算", () => {
-  for (const district of ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "kaohsiung"]) assert.equal(isAdmissionCalculatorAvailable(district), true);
-  for (const district of ["chiayi", "tainan", "pingtung", "hualien", "taitung", "penghu", "kinmen"]) assert.equal(isAdmissionCalculatorAvailable(district), false);
+  for (const district of ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "chiayi", "tainan", "kaohsiung", "pingtung", "hualien", "taitung", "penghu", "kinmen"]) assert.equal(isAdmissionCalculatorAvailable(district), true);
+  assert.equal(isAdmissionCalculatorAvailable("unknown"), false);
 });
 
 test("嘉南屏花東澎金七區使用各自的 115 官方規則 JSON 開放試算", () => {
   const expected = [
-    ["chiayi", "嘉義區", 82, "cyc-115-research-json", "preference_rank"],
+    ["chiayi", "嘉義區", 82, "chiayi-115-research-json", "preference_rank"],
     ["tainan", "臺南區", 108, "tainan-115-research-json", "preference_group_rank"],
     ["pingtung", "屏東區", 79, "pingtung-115-research-json", "graduation_qualified"],
     ["hualien", "花蓮區", 100, "hualien-115-research-json", "target_school_other_score"],
@@ -39,6 +39,25 @@ test("嘉南屏花東澎金七區使用各自的 115 官方規則 JSON 開放試
     assert.equal(rule.totalScore, totalScore);
     assert.equal(rule.sourceId, sourceId);
     assert.equal(rule.fields.some((field) => field.field_id === fieldId), true);
+  }
+});
+
+test("嘉南屏花東澎金七區各自套用志願序、封頂與會考公式", () => {
+  const fullGrades = { chinese_exam_grade: "A++", english_exam_grade: "A++", math_exam_grade: "A++", social_exam_grade: "A++", science_exam_grade: "A++", writing_grade: 6 };
+  const cases = [
+    ["chiayi", { preference_rank: 1, low_income_status: "low_income", balanced_health_pe: true, balanced_arts: true, balanced_integrated: true, balanced_technology: true, adaptive_parent_matches: true, adaptive_teacher_matches: true, adaptive_counselor_matches: true, discipline_status: "none", major_merit_count: 1, minor_merit_count: 0, commendation_count: 0, service_learning_hours: 16, fitness_result: { qualified_items: 3, medal_bonus: 1 }, competition_records: [], ...fullGrades }, 82],
+    ["tainan", { preference_group_rank: 1, competition_records: [], major_merit_count: 4, minor_merit_count: 0, commendation_count: 0, major_demerit_count: 0, minor_demerit_count: 0, warning_count: 0, no_remaining_punishment: true, club_semester_1_qualified: true, club_semester_2_qualified: true, club_semester_3_qualified: true, club_semester_4_qualified: true, club_semester_5_qualified: true, service_learning_hours: 50, fitness_band: "two_pr85", language_certificate: "english_a2", nearby_eligibility: true, ...fullGrades }, 108],
+    ["pingtung", { graduation_qualified: true, preference_rank: 1, balanced_qualified_domain_count: 3, class_cadre_semesters: 4, club_president_semesters: 0, special_service_semesters: 0, discipline_status: "none", competition_records: [], fitness_status: { qualified_items: 4, completed_all: true }, local_language_certificate: true, adaptive_parent: true, adaptive_teacher: true, adaptive_counselor: true, economic_status: "low", ...fullGrades }, 79],
+    ["hualien", { preference_rank: 1, balanced_qualified_domains: 4, no_minor_demerit: true, cadre_qualified: true, competition_records: [], fitness_result: { qualified_items: 4, medal_bonus: 1 }, target_school_other_score: 15, low_income_status: true, ...fullGrades }, 100],
+    ["taitung", { preference_group_rank: 1, cadre_semesters: 4, service_hours_by_semester: [0, 0, 0, 0, 0], major_merit_count: 4, minor_merit_count: 0, commendation_count: 0, no_punishment: true, balanced_qualified_domains: 4, fitness_qualified_items: 4, ...fullGrades }, 100],
+    ["penghu", { preference_rank: 1, cadre_semesters: 3, reward_score_inputs: [{ score: 10 }], discipline_status: "none_ever", school_service_semesters_20h: 4, external_service_hours: 40, balanced_qualified_domains: 3, competition_records: [{ score: 15 }], fitness_result: { qualified_items: 4, pr50_items: 0 }, language_certificates: [{ score: 8 }], adaptive_plan_status: "both", technical_arts_class: true, club_semesters_20h: 4, ...fullGrades }, 80],
+    ["kinmen", { graduation_qualified: true, preference_rank: 1, balanced_qualified_domains: 4, morality_status: "none_or_cancelled", cadre_semesters: 4, service_hours: 36, competition_records: [{ score: 6 }], fitness_result: { qualified_items: 4, medal_bonus: 1 }, nearby_eligibility: true, economic_status: "low", ...fullGrades }, 60],
+  ];
+
+  for (const [district, ruleValues, total] of cases) {
+    const result = calculateAdmissionScore({ district, ruleValues });
+    assert.equal(result.status, "complete", district);
+    assert.equal(result.totalScore, total, district);
   }
 });
 
