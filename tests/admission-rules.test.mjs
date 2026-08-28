@@ -21,6 +21,27 @@ test("只有有研究 MD/JSON 的區域開放積分試算", () => {
   for (const district of ["chiayi", "tainan", "pingtung", "hualien", "taitung", "penghu", "kinmen"]) assert.equal(isAdmissionCalculatorAvailable(district), false);
 });
 
+test("嘉南屏花東澎金七區使用各自的 115 官方規則 JSON 開放試算", () => {
+  const expected = [
+    ["chiayi", "嘉義區", 82, "cyc-115-research-json", "preference_rank"],
+    ["tainan", "臺南區", 108, "tainan-115-research-json", "preference_group_rank"],
+    ["pingtung", "屏東區", 79, "pingtung-115-research-json", "graduation_qualified"],
+    ["hualien", "花蓮區", 100, "hualien-115-research-json", "target_school_other_score"],
+    ["taitung", "臺東區", 100, "taitung-115-research-json", "service_hours_by_semester"],
+    ["penghu", "澎湖區", 80, "penghu-115-research-json", "external_service_hours"],
+    ["kinmen", "金門區", 60, "kinmen-115-research-json", "nearby_eligibility"],
+  ];
+
+  for (const [district, label, totalScore, sourceId, fieldId] of expected) {
+    assert.equal(isAdmissionCalculatorAvailable(district), true, `${district} should be open`);
+    const rule = calculateAdmissionScore({ district, ruleValues: {} }).rule;
+    assert.equal(rule.label, label);
+    assert.equal(rule.totalScore, totalScore);
+    assert.equal(rule.sourceId, sourceId);
+    assert.equal(rule.fields.some((field) => field.field_id === fieldId), true);
+  }
+});
+
 test("五區滿分案例都遵守各區總分上限", () => {
   const cases = [
     ["tp", {

@@ -1,0 +1,1033 @@
+{
+  "academic_year": 115,
+  "district_id": "tnn",
+  "district_name": "臺南區",
+  "version": "115.1",
+  "coverage": [
+    "臺南市"
+  ],
+  "common_district_rules": [
+    "依簡章招生對象及共同就學區核定範圍；目標學校資格須另以招生名額表判定。"
+  ],
+  "total_score_max": 108,
+  "categories": [
+    {
+      "id": "preference",
+      "score_cap": 12
+    },
+    {
+      "id": "multiple",
+      "score_cap": 50
+    },
+    {
+      "id": "nearby",
+      "score_cap": 10
+    },
+    {
+      "id": "exam",
+      "score_cap": 36
+    }
+  ],
+  "fields": [
+    {
+      "field_id": "preference_group_rank",
+      "label": "志願群順位",
+      "category": "志願序",
+      "subcategory": "志願群順位",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 1,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 12,
+      "calculation": "score=max(13-rank,7)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "每個志願群最多3校；第1群12分，逐群減1分，第6群起均7分。",
+      "official_rule": "每個志願群最多3校；第1群12分，逐群減1分，第6群起均7分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 95,
+        "section": "志願序"
+      }
+    },
+    {
+      "field_id": "competition_records",
+      "label": "競賽成績",
+      "category": "多元學習表現",
+      "subcategory": "競賽成績",
+      "input_type": "multi_select",
+      "options": [],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 10,
+      "calculation": "score=min(sum(best_nonduplicate_scores),10)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上（五學期採計期）",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "依國際、全國或市級名次換算，團體獎折半；同性質同項只採最高一次。",
+      "official_rule": "依國際、全國或市級名次換算，團體獎折半；同性質同項只採最高一次。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 70,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "major_merit_count",
+      "label": "大功",
+      "category": "多元學習表現",
+      "subcategory": "大功",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": 4.5,
+      "score_cap": 15,
+      "calculation": "reward_raw += count * 4.5",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上（前五學期）",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輸入採計期間內的大功次數；功過相抵後與無懲處基本分合計最高15分。",
+      "official_rule": "輸入採計期間內的大功次數；功過相抵後與無懲處基本分合計最高15分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 71,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "minor_merit_count",
+      "label": "小功",
+      "category": "多元學習表現",
+      "subcategory": "小功",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": 1.5,
+      "score_cap": 15,
+      "calculation": "reward_raw += count * 1.5",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上（前五學期）",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輸入採計期間內的小功次數；功過相抵後與無懲處基本分合計最高15分。",
+      "official_rule": "輸入採計期間內的小功次數；功過相抵後與無懲處基本分合計最高15分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 71,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "commendation_count",
+      "label": "嘉獎",
+      "category": "多元學習表現",
+      "subcategory": "嘉獎",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": 0.5,
+      "score_cap": 15,
+      "calculation": "reward_raw += count * 0.5",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上（前五學期）",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輸入採計期間內的嘉獎次數；功過相抵後與無懲處基本分合計最高15分。",
+      "official_rule": "輸入採計期間內的嘉獎次數；功過相抵後與無懲處基本分合計最高15分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 71,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "major_demerit_count",
+      "label": "大過",
+      "category": "多元學習表現",
+      "subcategory": "大過",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": -4.5,
+      "score_cap": 15,
+      "calculation": "reward_raw += count * -4.5",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上（前五學期）",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輸入採計期間內的大過次數；功過相抵後與無懲處基本分合計最高15分。",
+      "official_rule": "輸入採計期間內的大過次數；功過相抵後與無懲處基本分合計最高15分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 71,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "minor_demerit_count",
+      "label": "小過",
+      "category": "多元學習表現",
+      "subcategory": "小過",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": -1.5,
+      "score_cap": 15,
+      "calculation": "reward_raw += count * -1.5",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上（前五學期）",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輸入採計期間內的小過次數；功過相抵後與無懲處基本分合計最高15分。",
+      "official_rule": "輸入採計期間內的小過次數；功過相抵後與無懲處基本分合計最高15分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 71,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "warning_count",
+      "label": "警告",
+      "category": "多元學習表現",
+      "subcategory": "警告",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": -0.5,
+      "score_cap": 15,
+      "calculation": "reward_raw += count * -0.5",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上（前五學期）",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輸入採計期間內的警告次數；功過相抵後與無懲處基本分合計最高15分。",
+      "official_rule": "輸入採計期間內的警告次數；功過相抵後與無懲處基本分合計最高15分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 71,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "no_remaining_punishment",
+      "label": "功過相抵後無懲處",
+      "category": "多元學習表現",
+      "subcategory": "功過相抵後無懲處",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "否",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "是",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 15,
+      "calculation": "basic_score = value ? 3 : 0; reward_score=min(max(reward_raw+basic_score,0),15)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "功過相抵後完全無懲處紀錄可加基本3分；仍有懲處則此基本分為0。",
+      "official_rule": "功過相抵後完全無懲處紀錄可加基本3分；仍有懲處則此基本分為0。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 71,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "club_semester_1_qualified",
+      "label": "社團第1學期達標",
+      "category": "多元學習表現",
+      "subcategory": "社團第1學期達標",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "未達標",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "達標",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score = qualified ? 3 : 0; club_score=min(sum,15)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "該學期參加符合規定社團滿16小時且經指導教師評定通過才算達標。",
+      "official_rule": "該學期參加符合規定社團滿16小時且經指導教師評定通過才算達標。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 72,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "club_semester_2_qualified",
+      "label": "社團第2學期達標",
+      "category": "多元學習表現",
+      "subcategory": "社團第2學期達標",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "未達標",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "達標",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score = qualified ? 3 : 0; club_score=min(sum,15)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "該學期參加符合規定社團滿16小時且經指導教師評定通過才算達標。",
+      "official_rule": "該學期參加符合規定社團滿16小時且經指導教師評定通過才算達標。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 72,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "club_semester_3_qualified",
+      "label": "社團第3學期達標",
+      "category": "多元學習表現",
+      "subcategory": "社團第3學期達標",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "未達標",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "達標",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score = qualified ? 3 : 0; club_score=min(sum,15)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "該學期參加符合規定社團滿16小時且經指導教師評定通過才算達標。",
+      "official_rule": "該學期參加符合規定社團滿16小時且經指導教師評定通過才算達標。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 72,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "club_semester_4_qualified",
+      "label": "社團第4學期達標",
+      "category": "多元學習表現",
+      "subcategory": "社團第4學期達標",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "未達標",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "達標",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score = qualified ? 3 : 0; club_score=min(sum,15)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "該學期參加符合規定社團滿16小時且經指導教師評定通過才算達標。",
+      "official_rule": "該學期參加符合規定社團滿16小時且經指導教師評定通過才算達標。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 72,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "club_semester_5_qualified",
+      "label": "社團第5學期達標",
+      "category": "多元學習表現",
+      "subcategory": "社團第5學期達標",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "未達標",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "達標",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score = qualified ? 3 : 0; club_score=min(sum,15)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "該學期參加符合規定社團滿16小時且經指導教師評定通過才算達標。",
+      "official_rule": "該學期參加符合規定社團滿16小時且經指導教師評定通過才算達標。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 72,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "service_learning_hours",
+      "label": "服務學習時數",
+      "category": "多元學習表現",
+      "subcategory": "服務學習時數",
+      "input_type": "decimal",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": 0.3,
+      "score_cap": 15,
+      "calculation": "score=min(hours*0.3,15)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "輸入認可的服務時數，每小時0.3分、最高15分；校外服務須符合事前申請及認證規定。",
+      "official_rule": "輸入認可的服務時數，每小時0.3分、最高15分；校外服務須符合事前申請及認證規定。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 72,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "fitness_band",
+      "label": "體適能級距",
+      "category": "多元學習表現",
+      "subcategory": "體適能級距",
+      "input_type": "radio",
+      "options": [
+        {
+          "label": "無成績",
+          "value": "none",
+          "score": 0
+        },
+        {
+          "label": "僅0至1項達門檻",
+          "value": "under_two",
+          "score": 4
+        },
+        {
+          "label": "任2項達門檻",
+          "value": "two_threshold",
+          "score": 6
+        },
+        {
+          "label": "任2項PR50",
+          "value": "two_pr50",
+          "score": 8
+        },
+        {
+          "label": "任2項PR75",
+          "value": "two_pr75",
+          "score": 9
+        },
+        {
+          "label": "任2項PR85",
+          "value": "two_pr85",
+          "score": 10
+        },
+        {
+          "label": "特殊情形",
+          "value": "special",
+          "score": 6
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 10,
+      "calculation": "score=option_score",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "須以同一次檢測的四項成績判定；特殊或經認定不宜檢測者依簡章計6分。",
+      "official_rule": "須以同一次檢測的四項成績判定；特殊或經認定不宜檢測者依簡章計6分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 73,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "language_certificate",
+      "label": "語言認證",
+      "category": "多元學習表現",
+      "subcategory": "語言認證",
+      "input_type": "radio",
+      "options": [
+        {
+          "label": "無",
+          "value": "none",
+          "score": 0
+        },
+        {
+          "label": "本土語文達標",
+          "value": "local_language",
+          "score": 5
+        },
+        {
+          "label": "英語CEFR A2以上",
+          "value": "english_a2",
+          "score": 5
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 5,
+      "calculation": "score=qualified?5:0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "本土語文達基礎級以上或英語達CEFR A2以上計5分；須為簡章認可證書。",
+      "official_rule": "本土語文達基礎級以上或英語達CEFR A2以上計5分；須為簡章認可證書。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 74,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "nearby_eligibility",
+      "label": "就近入學資格",
+      "category": "就近入學",
+      "subcategory": "就近入學資格",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "不符合",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "符合",
+          "value": true,
+          "score": 10
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 10,
+      "calculation": "score=eligible?10:0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "臺南區、核定共同就學區或核准變更就學區資格者計10分。",
+      "official_rule": "臺南區、核定共同就學區或核准變更就學區資格者計10分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 95,
+        "section": "就近入學"
+      }
+    }
+  ],
+  "exam_scoring": {
+    "subjects": [
+      "chinese",
+      "english",
+      "math",
+      "social",
+      "science"
+    ],
+    "subject_options": [
+      {
+        "label": "A++",
+        "value": "A++",
+        "score": 7
+      },
+      {
+        "label": "A+",
+        "value": "A+",
+        "score": 6
+      },
+      {
+        "label": "A",
+        "value": "A",
+        "score": 5
+      },
+      {
+        "label": "B++",
+        "value": "B++",
+        "score": 4
+      },
+      {
+        "label": "B+",
+        "value": "B+",
+        "score": 3
+      },
+      {
+        "label": "B",
+        "value": "B",
+        "score": 2
+      },
+      {
+        "label": "C",
+        "value": "C",
+        "score": 1
+      }
+    ],
+    "writing_options": [
+      {
+        "label": "6級",
+        "value": "6",
+        "score": 1
+      },
+      {
+        "label": "5級",
+        "value": "5",
+        "score": 0.8
+      },
+      {
+        "label": "4級",
+        "value": "4",
+        "score": 0.6
+      },
+      {
+        "label": "3級",
+        "value": "3",
+        "score": 0.4
+      },
+      {
+        "label": "2級",
+        "value": "2",
+        "score": 0.2
+      },
+      {
+        "label": "1級",
+        "value": "1",
+        "score": 0.1
+      },
+      {
+        "label": "0級",
+        "value": "0",
+        "score": 0
+      }
+    ],
+    "score_cap": 36,
+    "calculation": "sum(subject_scores)+writing_score",
+    "violation_deduction": {
+      "one_point": 0.36,
+      "two_points": 0.72
+    }
+  },
+  "preference_scoring": {
+    "enabled": true,
+    "max_choices": null,
+    "grouping_method": "每一志願群最多3校；同校各科同群，重複選同校另成新群",
+    "ranges": [
+      {
+        "from": 1,
+        "to": 1,
+        "score": 12
+      },
+      {
+        "from": 2,
+        "to": 2,
+        "score": 11
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "score": 10
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "score": 9
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "score": 8
+      },
+      {
+        "from": 6,
+        "to": null,
+        "score": 7
+      }
+    ],
+    "minimum_score": 7
+  },
+  "tie_breaking_rules": [
+    {
+      "priority": 1,
+      "field": "total_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "total_score",
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 2,
+      "field": "low_income_status",
+      "comparison": "identity_priority",
+      "higher_is_better": false,
+      "description": "總積分相同時低收入戶優先",
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 3,
+      "field": "preference_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "preference_score",
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 4,
+      "field": "multiple_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "multiple_score",
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 5,
+      "field": "exam_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_score",
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 6,
+      "field": "exam_mark_pattern",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_mark_pattern",
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 7,
+      "field": "exam_subject_scores_chinese_english_math_science_social",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_subject_scores_chinese_english_math_science_social",
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 8,
+      "field": "preference_group_school_order",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "preference_group_school_order",
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 9,
+      "field": "program_order_within_school",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "program_order_within_school",
+      "source_ids": [
+        "TNN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    }
+  ],
+  "special_identity_rules": [
+    {
+      "requires_special_identity_module": true,
+      "rule": "原住民、身心障礙及其他依法優待身分另依簡章附錄辦理，不併入一般生基本積分。"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "TNN-115-001",
+      "district": "臺南區",
+      "academic_year": 115,
+      "document_title": "115學年度臺南區高級中等學校免試入學簡章",
+      "issuing_authority": "115學年度臺南區高級中等學校免試入學委員會",
+      "document_type": "招生簡章",
+      "publication_date": null,
+      "page": "7–8、70–74、95–96",
+      "section": "比序項目積分方式、錄取方式及附表",
+      "official_url": "https://tn.entry.edu.tw",
+      "accessed_date": "2026-08-28",
+      "notes": "本規格以使用者提供之115學年度正式簡章PDF逐頁核對。"
+    }
+  ],
+  "verification_status": "verified_from_official_115_brochure",
+  "changes_from_previous_year": {
+    "status": "needs_official_confirmation",
+    "items": []
+  },
+  "unresolved_items": [
+    "簡章未設定單一志願總數上限，preference_scoring.max_choices 保留 null。"
+  ],
+  "total_score_calculation": "preference_score + min(competition_score+reward_score+club_score+service_score+fitness_score+language_score,50) + nearby_score + exam_score",
+  "verification": {
+    "score_total_verified": true,
+    "field_coverage_verified": true,
+    "tie_break_verified": true,
+    "academic_year_verified": true,
+    "unresolved_items": [
+      "簡章未設定單一志願總數上限，preference_scoring.max_choices 保留 null。"
+    ]
+  }
+}

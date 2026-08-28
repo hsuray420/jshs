@@ -1,0 +1,904 @@
+{
+  "academic_year": 115,
+  "district_id": "ptc",
+  "district_name": "屏東區",
+  "version": "115.1",
+  "coverage": [
+    "屏東縣"
+  ],
+  "common_district_rules": [
+    "高雄市立林園高中為簡章所列共同就學區招生學校。"
+  ],
+  "total_score_max": 79,
+  "categories": [
+    {
+      "id": "graduation",
+      "score_cap": 2
+    },
+    {
+      "id": "preference",
+      "score_cap": 7
+    },
+    {
+      "id": "balanced",
+      "score_cap": 9
+    },
+    {
+      "id": "multiple",
+      "score_cap": 28
+    },
+    {
+      "id": "adaptive",
+      "score_cap": 6
+    },
+    {
+      "id": "economic",
+      "score_cap": 2
+    },
+    {
+      "id": "exam",
+      "score_cap": 25
+    }
+  ],
+  "fields": [
+    {
+      "field_id": "graduation_qualified",
+      "label": "畢業資格",
+      "category": "畢業資格",
+      "subcategory": "畢業資格",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "未取得",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "取得",
+          "value": true,
+          "score": 2
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score=value?2:0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "取得國中畢業資格計2分；僅具修業證明者不計。",
+      "official_rule": "取得國中畢業資格計2分；僅具修業證明者不計。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 44,
+        "section": "畢業資格"
+      }
+    },
+    {
+      "field_id": "preference_rank",
+      "label": "志願順位",
+      "category": "志願序",
+      "subcategory": "志願順位",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 1,
+      "max": 30,
+      "score_per_unit": null,
+      "score_cap": 7,
+      "calculation": "score=range_score(rank)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "同校不同科原則上分開計志願；請輸入實際校科順位，系統依級距換算。",
+      "official_rule": "同校不同科原則上分開計志願；請輸入實際校科順位，系統依級距換算。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 44,
+        "section": "志願序"
+      }
+    },
+    {
+      "field_id": "balanced_qualified_domain_count",
+      "label": "均衡學習達標領域數",
+      "category": "均衡學習",
+      "subcategory": "均衡學習達標領域數",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": 4,
+      "score_per_unit": null,
+      "score_cap": 9,
+      "calculation": "score=min(count,3)*3",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "前五學期",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "健康與體育、藝術、綜合活動、科技四領域中，依簡章達標者每領域3分，最高9分。",
+      "official_rule": "健康與體育、藝術、綜合活動、科技四領域中，依簡章達標者每領域3分，最高9分。",
+      "validation": {
+        "required": true,
+        "type": "integer",
+        "min": 0,
+        "max": 4,
+        "error_message": "請輸入0～4"
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 44,
+        "section": "均衡學習"
+      }
+    },
+    {
+      "field_id": "class_cadre_semesters",
+      "label": "班級幹部達標學期數",
+      "category": "多元學習表現",
+      "subcategory": "班級幹部達標學期數",
+      "input_type": "semester_count",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": 5,
+      "score_per_unit": 3,
+      "score_cap": 10,
+      "calculation": "raw += count*3",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "每一完整學期擔任班級幹部且符合評定者3分；與其他服務項合計最高10分。",
+      "official_rule": "每一完整學期擔任班級幹部且符合評定者3分；與其他服務項合計最高10分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 45,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "club_president_semesters",
+      "label": "社團社長達標學期數",
+      "category": "多元學習表現",
+      "subcategory": "社團社長達標學期數",
+      "input_type": "semester_count",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": 5,
+      "score_per_unit": 2,
+      "score_cap": 10,
+      "calculation": "raw += count*2",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "每一完整學期擔任社團社長且符合評定者2分；服務學習合計最高10分。",
+      "official_rule": "每一完整學期擔任社團社長且符合評定者2分；服務學習合計最高10分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 45,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "special_service_semesters",
+      "label": "特殊服務達標學期數",
+      "category": "多元學習表現",
+      "subcategory": "特殊服務達標學期數",
+      "input_type": "semester_count",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": 5,
+      "score_per_unit": 2,
+      "score_cap": 10,
+      "calculation": "raw += count*2; service_score=min(raw,10)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "經學校認定的特殊服務每學期2分，每班名額依簡章限制；服務項合計最高10分。",
+      "official_rule": "經學校認定的特殊服務每學期2分，每班名額依簡章限制；服務項合計最高10分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 45,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "discipline_status",
+      "label": "無記過紀錄",
+      "category": "多元學習表現",
+      "subcategory": "無記過紀錄",
+      "input_type": "radio",
+      "options": [
+        {
+          "label": "無懲處",
+          "value": "none",
+          "score": 10
+        },
+        {
+          "label": "未達小過1次",
+          "value": "under_one_minor",
+          "score": 7
+        },
+        {
+          "label": "未達小過2次",
+          "value": "under_two_minor",
+          "score": 4
+        },
+        {
+          "label": "未達小過3次",
+          "value": "under_three_minor",
+          "score": 1
+        },
+        {
+          "label": "其他",
+          "value": "other",
+          "score": 0
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 10,
+      "calculation": "score=option_score",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "依銷過及功過相抵後剩餘懲處選擇；不同級距直接對應10、7、4、1分。",
+      "official_rule": "依銷過及功過相抵後剩餘懲處選擇；不同級距直接對應10、7、4、1分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 45,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "competition_records",
+      "label": "競賽表現",
+      "category": "多元學習表現",
+      "subcategory": "競賽表現",
+      "input_type": "multi_select",
+      "options": [],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 10,
+      "calculation": "score=min(sum(best_nonduplicate_scores),10)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "依縣級、全國、國際層級及名次換算；同學年同類同項只取最高一次。",
+      "official_rule": "依縣級、全國、國際層級及名次換算；同學年同類同項只取最高一次。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 46,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "fitness_status",
+      "label": "體適能",
+      "category": "多元學習表現",
+      "subcategory": "體適能",
+      "input_type": "select",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": 4,
+      "score_per_unit": null,
+      "score_cap": 10,
+      "calculation": "score=min(qualified_items*2+(completed_all?2:0),10)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "每項達門檻2分，四項全測再加2分；特殊或不宜檢測者依簡章計8分。",
+      "official_rule": "每項達門檻2分，四項全測再加2分；特殊或不宜檢測者依簡章計8分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 46,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "local_language_certificate",
+      "label": "本土語文認證",
+      "category": "多元學習表現",
+      "subcategory": "本土語文認證",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "無",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "有",
+          "value": true,
+          "score": 2
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score=qualified?2:0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "取得簡章認可之本土語文初級以上證明計2分。",
+      "official_rule": "取得簡章認可之本土語文初級以上證明計2分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 46,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "adaptive_parent",
+      "label": "家長意見相符",
+      "category": "適性輔導",
+      "subcategory": "家長意見相符",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "不相符",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "相符",
+          "value": true,
+          "score": 2
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score=value?2:0",
+      "conditions": [],
+      "dependencies": [
+        "target_preference_id"
+      ],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "家長意見與該目標校科相符計2分；須按志願逐一判定。",
+      "official_rule": "家長意見與該目標校科相符計2分；須按志願逐一判定。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 46,
+        "section": "適性輔導"
+      }
+    },
+    {
+      "field_id": "adaptive_teacher",
+      "label": "導師意見相符",
+      "category": "適性輔導",
+      "subcategory": "導師意見相符",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "不相符",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "相符",
+          "value": true,
+          "score": 2
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score=value?2:0",
+      "conditions": [],
+      "dependencies": [
+        "target_preference_id"
+      ],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "導師意見與該目標校科相符計2分；須按志願逐一判定。",
+      "official_rule": "導師意見與該目標校科相符計2分；須按志願逐一判定。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 46,
+        "section": "適性輔導"
+      }
+    },
+    {
+      "field_id": "adaptive_counselor",
+      "label": "輔導教師意見相符",
+      "category": "適性輔導",
+      "subcategory": "輔導教師意見相符",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "不相符",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "相符",
+          "value": true,
+          "score": 2
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score=value?2:0",
+      "conditions": [],
+      "dependencies": [
+        "target_preference_id"
+      ],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輔導教師意見與該目標校科相符計2分；須按志願逐一判定。",
+      "official_rule": "輔導教師意見與該目標校科相符計2分；須按志願逐一判定。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 46,
+        "section": "適性輔導"
+      }
+    },
+    {
+      "field_id": "economic_status",
+      "label": "經濟弱勢",
+      "category": "扶助弱勢",
+      "subcategory": "經濟弱勢",
+      "input_type": "radio",
+      "options": [
+        {
+          "label": "無",
+          "value": "none",
+          "score": 0
+        },
+        {
+          "label": "中低收入戶",
+          "value": "middle_low",
+          "score": 1
+        },
+        {
+          "label": "低收入戶",
+          "value": "low",
+          "score": 2
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score=option_score",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": true,
+      "evidence_description": "報名時有效之公所證明。",
+      "helper_text": "低收入戶2分、中低收入戶1分；須持簡章規定期間有效證明，兩者互斥。",
+      "official_rule": "低收入戶2分、中低收入戶1分；須持簡章規定期間有效證明，兩者互斥。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 46,
+        "section": "扶助弱勢"
+      }
+    }
+  ],
+  "exam_scoring": {
+    "subjects": [
+      "chinese",
+      "english",
+      "math",
+      "social",
+      "science"
+    ],
+    "subject_options": [
+      {
+        "label": "A++",
+        "value": "A++",
+        "score": 5
+      },
+      {
+        "label": "A+",
+        "value": "A+",
+        "score": 5
+      },
+      {
+        "label": "A",
+        "value": "A",
+        "score": 5
+      },
+      {
+        "label": "B++",
+        "value": "B++",
+        "score": 4
+      },
+      {
+        "label": "B+",
+        "value": "B+",
+        "score": 3.5
+      },
+      {
+        "label": "B",
+        "value": "B",
+        "score": 3
+      },
+      {
+        "label": "C",
+        "value": "C",
+        "score": 1
+      }
+    ],
+    "writing_options": [
+      {
+        "label": "6級",
+        "value": "6",
+        "score": 1
+      },
+      {
+        "label": "5級",
+        "value": "5",
+        "score": 1
+      },
+      {
+        "label": "4級",
+        "value": "4",
+        "score": 0.5
+      },
+      {
+        "label": "3級",
+        "value": "3",
+        "score": 0.5
+      },
+      {
+        "label": "2級",
+        "value": "2",
+        "score": 0
+      },
+      {
+        "label": "1級",
+        "value": "1",
+        "score": 0
+      },
+      {
+        "label": "0級",
+        "value": "0",
+        "score": 0
+      }
+    ],
+    "score_cap": 25,
+    "calculation": "min(sum(subject_scores)+writing_score,25)",
+    "violation_deduction": {
+      "one_point": 0.25,
+      "two_points": 0.5
+    }
+  },
+  "preference_scoring": {
+    "enabled": true,
+    "max_choices": 30,
+    "grouping_method": "校科志願分開計；核定群招生同群",
+    "ranges": [
+      {
+        "from": 1,
+        "to": 3,
+        "score": 7
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "score": 5
+      },
+      {
+        "from": 7,
+        "to": 9,
+        "score": 3
+      },
+      {
+        "from": 10,
+        "to": 12,
+        "score": 2
+      },
+      {
+        "from": 13,
+        "to": 30,
+        "score": 1
+      }
+    ],
+    "minimum_score": 1
+  },
+  "tie_breaking_rules": [
+    {
+      "priority": 1,
+      "field": "total_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "total_score",
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 47,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 2,
+      "field": "graduation_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "graduation_score",
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 47,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 3,
+      "field": "preference_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "preference_score",
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 47,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 4,
+      "field": "balanced_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "balanced_score",
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 47,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 5,
+      "field": "multiple_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "multiple_score",
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 47,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 6,
+      "field": "adaptive_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "adaptive_score",
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 47,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 7,
+      "field": "economic_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "economic_score",
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 47,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 8,
+      "field": "exam_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_score",
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 47,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 9,
+      "field": "exam_subject_scores_chinese_english_math_social_science_writing",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_subject_scores_chinese_english_math_social_science_writing",
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 47,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 10,
+      "field": "exam_full_mark_chinese_english_math_social_science",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_full_mark_chinese_english_math_social_science",
+      "source_ids": [
+        "PTC-115-001"
+      ],
+      "source_locator": {
+        "page": 47,
+        "section": "同分超額比序"
+      }
+    }
+  ],
+  "special_identity_rules": [
+    {
+      "requires_special_identity_module": true,
+      "rule": "原住民、身心障礙及其他依法優待身分另依簡章附錄辦理，不併入一般生基本積分。"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "PTC-115-001",
+      "district": "屏東區",
+      "academic_year": 115,
+      "document_title": "115學年度屏東區高級中等學校免試入學簡章",
+      "issuing_authority": "115學年度屏東區高級中等學校免試入學委員會",
+      "document_type": "招生簡章",
+      "publication_date": null,
+      "page": "44–47",
+      "section": "比序項目積分方式、錄取方式及附表",
+      "official_url": "https://ptc.entry.edu.tw",
+      "accessed_date": "2026-08-28",
+      "notes": "本規格以使用者提供之115學年度正式簡章PDF逐頁核對。"
+    }
+  ],
+  "verification_status": "verified_from_official_115_brochure",
+  "changes_from_previous_year": {
+    "status": "needs_official_confirmation",
+    "items": []
+  },
+  "unresolved_items": [
+    "均衡學習有4領域但大項上限9分；第四個達標領域不再加分，UI仍可逐領域留存事實。"
+  ],
+  "total_score_calculation": "graduation_score+preference_score+balanced_score+min(service_score+discipline_score+competition_score+fitness_score+language_score,28)+adaptive_score+economic_score+exam_score",
+  "verification": {
+    "score_total_verified": true,
+    "field_coverage_verified": true,
+    "tie_break_verified": true,
+    "academic_year_verified": true,
+    "unresolved_items": [
+      "均衡學習有4領域但大項上限9分；第四個達標領域不再加分，UI仍可逐領域留存事實。"
+    ]
+  }
+}

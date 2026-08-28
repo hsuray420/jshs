@@ -1,0 +1,1016 @@
+{
+  "academic_year": 115,
+  "district_id": "cyc",
+  "district_name": "嘉義區",
+  "version": "115.1",
+  "coverage": [
+    "嘉義市",
+    "嘉義縣"
+  ],
+  "common_district_rules": [
+    "雲林縣北港鎮、元長鄉、水林鄉、口湖鄉、四湖鄉；另有簡章所列雲林、臺南共同就學區招生學校。"
+  ],
+  "total_score_max": 82,
+  "categories": [
+    {
+      "id": "preference",
+      "score_cap": 10
+    },
+    {
+      "id": "disadvantaged",
+      "score_cap": 1
+    },
+    {
+      "id": "balanced",
+      "score_cap": 12
+    },
+    {
+      "id": "adaptive",
+      "score_cap": 6
+    },
+    {
+      "id": "multiple",
+      "raw_cap": 40,
+      "score_cap": 26
+    },
+    {
+      "id": "exam",
+      "score_cap": 27
+    }
+  ],
+  "fields": [
+    {
+      "field_id": "preference_rank",
+      "label": "志願序",
+      "category": "志願序",
+      "subcategory": "志願序",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 1,
+      "max": 30,
+      "score_per_unit": null,
+      "score_cap": 10,
+      "calculation": "score = range_score(rank)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "請輸入實際志願順位；每6個志願為同一級距，第1至6志願10分，最低6分。",
+      "official_rule": "請輸入實際志願順位；每6個志願為同一級距，第1至6志願10分，最低6分。",
+      "validation": {
+        "required": true,
+        "type": "integer",
+        "min": 1,
+        "max": 30,
+        "error_message": "請輸入1～30的整數"
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "志願序"
+      }
+    },
+    {
+      "field_id": "low_income_status",
+      "label": "低收入戶",
+      "category": "扶助弱勢",
+      "subcategory": "低收入戶",
+      "input_type": "radio",
+      "options": [
+        {
+          "label": "非低收入戶",
+          "value": "none",
+          "score": 0
+        },
+        {
+          "label": "低收入戶",
+          "value": "low_income",
+          "score": 1
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 1,
+      "calculation": "score = status == low_income ? 1 : 0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": true,
+      "evidence_description": "報名當年度鄉鎮市區公所核發之低收入戶證明。",
+      "helper_text": "僅低收入戶計1分；須持報名當年度鄉鎮市區公所核發且有效的證明。",
+      "official_rule": "僅低收入戶計1分；須持報名當年度鄉鎮市區公所核發且有效的證明。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "扶助弱勢"
+      }
+    },
+    {
+      "field_id": "balanced_health_pe",
+      "label": "健康與體育",
+      "category": "均衡學習",
+      "subcategory": "健康與體育",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "未達標",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "達標",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score = qualified ? 3 : 0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上（前五學期）",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "健康與體育前五學期平均成績達及格或丙等以上計3分。",
+      "official_rule": "健康與體育前五學期平均成績達及格或丙等以上計3分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "均衡學習"
+      }
+    },
+    {
+      "field_id": "balanced_arts",
+      "label": "藝術",
+      "category": "均衡學習",
+      "subcategory": "藝術",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "未達標",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "達標",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score = qualified ? 3 : 0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上（前五學期）",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "藝術前五學期平均成績達及格或丙等以上計3分。",
+      "official_rule": "藝術前五學期平均成績達及格或丙等以上計3分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "均衡學習"
+      }
+    },
+    {
+      "field_id": "balanced_integrated",
+      "label": "綜合活動",
+      "category": "均衡學習",
+      "subcategory": "綜合活動",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "未達標",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "達標",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score = qualified ? 3 : 0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上（前五學期）",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "綜合活動前五學期平均成績達及格或丙等以上計3分。",
+      "official_rule": "綜合活動前五學期平均成績達及格或丙等以上計3分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "均衡學習"
+      }
+    },
+    {
+      "field_id": "balanced_technology",
+      "label": "科技",
+      "category": "均衡學習",
+      "subcategory": "科技",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "未達標",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "達標",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score = qualified ? 3 : 0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上（前五學期）",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "科技前五學期平均成績達及格或丙等以上計3分。",
+      "official_rule": "科技前五學期平均成績達及格或丙等以上計3分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "均衡學習"
+      }
+    },
+    {
+      "field_id": "adaptive_parent_matches",
+      "label": "家長意見",
+      "category": "適性輔導",
+      "subcategory": "家長意見",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "不相符",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "相符",
+          "value": true,
+          "score": 2
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score = matches_target ? 2 : 0",
+      "conditions": [],
+      "dependencies": [
+        "target_preference_id"
+      ],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "家長意見與本次填報的目標校科相符才計2分；不同志願須分別判定。",
+      "official_rule": "家長意見與本次填報的目標校科相符才計2分；不同志願須分別判定。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "適性輔導"
+      }
+    },
+    {
+      "field_id": "adaptive_teacher_matches",
+      "label": "導師意見",
+      "category": "適性輔導",
+      "subcategory": "導師意見",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "不相符",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "相符",
+          "value": true,
+          "score": 2
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score = matches_target ? 2 : 0",
+      "conditions": [],
+      "dependencies": [
+        "target_preference_id"
+      ],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "導師意見與本次填報的目標校科相符才計2分；不同志願須分別判定。",
+      "official_rule": "導師意見與本次填報的目標校科相符才計2分；不同志願須分別判定。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "適性輔導"
+      }
+    },
+    {
+      "field_id": "adaptive_counselor_matches",
+      "label": "輔導教師意見",
+      "category": "適性輔導",
+      "subcategory": "輔導教師意見",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "不相符",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "相符",
+          "value": true,
+          "score": 2
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score = matches_target ? 2 : 0",
+      "conditions": [],
+      "dependencies": [
+        "target_preference_id"
+      ],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輔導教師意見與本次填報的目標校科相符才計2分；不同志願須分別判定。",
+      "official_rule": "輔導教師意見與本次填報的目標校科相符才計2分；不同志願須分別判定。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "適性輔導"
+      }
+    },
+    {
+      "field_id": "discipline_status",
+      "label": "德行表現",
+      "category": "多元學習表現",
+      "subcategory": "德行表現",
+      "input_type": "radio",
+      "options": [
+        {
+          "label": "無懲處紀錄",
+          "value": "none",
+          "score": 6
+        },
+        {
+          "label": "仍有懲處但未達大過1次",
+          "value": "under_major_demerit",
+          "score": 3
+        },
+        {
+          "label": "累積達大過1次以上",
+          "value": "major_demerit_or_more",
+          "score": 0
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 12,
+      "calculation": "score = option_score; morality_score=min(score+remaining_merit_score,12)",
+      "conditions": [],
+      "dependencies": [
+        "major_merit_count",
+        "minor_merit_count",
+        "commendation_count"
+      ],
+      "mutually_exclusive": [],
+      "adopted_period": "簡章規定採計期，截止115年4月30日",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "先依銷過及功過相抵後狀態選擇；無懲處者基本6分，剩餘獎勵可再累加至12分。",
+      "official_rule": "先依銷過及功過相抵後狀態選擇；無懲處者基本6分，剩餘獎勵可再累加至12分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "major_merit_count",
+      "label": "大功次數",
+      "category": "多元學習表現",
+      "subcategory": "大功次數",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": 9,
+      "score_cap": 12,
+      "calculation": "remaining_merit_score += count * 9; morality_score=min(base+remaining_merit_score,12)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "截止115年4月30日",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輸入功過相抵後仍可採計的大功次數；德行表現合計最高12分。",
+      "official_rule": "輸入功過相抵後仍可採計的大功次數；德行表現合計最高12分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "minor_merit_count",
+      "label": "小功次數",
+      "category": "多元學習表現",
+      "subcategory": "小功次數",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": 3,
+      "score_cap": 12,
+      "calculation": "remaining_merit_score += count * 3; morality_score=min(base+remaining_merit_score,12)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "截止115年4月30日",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輸入功過相抵後仍可採計的小功次數；德行表現合計最高12分。",
+      "official_rule": "輸入功過相抵後仍可採計的小功次數；德行表現合計最高12分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "commendation_count",
+      "label": "嘉獎次數",
+      "category": "多元學習表現",
+      "subcategory": "嘉獎次數",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": 1,
+      "score_cap": 12,
+      "calculation": "remaining_merit_score += count * 1; morality_score=min(base+remaining_merit_score,12)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "截止115年4月30日",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輸入功過相抵後仍可採計的嘉獎次數；德行表現合計最高12分。",
+      "official_rule": "輸入功過相抵後仍可採計的嘉獎次數；德行表現合計最高12分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "service_learning_hours",
+      "label": "服務學習時數",
+      "category": "多元學習表現",
+      "subcategory": "服務學習時數",
+      "input_type": "hours",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": 0.5,
+      "score_cap": 8,
+      "calculation": "score=min(floor(hours/2),8)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "截止115年4月30日",
+      "evidence_required": true,
+      "evidence_description": "服務單位或學校核發之服務學習證明。",
+      "helper_text": "每滿2小時計1分，最高8分；限簡章認可機關、學校或立案團體，且不得與競賽或獎勵同一事由重複。",
+      "official_rule": "每滿2小時計1分，最高8分；限簡章認可機關、學校或立案團體，且不得與競賽或獎勵同一事由重複。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "fitness_result",
+      "label": "體適能",
+      "category": "多元學習表現",
+      "subcategory": "體適能",
+      "input_type": "select",
+      "options": [],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 10,
+      "calculation": "score = min(qualified_items*3 + medal_bonus,10)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "國中階段符合簡章之檢測；截止115年4月30日",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "四項檢測每項達PR25計3分，但僅達中等標準合計最高9分；銅牌以上依簡章可加至10分。",
+      "official_rule": "四項檢測每項達PR25計3分，但僅達中等標準合計最高9分；銅牌以上依簡章可加至10分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "competition_records",
+      "label": "競賽紀錄",
+      "category": "多元學習表現",
+      "subcategory": "競賽紀錄",
+      "input_type": "multi_select",
+      "options": [],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 10,
+      "calculation": "score=min(sum(best_nonduplicate_record_score),10)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "截止115年4月30日",
+      "evidence_required": true,
+      "evidence_description": "官方認可競賽獎狀或成績證明。",
+      "helper_text": "依國際／全國或縣市層級及名次換算；團體獎折半，同學年同類同項只取最高一次。",
+      "official_rule": "依國際／全國或縣市層級及名次換算；團體獎折半，同學年同類同項只取最高一次。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "多元學習表現"
+      }
+    }
+  ],
+  "exam_scoring": {
+    "subjects": [
+      "chinese",
+      "english",
+      "math",
+      "social",
+      "science"
+    ],
+    "subject_options": [
+      {
+        "label": "A++",
+        "value": "A++",
+        "score": 5
+      },
+      {
+        "label": "A+",
+        "value": "A+",
+        "score": 5
+      },
+      {
+        "label": "A",
+        "value": "A",
+        "score": 5
+      },
+      {
+        "label": "B++",
+        "value": "B++",
+        "score": 3
+      },
+      {
+        "label": "B+",
+        "value": "B+",
+        "score": 3
+      },
+      {
+        "label": "B",
+        "value": "B",
+        "score": 3
+      },
+      {
+        "label": "C",
+        "value": "C",
+        "score": 1
+      }
+    ],
+    "writing_options": [
+      {
+        "label": "6級",
+        "value": "6",
+        "score": 2
+      },
+      {
+        "label": "5級",
+        "value": "5",
+        "score": 2
+      },
+      {
+        "label": "4級",
+        "value": "4",
+        "score": 1.5
+      },
+      {
+        "label": "3級",
+        "value": "3",
+        "score": 1.5
+      },
+      {
+        "label": "2級",
+        "value": "2",
+        "score": 1
+      },
+      {
+        "label": "1級",
+        "value": "1",
+        "score": 1
+      },
+      {
+        "label": "0級",
+        "value": "0",
+        "score": 0
+      }
+    ],
+    "score_cap": 27,
+    "calculation": "min(sum(subject_scores)+writing_score,27)",
+    "violation_deduction": {
+      "one_point": 0.27,
+      "two_points": 0.54
+    }
+  },
+  "preference_scoring": {
+    "enabled": true,
+    "max_choices": 30,
+    "grouping_method": "每6個志願一級距",
+    "ranges": [
+      {
+        "from": 1,
+        "to": 6,
+        "score": 10
+      },
+      {
+        "from": 7,
+        "to": 12,
+        "score": 9
+      },
+      {
+        "from": 13,
+        "to": 18,
+        "score": 8
+      },
+      {
+        "from": 19,
+        "to": 24,
+        "score": 7
+      },
+      {
+        "from": 25,
+        "to": 30,
+        "score": 6
+      }
+    ],
+    "minimum_score": 6,
+    "score_cap": 10
+  },
+  "tie_breaking_rules": [
+    {
+      "priority": 1,
+      "field": "total_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "total_score",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 2,
+      "field": "preference_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "preference_score",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 3,
+      "field": "balanced_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "balanced_score",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 4,
+      "field": "adaptive_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "adaptive_score",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 5,
+      "field": "multiple_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "multiple_score",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 6,
+      "field": "exam_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_score",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 7,
+      "field": "morality_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "morality_score",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 8,
+      "field": "service_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "service_score",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 9,
+      "field": "exam_mark_total",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_mark_total",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 10,
+      "field": "exam_mark_count_sequence",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_mark_count_sequence",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 11,
+      "field": "exam_subject_marks_chinese_math_english_science_social",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_subject_marks_chinese_math_english_science_social",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 12,
+      "field": "competition_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "competition_score",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 13,
+      "field": "fitness_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "fitness_score",
+      "source_ids": [
+        "CYC-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    }
+  ],
+  "special_identity_rules": [
+    {
+      "requires_special_identity_module": true,
+      "rule": "原住民、身心障礙及其他依法優待身分另依簡章附錄辦理，不併入一般生基本積分。"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "CYC-115-001",
+      "district": "嘉義區",
+      "academic_year": 115,
+      "document_title": "115學年度嘉義區高級中等學校免試入學簡章",
+      "issuing_authority": "115學年度嘉義區高級中等學校免試入學委員會",
+      "document_type": "招生簡章",
+      "publication_date": null,
+      "page": "6–10",
+      "section": "比序項目積分方式、錄取方式及附表",
+      "official_url": "https://cyc.entry.edu.tw",
+      "accessed_date": "2026-08-28",
+      "notes": "本規格以使用者提供之115學年度正式簡章PDF逐頁核對。"
+    }
+  ],
+  "verification_status": "verified_from_official_115_brochure",
+  "changes_from_previous_year": {
+    "status": "needs_official_confirmation",
+    "items": []
+  },
+  "unresolved_items": [],
+  "total_score_calculation": "preference_score + low_income_score + balanced_score + adaptive_score + min(morality_score + service_score + fitness_score + competition_score,26) + exam_score",
+  "verification": {
+    "score_total_verified": true,
+    "field_coverage_verified": true,
+    "tie_break_verified": true,
+    "academic_year_verified": true,
+    "unresolved_items": []
+  }
+}

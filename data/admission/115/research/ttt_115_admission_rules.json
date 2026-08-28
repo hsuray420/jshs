@@ -1,0 +1,627 @@
+{
+  "academic_year": 115,
+  "district_id": "ttt",
+  "district_name": "臺東區",
+  "version": "115.1",
+  "coverage": [
+    "臺東縣"
+  ],
+  "common_district_rules": [],
+  "total_score_max": 100,
+  "categories": [
+    {
+      "id": "preference",
+      "score_cap": 12
+    },
+    {
+      "id": "multiple",
+      "score_cap": 58
+    },
+    {
+      "id": "exam",
+      "score_cap": 30
+    }
+  ],
+  "fields": [
+    {
+      "field_id": "preference_group_rank",
+      "label": "志願群順位",
+      "category": "志願序",
+      "subcategory": "志願群順位",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 1,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 12,
+      "calculation": "score=max(14-rank*2,2)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "連續選填同一群科者視為同一志願群；不連續則另計一群，最多30個校科志願。",
+      "official_rule": "連續選填同一群科者視為同一志願群；不連續則另計一群，最多30個校科志願。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "志願序"
+      }
+    },
+    {
+      "field_id": "cadre_semesters",
+      "label": "幹部達標學期數",
+      "category": "服務學習",
+      "subcategory": "幹部達標學期數",
+      "input_type": "semester_count",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": 5,
+      "score_per_unit": null,
+      "score_cap": 12,
+      "calculation": "raw+=count*3",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "112年8月1日至115年4月10日",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "擔任班級或社團幹部滿一學期且表現優良，每學期3分。",
+      "official_rule": "擔任班級或社團幹部滿一學期且表現優良，每學期3分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "服務學習"
+      }
+    },
+    {
+      "field_id": "service_hours_by_semester",
+      "label": "逐學期服務時數",
+      "category": "服務學習",
+      "subcategory": "逐學期服務時數",
+      "input_type": "multi_select",
+      "options": [],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 12,
+      "calculation": "raw+=sum(min(hours_i*.125,3)); score=min(raw,12)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "112年8月1日至115年4月10日",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "每8小時1分，不足8小時按每小時0.125分；每學期最高3分，服務項合計最高12分。",
+      "official_rule": "每8小時1分，不足8小時按每小時0.125分；每學期最高3分，服務項合計最高12分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "服務學習"
+      }
+    },
+    {
+      "field_id": "major_merit_count",
+      "label": "大功次數",
+      "category": "日常生活表現",
+      "subcategory": "大功次數",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 15,
+      "calculation": "reward_raw+=count*4.5",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "輸入功過相抵後可採計的大功，每次4.5分；獎勵紀錄最高15分。",
+      "official_rule": "輸入功過相抵後可採計的大功，每次4.5分；獎勵紀錄最高15分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "日常生活表現"
+      }
+    },
+    {
+      "field_id": "minor_merit_count",
+      "label": "小功次數",
+      "category": "日常生活表現",
+      "subcategory": "小功次數",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 15,
+      "calculation": "reward_raw+=count*1.5",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "每次小功1.5分，與其他獎勵合計最高15分。",
+      "official_rule": "每次小功1.5分，與其他獎勵合計最高15分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "日常生活表現"
+      }
+    },
+    {
+      "field_id": "commendation_count",
+      "label": "嘉獎次數",
+      "category": "日常生活表現",
+      "subcategory": "嘉獎次數",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 15,
+      "calculation": "reward_raw+=count*.5; reward_score=min(raw,15)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "每次嘉獎0.5分，與大功、小功合計最高15分。",
+      "official_rule": "每次嘉獎0.5分，與大功、小功合計最高15分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "日常生活表現"
+      }
+    },
+    {
+      "field_id": "no_punishment",
+      "label": "無記過紀錄",
+      "category": "日常生活表現",
+      "subcategory": "無記過紀錄",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "否",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "是",
+          "value": true,
+          "score": 5
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 5,
+      "calculation": "score=value?5:0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "銷過及功過相抵後無懲處紀錄計5分。",
+      "official_rule": "銷過及功過相抵後無懲處紀錄計5分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "日常生活表現"
+      }
+    },
+    {
+      "field_id": "balanced_qualified_domains",
+      "label": "均衡學習達標領域數",
+      "category": "均衡學習",
+      "subcategory": "均衡學習達標領域數",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": 4,
+      "score_per_unit": null,
+      "score_cap": 20,
+      "calculation": "score=count*5",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "健康與體育、藝術、綜合活動、科技前五學期平均及格，每領域5分。",
+      "official_rule": "健康與體育、藝術、綜合活動、科技前五學期平均及格，每領域5分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "均衡學習"
+      }
+    },
+    {
+      "field_id": "fitness_qualified_items",
+      "label": "體適能達標項目數",
+      "category": "體適能",
+      "subcategory": "體適能達標項目數",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": 4,
+      "score_per_unit": null,
+      "score_cap": 6,
+      "calculation": "score=count*1.5",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "四項檢測每達標一項1.5分，最高6分；特殊情形依簡章計6分。",
+      "official_rule": "四項檢測每達標一項1.5分，最高6分；特殊情形依簡章計6分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "體適能"
+      }
+    }
+  ],
+  "exam_scoring": {
+    "subjects": [
+      "chinese",
+      "math",
+      "english",
+      "social",
+      "science"
+    ],
+    "subject_options": [
+      {
+        "label": "A++",
+        "value": "A++",
+        "score": 6
+      },
+      {
+        "label": "A+",
+        "value": "A+",
+        "score": 6
+      },
+      {
+        "label": "A",
+        "value": "A",
+        "score": 6
+      },
+      {
+        "label": "B++",
+        "value": "B++",
+        "score": 3
+      },
+      {
+        "label": "B+",
+        "value": "B+",
+        "score": 3
+      },
+      {
+        "label": "B",
+        "value": "B",
+        "score": 3
+      },
+      {
+        "label": "C",
+        "value": "C",
+        "score": 1
+      }
+    ],
+    "score_cap": 30,
+    "violation_deduction": {
+      "one_point": 0.3,
+      "two_points": 0.6
+    }
+  },
+  "preference_scoring": {
+    "enabled": true,
+    "max_choices": 30,
+    "grouping_method": "連續選填同群科為同一志願群；普高以校為群",
+    "ranges": [
+      {
+        "from": 1,
+        "to": 1,
+        "score": 12
+      },
+      {
+        "from": 2,
+        "to": 2,
+        "score": 10
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "score": 8
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "score": 6
+      },
+      {
+        "from": 5,
+        "to": 5,
+        "score": 4
+      },
+      {
+        "from": 6,
+        "to": null,
+        "score": 2
+      }
+    ],
+    "minimum_score": 2
+  },
+  "tie_breaking_rules": [
+    {
+      "priority": 1,
+      "field": "total_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "total_score",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 2,
+      "field": "preference_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "preference_score",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 3,
+      "field": "preference_school_group",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "preference_school_group",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 4,
+      "field": "program_order",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "program_order",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 5,
+      "field": "service_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "service_score",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 6,
+      "field": "reward_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "reward_score",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 7,
+      "field": "no_punishment_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "no_punishment_score",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 8,
+      "field": "balanced_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "balanced_score",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 9,
+      "field": "exam_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_score",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 10,
+      "field": "exam_subject_scores_chinese_math_english_social_science",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_subject_scores_chinese_math_english_social_science",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 11,
+      "field": "writing_level",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "writing_level",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 12,
+      "field": "exam_full_mark_chinese_math_english_social_science",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_full_mark_chinese_math_english_social_science",
+      "source_ids": [
+        "TTT-115-001"
+      ],
+      "source_locator": {
+        "page": 9,
+        "section": "同分超額比序"
+      }
+    }
+  ],
+  "special_identity_rules": [
+    {
+      "requires_special_identity_module": true,
+      "rule": "原住民、身心障礙及其他依法優待身分另依簡章附錄辦理，不併入一般生基本積分。"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "TTT-115-001",
+      "district": "臺東區",
+      "academic_year": 115,
+      "document_title": "115學年度臺東區高級中等學校免試入學簡章",
+      "issuing_authority": "115學年度臺東區高級中等學校免試入學委員會",
+      "document_type": "招生簡章",
+      "publication_date": null,
+      "page": "6–9、38–39",
+      "section": "比序項目積分方式、錄取方式及附表",
+      "official_url": "https://ttt.entry.edu.tw",
+      "accessed_date": "2026-08-28",
+      "notes": "本規格以使用者提供之115學年度正式簡章PDF逐頁核對。"
+    }
+  ],
+  "verification_status": "verified_from_official_115_brochure",
+  "changes_from_previous_year": {
+    "status": "needs_official_confirmation",
+    "items": []
+  },
+  "unresolved_items": [
+    "個人實驗教育學生另以均衡學習換算58分；須走 exception module。",
+    "學習區完全免試入學另有超額比序延伸，不套一般免試主流程。"
+  ],
+  "total_score_calculation": "preference_score+min(service_score+reward_score+no_punishment_score+balanced_score+fitness_score,58)+exam_score",
+  "verification": {
+    "score_total_verified": true,
+    "field_coverage_verified": true,
+    "tie_break_verified": true,
+    "academic_year_verified": true,
+    "unresolved_items": [
+      "個人實驗教育學生另以均衡學習換算58分；須走 exception module。",
+      "學習區完全免試入學另有超額比序延伸，不套一般免試主流程。"
+    ]
+  }
+}

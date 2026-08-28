@@ -1,0 +1,588 @@
+{
+  "academic_year": 115,
+  "district_id": "hlc",
+  "district_name": "花蓮區",
+  "version": "115.1",
+  "coverage": [
+    "花蓮縣"
+  ],
+  "common_district_rules": [],
+  "total_score_max": 100,
+  "categories": [
+    {
+      "id": "adaptive_preference",
+      "score_cap": 20
+    },
+    {
+      "id": "multiple",
+      "score_cap": 47
+    },
+    {
+      "id": "low_income",
+      "score_cap": 3
+    },
+    {
+      "id": "exam",
+      "base_score_cap": 30,
+      "target_weighting": true
+    }
+  ],
+  "fields": [
+    {
+      "field_id": "preference_rank",
+      "label": "志願順位",
+      "category": "適性輔導",
+      "subcategory": "志願順位",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 1,
+      "max": 40,
+      "score_per_unit": null,
+      "score_cap": 20,
+      "calculation": "score=range_score(rank)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "普高以學校、技高以科班群為志願單位；第1至3志願20分，第31至40志願0分。",
+      "official_rule": "普高以學校、技高以科班群為志願單位；第1至3志願20分，第31至40志願0分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "適性輔導"
+      }
+    },
+    {
+      "field_id": "balanced_qualified_domains",
+      "label": "均衡學習達標領域數",
+      "category": "多元學習表現",
+      "subcategory": "均衡學習達標領域數",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": 4,
+      "score_per_unit": null,
+      "score_cap": 16,
+      "calculation": "score=count*4",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "四領域以前五學期平均及格判定，每達標一領域4分。",
+      "official_rule": "四領域以前五學期平均及格判定，每達標一領域4分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 10,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "no_minor_demerit",
+      "label": "無小過以上紀錄",
+      "category": "多元學習表現",
+      "subcategory": "無小過以上紀錄",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "否",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "是",
+          "value": true,
+          "score": 9
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 9,
+      "calculation": "score=value?9:0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "經銷過及功過相抵後無小過以上紀錄計9分。",
+      "official_rule": "經銷過及功過相抵後無小過以上紀錄計9分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 10,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "cadre_qualified",
+      "label": "幹部表現",
+      "category": "多元學習表現",
+      "subcategory": "幹部表現",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "否",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "是",
+          "value": true,
+          "score": 9
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 9,
+      "calculation": "score=value?9:0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "前五學期曾任班級、社團或全校幹部滿一學期且表現優良計9分。",
+      "official_rule": "前五學期曾任班級、社團或全校幹部滿一學期且表現優良計9分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 10,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "competition_records",
+      "label": "競賽表現",
+      "category": "多元學習表現",
+      "subcategory": "競賽表現",
+      "input_type": "multi_select",
+      "options": [],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 15,
+      "calculation": "score=min(sum(best_scores),15)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "115年4月30日前",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "依鄉鎮、縣、全國或國際層級換算；團體折半，同年度同項只取最高。",
+      "official_rule": "依鄉鎮、縣、全國或國際層級換算；團體折半，同年度同項只取最高。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 11,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "fitness_result",
+      "label": "體適能",
+      "category": "多元學習表現",
+      "subcategory": "體適能",
+      "input_type": "select",
+      "options": [],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 9,
+      "calculation": "score=min(qualified_items*2+medal_bonus,9)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "四項達門檻各2分，銅牌以上加分合計最高1分；特殊情形依簡章計8分。",
+      "official_rule": "四項達門檻各2分，銅牌以上加分合計最高1分；特殊情形依簡章計8分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 11,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "target_school_other_score",
+      "label": "各校自訂其他項",
+      "category": "多元學習表現",
+      "subcategory": "各校自訂其他項",
+      "input_type": "calculated",
+      "options": [],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 15,
+      "calculation": "score=target_school_rule(inputs)",
+      "conditions": [],
+      "dependencies": [
+        "target_school_id"
+      ],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "技藝班、特殊表現、社團、證照或檢定由目標高中依附表設定，必須載入各校規則後計算。",
+      "official_rule": "技藝班、特殊表現、社團、證照或檢定由目標高中依附表設定，必須載入各校規則後計算。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 14,
+        "section": "多元學習表現"
+      }
+    },
+    {
+      "field_id": "low_income_status",
+      "label": "低收入戶",
+      "category": "扶助弱勢",
+      "subcategory": "低收入戶",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "否",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "是",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score=value?3:0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "低收入戶計3分，須持報名時有效證明。",
+      "official_rule": "低收入戶計3分，須持報名時有效證明。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "扶助弱勢"
+      }
+    }
+  ],
+  "exam_scoring": {
+    "subjects": [
+      "chinese",
+      "math",
+      "english",
+      "social",
+      "science"
+    ],
+    "subject_options": [
+      {
+        "label": "A++",
+        "value": "A++",
+        "score": 6
+      },
+      {
+        "label": "A+",
+        "value": "A+",
+        "score": 6
+      },
+      {
+        "label": "A",
+        "value": "A",
+        "score": 6
+      },
+      {
+        "label": "B++",
+        "value": "B++",
+        "score": 5
+      },
+      {
+        "label": "B+",
+        "value": "B+",
+        "score": 4
+      },
+      {
+        "label": "B",
+        "value": "B",
+        "score": 3
+      },
+      {
+        "label": "C",
+        "value": "C",
+        "score": 2
+      }
+    ],
+    "base_score_cap": 30,
+    "target_weighting": "附表指定科目可乘1.25，最多2科；加權後教育會考積分不得超過總積分三分之一。"
+  },
+  "preference_scoring": {
+    "enabled": true,
+    "max_choices": 40,
+    "grouping_method": "普高以校、技高以科班群為單位",
+    "ranges": [
+      {
+        "from": 1,
+        "to": 3,
+        "score": 20
+      },
+      {
+        "from": 4,
+        "to": 6,
+        "score": 18
+      },
+      {
+        "from": 7,
+        "to": 9,
+        "score": 16
+      },
+      {
+        "from": 10,
+        "to": 12,
+        "score": 14
+      },
+      {
+        "from": 13,
+        "to": 15,
+        "score": 12
+      },
+      {
+        "from": 16,
+        "to": 18,
+        "score": 10
+      },
+      {
+        "from": 19,
+        "to": 21,
+        "score": 8
+      },
+      {
+        "from": 22,
+        "to": 24,
+        "score": 6
+      },
+      {
+        "from": 25,
+        "to": 27,
+        "score": 4
+      },
+      {
+        "from": 28,
+        "to": 30,
+        "score": 2
+      },
+      {
+        "from": 31,
+        "to": 40,
+        "score": 0
+      }
+    ],
+    "minimum_score": 0
+  },
+  "tie_breaking_rules": [
+    {
+      "priority": 1,
+      "field": "total_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "total_score",
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 15,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 2,
+      "field": "adaptive_preference_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "adaptive_preference_score",
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 15,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 3,
+      "field": "multiple_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "multiple_score",
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 15,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 4,
+      "field": "low_income_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "low_income_score",
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 15,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 5,
+      "field": "exam_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_score",
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 15,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 6,
+      "field": "exam_mark_total",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_mark_total",
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 15,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 7,
+      "field": "exam_subject_marks_chinese_math_english_social_science",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_subject_marks_chinese_math_english_social_science",
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 15,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 8,
+      "field": "writing_level",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "writing_level",
+      "source_ids": [
+        "HLC-115-001"
+      ],
+      "source_locator": {
+        "page": 15,
+        "section": "同分超額比序"
+      }
+    }
+  ],
+  "special_identity_rules": [
+    {
+      "requires_special_identity_module": true,
+      "rule": "原住民、身心障礙及其他依法優待身分另依簡章附錄辦理，不併入一般生基本積分。"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "HLC-115-001",
+      "district": "花蓮區",
+      "academic_year": 115,
+      "document_title": "115學年度花蓮區高級中等學校免試入學簡章",
+      "issuing_authority": "115學年度花蓮區高級中等學校免試入學委員會",
+      "document_type": "招生簡章",
+      "publication_date": null,
+      "page": "6、10–15",
+      "section": "比序項目積分方式、錄取方式及附表",
+      "official_url": "https://hlc.entry.edu.tw",
+      "accessed_date": "2026-08-28",
+      "notes": "本規格以使用者提供之115學年度正式簡章PDF逐頁核對。"
+    }
+  ],
+  "verification_status": "verified_from_official_115_brochure",
+  "changes_from_previous_year": {
+    "status": "needs_official_confirmation",
+    "items": []
+  },
+  "unresolved_items": [
+    "「其他項」及會考加權為目標學校專屬矩陣，須依簡章第14頁完整建表；不可用全區單一公式。"
+  ],
+  "total_score_calculation": "adaptive_preference_score+min(balanced_score+discipline_score+cadre_score+competition_score+fitness_score+target_school_other_score,47)+low_income_score+target_weighted_exam_score",
+  "verification": {
+    "score_total_verified": true,
+    "field_coverage_verified": true,
+    "tie_break_verified": true,
+    "academic_year_verified": true,
+    "unresolved_items": [
+      "「其他項」及會考加權為目標學校專屬矩陣，須依簡章第14頁完整建表；不可用全區單一公式。"
+    ]
+  }
+}

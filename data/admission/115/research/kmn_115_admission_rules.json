@@ -1,0 +1,749 @@
+{
+  "academic_year": 115,
+  "district_id": "kmn",
+  "district_name": "金門區",
+  "version": "115.1",
+  "coverage": [
+    "金門縣"
+  ],
+  "common_district_rules": [],
+  "total_score_max": 60,
+  "categories": [
+    {
+      "id": "graduation",
+      "score_cap": 3
+    },
+    {
+      "id": "preference",
+      "score_cap": 8
+    },
+    {
+      "id": "balanced",
+      "score_cap": 8
+    },
+    {
+      "id": "morality",
+      "score_cap": 5
+    },
+    {
+      "id": "service",
+      "score_cap": 4
+    },
+    {
+      "id": "competition",
+      "score_cap": 6
+    },
+    {
+      "id": "fitness",
+      "score_cap": 3
+    },
+    {
+      "id": "nearby",
+      "score_cap": 1
+    },
+    {
+      "id": "weak",
+      "score_cap": 2
+    },
+    {
+      "id": "exam",
+      "score_cap": 20
+    }
+  ],
+  "fields": [
+    {
+      "field_id": "graduation_qualified",
+      "label": "畢業資格",
+      "category": "畢業資格",
+      "subcategory": "畢業資格",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "未取得",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "取得",
+          "value": true,
+          "score": 3
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score=value?3:0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "取得國中畢業資格計3分。",
+      "official_rule": "取得國中畢業資格計3分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "畢業資格"
+      }
+    },
+    {
+      "field_id": "preference_rank",
+      "label": "志願順位",
+      "category": "志願序",
+      "subcategory": "志願順位",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 1,
+      "max": 12,
+      "score_per_unit": null,
+      "score_cap": 8,
+      "calculation": "score=range_score(rank)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "最多12個志願，第1志願8分，第9至12志願3分。",
+      "official_rule": "最多12個志願，第1志願8分，第9至12志願3分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "志願序"
+      }
+    },
+    {
+      "field_id": "balanced_qualified_domains",
+      "label": "均衡學習達標領域數",
+      "category": "均衡學習",
+      "subcategory": "均衡學習達標領域數",
+      "input_type": "integer",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": 4,
+      "score_per_unit": null,
+      "score_cap": 8,
+      "calculation": "score=count*2",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "七上至九上",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "四領域前五學期平均及格，每領域2分。",
+      "official_rule": "四領域前五學期平均及格，每領域2分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "均衡學習"
+      }
+    },
+    {
+      "field_id": "morality_status",
+      "label": "品德表現",
+      "category": "品德表現",
+      "subcategory": "品德表現",
+      "input_type": "radio",
+      "options": [
+        {
+          "label": "無懲處或已銷過",
+          "value": "none_or_cancelled",
+          "score": 5
+        },
+        {
+          "label": "後功抵前過後無懲處",
+          "value": "offset_none",
+          "score": 4
+        },
+        {
+          "label": "無小過以上",
+          "value": "no_minor_or_above",
+          "score": 3
+        },
+        {
+          "label": "無大過",
+          "value": "no_major",
+          "score": 2
+        },
+        {
+          "label": "其他",
+          "value": "other",
+          "score": 0
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 5,
+      "calculation": "score=option_score",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "依是否曾受懲處、銷過及後功抵前過後狀態選擇，直接對應5至0分。",
+      "official_rule": "依是否曾受懲處、銷過及後功抵前過後狀態選擇，直接對應5至0分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 6,
+        "section": "品德表現"
+      }
+    },
+    {
+      "field_id": "cadre_semesters",
+      "label": "幹部達標學期數",
+      "category": "服務學習",
+      "subcategory": "幹部達標學期數",
+      "input_type": "semester_count",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": 5,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score=min(count*.5,2)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "擔任班級或學生幹部滿一學期且表現優良，每學期0.5分，最高2分。",
+      "official_rule": "擔任班級或學生幹部滿一學期且表現優良，每學期0.5分，最高2分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "服務學習"
+      }
+    },
+    {
+      "field_id": "service_hours",
+      "label": "服務學習時數",
+      "category": "服務學習",
+      "subcategory": "服務學習時數",
+      "input_type": "hours",
+      "options": [],
+      "unit": null,
+      "min": 0,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score=min(floor(hours/9)*.5,2)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "每滿9小時計0.5分，最高2分；須有認可證明。",
+      "official_rule": "每滿9小時計0.5分，最高2分；須有認可證明。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "服務學習"
+      }
+    },
+    {
+      "field_id": "competition_records",
+      "label": "競賽表現",
+      "category": "競賽",
+      "subcategory": "競賽表現",
+      "input_type": "multi_select",
+      "options": [],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 6,
+      "calculation": "score=min(sum(best_scores),6)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "依縣級或全國層級與名次換算；團體獎折半，最高6分。",
+      "official_rule": "依縣級或全國層級與名次換算；團體獎折半，最高6分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "競賽"
+      }
+    },
+    {
+      "field_id": "fitness_result",
+      "label": "體適能",
+      "category": "體適能",
+      "subcategory": "體適能",
+      "input_type": "select",
+      "options": [],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 3,
+      "calculation": "score=min(qualified_items*.5+medal_bonus,3)",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "四項達標每項0.5分；金、銀、銅牌另依簡章加1、0.5、0.2分，最高3分。",
+      "official_rule": "四項達標每項0.5分；金、銀、銅牌另依簡章加1、0.5、0.2分，最高3分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "體適能"
+      }
+    },
+    {
+      "field_id": "nearby_eligibility",
+      "label": "就近入學",
+      "category": "就近入學",
+      "subcategory": "就近入學",
+      "input_type": "boolean",
+      "options": [
+        {
+          "label": "不符合",
+          "value": false,
+          "score": 0
+        },
+        {
+          "label": "符合",
+          "value": true,
+          "score": 1
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 1,
+      "calculation": "score=value?1:0",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": false,
+      "evidence_description": "",
+      "helper_text": "符合金門區或核准變更就學區資格計1分。",
+      "official_rule": "符合金門區或核准變更就學區資格計1分。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "就近入學"
+      }
+    },
+    {
+      "field_id": "economic_status",
+      "label": "扶助弱勢",
+      "category": "扶助弱勢",
+      "subcategory": "扶助弱勢",
+      "input_type": "radio",
+      "options": [
+        {
+          "label": "無",
+          "value": "none",
+          "score": 0
+        },
+        {
+          "label": "中低收入戶",
+          "value": "middle_low",
+          "score": 1
+        },
+        {
+          "label": "低收入戶",
+          "value": "low",
+          "score": 2
+        }
+      ],
+      "unit": null,
+      "min": null,
+      "max": null,
+      "score_per_unit": null,
+      "score_cap": 2,
+      "calculation": "score=option_score",
+      "conditions": [],
+      "dependencies": [],
+      "mutually_exclusive": [],
+      "adopted_period": "",
+      "evidence_required": true,
+      "evidence_description": "",
+      "helper_text": "低收入戶2分、中低收入戶1分，須持報名日期仍有效的證明。",
+      "official_rule": "低收入戶2分、中低收入戶1分，須持報名日期仍有效的證明。",
+      "validation": {
+        "required": true
+      },
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 7,
+        "section": "扶助弱勢"
+      }
+    }
+  ],
+  "exam_scoring": {
+    "subjects": [
+      "chinese",
+      "english",
+      "math",
+      "social",
+      "science"
+    ],
+    "subject_options": [
+      {
+        "label": "A++",
+        "value": "A++",
+        "score": 4
+      },
+      {
+        "label": "A+",
+        "value": "A+",
+        "score": 4
+      },
+      {
+        "label": "A",
+        "value": "A",
+        "score": 4
+      },
+      {
+        "label": "B++",
+        "value": "B++",
+        "score": 3.75
+      },
+      {
+        "label": "B+",
+        "value": "B+",
+        "score": 3.5
+      },
+      {
+        "label": "B",
+        "value": "B",
+        "score": 3
+      },
+      {
+        "label": "C",
+        "value": "C",
+        "score": 1
+      }
+    ],
+    "writing_in_total": false,
+    "score_cap": 20,
+    "violation_deduction": {
+      "one_point": 0.2,
+      "two_points": 0.4
+    }
+  },
+  "preference_scoring": {
+    "enabled": true,
+    "max_choices": 12,
+    "grouping_method": "逐志願順位",
+    "ranges": [
+      {
+        "from": 1,
+        "to": 1,
+        "score": 8
+      },
+      {
+        "from": 2,
+        "to": 2,
+        "score": 7
+      },
+      {
+        "from": 3,
+        "to": 3,
+        "score": 6
+      },
+      {
+        "from": 4,
+        "to": 4,
+        "score": 5
+      },
+      {
+        "from": 5,
+        "to": 8,
+        "score": 4
+      },
+      {
+        "from": 9,
+        "to": 12,
+        "score": 3
+      }
+    ],
+    "minimum_score": 3
+  },
+  "tie_breaking_rules": [
+    {
+      "priority": 1,
+      "field": "total_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "total_score",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 2,
+      "field": "graduation_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "graduation_score",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 3,
+      "field": "preference_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "preference_score",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 4,
+      "field": "balanced_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "balanced_score",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 5,
+      "field": "morality_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "morality_score",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 6,
+      "field": "service_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "service_score",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 7,
+      "field": "competition_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "competition_score",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 8,
+      "field": "fitness_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "fitness_score",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 9,
+      "field": "nearby_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "nearby_score",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 10,
+      "field": "weak_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "weak_score",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 11,
+      "field": "exam_score",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_score",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 12,
+      "field": "exam_subject_scores_chinese_english_math_social_science",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "exam_subject_scores_chinese_english_math_social_science",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    },
+    {
+      "priority": 13,
+      "field": "writing_level",
+      "comparison": "numeric_desc",
+      "higher_is_better": true,
+      "description": "writing_level",
+      "source_ids": [
+        "KMN-115-001"
+      ],
+      "source_locator": {
+        "page": 8,
+        "section": "同分超額比序"
+      }
+    }
+  ],
+  "special_identity_rules": [
+    {
+      "requires_special_identity_module": true,
+      "rule": "原住民、身心障礙及其他依法優待身分另依簡章附錄辦理，不併入一般生基本積分。"
+    }
+  ],
+  "sources": [
+    {
+      "source_id": "KMN-115-001",
+      "district": "金門區",
+      "academic_year": 115,
+      "document_title": "115學年度金門區高級中等學校免試入學簡章",
+      "issuing_authority": "115學年度金門區高級中等學校免試入學委員會",
+      "document_type": "招生簡章",
+      "publication_date": null,
+      "page": "6–8",
+      "section": "比序項目積分方式、錄取方式及附表",
+      "official_url": "https://kmn.entry.edu.tw",
+      "accessed_date": "2026-08-28",
+      "notes": "本規格以使用者提供之115學年度正式簡章PDF逐頁核對。"
+    }
+  ],
+  "verification_status": "verified_from_official_115_brochure",
+  "changes_from_previous_year": {
+    "status": "needs_official_confirmation",
+    "items": []
+  },
+  "unresolved_items": [],
+  "total_score_calculation": "graduation_score+preference_score+balanced_score+morality_score+service_score+competition_score+fitness_score+nearby_score+weak_score+exam_score",
+  "verification": {
+    "score_total_verified": true,
+    "field_coverage_verified": true,
+    "tie_break_verified": true,
+    "academic_year_verified": true,
+    "unresolved_items": []
+  }
+}
