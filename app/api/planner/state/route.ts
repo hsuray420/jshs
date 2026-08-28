@@ -30,7 +30,7 @@ export async function PUT(request: Request) {
 
   await savePlannerState(plannerId, stateJson);
   const items = await listPlannerItems(plannerId);
-  await createPlannerVersion(plannerId, stateJson, items.length);
+  await createPlannerVersion(plannerId, stateJson, items);
   return plannerResponse({ ok: true }, plannerId);
 }
 

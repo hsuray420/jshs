@@ -3,74 +3,27 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { SiteIcon, type SiteIconName } from "@/components/site-icons";
-import { formatNewsDate, getFeaturedNews, type NewsArticle } from "@/lib/news";
+import { SourceBadge } from "@/components/source-badge";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 import { PageContainer } from "@/components/ui/layout";
 import { HomeProgress } from "@/components/home-progress";
-import { SERVICE_YEAR } from "@/lib/trust";
+import { SERVICE_YEAR, SOURCE_ACADEMIC_YEAR, VERIFICATION_STATUS } from "@/lib/trust";
 
-const homeTitle = "全國國中升學資訊網｜陪你找到升學方向";
-const homeDescription = "不論是第一次探索升學，或已經知道下一步，這裡用可信資料陪你找到方向、完成試算並整理志願。";
+const homeTitle = "116 學年度升學 Dashboard｜全國國中升學資訊網";
+const homeDescription = "從就學區、成績試算、校科探索到志願規劃，沿著一條清楚的升學流程前進。";
 
 export const metadata: Metadata = {
   title: homeTitle,
   description: homeDescription,
   alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    locale: "zh_TW",
-    url: "/",
-    siteName: "全國國中升學資訊網",
-    title: homeTitle,
-    description: homeDescription,
-  },
+  openGraph: { type: "website", locale: "zh_TW", url: "/", siteName: "全國國中升學資訊網", title: homeTitle, description: homeDescription },
   twitter: { card: "summary", title: homeTitle, description: homeDescription },
 };
 
-const keyTimeline = districtMetadata.timelineDefaults.ready;
-const latestNews = getFeaturedNews(3);
+const officialDistricts = Object.entries(districtMetadata.districts).slice(0, 3);
 
 export default function HomePage() {
-  return (
-    <main className="min-h-screen jshs-page-shell">
-      <SiteHeader />
-
-      <section className="border-b jshs-hero-section">
-        <PageContainer size="wide" className="pb-10 pt-12 md:pb-16 md:pt-20">
-          <div>
-            <p className="jshs-eyebrow">{SERVICE_YEAR} 學年度升學 Dashboard</p>
-            <h1 className="mt-3 max-w-4xl text-4xl leading-tight md:text-6xl">從我的下一步開始，完成升學規劃。</h1>
-            <p className="mt-5 max-w-3xl text-base leading-8 jshs-muted-copy md:text-lg">升學資訊很多，但你不需要一次懂完。家長可以放心，孩子可以從現在的疑問開始；我們會陪你把方向、分數、學校和志願，一步一步整理清楚。</p>
-            <div className="mt-8 grid gap-4 md:grid-cols-3">
-              <TaskCard icon="calculator" tone="blue" title="算我的積分" body="先確認就學區，再依目前可用規則完成試算。" href="/tools" action="開始試算" />
-              <TaskCard icon="school" tone="green" title="找學校" body="用就學區、縣市、學制分類、群科與科別找校科。" href="/schools" action="開始查詢" />
-              <TaskCard icon="planner" tone="blue" title="規劃志願" body="把候選校科加入同一份清單，自己排或看系統推薦。" href="/planner" action="開始規劃" />
-            </div>
-          </div>
-        </PageContainer>
-      </section>
-
-      <HomeProgress />
-
-      <PageContainer as="section" aria-labelledby="news-preview-title" className="py-8">
-        <SectionHeading eyebrow="最新升學情報" id="news-preview-title" title="先讀懂規則，再查資料。" body="每篇標示更新日期、官方來源與下一步工具。" />
-        <div className="mt-6 grid gap-3 lg:grid-cols-3">{latestNews.slice(0, 3).map((article) => <NewsPreview key={article.slug} article={article} />)}</div>
-        <Link className="mt-5 inline-block text-sm font-black text-[var(--jshs-primary)]" href="/news">前往全部升學情報 →</Link>
-        <Link className="ml-4 inline-block text-sm font-black text-[var(--jshs-primary)]" href="/knowledge/admission-basics">先看升學入門 →</Link>
-        <Link className="ml-4 inline-block text-sm font-black text-[var(--jshs-primary)]" href="/knowledge/fit-quiz">探索學制適合度 →</Link>
-      </PageContainer>
-
-      <section aria-labelledby="timeline-title" className="border-y border-[var(--jshs-border)] py-8 jshs-section-subtle">
-        <PageContainer>
-          <SectionHeading eyebrow="重要時程" id="timeline-title" title="只看已標示狀態的日期。" body="各區正式日期仍以招生單位最新公告為準。" />
-          <div className="mt-6 grid gap-3 md:grid-cols-2">{keyTimeline.map((item) => <article key={item.title} className="p-5 jshs-surface-card"><span className="text-sm font-extrabold text-[var(--jshs-primary)]">{item.date}</span><h3 className="mt-2 text-lg font-black">{item.title}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{item.detail}</p><span className="mt-4 jshs-chip">{item.status}</span></article>)}</div>
-          <Link className="mt-5 inline-block text-sm font-black text-[var(--jshs-primary)]" href="/news/exam">查看完整會考準備 →</Link>
-        </PageContainer>
-      </section>
-
-      <SiteFooter />
-    </main>
-  );
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader /><section className="border-b jshs-hero-section"><PageContainer size="wide" className="pb-10 pt-12 md:pb-16 md:pt-20"><p className="jshs-eyebrow">{SERVICE_YEAR} 學年度升學 Dashboard</p><h1 className="mt-3 max-w-4xl text-4xl leading-tight md:text-6xl">先知道下一步，再開始做決定。</h1><p className="mt-5 max-w-3xl text-base leading-8 jshs-muted-copy">用同一個就學區情境，完成規則理解、成績試算、校科比較與志願健檢；官方資料、JSHS 計算與推估會清楚分開。</p><div className="mt-8 grid gap-4 md:grid-cols-3"><TaskCard icon="calculator" tone="blue" title="算我的積分" body="先確認就學區，再依目前可用規則完成試算。" href="/tools" action="開始試算" /><TaskCard icon="school" tone="green" title="找學校" body="用就學區、縣市、學制、群科與科別找校科。" href="/schools" action="開始查詢" /><TaskCard icon="planner" tone="blue" title="規劃志願" body="把校科加入同一份清單，自己排或查看系統推薦。" href="/planner" action="開始規劃" /></div></PageContainer></section><HomeProgress /><PageContainer as="section" aria-labelledby="status-title" className="py-8"><SectionHeading eyebrow="116 學年度狀態" id="status-title" title="目前服務年度與資料邊界" body="115 官方資料不會被改名成 116；正式公告後再重新校核。"/><div className="mt-6 grid gap-3 md:grid-cols-3"><article className="p-5 jshs-surface-card"><SourceBadge sourceType="jshs_curated" /><h3 className="mt-3 text-xl">{SERVICE_YEAR} 學年度服務</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">目前狀態：{VERIFICATION_STATUS === "awaiting_116_official_release" ? "116 正式規則待公告" : "已完成校核"}。</p></article><article className="p-5 jshs-surface-card"><SourceBadge sourceType="official_based_calculation" /><h3 className="mt-3 text-xl">試算規則來源</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">目前暫依 {SOURCE_ACADEMIC_YEAR} 學年度官方規則，結果不是官方試算結果。</p><Link href="/tools/rules" className="mt-4 inline-block text-sm font-black text-[var(--jshs-primary)]">查看積分規則 →</Link></article><article className="p-5 jshs-surface-card"><SourceBadge sourceType="jshs_estimated" /><h3 className="mt-3 text-xl">目前可用試算</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">8 / 15 區完成規則建模；其餘區域不提供假試算器。</p><Link href="/trust/progress" className="mt-4 inline-block text-sm font-black text-[var(--jshs-primary)]">查看建置進度 →</Link></article></div></PageContainer><section aria-labelledby="dates-title" className="border-y border-[var(--jshs-border)] py-8 jshs-section-subtle"><PageContainer><SectionHeading eyebrow="近期重要時間" id="dates-title" title="正式日期按公告狀態呈現" body="目前沒有本站可直接確認的 116 學年度正式日期。"/><div className="mt-6 grid gap-3 md:grid-cols-2"><article className="p-5 jshs-surface-card"><span className="jshs-chip">待公告</span><h3 className="mt-3 text-xl">116 學年度國中教育會考</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">正式日期尚待官方發布；不使用推估日期做倒數。</p></article><article className="p-5 jshs-surface-card"><span className="jshs-chip">官方資訊</span><h3 className="mt-3 text-xl">各區招生時程</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">各區簡章、報名、選填與放榜日期請以官方來源為準。</p><Link href="/admission-guides/schedule" className="mt-4 inline-block text-sm font-black text-[var(--jshs-primary)]">查看官方招生時程 →</Link></article></div></PageContainer></section><PageContainer as="section" aria-labelledby="official-title" className="py-8"><SectionHeading eyebrow="官方最新更新" id="official-title" title="從官方來源查看最新公告" body="本站不把 JSHS 編輯內容混進官方資訊。"/><div className="mt-6 grid gap-3 md:grid-cols-3">{officialDistricts.map(([code, district]) => <article key={code} className="p-5 jshs-surface-card"><SourceBadge sourceType="official" /><h3 className="mt-3 text-xl">{district.label}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{district.sourceName}</p><p className="mt-2 text-xs text-slate-500">目前可查來源年度：{district.academicYear}</p><a href={district.sourceUrl} target="_blank" rel="noreferrer" className="mt-4 inline-block text-sm font-black text-[var(--jshs-primary)]">開啟官方公告 ↗</a></article>)}</div><Link href="/news" className="mt-5 inline-block text-sm font-black text-[var(--jshs-primary)]">查看全部官方公告入口 →</Link></PageContainer><SiteFooter /></main>;
 }
 
 function SectionHeading({ eyebrow, id, title, body }: { eyebrow: string; id: string; title: string; body: string }) {
@@ -78,9 +31,5 @@ function SectionHeading({ eyebrow, id, title, body }: { eyebrow: string; id: str
 }
 
 function TaskCard({ icon, tone, title, body, href, action }: { icon: SiteIconName; tone: "blue" | "green"; title: string; body: string; href: string; action: string }) {
-  return <Link href={href} className="group p-[14px] jshs-surface-card"><span className={`jshs-icon-tile jshs-task-icon ${tone === "green" ? "is-success" : ""}`} aria-hidden="true"><SiteIcon name={icon} size={18} /></span><h2 className="mt-4">{title}</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">{body}</p><b className="mt-4 block text-sm text-[var(--jshs-primary)]">{action} <span className="inline-block transition group-hover:translate-x-1">→</span></b></Link>;
-}
-
-function NewsPreview({ article }: { article: NewsArticle }) {
-  return <Link href={`/news/${article.slug}`} className="group flex min-h-56 flex-col p-5 jshs-surface-card"><div className="flex items-center justify-between gap-3 text-xs font-black"><span className="text-[var(--jshs-primary)]">{article.category}</span><span className="text-[var(--jshs-muted)]">更新 {formatNewsDate(article.updatedAt)}</span></div><h3 className="mt-4 text-xl font-black leading-snug">{article.title}</h3><p className="mt-2 line-clamp-2 text-sm leading-6 jshs-muted-copy">{article.description}</p><span className="mt-3 text-xs font-bold text-[var(--jshs-muted)]">來源：{article.sources[0]?.label || "官方公告"}</span><b className="mt-auto pt-6 text-sm text-[var(--jshs-primary)]">閱讀完整指南 <span className="inline-block transition group-hover:translate-x-1">→</span></b></Link>;
+  return <Link href={href} className="group p-[14px] jshs-surface-card"><span className={"jshs-icon-tile jshs-task-icon " + (tone === "green" ? "is-success" : "")} aria-hidden="true"><SiteIcon name={icon} size={18} /></span><h2 className="mt-4">{title}</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">{body}</p><b className="mt-4 block text-sm text-[var(--jshs-primary)]">{action} <span className="inline-block transition group-hover:translate-x-1">→</span></b></Link>;
 }

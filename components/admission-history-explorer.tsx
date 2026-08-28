@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { SourceBadge } from "@/components/source-badge";
 
 type HistoryRecord = Readonly<{
   districtCode: string;
@@ -60,22 +61,22 @@ export function AdmissionHistoryExplorer({ districtOptions, initialDistrict = "a
   }, [district, query, schools]);
 
   return <>
-    <section className="border-b jshs-hero-section"><div className="mx-auto w-[min(1180px,calc(100%-32px))] py-12 md:py-16"><p className="jshs-eyebrow">歷年錄取成績查詢</p><h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-6xl">獨立整理的歷年參考資料。</h1><p className="mt-5 max-w-3xl text-lg leading-8 jshs-muted-copy">這裡使用獨立的歷年資料檔，不與全國校科查詢共用 CSV。全部內容都是非官方整理，正式資格、名額與錄取結果請以當年度官方公告為準。</p></div></section>
+    <section className="border-b jshs-hero-section"><div className="mx-auto w-[min(1180px,calc(100%-32px))] py-12 md:py-16"><p className="jshs-eyebrow">歷年錄取參考</p><h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-6xl">獨立整理的歷年參考資料。</h1><p className="mt-5 max-w-3xl text-lg leading-8 jshs-muted-copy">這裡使用獨立的歷年資料檔，不與全國校科查詢共用 CSV。全部內容都是非官方整理，正式資格、名額與錄取結果請以當年度官方公告為準。</p></div></section>
     <section className="mx-auto w-[min(1180px,calc(100%-32px))] py-8 md:py-12">
       <div className="grid gap-4 p-5 jshs-surface-card md:grid-cols-[1fr_220px] md:p-7">
         <label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">搜尋學校、科系、縣市或代碼<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="例如：中科實驗、普通科、060323" /></label>
         <FilterSelect label="就學區" value={district} onChange={setDistrict} options={[{ code: "all", label: "全部就學區" }, ...districtOptions]} />
       </div>
-      <div className="mt-5 flex flex-wrap items-center gap-3"><span className="jshs-chip">非官方整理 {filtered.length} 筆</span><p className="text-xs leading-5 text-slate-500">本頁僅供經驗與趨勢參考；不代表今年錄取保證。</p></div>
+      <div className="mt-5 flex flex-wrap items-center gap-3"><SourceBadge sourceType="community" /><span className="text-sm jshs-muted-copy">{loaded ? `${filtered.length} 筆` : "資料載入中"}</span><p className="text-xs leading-5 text-slate-500">本頁僅供經驗與趨勢參考；不代表今年錄取保證。</p></div>
       {!loaded ? <div className="mt-6 p-8 text-center jshs-surface-card">正在載入歷年錄取資料…</div> : null}
-      {loadError ? <div className="mt-6 p-8 text-center jshs-surface-card"><h2 className="text-xl">歷年資料暫時無法載入</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">請重新整理頁面；如果問題持續，請稍後再試。</p></div> : null}
+      {loadError ? <div className="mt-6 p-8 text-center jshs-surface-card"><h2 className="text-xl">歷年資料暫時無法載入</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">請重新載入；如果問題持續，請稍後再試。</p><button type="button" onClick={() => window.location.reload()} className="mt-4 min-h-11 px-4 py-3 text-sm jshs-button-primary">重新載入</button></div> : null}
       {loaded && !loadError ? <div className="mt-7 grid gap-8"><HistoryGroup schools={filtered} /></div> : null}
     </section>
   </>;
 }
 
 function HistoryGroup({ schools }: { schools: readonly HistoryRecord[] }) {
-  return <section aria-labelledby="history-community"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="jshs-eyebrow">非官方整理</p><h2 id="history-community" className="mt-2 text-2xl font-black">非官方歷年整理</h2></div><span className="text-sm jshs-muted-copy">{schools.length} 筆</span></div>{schools.length ? <div className="mt-4 grid gap-4 lg:grid-cols-2">{schools.map((school) => <article key={`${school.districtCode}:${school.code}`} className="p-5 jshs-surface-card"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-black tracking-[.12em] text-[var(--jshs-primary)]">{school.districtLabel} · {school.code}</p><h3 className="mt-2 text-xl font-black">{school.name}</h3></div><span className="jshs-chip">非官方整理</span></div><p className="mt-3 text-sm leading-6 jshs-muted-copy">{[school.city, school.area, school.program].filter(Boolean).join(" · ")}</p><dl className="mt-4 grid gap-3 sm:grid-cols-2"><HistoryFact label="最低錄取成績" value={school.referenceScore} /><HistoryFact label="成績年度" value={school.scoreYear || "未標示"} /></dl><p className="mt-4 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-7 text-slate-700">科系／校科：{school.departmentsRaw || "未標示"}</p><p className="mt-4 text-xs leading-5 text-slate-500">資料性質：非官方整理；{school.sourceNote || "資料檔未補充備註"}</p><Link className="mt-4 inline-block text-sm font-black text-[var(--jshs-primary)]" href={`/schools/${school.districtCode}/${school.code}#alumni`}>查看學校詳情與學長姐分享 →</Link></article>)}</div> : <div className="mt-4 rounded-2xl border border-dashed border-[var(--jshs-border)] p-6 text-sm leading-6 jshs-muted-copy">目前沒有符合條件的非官方整理，不以推估資料補空白。</div>}</section>;
+  return <section aria-labelledby="history-community"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="jshs-eyebrow">社群資料</p><h2 id="history-community" className="mt-2 text-2xl font-black">歷年錄取參考</h2></div><span className="text-sm jshs-muted-copy">{schools.length} 筆</span></div>{schools.length ? <div className="mt-4 grid gap-4 lg:grid-cols-2">{schools.map((school) => <article key={`${school.districtCode}:${school.code}`} className="p-5 jshs-surface-card"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-black tracking-[.12em] text-[var(--jshs-primary)]">{school.districtLabel} · {school.code}</p><h3 className="mt-2 text-xl font-black">{school.name}</h3></div><SourceBadge sourceType="community" /></div><p className="mt-3 text-sm leading-6 jshs-muted-copy">{[school.city, school.area, school.program].filter(Boolean).join(" · ")}</p><dl className="mt-4 grid gap-3 sm:grid-cols-2"><HistoryFact label="最低錄取成績" value={school.referenceScore} /><HistoryFact label="成績年度" value={school.scoreYear || "未標示"} /></dl><p className="mt-4 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-7 text-slate-700">科系／校科：{school.departmentsRaw || "未標示"}</p><p className="mt-4 text-xs leading-5 text-slate-500">資料性質：社群資料；{school.sourceNote || "資料檔未提供其他備註"}</p><Link className="mt-4 inline-block text-sm font-black text-[var(--jshs-primary)]" href={`/schools/${school.districtCode}/${school.code}#alumni`}>查看學校詳情與學長姐分享 →</Link></article>)}</div> : <div className="mt-4 rounded-2xl border border-dashed border-[var(--jshs-border)] p-6 text-sm leading-6 jshs-muted-copy">目前沒有符合條件的社群資料，不以推估資料補空白。</div>}</section>;
 }
 
 function FilterSelect({ label, value, onChange, options }: { label: string; value: string; onChange: (value: string) => void; options: readonly { code: string; label: string }[] }) {

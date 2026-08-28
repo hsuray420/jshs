@@ -20,24 +20,24 @@ test("admission calculator uses structured sections and fact-based controls", as
   assert.match(source, /<select value=\{writingLevel\}/);
 });
 
-test("planner exposes four workspaces, ordering, comparison, family summary and private share", async () => {
-  const [planner, page, share] = await Promise.all([
-    read("components/planner-workspace.tsx"),
+test("planner exposes parallel manual/recommendation workspaces with shared ordering and health checks", async () => {
+  const [planner, page] = await Promise.all([
+    read("components/planner-mode-workspace.tsx"),
     read("app/planner/page.tsx"),
-    read("components/planner-share.tsx"),
   ]);
-  for (const label of ["我的選項", "風險分層", "比較表", "下一步", "為什麼想選", "觀點標籤", "列印／另存 PDF", "下載清單", "建立只讀分享", "家庭討論摘要"]) assert.match(planner, new RegExp(label));
+  for (const label of ["我的志願順序", "志願健檢", "推薦理由", "挑戰", "適中", "穩定", "拖曳", "查看學校"]) assert.match(planner, new RegExp(label));
   assert.match(planner, /draggable/);
   assert.match(planner, /\/api\/planner\/state/);
-  assert.match(page, /plannerSchools/);
-  assert.match(share, /不公開索引/);
+  assert.match(page, /PlannerHub/);
+  assert.match(planner, /readLocalPlanner|writeLocalPlanner/);
 });
 
 test("search and trust centers are real routes and discoverable", async () => {
   await Promise.all([access(new URL("../app/search/page.tsx", import.meta.url)), access(new URL("../app/trust/page.tsx", import.meta.url))]);
   const [search, trust, sitemap] = await Promise.all([read("app/search/page.tsx"), read("app/trust/page.tsx"), read("scripts/generate-sitemap.mjs")]);
-  for (const label of ["學校／校科", "升學指南文章", "百科與規則名詞", "重要日程", "官方來源"]) assert.match(search, new RegExp(label));
-  for (const label of ["資料來源與更新紀錄", "試算與分析方法", "資料錯誤回報", "隱私權", "服務條款", "支持／合作與售後"]) assert.match(trust, new RegExp(label));
+  for (const label of ["學校／校科", "升學指南", "百科與規則名詞", "重要日程", "官方來源"]) assert.match(search, new RegExp(label));
+  for (const label of ["資料來源", "資料更新狀態", "15 區建置進度", "試算與分析方法", "錯誤回報", "平台可信度說明"]) assert.match(trust, new RegExp(label));
+  assert.doesNotMatch(trust, /隱私權|服務條款|支持／合作與售後/);
   assert.match(sitemap, /entry\("\/search"/);
   assert.match(sitemap, /entry\("\/trust"/);
 });
@@ -48,9 +48,9 @@ test("CT and Changhua timelines contain only source-confirmed page I/II fields",
     read("components/schedule-workspace.tsx"),
     read("public/it_hs/district-metadata.json"),
   ]);
-  for (const label of ["ct-115-preference", "ct-115-placement", "ch-115-preference", "ch-115-placement", "sourcePages", "confirmed"]) assert.match(schedule, new RegExp(label));
+  for (const label of ["ct-115-preference", "ct-115-placement", "ch-115-preference", "ch-115-placement", "sourcePages", "previous_year_reference"]) assert.match(schedule, new RegExp(label));
   assert.match(workspace, /getDistrictAdmissionSchedule/);
-  assert.match(workspace, /項目、日期、說明與來源頁碼均已逐欄核對/);
+  assert.match(workspace, /官方來源|來源頁碼/);
   const districts = JSON.parse(metadata).districts;
   assert.equal(districts.ct.dataStatus, "ready");
   assert.equal(districts.changhua.dataStatus, "ready");

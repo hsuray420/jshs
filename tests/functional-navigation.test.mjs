@@ -14,10 +14,10 @@ test("task hubs route users into the new first-party admission surfaces", async 
 
   assert.match(tools, /AdmissionCalculator/);
   assert.match(schools, /SchoolExplorer/);
-  assert.match(planner, /PlannerWorkspace/);
+  assert.match(planner, /PlannerHub/);
   assert.match(home, /href="\/tools"/);
-  assert.match(home, /href="\/knowledge\/admission-basics"/);
-  assert.match(home, /href="\/knowledge\/fit-quiz"/);
+  assert.match(home, /href="\/schools"/);
+  assert.match(home, /href="\/planner"/);
   assert.doesNotMatch(home, /districts-title|HomeDistrictPicker/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm#(?:calculator|analysis|home)/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm\?district=/);
@@ -62,7 +62,7 @@ test("new school, calculator, and planner clients own the functional destination
   const [schools, calculator, planner] = await Promise.all([
     readSource("components/school-explorer.tsx"),
     readSource("components/admission-calculator.tsx"),
-    readSource("components/planner-workspace.tsx"),
+    readSource("components/planner-mode-workspace.tsx"),
   ]);
 
   assert.match(schools, /SchoolDirectoryRecord/);

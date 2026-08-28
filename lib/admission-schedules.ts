@@ -9,7 +9,9 @@ export type AdmissionScheduleItem = {
   sourcePages: "I" | "II" | "i" | "ii" | "iii";
 };
 
-const confirmed = (item: Omit<AdmissionScheduleItem, "status">): AdmissionScheduleItem => ({ ...item, status: "confirmed" });
+// These records are sourced from 115 materials. They remain useful references,
+// but must never render as confirmed 116 dates.
+const confirmed = (item: Omit<AdmissionScheduleItem, "status">): AdmissionScheduleItem => ({ ...item, status: "previous_year_reference" });
 
 export const districtAdmissionSchedules: Record<string, AdmissionScheduleItem[]> = {
   changhua: [

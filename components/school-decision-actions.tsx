@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { readLocalPlanner, writeLocalPlanner } from "@/lib/planner-local";
+import { readLocalPlanner, saveLocalPlannerSnapshot, writeLocalPlanner } from "@/lib/planner-local";
+import { markProgress } from "@/lib/progress";
 
 type Tier = "challenge" | "balanced" | "stable";
 
@@ -36,9 +37,16 @@ export function SchoolDecisionActions({
   async function saveSchool() {
     setStatus("saving");
     if (!isMember && typeof window !== "undefined") {
+      const current = readLocalPlanner();
+      if (current.items.some((item) => item.district === district && item.school_code === schoolCode)) {
+        setStatus("saved");
+        return;
+      }
       const item = { id: crypto.randomUUID(), district, school_code: schoolCode, school_name: schoolName, department: departments, tier, notes, created_at: new Date().toISOString() };
-      const items = [...readLocalPlanner().items, item];
+      const items = [...current.items, item];
       writeLocalPlanner(items, { order: items.map((entry) => entry.id) });
+      saveLocalPlannerSnapshot(items, { order: items.map((entry) => entry.id) });
+      markProgress("planner");
       setStatus("saved_local");
       return;
     }
@@ -47,6 +55,7 @@ export function SchoolDecisionActions({
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ district, schoolCode, schoolName, department: departments, tier, notes }),
     }).catch(() => null);
+    if (response?.ok) markProgress("planner");
     setStatus(response?.status === 401 ? "member_required" : response?.ok ? "saved" : "error");
   }
 

@@ -44,10 +44,8 @@ test("算成績的每個功能都有自己的 canonical route", async () => {
   assert.match(calculator, /jshs_score_latest/);
 });
 
-test("重要日程的每個功能都有自己的 canonical route並完成校園開放日操作", async () => {
-  const paths = [
-    "countdown", "timeline", "now", "tasks", "compare", "open-days", "export",
-  ];
+test("重要日程的 canonical menu routes preserve merged capabilities", async () => {
+  const paths = ["timeline", "now", "tasks"];
   const [siteMap, schedule] = await Promise.all([
     read("content/site-map.json"),
     read("components/schedule-workspace.tsx"),
@@ -57,8 +55,13 @@ test("重要日程的每個功能都有自己的 canonical route並完成校園�
     await access(new URL(`app/schedule/${path}/page.tsx`, root));
     assert.match(siteMap, new RegExp(`/schedule/${path}`));
   }
+  for (const path of ["countdown", "compare", "export", "open-days"]) {
+    await access(new URL(`app/schedule/${path}/page.tsx`, root));
+    assert.match(await read(`app/schedule/${path}/page.tsx`), /redirect\(/);
+  }
+  assert.match(siteMap, /\/schools\/open-days/);
   assert.match(schedule, /view/);
   assert.match(schedule, /jshs_schedule_open_days/);
-  assert.match(schedule, /新增開放日|加入開放日/);
-  assert.doesNotMatch(schedule, /目前公開資料尚未統一提供全國開放日清單/);
+  assert.match(schedule, /新增開放日|加入校園開放日/);
+  assert.match(schedule, /官方來源|個人活動/);
 });

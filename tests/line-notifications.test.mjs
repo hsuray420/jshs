@@ -80,7 +80,8 @@ test("notification child routes render feature-specific working controls", async
   const workspace = await source("components/notification-feature-workspace.tsx");
   assert.match(page, /NotificationFeatureWorkspace/);
   assert.match(workspace, /weekly_report_enabled/);
-  assert.match(workspace, /schedule\/open-days/);
+  assert.match(workspace, /schools\/open-days/);
+  assert.match(workspace, /schedule\/timeline/);
   assert.match(workspace, /officialLineUrl/);
 });
 

@@ -41,7 +41,7 @@ test("news catalog contains six useful, source-backed guides", async () => {
   }
 });
 
-test("news hub and article template expose SEO, schema and conversion surfaces", async () => {
+test("official information hub stays official-only and legacy articles redirect", async () => {
   const [hubPage, articlePage, newsLibrary] = await Promise.all([
     readFile(hubPageUrl, "utf8"),
     readFile(articlePageUrl, "utf8"),
@@ -49,39 +49,26 @@ test("news hub and article template expose SEO, schema and conversion surfaces",
   ]);
 
   assert.match(hubPage, /canonical:\s*"\/news"/);
-  assert.match(hubPage, /升學情報中心/);
-  assert.match(hubPage, /getFeaturedNews/);
+  assert.match(hubPage, /官方最新公告/);
+  assert.match(hubPage, /SourceBadge sourceType="official"/);
+  assert.doesNotMatch(hubPage, /getFeaturedNews|SourceBadge sourceType="jshs_|SourceBadge sourceType="community/);
   assert.match(articlePage, /generateStaticParams/);
   assert.match(articlePage, /generateMetadata/);
-  assert.match(articlePage, /"@type":\s*"Article"/);
-  assert.match(articlePage, /"@type":\s*"BreadcrumbList"/);
-  assert.match(articlePage, /application\/ld\+json/);
-  assert.match(articlePage, /官方資料來源/);
-  assert.match(articlePage, /適用對象/);
-  assert.match(articlePage, /適用學年度/);
-  assert.match(articlePage, /適用就學區/);
-  assert.match(articlePage, /一句話結論/);
-  assert.match(articlePage, /你需要先準備什麼/);
-  assert.match(articlePage, /常見誤解/);
-  assert.match(articlePage, /下一步工具/);
-  assert.match(articlePage, /article\.cta\.href/);
+  assert.match(articlePage, /redirect\(destinationFor\(slug\)\)/);
+  assert.doesNotMatch(articlePage, /application\/ld\+json/);
   assert.match(newsLibrary, /export function getNewsArticle/);
   assert.match(newsLibrary, /export function getRelatedNews/);
-  assert.match(articlePage, /notFound\(\)/);
+  assert.doesNotMatch(hubPage, /newsArticles|article\.title/);
 });
 
-test("homepage and sitemap make every guide discoverable", async () => {
-  const [catalog, homePage, sitemap] = await Promise.all([
-    readFile(catalogUrl, "utf8").then(JSON.parse),
+test("homepage and sitemap expose the canonical official information entry", async () => {
+  const [homePage, sitemap] = await Promise.all([
     readFile(homePageUrl, "utf8"),
     readFile(sitemapUrl, "utf8"),
   ]);
 
   assert.match(homePage, /href="\/news"/);
-  assert.match(homePage, /getFeaturedNews/);
+  assert.doesNotMatch(homePage, /getFeaturedNews/);
   assert.match(sitemap, /<loc>https:\/\/jshs\.cc\/news<\/loc>/);
-
-  for (const article of catalog.articles) {
-    assert.match(sitemap, new RegExp(`<loc>https://jshs\\.cc/news/${article.slug}</loc>`));
-  }
+  assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/news\/[^<]+<\/loc>/);
 });

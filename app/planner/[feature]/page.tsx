@@ -8,8 +8,7 @@ import { OfficialPlatformLinks } from "@/components/official-platform-links";
 import { PlannerExportWorkspace } from "@/components/planner-export-workspace";
 
 const pages: Record<string, SupportPage> = {
-  check: { eyebrow: "我的志願", title: "排序與健檢", description: "確認志願順序、三層分布與送出前需要補的資料。", sections: [{ title: "健檢原則", body: "每份志願都應包含願意就讀的選項，並同時檢查挑戰、穩定與保底分布。" }, { title: "開始調整", body: "你可以用系統推薦快速建立清單，也可以在自選排序頁逐一加入學校並上下移動。" }], action: { label: "前往自選排序", href: "/planner/custom" } },
-  versions: { eyebrow: "我的志願", title: "版本紀錄", description: "保留每次志願調整的決策脈絡，方便和家人一起回看。", sections: [{ title: "目前保存", body: "登入後的志願清單會保存於會員規劃中；每次調整前可先下載摘要留存。" }, { title: "比較方式", body: "將不同階段下載的摘要放在一起，可以看見學校順序與選擇理由的變化。" }], action: { label: "回到我的志願", href: "/planner" } },
+  versions: { eyebrow: "我的志願", title: "版本紀錄", description: "保留每次志願調整的決策脈絡，方便和家人一起回看。", sections: [{ title: "目前保存", body: "每次新增、刪除或移動志願時，系統會保存可查看與恢復的快照。" }, { title: "比較方式", body: "打開舊版本即可查看當時的學校順序與選擇理由，必要時恢復該版本。" }], action: { label: "回到我的志願", href: "/planner" } },
   export: { eyebrow: "我的志願", title: "列印／下載", description: "把目前志願清單整理成家庭討論或送出前的檢查資料。", sections: [{ title: "可下載摘要", body: "可直接列印、下載 PDF 或下載文字摘要。" }, { title: "送出前提醒", body: "正式選填仍須前往當年度招生單位指定平台，本站清單不等於正式送出。" }], action: { label: "回到我的志願", href: "/planner" } },
   "official-platform": { eyebrow: "正式選填", title: "志願選填平台連結", description: "前往當年度招生單位指定的正式選填平台。", sections: [{ title: "使用前確認", body: "請先確認就學區、學年度與登入身分，並以招生委員會公告的正式網址為準。" }, { title: "本站的角色", body: "本站協助試算與整理志願，不代替官方平台的資格審查、志願送出或結果公告。" }], action: { label: "查看官方來源", href: "/trust/sources" } },
 };

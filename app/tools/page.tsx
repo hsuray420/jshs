@@ -6,8 +6,8 @@ import { SiteHeader } from "@/components/site-header";
 import { isAdmissionDistrict, type AdmissionDistrict } from "@/lib/admission-score";
 import { getMemberSession } from "@/lib/member-auth";
 
-const title = "升學工具｜從積分試算到志願清單";
-const description = "集中使用積分試算、落點分析、志願清單、校科比較、通勤比較與升學時程，讓每次查資料都能留下可執行的結果。";
+const title = "算成績｜116 學年度積分試算";
+const description = "依就學區規則完成 116 學年度積分試算，查看同分比序資料並把結果帶到我的志願。";
 
 export const metadata: Metadata = {
   title,

@@ -3,8 +3,8 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import districtMetadata from "../../public/it_hs/district-metadata.json";
 
-const title = "全國就學區｜15 區學校資料與升學工具入口";
-const description = "選擇適用就學區，查看學校資料、適用學年度、更新日期，以及目前可使用的積分試算與落點分析功能。";
+const title = "選擇就學區｜15 區學校資料與升學工具";
+const description = "選擇適用就學區後，回到找學校、算成績或我的志願使用對應資料。";
 
 export const metadata: Metadata = {
   title,
@@ -68,7 +68,7 @@ export default async function DistrictsPage({
         <div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-12">
           <p className="jshs-eyebrow">15 ADMISSION DISTRICTS</p>
           <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-5xl">先選對就學區，直接進入{requestedLabel}。</h1>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">{target ? `選擇地區後會直接開啟${requestedLabel}；各區功能入口均已開放，規則細節請依官方公告核對。` : description}</p>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">{target ? `選擇地區後會直接開啟${requestedLabel}；只有已完成規則建模的區域提供積分試算，其餘區域請先查看學校與官方資訊。` : description}</p>
         </div>
       </section>
 

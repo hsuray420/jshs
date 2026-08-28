@@ -49,7 +49,7 @@ export function getAssistantConversationReply(question: string): string | null {
     return "不客氣！如果要查正式日期、校科或規則，我可以繼續陪你一起看本站資料。";
   }
   if (/^(你是誰|你能做什麼|可以問什麼|功能)$/u.test(normalized)) {
-    return "我是本站的小助手，能依本站資料協助你找升學知識、就學區、學校與重要日程；成績與落點請使用本站專用工具。";
+    return "我是本站的小助手，能依本站資料協助你找升學指南、就學區、學校與升學日程；成績與落點請使用算成績中的專用功能。";
   }
   if (/^(掰掰|再見|bye)$/iu.test(normalized)) {
     return "再見！需要查升學資料時，隨時回到本站找我。";

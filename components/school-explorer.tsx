@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { SchoolDirectoryRecord } from "@/lib/school-directory";
 import { readStoredDistrict } from "@/lib/district-context";
 import { markProgress } from "@/lib/progress";
+import { readLocalPlanner, saveLocalPlannerSnapshot, writeLocalPlanner } from "@/lib/planner-local";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/status";
 import { PageContainer } from "@/components/ui/layout";
 import { SourceBadge } from "@/components/source-badge";
@@ -126,7 +127,15 @@ export function SchoolExplorer({
       setSavedCode(`${school.districtCode}:${school.code}`);
       markProgress("planner");
     } else if (response?.status === 401) {
-      setSaveMessage("收藏校科需要先使用 LINE 登入。");
+      const current = readLocalPlanner();
+      const exists = current.items.some((item) => item.district === school.districtCode && item.school_code === school.code);
+      const nextItems = exists ? current.items : [...current.items, { id: crypto.randomUUID(), district: school.districtCode, school_code: school.code, school_name: school.name, department: school.departmentsRaw, tier: "balanced", notes: "", created_at: new Date().toISOString() }];
+      const nextState = { ...current.state, order: exists ? [...(current.state.order || [])] : [...(current.state.order || []), nextItems[nextItems.length - 1].id] };
+      writeLocalPlanner(nextItems, nextState);
+      saveLocalPlannerSnapshot(nextItems, nextState);
+      setSavedCode(`${school.districtCode}:${school.code}`);
+      setSaveMessage(exists ? "這個校科已在你的志願清單中。" : "已保存於目前裝置；登入 LINE 後才能跨裝置同步。");
+      markProgress("planner");
     } else {
       setSaveMessage("暫時無法儲存，請稍後再試。");
     }
@@ -171,7 +180,7 @@ export function SchoolExplorer({
         </div>
 
         <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
-          <div><p className="text-sm font-bold jshs-muted-copy">目前顯示 {filteredSchools.length} 所學校／校科資料</p><p className="mt-1 text-xs leading-5 text-slate-500">每筆結果保留資料年度、來源與欄位狀態；正式招生權益仍以官方公告為準。瀏覽可匿名，收藏需要 LINE 登入。</p></div>
+          <div><p className="text-sm font-bold jshs-muted-copy">目前顯示 {filteredSchools.length} 所學校／校科資料</p><p className="mt-1 text-xs leading-5 text-slate-500">每筆結果保留資料年度、來源與欄位狀態；正式招生權益仍以官方公告為準。可匿名瀏覽與保存於目前裝置；登入 LINE 後可跨裝置同步。</p></div>
           <Link className="text-sm font-black text-[var(--jshs-primary)]" href="/planner">查看我的規劃 →</Link>
         </div>
         {saveMessage ? <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-900" role="status">{saveMessage} <a className="ml-1 underline" href="/api/line/login/start">使用 LINE 登入</a></p> : null}

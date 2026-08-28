@@ -14,7 +14,7 @@ const surfaceUrls = [
   new URL("../components/site-footer.tsx", import.meta.url),
   new URL("../components/school-explorer.tsx", import.meta.url),
   new URL("../components/admission-calculator.tsx", import.meta.url),
-  new URL("../components/planner-workspace.tsx", import.meta.url),
+  new URL("../components/planner-mode-workspace.tsx", import.meta.url),
 ];
 
 test("design tokens follow the education iOS visual guide", async () => {
@@ -95,7 +95,7 @@ test("core visitor surfaces use neutral design-system primitives for future page
 test("homepage task cards use icon tiles and grouped context spacing", async () => {
   const home = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
 
-  assert.equal((home.match(/className=\{`jshs-icon-tile jshs-task-icon/g) || []).length, 1);
+  assert.equal((home.match(/jshs-icon-tile jshs-task-icon/g) || []).length, 1);
   assert.match(home, /jshs-task-icon/);
   assert.match(home, /SiteIcon/);
   assert.doesNotMatch(home, /[▤⌂∑☷]/);

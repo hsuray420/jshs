@@ -1,7 +1,5 @@
-import { getNewsCategoryMetadata, NewsCategoryPage } from "@/components/news-category-page";
+import { redirect } from "next/navigation";
 
-export const metadata = getNewsCategoryMetadata("schools");
-
-export default function SchoolsNewsPage() {
-  return <NewsCategoryPage categorySlug="schools" />;
+export default function LegacyNewsCategoryRoute() {
+  redirect("/schools");
 }

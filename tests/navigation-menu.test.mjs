@@ -5,13 +5,13 @@ import test from "node:test";
 const siteMapUrl = new URL("../content/site-map.json", import.meta.url);
 const headerUrl = new URL("../components/site-header.tsx", import.meta.url);
 const footerUrl = new URL("../components/site-footer.tsx", import.meta.url);
-const expectedGroups = ["查學校", "算成績", "時間日程", "我的志願", "特殊資格", "升學知識", "更多"];
+const expectedGroups = ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任"];
 const requiredLabels = [
-  "全國校科查詢", "歷年錄取成績查詢", "學長姐分享", "學校地圖", "費用試算", "通勤比較", "群科／十五群科介紹",
-  "開始試算", "積分／序位換算說明", "成績歷史紀錄", "模擬考先估落點", "全年倒數計時", "重要時程總覽",
-  "升學待辦清單", "個人化行事曆匯出", "我的候選校科清單", "排序與健檢", "版本紀錄", "列印／下載",
-  "資格自我檢測", "特色招生／特色班", "跨區就學資格判定", "僑生／境外生說明", "3 分鐘看懂免試入學",
-  "名詞小百科", "常見迷思破解", "AI 問答小幫手", "會員登入", "通知與提醒", "資料來源與更新紀錄", "資料錯誤回報", "支持／合作",
+  "全國校科查詢", "歷年錄取", "學長姐分享", "學校地圖", "費用試算", "通勤比較", "群科介紹",
+  "成績積分試算", "積分規則", "成績歷史", "模擬考落點", "升學總覽", "重要時程",
+  "現在該做什麼", "我的待辦", "自己排", "系統推薦", "版本紀錄", "列印／下載", "官方選填平台",
+  "特殊入學與資格", "升學入門", "志願與積分", "升學百科", "生涯探索", "資料來源", "資料更新狀態",
+  "15 區建置進度", "試算與分析方法", "資料版本紀錄", "錯誤回報", "平台可信度說明",
 ];
 
 function collectLabels(items) { return items.flatMap(({ label, children = [] }) => [label, ...collectLabels(children)]); }
@@ -37,5 +37,8 @@ test("desktop and mobile navigation render the same complete submenu model", asy
   assert.doesNotMatch(header, /[♧♙⌕☰↗]/);
   assert.match(header, /group\.items/);
   assert.doesNotMatch(header, /功能準備中/);
-  assert.match(footer, /menuGroups\.map/);
+  assert.match(footer, /footerGroups\.map/);
+  assert.match(footer, /快速入口/);
+  assert.match(footer, /資料與信任/);
+  assert.match(footer, /法律/);
 });

@@ -10,7 +10,7 @@ const articlePageUrl = new URL("../app/news/[slug]/page.tsx", import.meta.url);
 const visitorSurfaceUrls = [
   new URL("../components/school-explorer.tsx", import.meta.url),
   new URL("../components/admission-calculator.tsx", import.meta.url),
-  new URL("../components/planner-workspace.tsx", import.meta.url),
+  new URL("../components/planner-mode-workspace.tsx", import.meta.url),
   new URL("../components/site-header.tsx", import.meta.url),
 ];
 
@@ -24,7 +24,7 @@ const expectedNavigation = [
   ["資料與信任", "/trust"],
 ];
 
-const expectedCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
+const legacyNewsCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
 
 test("the information architecture follows the final seven-group product sitemap", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
@@ -58,7 +58,9 @@ test("shared header exposes scalable desktop, drawer, and mobile bottom navigati
   assert.match(header, /jshs-button/);
   assert.match(header, /finalNavigationLabels/);
   assert.doesNotMatch(header, />導覽選單</);
-  assert.match(footer, /menuGroups\.map/);
+  assert.match(footer, /footerGroups\.map/);
+  assert.match(footer, /JSHS\.CC/);
+  assert.match(footer, /資料最後更新/);
 });
 
 test("visitor task surfaces hide implementation details from public copy", async () => {
@@ -76,19 +78,14 @@ test("visitor task surfaces use the shared education iOS design system without o
   }
 });
 
-test("six news category hubs have stable URLs, metadata, and route files", async () => {
+test("legacy news category routes redirect into the canonical IA", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
+  assert.equal("newsCategories" in siteMap, false);
 
-  assert.deepEqual(siteMap.newsCategories.map(({ slug }) => slug), expectedCategories);
-
-  for (const category of siteMap.newsCategories) {
-    assert.equal(category.href, `/news/${category.slug}`);
-    assert.ok(category.title.length >= 4);
-    assert.ok(category.description.length >= 30);
-
-    const route = new URL(`../app/news/${category.slug}/page.tsx`, import.meta.url);
-    const source = await readFile(route, "utf8");
-    assert.match(source, new RegExp(`categorySlug=\\"${category.slug}\\"`));
+  for (const slug of legacyNewsCategories) {
+    const source = await readFile(new URL(`../app/news/${slug}/page.tsx`, import.meta.url), "utf8");
+    assert.match(source, /redirect\(/);
+    assert.doesNotMatch(source, /NewsCategoryPage|categorySlug/);
   }
 });
 
@@ -109,7 +106,6 @@ test("primary navigation lands on an interactive surface instead of an introduct
   const tools = await readFile(new URL("../app/tools/page.tsx", import.meta.url), "utf8");
   const planner = await readFile(new URL("../app/planner/page.tsx", import.meta.url), "utf8");
   const schedule = await readFile(new URL("../app/schedule/page.tsx", import.meta.url), "utf8");
-  const eligibility = await readFile(new URL("../app/eligibility/page.tsx", import.meta.url), "utf8");
   const knowledge = await readFile(new URL("../app/knowledge/page.tsx", import.meta.url), "utf8");
 
   for (const { href } of siteMap.primaryNavigation) {
@@ -119,11 +115,10 @@ test("primary navigation lands on an interactive surface instead of an introduct
       continue;
     }
     if (url.pathname === "/tools") assert.match(tools, /AdmissionCalculator/);
-    else if (url.pathname === "/planner") assert.match(planner, /PlannerWorkspace/);
+    else if (url.pathname === "/planner") assert.match(planner, /PlannerHub/);
     else if (url.pathname === "/schedule") assert.match(schedule, /ScheduleWorkspace/);
-    else if (url.pathname === "/eligibility") assert.match(eligibility, /AdmissionPathFinder/);
     else if (url.pathname === "/admission-guides") assert.match(await readFile(new URL("../app/admission-guides/page.tsx", import.meta.url), "utf8"), /AdmissionGuideLibrary/);
-    else if (url.pathname === "/knowledge") assert.match(knowledge, /KnowledgeHelper/);
+    else if (url.pathname === "/knowledge") assert.match(knowledge, /guideSections/);
     else assert.equal(url.pathname, "/trust");
   }
 });
@@ -133,10 +128,12 @@ test("sitemap exposes canonical hubs and excludes redirect-only legacy homepage"
   const requiredPaths = [
     "/",
     "/news",
-    ...expectedCategories.map((slug) => `/news/${slug}`),
+    "/admission-guides/schedule",
     "/tools",
     "/schools",
-    "/districts",
+    "/schools/groups",
+    "/planner/official-platform",
+    "/trust",
   ];
 
   for (const path of requiredPaths) {
@@ -144,13 +141,15 @@ test("sitemap exposes canonical hubs and excludes redirect-only legacy homepage"
   }
 
   assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/jshs\/home<\/loc>/);
-  assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/planner<\/loc>/);
+  for (const slug of legacyNewsCategories) assert.doesNotMatch(sitemap, new RegExp(`<loc>https://jshs\\.cc/news/${slug}</loc>`));
+  assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/schedule\/(countdown|compare|export|open-days)<\/loc>/);
 });
 
-test("article breadcrumbs point back to the canonical homepage", async () => {
+test("legacy article routes do not render a second content IA", async () => {
   const articlePage = await readFile(articlePageUrl, "utf8");
-  assert.match(articlePage, /item:\s*"https:\/\/jshs\.cc\/"/);
-  assert.match(articlePage, /href="\/"/);
+  assert.match(articlePage, /redirect\(destinationFor\(slug\)\)/);
+  assert.match(articlePage, /robots: \{ index: false, follow: false \}/);
+  assert.doesNotMatch(articlePage, /application\/ld\+json/);
 });
 
 test("district metadata remains the Cloudflare-hosted source catalog", async () => {

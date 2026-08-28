@@ -1,17 +1,17 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 test("查學校選單提供查詢、歷年、分享、地圖、費用與通勤入口", async () => {
   const siteMap = JSON.parse(await read("content/site-map.json"));
-  const schoolGroup = siteMap.menuGroups.find(({ label }) => label === "查學校");
+  const schoolGroup = siteMap.menuGroups.find(({ label }) => label === "找學校");
   const items = schoolGroup.items;
   const labels = items.map(({ label }) => label);
 
   assert.ok(labels.includes("全國校科查詢"));
-  assert.ok(labels.includes("歷年錄取成績查詢"));
+  assert.ok(labels.includes("歷年錄取"));
   for (const [label, href] of [
     ["學長姐分享", "/schools/alumni"],
     ["學校地圖", "/schools/map"],
@@ -20,7 +20,7 @@ test("查學校選單提供查詢、歷年、分享、地圖、費用與通勤�
   ]) {
     assert.equal(items.find((item) => item.label === label)?.href, href);
   }
-  for (const removed of ["學制篩選（普高／技高／綜高／五專）", "校科比較表"]) {
+  for (const removed of ["就學區找學校", "學校詳細資料"]) {
     assert.equal(labels.includes(removed), false, `不應再有：${removed}`);
   }
 });
@@ -36,15 +36,15 @@ test("全國校科查詢不再顯示獨立比較與地圖功能", async () => {
 
 test("歷年錄取查詢使用獨立資料並明確標示非官方整理", async () => {
   const [page, history] = await Promise.all([
-    read("app/schools/page.tsx"),
+    read("app/schools/history/page.tsx"),
     read("components/admission-history-explorer.tsx"),
   ]);
-  assert.match(page, /view === "history"/);
+  assert.match(page, /AdmissionHistoryExplorer/);
   assert.match(page, /AdmissionHistoryExplorer/);
   assert.match(history, /admission-history\.json/);
   assert.doesNotMatch(history, /school-directory\.json/);
   assert.match(history, /最低錄取成績/);
-  assert.match(history, /非官方整理/);
+  assert.match(history, /社群資料/);
   assert.doesNotMatch(history, /官方歷年錄取資料/);
 });
 
@@ -63,34 +63,29 @@ test("校科目錄與歷年資料各自有獨立資產", async () => {
   assert.match(generator, /hasHistoricalData/);
 });
 
-test("查學校四個獨立工具各自有路由與可操作頁面", async () => {
-  const page = await read("app/schools/page.tsx");
-  for (const [view, component] of [
-    ["alumni", "SchoolAlumniExplorer"],
-    ["map", "SchoolMapExplorer"],
-    ["cost", "SchoolCostPlanner"],
-    ["commute", "CommuteComparison"],
-  ]) {
-    assert.match(page, new RegExp(`view === "${view}"`));
-    assert.match(page, new RegExp(component));
+test("找學校工具各自有 canonical route 與可操作頁面", async () => {
+  for (const route of ["history", "map", "compare", "commute", "cost", "alumni", "open-days", "groups"]) {
+    await access(new URL(`../app/schools/${route}/page.tsx`, import.meta.url));
   }
-  const [alumni, map, cost, commute] = await Promise.all([
+  const [alumni, map, cost, commute, comparison] = await Promise.all([
     read("components/school-alumni-explorer.tsx"),
     read("components/school-map-explorer.tsx"),
     read("components/school-cost-planner.tsx"),
     read("components/commute-comparison.tsx"),
+    read("components/school-comparison-explorer.tsx"),
   ]);
   assert.match(alumni, /school-reviews/);
   assert.match(alumni, /學長姐分享/);
   assert.match(map, /學校地圖/);
-  assert.match(map, /Google Maps/);
+  assert.match(map, /openstreetmap|OpenStreetMap/i);
   assert.match(map, /address/);
   assert.match(cost, /費用/);
   assert.match(cost, /三年/);
   assert.match(cost, /估算/);
   assert.match(commute, /通勤比較/);
   assert.match(commute, /分鐘/);
-  assert.match(commute, /選擇學校/);
+  assert.match(commute, /加入學校/);
+  assert.match(comparison, /2～4|repeat\(/);
 });
 
 test("學校地圖使用免付款的 OpenStreetMap 與 Leaflet 顯示標記並支援聚焦", async () => {

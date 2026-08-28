@@ -24,7 +24,7 @@ export default async function AdminContentPage({ searchParams }: { searchParams:
   return <main className="admin-shell">
     <header className="admin-header">
       <div><p className="admin-eyebrow">Content Studio</p><h1>內容中心</h1><p className="admin-muted">管理員：{admin.user.displayName} · 內容發布後前台直接讀取，不需要修改 GitHub。</p></div>
-      <div className="admin-actions"><Link href="/admin">回後台</Link><Link href="/knowledge" target="_blank">看升學知識 ↗</Link><Link href="/schedule" target="_blank">看時間日程 ↗</Link><a href={admin.signOutPath}>登出</a></div>
+      <div className="admin-actions"><Link href="/admin">回後台</Link><Link href="/knowledge" target="_blank">看升學指南 ↗</Link><Link href="/schedule" target="_blank">看升學日程 ↗</Link><a href={admin.signOutPath}>登出</a></div>
     </header>
     {params.updated ? <section className="admin-flash">{params.updated === "published" ? "內容已發布，前台會讀取最新版本。" : params.updated === "unpublished" ? "內容已退回草稿。" : params.updated === "draft" ? "草稿已儲存。" : "內容格式不正確，尚未更新。"}{params.sync === "ok" ? " GitHub 已同步，Actions 會自動驗證並部署。" : params.sync === "pending" ? " Cloudflare 已更新；尚未設定 GitHub 同步 Secret。" : params.sync === "failed" ? " Cloudflare 已更新，但 GitHub 同步失敗，請檢查設定。" : ""}</section> : null}
     <section className="admin-stat-grid"><StatusCard label="內容總數" value={`${entries.length} 筆`} tone="ok" /><StatusCard label="已發布" value={`${entries.filter((entry) => entry.status === "published").length} 筆`} tone="ok" /><StatusCard label="草稿" value={`${entries.filter((entry) => entry.status === "draft").length} 筆`} tone={entries.some((entry) => entry.status === "draft") ? "warn" : "ok"} /><StatusCard label="版本保留" value="每次儲存" tone="ok" /></section>
@@ -37,7 +37,7 @@ export default async function AdminContentPage({ searchParams }: { searchParams:
 }
 
 function isContentType(value?: string): value is ContentType { return CONTENT_TYPES.includes(value as ContentType); }
-function defaultBody(type: ContentType) { if (type === "knowledge_term") return '{\n  "body": "請輸入名詞說明。"\n}'; if (type === "knowledge_card") return '{\n  "eyebrow": "知識主題",\n  "href": "/news"\n}'; if (type === "schedule_task") return '{\n  "detail": "請輸入待辦說明。"\n}'; return '{\n  "severity": "info"\n}'; }
+function defaultBody(type: ContentType) { if (type === "knowledge_term") return '{\n  "body": ""\n}'; if (type === "knowledge_card") return '{\n  "eyebrow": "知識主題",\n  "href": "/knowledge"\n}'; if (type === "schedule_task") return '{\n  "detail": ""\n}'; return '{\n  "severity": "info"\n}'; }
 function readStyle(entry?: ContentEntry) { try { const body = entry ? JSON.parse(entry.body_json) as { style?: { fontSize?: string; color?: string } } : null; return { fontSize: ["14", "16", "18", "20", "24", "28", "32"].includes(body?.style?.fontSize || "") ? body?.style?.fontSize || "16" : "16", color: /^#[0-9a-f]{6}$/i.test(body?.style?.color || "") ? body?.style?.color || "#1C1C1E" : "#1C1C1E" }; } catch { return { fontSize: "16", color: "#1C1C1E" }; } }
 function formatDate(value: string) { return new Intl.DateTimeFormat("zh-TW", { dateStyle: "medium", timeZone: "Asia/Taipei" }).format(new Date(value)); }
 function Preview({ entry }: { entry?: ContentEntry }) { return <section className="admin-panel"><div className="admin-section-head"><div><p className="admin-eyebrow">Preview</p><h2>內容預覽</h2></div></div>{entry ? <><h3>{entry.title}</h3><p className="admin-muted">{entry.summary}</p><pre className="admin-preview-json">{entry.body_json}</pre></> : <p className="admin-muted">找不到要預覽的內容。</p>}</section>; }

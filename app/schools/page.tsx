@@ -5,6 +5,7 @@ import { CommuteComparison } from "@/components/commute-comparison";
 import { SchoolCostPlanner } from "@/components/school-cost-planner";
 import { SchoolExplorer, type SchoolExplorerFilters } from "@/components/school-explorer";
 import { SchoolMapExplorer } from "@/components/school-map-explorer";
+import { SchoolComparisonExplorer } from "@/components/school-comparison-explorer";
 import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -39,6 +40,7 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
         {view === "history" ? <AdmissionHistoryExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
           : view === "alumni" ? <SchoolAlumniExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} initialSchoolCode={params.schoolCode} />
             : view === "map" ? <SchoolMapExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
+              : view === "compare" ? <SchoolComparisonExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
               : view === "cost" ? <SchoolCostPlanner />
                 : view === "commute" ? <CommuteComparison districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
                   : <SchoolExplorer districtOptions={schoolDistrictOptions} initialFilters={initialFilters} />}

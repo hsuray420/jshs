@@ -3,34 +3,42 @@ import { resolve } from "node:path";
 import { toSchoolRecords } from "../lib/school-catalog.mjs";
 
 const root = process.cwd();
-const [newsCatalog, districtMetadata] = await Promise.all([
-  readJson("content/news.json"),
-  readJson("public/it_hs/district-metadata.json"),
-]);
+const districtMetadata = await readJson("public/it_hs/district-metadata.json");
 
 const updatedAt = districtMetadata.updatedAt;
 const staticEntries = [
   entry("/", updatedAt, "weekly", "1.0"),
   entry("/it_5/it_5.html", updatedAt, "weekly", "0.7"),
-  entry("/news", newsCatalog.updatedAt, "weekly", "0.9"),
-  ...["exam", "rules", "strategy", "schools", "career", "parents"].map((slug) => entry(`/news/${slug}`, newsCatalog.updatedAt, "weekly", "0.8")),
+  entry("/news", updatedAt, "weekly", "0.8"),
+  entry("/admission-guides", updatedAt, "monthly", "0.8"),
+  entry("/admission-guides/schedule", updatedAt, "weekly", "0.8"),
   entry("/schools", updatedAt, "weekly", "0.9"),
+  entry("/schools/groups", updatedAt, "monthly", "0.7"),
   entry("/tools", updatedAt, "weekly", "0.9"),
   entry("/tools/rules", updatedAt, "monthly", "0.8"),
+  entry("/tools/placement", updatedAt, "monthly", "0.7"),
+  entry("/tools/summary", updatedAt, "monthly", "0.7"),
+  entry("/tools/history", updatedAt, "monthly", "0.7"),
+  entry("/planner", updatedAt, "weekly", "0.8"),
+  entry("/planner/versions", updatedAt, "monthly", "0.6"),
+  entry("/planner/export", updatedAt, "monthly", "0.6"),
+  entry("/planner/official-platform", updatedAt, "monthly", "0.7"),
   entry("/schedule", updatedAt, "weekly", "0.9"),
-  ...["countdown", "timeline", "now", "tasks", "compare", "open-days", "export"].map((slug) => entry(`/schedule/${slug}`, updatedAt, "weekly", "0.8")),
-  entry("/districts", updatedAt, "weekly", "0.9"),
+  ...["timeline", "now", "tasks"].map((slug) => entry(`/schedule/${slug}`, updatedAt, "weekly", "0.8")),
+  entry("/knowledge", updatedAt, "monthly", "0.8"),
+  ...["admission-basics", "rules", "glossary", "fit-quiz"].map((slug) => entry(`/knowledge/${slug}`, updatedAt, "monthly", "0.7")),
+  entry("/eligibility", updatedAt, "monthly", "0.7"),
+  ...["sources", "status", "progress", "methodology", "versions", "report", "credibility"].map((slug) => entry(`/trust/${slug}`, updatedAt, "monthly", "0.6")),
   entry("/search", updatedAt, "weekly", "0.8"),
   entry("/trust", updatedAt, "monthly", "0.7"),
 ];
-const newsEntries = newsCatalog.articles.map((article) => entry(`/news/${article.slug}`, article.updatedAt, "monthly", "0.8"));
 const schoolEntries = Object.entries(districtMetadata.districts).flatMap(([districtCode, district]) => {
   const file = districtCode === "tp" ? "schools_tp.csv" : districtCode === "taoyuan-lienchiang" ? "schools_tl.csv" : "schools.csv";
   return readFile(resolve(root, `public/it_hs/${districtCode}/${file}`), "utf8")
     .then((csv) => toSchoolRecords(csv).map((school) => entry(`/schools/${districtCode}/${school.code}`, district.updatedAt, "monthly", "0.7")));
 });
 const schoolEntryGroups = await Promise.all(schoolEntries);
-const entries = [...staticEntries, ...newsEntries, ...schoolEntryGroups.flat()];
+const entries = [...staticEntries, ...schoolEntryGroups.flat()];
 const uniqueEntries = [...new Map(entries.map((item) => [item.path, item])).values()];
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

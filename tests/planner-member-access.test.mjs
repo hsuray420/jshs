@@ -27,7 +27,7 @@ test("anonymous interfaces save locally while member writes remain LINE-gated", 
   const [schoolExplorer, decisionActions, plannerWorkspace, localStore] = await Promise.all([
     readSource("components/school-explorer.tsx"),
     readSource("components/school-decision-actions.tsx"),
-    readSource("components/planner-workspace.tsx"),
+    readSource("components/planner-mode-workspace.tsx"),
     readSource("lib/planner-local.ts"),
   ]);
 

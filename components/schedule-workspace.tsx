@@ -1,119 +1,183 @@
 "use client";
+
+import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import districtMetadata from "../public/it_hs/district-metadata.json";
-import { getDistrictLabel, readStoredDistrict, subscribeToDistrict, type DistrictCode } from "@/lib/district-context";
-import { getDistrictAdmissionSchedule } from "@/lib/admission-schedules";
+import { readStoredDistrict, subscribeToDistrict, type DistrictCode } from "@/lib/district-context";
+import { getDistrictAdmissionSchedule, type AdmissionScheduleStatus } from "@/lib/admission-schedules";
+import { defaultProgress, PROGRESS_STORAGE_KEY, readProgress, type ProgressState } from "@/lib/progress";
 import { SERVICE_YEAR, SOURCE_ACADEMIC_YEAR } from "@/lib/trust";
 
-export type ScheduleView = "overview" | "countdown" | "timeline" | "now" | "tasks" | "compare" | "open-days" | "export";
-type ImportantDate = { id: string; title: string; description: string; eventDate: string; sendAt?: string; status?: "confirmed" | "pending" | "previous_year_reference" | "provisional"; sourcePages?: "I" | "II" | "i" | "ii" | "iii" };
+export type ScheduleView = "overview" | "timeline" | "now" | "tasks" | "open-days";
+type ImportantDate = { id: string; title: string; description: string; eventDate?: string; status?: AdmissionScheduleStatus; sourcePages?: "I" | "II" | "i" | "ii" | "iii"; sourceUrl?: string };
 type OpenDay = { id: string; school: string; eventDate: string; url: string; notes: string };
+type UserTask = { id: string; title: string; done: boolean };
 
-const targetDate = new Date("2027-05-15T08:00:00+08:00");
-const fallbackImportantDates: ImportantDate[] = [
-  { id: "fallback-exam", title: "國中教育會考", description: "確認准考證、應試用品與交通安排。", eventDate: "2027-05-15", sendAt: "2027-05-15T00:00:00.000Z" },
-  { id: "fallback-admission", title: "確認免試入學簡章", description: "核對志願選填、報名與放榜時程。", eventDate: "2027-06-01", sendAt: "2027-06-01T01:00:00.000Z" },
-];
 const fallbackTasks = [
-  { id: "read-rules", title: "讀完適用就學區規則", detail: "確認比序項目、志願數量與重要截止日。" },
-  { id: "try-schools", title: "建立三層候選校科", detail: "至少各放一個挑戰、適中與穩定選項。" },
-  { id: "check-score", title: "完成一次成績試算", detail: "留下年度、區域與待補欄位，避免混用規則。" },
-  { id: "family-meeting", title: "完成一次家庭討論", detail: "記下學生想要的學習內容與家庭需要確認的條件。" },
+  { id: "read-rules", title: "查看適用就學區的積分規則", detail: "先了解採計項目、同分比序與資料來源。" },
+  { id: "check-score", title: "完成一次成績試算", detail: "留下服務年度、規則來源年度與尚未完成的欄位。" },
+  { id: "try-schools", title: "收藏有興趣的校科", detail: "從找學校開始，比較課程、通勤與錄取參考。" },
+  { id: "make-planner", title: "建立志願清單", detail: "加入校科後，再用自己排與系統推薦整理順序。" },
 ] as const;
+
+const statusLabels: Record<AdmissionScheduleStatus, string> = {
+  confirmed: "已公告",
+  pending: "待公告",
+  previous_year_reference: "上年度參考",
+  provisional: "暫定，請再核對",
+};
 
 export function ScheduleWorkspace({ view = "overview" }: { view?: ScheduleView }) {
   const district = useSyncExternalStore(subscribeToDistrict, readStoredDistrict, () => "") as DistrictCode | "";
   const [now, setNow] = useState(() => new Date());
-  const [done, setDone] = useState<Record<string, boolean>>(() => typeof window === "undefined" ? {} : readJson("jshs_schedule_tasks", {}));
-  const [compare, setCompare] = useState(["ct", "tp"]);
-  const [status, setStatus] = useState("");
-  const [importantDates, setImportantDates] = useState<ImportantDate[]>(fallbackImportantDates);
+  const [progress, setProgress] = useState<ProgressState>(defaultProgress);
+  const [importantDates, setImportantDates] = useState<ImportantDate[]>([]);
   const [scheduleTasks, setScheduleTasks] = useState(fallbackTasks);
+  const [userTasks, setUserTasks] = useState<UserTask[]>(() => typeof window === "undefined" ? [] : readJson("jshs_user_tasks", []));
   const [openDays, setOpenDays] = useState<OpenDay[]>(() => typeof window === "undefined" ? [] : readJson("jshs_schedule_open_days", []));
+  const [newTask, setNewTask] = useState("");
   const [newOpenDay, setNewOpenDay] = useState({ school: "", eventDate: "", url: "", notes: "" });
+  const [compare, setCompare] = useState(["ct", "tp"]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 60_000);
+    const syncProgress = () => setProgress(readProgress(window.localStorage.getItem(PROGRESS_STORAGE_KEY)));
+    syncProgress();
+    window.addEventListener("storage", syncProgress);
+    window.addEventListener("jshs-progress", syncProgress);
     fetch("/api/schedule", { headers: { accept: "application/json" } }).then(async (response) => {
       if (!response.ok) return null;
       return await response.json() as { dates?: ImportantDate[]; tasks?: typeof fallbackTasks };
     }).then((payload) => {
-      if (payload?.dates?.length) setImportantDates(payload.dates);
+      if (payload?.dates?.length) setImportantDates(payload.dates.map((item) => ({ ...item, status: item.status || "pending" })));
       if (payload?.tasks?.length) setScheduleTasks(payload.tasks);
-    }).catch(() => undefined);
-    return () => window.clearInterval(timer);
+    }).catch(() => setMessage("官方時程暫時無法載入，請稍後重新整理。"));
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("storage", syncProgress);
+      window.removeEventListener("jshs-progress", syncProgress);
+    };
   }, []);
 
-  const districtSchedule = getDistrictAdmissionSchedule(district);
-  const displayedDates: ImportantDate[] = districtSchedule.length ? districtSchedule : importantDates;
-  const examDate = displayedDates.find((item) => item.title.includes("會考"));
-  const countdownTarget = examDate ? new Date(`${examDate.eventDate}T08:00:00+08:00`) : targetDate;
-  const remainingDays = Math.max(0, Math.ceil((countdownTarget.getTime() - now.getTime()) / 86_400_000));
+  const districtSchedule = useMemo(() => getDistrictAdmissionSchedule(district).map((item) => ({ ...item, status: "previous_year_reference" as const })), [district]);
+  const displayedDates = districtSchedule.length ? districtSchedule : importantDates;
   const districtInfo = district ? districtMetadata.districts[district] : null;
-  const completed = scheduleTasks.filter(({ id }) => done[id]).length;
-  const currentTask = scheduleTasks.find(({ id }) => !done[id]) || scheduleTasks[scheduleTasks.length - 1];
-  const nextDate = displayedDates.filter((item) => new Date(`${item.eventDate}T23:59:59+08:00`).getTime() >= now.getTime()).sort((a, b) => a.eventDate.localeCompare(b.eventDate))[0];
+  const nextDate = displayedDates.filter((item) => item.eventDate && new Date(item.eventDate + "T23:59:59+08:00").getTime() >= now.getTime()).sort((a, b) => (a.eventDate || "").localeCompare(b.eventDate || ""))[0];
+  const confirmedExam = displayedDates.find((item) => item.status === "confirmed" && item.title.includes("會考") && item.eventDate);
+  const remainingDays = confirmedExam?.eventDate ? Math.max(0, Math.ceil((new Date(confirmedExam.eventDate + "T08:00:00+08:00").getTime() - now.getTime()) / 86_400_000)) : null;
   const districtRows = useMemo(() => compare.map((code) => ({ code, info: districtMetadata.districts[code as keyof typeof districtMetadata.districts] })), [compare]);
+  const systemTasks = scheduleTasks.map((task) => ({ ...task, done: task.id === "read-rules" ? Boolean(district && hasStoredValue("jshs_rule_intro_seen:" + district, "1")) : task.id === "check-score" ? hasStoredValue("jshs_score_latest") : task.id === "try-schools" ? progress.schoolSearch : task.id === "make-planner" ? progress.planner : false }));
 
-  function toggleTask(id: string) {
-    const next = { ...done, [id]: !done[id] };
-    setDone(next);
-    window.localStorage.setItem("jshs_schedule_tasks", JSON.stringify(next));
+  function toggleUserTask(id: string) {
+    const next = userTasks.map((task) => task.id === id ? { ...task, done: !task.done } : task);
+    setUserTasks(next);
+    window.localStorage.setItem("jshs_user_tasks", JSON.stringify(next));
+  }
+
+  function addUserTask(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const title = newTask.trim().slice(0, 120);
+    if (!title) return;
+    const next = [...userTasks, { id: crypto.randomUUID(), title, done: false }];
+    setUserTasks(next);
+    window.localStorage.setItem("jshs_user_tasks", JSON.stringify(next));
+    setNewTask("");
   }
 
   function addOpenDay(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const school = newOpenDay.school.trim();
     if (!school || !newOpenDay.eventDate) {
-      setStatus("請填寫學校名稱與開放日期。");
+      setMessage("請填寫學校名稱與開放日期。");
       return;
     }
     const next = [...openDays, { id: crypto.randomUUID(), school, eventDate: newOpenDay.eventDate, url: newOpenDay.url.trim(), notes: newOpenDay.notes.trim() }].sort((a, b) => a.eventDate.localeCompare(b.eventDate));
     setOpenDays(next);
     window.localStorage.setItem("jshs_schedule_open_days", JSON.stringify(next));
     setNewOpenDay({ school: "", eventDate: "", url: "", notes: "" });
-    setStatus("已加入校園開放日，可在匯出頁一起下載。");
+    setMessage("已加入校園開放日；日期請以學校官方公告為準。");
   }
 
   function removeOpenDay(id: string) {
     const next = openDays.filter((item) => item.id !== id);
     setOpenDays(next);
     window.localStorage.setItem("jshs_schedule_open_days", JSON.stringify(next));
-    setStatus("已移除這筆校園開放日。");
+    setMessage("已移除這筆校園開放日。");
   }
 
-  function exportCalendar() {
-    const events = [
-      ...displayedDates.map(({ eventDate, title, description }) => calendarEvent(eventDate, title, description)),
-      ...openDays.map(({ eventDate, school, notes, url }) => calendarEvent(eventDate, `${school} 校園開放日`, [notes, url].filter(Boolean).join("\n"))),
-    ].join("\n");
-    const blob = new Blob([`BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//JSHS//Admission Calendar//ZH\n${events}\nEND:VCALENDAR`], { type: "text/calendar;charset=utf-8" });
+  function exportCalendar(selectedDates = displayedDates) {
+    const events = [...selectedDates.filter((item) => item.eventDate).map((item) => calendarEvent(item.eventDate || "", item.title, item.description)), ...openDays.map((item) => calendarEvent(item.eventDate, item.school + " 校園開放日", [item.notes, item.url].filter(Boolean).join("\n")))].join("\n");
+    const content = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//JSHS//Admission Calendar//ZH\n" + events + "\nEND:VCALENDAR";
+    const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a"); anchor.href = url; anchor.download = "jshs-升學日程.ics"; anchor.click(); URL.revokeObjectURL(url);
-    setStatus("已下載個人化行事曆，可匯入手機或 Google Calendar。日期仍請以官方公告更新。");
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "jshs-" + SERVICE_YEAR + "-升學日程.ics";
+    anchor.click();
+    URL.revokeObjectURL(url);
+    setMessage("已下載 ICS；官方日期更新後，先前匯出的檔案不會自動同步。");
   }
 
   return <>
-    <section className="jshs-hero-section"><div className="mx-auto w-[min(1160px,calc(100%-32px))] py-12 md:py-16"><p className="jshs-eyebrow">{SERVICE_YEAR} 學年度 · 時間日程中心</p><h1 className="mt-3 max-w-4xl">把「還來得及嗎」變成下一個可完成的日期。</h1><p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">未選就學區時先看共通節點；選定後，重要時程會帶入目前的 {getDistrictLabel(district)} 情境。{districtSchedule.length ? `目前顯示 ${SOURCE_ACADEMIC_YEAR} 學年度官方來源，${SERVICE_YEAR} 正式時程待公告。` : ""}</p></div></section>
-    {view === "overview" || view === "countdown" ? <section id="countdown" className="mx-auto grid w-[min(1160px,calc(100%-32px))] gap-4 py-8 md:grid-cols-[1.2fr_.8fr]"><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">全年倒數計時</p><div className="mt-2 flex flex-wrap items-end gap-4"><strong className="text-6xl text-[var(--jshs-primary)]">{remainingDays}</strong><span className="pb-2 text-lg">天後是國中教育會考<br /><small className="jshs-muted-copy">預定 {examDate?.eventDate || "2027-05-15"} · {countdownTarget.toLocaleDateString("zh-TW")}</small></span></div><p className="mt-5 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy">倒數是時間管理參考，不代表正式報名或考試日期已完整公告。涉及權益的日期請以招生單位最新公告為準。</p></article></section> : null}
-    {view === "overview" || view === "now" ? <section id="now" className="mx-auto w-[min(1160px,calc(100%-32px))] py-8"><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">我現在該做什麼</p><h2 className="mt-2 text-2xl">{currentTask.title}</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">{currentTask.detail}</p><p className="mt-5 text-sm font-black text-[var(--jshs-primary)]">目前完成 {completed}／{scheduleTasks.length} 項</p>{nextDate ? <p className="mt-3 text-sm leading-6 jshs-muted-copy">下一個日期：{nextDate.eventDate} · {nextDate.title}</p> : null}</article></section> : null}
-    {view === "overview" || view === "timeline" ? <section id="timeline" className="mx-auto w-[min(1160px,calc(100%-32px))] py-8"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="jshs-eyebrow">重要時程總覽</p><h2 className="mt-2">{districtInfo ? `${districtInfo.label} · ${districtInfo.academicYear} 學年度` : "全國共通節點"}</h2></div><span className="jshs-data-tag is-reference">{districtInfo?.dataStatus === "ready" ? "區域資料已校核" : "未選區，先看共通資料"}</span></div>{districtSchedule.length ? <p className="mt-4 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy">本頁僅顯示{districtInfo?.label}簡章重要日程表；項目、日期、說明與來源頁碼均已逐欄核對，狀態：<strong className="text-[var(--jshs-success)]">已確認</strong>。</p> : null}<div className="mt-5 grid gap-3 md:grid-cols-3">{displayedDates.map((item) => <article key={item.id} className="p-5 jshs-surface-card"><div className="flex flex-wrap items-center justify-between gap-2"><span className="text-sm font-black text-[var(--jshs-primary)]">{item.eventDate}</span>{item.status ? <span className="jshs-chip">{item.status === "confirmed" ? "已確認" : "待核對"} · 頁 {item.sourcePages}</span> : <span className="jshs-chip">後台公告</span>}</div><h3 className="mt-2">{item.title}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{item.description}</p></article>)}</div></section> : null}
-    {view === "overview" || view === "tasks" ? <section id="tasks" className="mx-auto w-[min(1160px,calc(100%-32px))] py-8"><div className="flex items-end justify-between gap-3"><div><p className="jshs-eyebrow">升學待辦清單</p><h2 className="mt-2">完成一件，再往下一件</h2></div><span className="text-sm jshs-muted-copy">保存在目前裝置 · 內容由後台管理</span></div><div className="mt-5 grid gap-3">{scheduleTasks.map(({ id, title, detail }) => <label key={id} className="flex cursor-pointer items-start gap-4 p-5 jshs-surface-card"><input type="checkbox" checked={Boolean(done[id])} onChange={() => toggleTask(id)} className="mt-1 h-5 w-5" /><span><strong className={done[id] ? "line-through opacity-60" : ""}>{title}</strong><span className="mt-1 block text-sm leading-6 jshs-muted-copy">{detail}</span></span></label>)}</div></section> : null}
-    {view === "overview" || view === "compare" ? <section id="compare" className="mx-auto w-[min(1160px,calc(100%-32px))] py-8"><p className="jshs-eyebrow">各就學區時程差異比較</p><h2 className="mt-2">把兩個地區放在一起看</h2><div className="mt-4 flex flex-wrap gap-2">{["ct", "tp", "ilan", "hsinchu-miaoli", "kaohsiung"].map((code) => <button key={code} type="button" onClick={() => setCompare((current) => current.includes(code) ? current.filter((item) => item !== code) : [...current, code].slice(-2))} className={`px-3 py-2 text-sm jshs-button ${compare.includes(code) ? "jshs-button-primary" : "jshs-button-secondary"}`}>{districtMetadata.districts[code as keyof typeof districtMetadata.districts].label}</button>)}</div><div className="mt-5 grid gap-3 md:grid-cols-2">{districtRows.map(({ code, info }) => <article key={code} className="p-5 jshs-surface-card"><div className="flex items-center justify-between gap-3"><h3>{info.label}</h3><span className="jshs-chip">{info.academicYear} 學年度</span></div><p className="mt-3 text-sm leading-6 jshs-muted-copy">{info.tasks?.join("；") || "請以該區委員會公告為準"}</p><a className="mt-4 block text-sm text-[var(--jshs-primary)]" href={info.sourceUrl} target="_blank" rel="noreferrer">查看官方來源 ↗</a></article>)}</div></section> : null}
-    {view === "overview" || view === "open-days" ? <section id="open-days" className="mx-auto w-[min(1160px,calc(100%-32px))] py-8"><div className="grid gap-4 md:grid-cols-[.9fr_1.1fr]"><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">校園開放日行事曆</p><h2 className="mt-2">把想參訪的學校先收進來</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">日期由你依學校官方公告輸入，會保存在目前裝置，也能在匯出頁與升學節點一起下載。</p><form className="mt-5 grid gap-3" onSubmit={addOpenDay}><label className="grid gap-1 text-sm font-black">學校名稱<input value={newOpenDay.school} onChange={(event) => setNewOpenDay((current) => ({ ...current, school: event.target.value }))} placeholder="例如：○○高工" required /></label><label className="grid gap-1 text-sm font-black">開放日期<input type="date" value={newOpenDay.eventDate} onChange={(event) => setNewOpenDay((current) => ({ ...current, eventDate: event.target.value }))} required /></label><label className="grid gap-1 text-sm font-black">官方公告網址<input type="url" value={newOpenDay.url} onChange={(event) => setNewOpenDay((current) => ({ ...current, url: event.target.value }))} placeholder="https://…" /></label><label className="grid gap-1 text-sm font-black">備註<textarea value={newOpenDay.notes} onChange={(event) => setNewOpenDay((current) => ({ ...current, notes: event.target.value }))} rows={3} placeholder="集合時間、攜帶資料…" /></label><button type="submit" className="px-4 py-3 text-sm jshs-button-primary">新增開放日</button></form></article><article className="p-6 jshs-surface-card"><div className="flex items-center justify-between gap-3"><h2>我的開放日清單</h2><span className="jshs-chip">{openDays.length} 筆</span></div>{openDays.length ? <div className="mt-4 grid gap-3">{openDays.map((item) => <div key={item.id} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><div className="flex items-start justify-between gap-3"><div><strong>{item.school}</strong><p className="mt-1 text-sm text-[var(--jshs-primary)]">{item.eventDate}</p></div><button type="button" onClick={() => removeOpenDay(item.id)} className="text-xs font-black text-[var(--jshs-danger)]">移除</button></div>{item.notes ? <p className="mt-2 text-sm leading-6 jshs-muted-copy">{item.notes}</p> : null}{item.url ? <a href={item.url} target="_blank" rel="noreferrer" className="mt-2 block break-all text-xs text-[var(--jshs-primary)]">查看官方公告 ↗</a> : null}</div>)}</div> : <p className="mt-4 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy">尚未加入資料，請以學校官方公告為準。</p>}</article></div></section> : null}
-    {view === "overview" || view === "export" ? <section id="export" className="mx-auto w-[min(1160px,calc(100%-32px))] py-8"><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">個人化行事曆匯出</p><h2 className="mt-2">帶走你的下一步</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">匯出 {displayedDates.length} 個升學節點與 {openDays.length} 個校園開放日；匯入後仍可自行修改。</p><button type="button" onClick={exportCalendar} className="mt-5 px-4 py-3 text-sm jshs-button-primary">下載 ICS 行事曆</button>{status ? <p className="mt-3 text-sm font-bold text-[var(--jshs-success)]" role="status">{status}</p> : null}</article></section> : null}
+    <section className="jshs-hero-section"><div className="mx-auto w-[min(1120px,calc(100%-32px))] py-12 md:py-16"><p className="jshs-eyebrow">{SERVICE_YEAR} 學年度 · 升學日程</p><h1 className="mt-3 max-w-4xl">把現在要做的事，放在看得懂的時間線上。</h1><p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">這裡是個人化工具；日期的正式效力仍以官方招生單位公告為準。{districtInfo ? "目前情境：" + districtInfo.label + "。" : "先選定就學區後，會帶入相應資料。"}</p></div></section>
+    {view === "overview" ? <Overview district={district} districtInfo={districtInfo} nextDate={nextDate} remainingDays={remainingDays} systemTasks={systemTasks} progress={progress} /> : null}
+    {view === "timeline" ? <Timeline displayedDates={displayedDates} districtInfo={districtInfo} compare={compare} districtRows={districtRows} onToggleCompare={(code) => setCompare((current) => current.includes(code) ? current.filter((item) => item !== code) : [...current, code].slice(-3))} onExport={(item) => exportCalendar(item ? [item] : displayedDates)} openDays={openDays.length} /> : null}
+    {view === "now" ? <Now progress={progress} district={district} systemTasks={systemTasks} nextDate={nextDate} /> : null}
+    {view === "tasks" ? <Tasks systemTasks={systemTasks} userTasks={userTasks} newTask={newTask} onNewTask={setNewTask} onAddTask={addUserTask} onToggleUserTask={toggleUserTask} /> : null}
+    {view === "open-days" ? <OpenDays openDays={openDays} newOpenDay={newOpenDay} onNewOpenDay={setNewOpenDay} onAdd={addOpenDay} onRemove={removeOpenDay} message={message} /> : null}
+    {view === "timeline" ? <p className="mx-auto w-[min(1120px,calc(100%-32px))] pb-10 text-sm leading-6 text-amber-900" role="status">行事曆匯出完成後，若官方日期更新，原本匯出的 ICS 不會自動更新。</p> : null}
+    {message && view !== "open-days" ? <p className="mx-auto w-[min(1120px,calc(100%-32px))] pb-8 text-sm font-bold text-[var(--jshs-primary)]" role="status">{message}</p> : null}
   </>;
+}
+
+function Overview({ district, districtInfo, nextDate, remainingDays, systemTasks, progress }: { district: string; districtInfo: { label: string } | null; nextDate?: ImportantDate; remainingDays: number | null; systemTasks: readonly (typeof fallbackTasks[number] & { done: boolean })[]; progress: ProgressState }) {
+  const completed = systemTasks.filter((task) => task.done).length;
+  return <section className="mx-auto w-[min(1120px,calc(100%-32px))] space-y-5 py-8"><div className="grid gap-4 md:grid-cols-3"><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">服務年度</p><h2 className="mt-2 text-3xl">{SERVICE_YEAR} 學年度</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">{districtInfo ? districtInfo.label : "尚未設定就學區"}</p></article><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">會考倒數</p><h2 className="mt-2 text-3xl">{remainingDays === null ? "待公告" : remainingDays + " 天"}</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">{remainingDays === null ? "116 學年度正式日期尚未由本站確認。" : "僅作個人時間管理參考。"}</p></article><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">下一個重要日期</p><h2 className="mt-2 text-xl">{nextDate?.title || "目前沒有已載入日期"}</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">{nextDate?.eventDate || "請到重要時程查看待公告狀態。"}</p></article></div><div className="grid gap-4 md:grid-cols-[1.2fr_.8fr]"><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">目前階段</p><h2 className="mt-2 text-2xl">{district ? "先完成規則、試算與校科探索" : "先設定就學區"}</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">{district ? "下一步會依你的進度，從規則、成績、校科與志願中挑選。" : "設定後，算成績與日程會使用相同的就學區情境。"}</p><Link href={district ? "/schedule/now" : "/schools"} className="mt-5 inline-flex px-4 py-3 text-sm jshs-button-primary">{district ? "查看現在該做什麼 →" : "到找學校設定 →"}</Link></article><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">完成進度</p><h2 className="mt-2 text-2xl">{completed} / {systemTasks.length}</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">{progress.calculator ? "已完成最近一次試算。" : "完成的功能會自動同步到系統待辦。"}</p><Link href="/schedule/tasks" className="mt-5 inline-flex px-4 py-3 text-sm jshs-button-secondary">查看我的待辦 →</Link></article></div><div className="p-6 jshs-surface-card"><p className="jshs-eyebrow">近期系統待辦</p><div className="mt-4 grid gap-2 md:grid-cols-2">{systemTasks.slice(0, 4).map((task) => <Link key={task.id} href={task.done ? "/schedule/tasks" : task.id === "check-score" ? "/tools" : task.id === "try-schools" ? "/schools" : task.id === "make-planner" ? "/planner" : "/tools/rules"} className="rounded-xl bg-[var(--jshs-muted-surface)] p-4"><strong>{task.done ? "✓ " : ""}{task.title}</strong><span className="mt-1 block text-sm leading-6 jshs-muted-copy">{task.detail}</span></Link>)}</div></div></section>;
+}
+
+function Timeline({ displayedDates, districtInfo, compare, districtRows, onToggleCompare, onExport, openDays }: { displayedDates: readonly ImportantDate[]; districtInfo: { label: string; academicYear: string; sourceUrl: string } | null; compare: readonly string[]; districtRows: readonly { code: string; info: (typeof districtMetadata.districts)[keyof typeof districtMetadata.districts] }[]; onToggleCompare: (code: string) => void; onExport: (item?: ImportantDate) => void; openDays: number }) {
+  const comparisonOptions = ["ct", "tp", "ilan", "hsinchu-miaoli", "kaohsiung"];
+  return <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-8"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="jshs-eyebrow">升學日程 · 重要時程</p><h2 className="mt-2">{districtInfo ? districtInfo.label : "全國共通節點"}</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">來源年度 {SOURCE_ACADEMIC_YEAR} 的日期會標示為上年度參考；116 正式日期待公告時不會顯示成已確認。</p></div><button type="button" onClick={() => onExport()} className="min-h-11 px-4 py-3 text-sm jshs-button-primary">加入行事曆（ICS）</button></div><div className="mt-6 grid gap-3">{displayedDates.length ? displayedDates.map((item) => { const action = getEventAction(item); const sourceUrl = item.sourceUrl || districtInfo?.sourceUrl; return <details key={item.id} className="p-5 jshs-surface-card"><summary className="cursor-pointer list-none"><div className="flex flex-wrap items-center gap-3"><span className="text-sm font-black text-[var(--jshs-primary)]">{item.eventDate || "日期待公告"}</span><span className="jshs-chip">{item.status ? statusLabels[item.status] : "待公告"}</span><h3 className="text-lg">{item.title}</h3></div></summary><div className="mt-4 border-t border-[var(--jshs-border)] pt-4 text-sm leading-7"><p className="jshs-muted-copy">{item.description}</p><dl className="mt-4 grid gap-3 rounded-xl bg-[var(--jshs-muted-surface)] p-4"><div><dt className="font-black text-slate-700">現在要做什麼</dt><dd className="jshs-muted-copy">{action.detail}</dd></div><div><dt className="font-black text-slate-700">官方來源</dt><dd>{sourceUrl ? <a className="font-bold text-[var(--jshs-primary)]" href={sourceUrl} target="_blank" rel="noreferrer">開啟官方來源 ↗</a> : <span className="jshs-muted-copy">目前沒有可回查的官方連結。</span>}{item.sourcePages ? <span className="ml-2 text-slate-500">來源頁碼：{item.sourcePages}</span> : null}</dd></div></dl><div className="mt-4 flex flex-wrap gap-3"><Link href={action.href} className="inline-flex min-h-11 items-center px-3 py-2 text-sm jshs-button-secondary">{action.label} →</Link>{item.eventDate ? <button type="button" onClick={() => onExport(item)} className="min-h-11 px-3 py-2 text-sm jshs-button-secondary">加入這個日期</button> : null}</div></div></details>; }) : <div className="p-6 jshs-surface-card"><h3 className="text-lg">116 正式時程待公告</h3><p className="mt-2 text-sm leading-7 jshs-muted-copy">目前沒有可標示為 116 已公告的日期；請到官方資訊查看各區原始來源。</p></div>}</div><section className="mt-8 p-6 jshs-surface-card"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="jshs-eyebrow">就學區時程比較</p><h2 className="mt-2">加入另一區比較（最多 3 區）</h2></div><span className="text-sm jshs-muted-copy">{compare.length} / 3</span></div><div className="mt-4 flex flex-wrap gap-2">{comparisonOptions.map((code) => <button key={code} type="button" onClick={() => onToggleCompare(code)} className={"min-h-11 px-3 py-2 text-sm jshs-button " + (compare.includes(code) ? "jshs-button-primary" : "jshs-button-secondary")}>{districtMetadata.districts[code as keyof typeof districtMetadata.districts].label}</button>)}</div><div className="mt-5 grid gap-3 md:grid-cols-3">{districtRows.map(({ code, info }) => <article key={code} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><h3>{info.label}</h3><span className="mt-1 block text-xs text-slate-500">{info.academicYear} 學年度 · {info.dataStatus === "ready" ? "已整理" : "參考"}</span><p className="mt-3 text-sm leading-6 jshs-muted-copy">{info.tasks?.[0] || "請以該區官方公告為準"}</p><a className="mt-3 block text-sm font-black text-[var(--jshs-primary)]" href={info.sourceUrl} target="_blank" rel="noreferrer">查看官方來源 ↗</a></article>)}</div></section><p className="mt-4 text-sm leading-6 text-slate-600">我的校園開放日：{openDays} 筆；如需加入，請從找學校 → 校園開放日管理。</p></section>;
+}
+
+function getEventAction(item: ImportantDate) {
+  if (item.title.includes("會考")) return { detail: "查看會考相關官方公告，確認報名、應試與後續日期。", href: "/admission-guides/schedule", label: "查看官方招生時程" };
+  if (item.title.includes("志願") || item.title.includes("選填")) return { detail: "確認選填期間與資格資料，開放後前往正式官方平台操作。", href: "/planner/official-platform", label: "前往官方選填平台" };
+  if (item.title.includes("簡章") || item.title.includes("報名")) return { detail: "閱讀適用區域的正式簡章，整理報名需要的資料。", href: "/admission-guides", label: "查看官方簡章與規則" };
+  return { detail: "回查官方公告，依事件說明確認自己是否需要準備或完成下一項手續。", href: "/admission-guides/schedule", label: "查看官方招生時程" };
+}
+
+function Now({ progress, district, systemTasks, nextDate }: { progress: ProgressState; district: string; systemTasks: readonly (typeof fallbackTasks[number] & { done: boolean })[]; nextDate?: ImportantDate }) {
+  const next = !district ? { title: "設定我的就學區", detail: "先到找學校選擇就學區，後續規則、學校與日程會使用同一情境。", href: "/schools" } : !progress.calculator ? { title: "完成第一次積分試算", detail: "目前 8 / 15 區可用；請先確認本區規則與來源年度。", href: "/tools" } : !progress.schoolSearch ? { title: "收藏有興趣的校科", detail: "比較學制、群科、通勤與歷年錄取參考。", href: "/schools" } : !progress.planner ? { title: "建立我的志願清單", detail: "可以自己排，也可以看系統推薦；兩邊共用同一份資料。", href: "/planner" } : { title: "完成志願健檢", detail: "查看志願分布、資格、資料完整度、通勤與規則提示。", href: "/planner/custom?panel=health-check" };
+  return <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-8"><div className="grid gap-5 md:grid-cols-[1.1fr_.9fr]"><article className="p-6 md:p-8 jshs-surface-card"><p className="jshs-eyebrow">現在該做什麼</p><h2 className="mt-3 text-3xl">{next.title}</h2><p className="mt-4 text-sm leading-7 jshs-muted-copy">{next.detail}</p><Link href={next.href} className="mt-6 inline-flex px-5 py-3 text-sm jshs-button-primary">直接前往 →</Link></article><aside className="p-6 jshs-surface-card"><p className="jshs-eyebrow">同步依據</p><ul className="mt-4 grid gap-3 text-sm">{[["就學區", district ? "已設定" : "尚未設定"], ["積分試算", progress.calculator ? "已完成" : "尚未完成"], ["校科探索", progress.schoolSearch ? "已開始" : "尚未開始"], ["志願清單", progress.planner ? "已建立" : "尚未建立"]].map(([label, value]) => <li key={label} className="flex justify-between gap-3 border-b border-[var(--jshs-border)] pb-3"><span className="jshs-muted-copy">{label}</span><strong>{value}</strong></li>)}</ul>{nextDate ? <p className="mt-5 text-sm leading-6 jshs-muted-copy">最近日期：{nextDate.eventDate || "待公告"} · {nextDate.title}</p> : null}</aside></div><div className="mt-6 grid gap-3 md:grid-cols-2">{systemTasks.map((task) => <Link key={task.id} href={task.done ? "/schedule/tasks" : task.id === "check-score" ? "/tools" : task.id === "try-schools" ? "/schools" : task.id === "make-planner" ? "/planner" : "/tools/rules"} className="p-5 jshs-surface-card"><strong>{task.done ? "✓ " : ""}{task.title}</strong><p className="mt-2 text-sm leading-6 jshs-muted-copy">{task.detail}</p></Link>)}</div></section>;
+}
+
+function Tasks({ systemTasks, userTasks, newTask, onNewTask, onAddTask, onToggleUserTask }: { systemTasks: readonly (typeof fallbackTasks[number] & { done: boolean })[]; userTasks: readonly UserTask[]; newTask: string; onNewTask: (value: string) => void; onAddTask: (event: FormEvent<HTMLFormElement>) => void; onToggleUserTask: (id: string) => void }) {
+  return <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-8"><div className="grid gap-5 lg:grid-cols-2"><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">systemTasks</p><h2 className="mt-2 text-2xl">系統待辦</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">完成網站功能後自動同步，不需要手動假裝完成。</p><div className="mt-5 grid gap-3">{systemTasks.map((task) => <Link key={task.id} href={task.done ? "/schedule/tasks" : task.id === "check-score" ? "/tools" : task.id === "try-schools" ? "/schools" : task.id === "make-planner" ? "/planner" : "/tools/rules"} className="flex items-start gap-3 rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><span className="mt-0.5">{task.done ? "✓" : "○"}</span><span><strong>{task.title}</strong><span className="mt-1 block text-sm leading-6 jshs-muted-copy">{task.detail}</span></span></Link>)}</div></article><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">userTasks</p><h2 className="mt-2 text-2xl">自訂待辦</h2><form className="mt-5 flex gap-2" onSubmit={onAddTask}><label className="sr-only" htmlFor="new-user-task">新增待辦</label><input id="new-user-task" value={newTask} onChange={(event) => onNewTask(event.target.value)} maxLength={120} className="min-w-0 flex-1" aria-label="新增自訂待辦" /><button type="submit" className="min-h-11 px-4 py-3 text-sm jshs-button-primary">新增</button></form><div className="mt-4 grid gap-2">{userTasks.map((task) => <label key={task.id} className="flex items-start gap-3 rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><input type="checkbox" checked={task.done} onChange={() => onToggleUserTask(task.id)} className="mt-1 h-5 w-5" /><span className={task.done ? "line-through opacity-60" : ""}>{task.title}</span></label>)}{!userTasks.length ? <p className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy">目前沒有自訂待辦。</p> : null}</div></article></div></section>;
+}
+
+function OpenDays({ openDays, newOpenDay, onNewOpenDay, onAdd, onRemove, message }: { openDays: readonly OpenDay[]; newOpenDay: { school: string; eventDate: string; url: string; notes: string }; onNewOpenDay: (value: { school: string; eventDate: string; url: string; notes: string }) => void; onAdd: (event: FormEvent<HTMLFormElement>) => void; onRemove: (id: string) => void; message: string }) {
+  return <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-8"><div className="grid gap-5 lg:grid-cols-[.9fr_1.1fr]"><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">找學校 · 校園開放日</p><h2 className="mt-2 text-2xl">收集想參訪的學校</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">請依學校官方公告輸入活動；這裡是個人整理，不代表官方活動清單。</p><form className="mt-5 grid gap-3" onSubmit={onAdd}><label className="grid gap-1 text-sm font-black">學校名稱<input value={newOpenDay.school} onChange={(event) => onNewOpenDay({ ...newOpenDay, school: event.target.value })} required /></label><label className="grid gap-1 text-sm font-black">活動日期<input type="date" value={newOpenDay.eventDate} onChange={(event) => onNewOpenDay({ ...newOpenDay, eventDate: event.target.value })} required /></label><label className="grid gap-1 text-sm font-black">官方活動網址<input type="url" value={newOpenDay.url} onChange={(event) => onNewOpenDay({ ...newOpenDay, url: event.target.value })} /></label><label className="grid gap-1 text-sm font-black">備註<textarea value={newOpenDay.notes} onChange={(event) => onNewOpenDay({ ...newOpenDay, notes: event.target.value })} rows={3} /></label><button type="submit" className="min-h-11 px-4 py-3 text-sm jshs-button-primary">加入我的開放日</button></form></article><article className="p-6 jshs-surface-card"><div className="flex items-center justify-between gap-3"><h2 className="text-2xl">我的開放日</h2><span className="jshs-chip">{openDays.length} 筆</span></div><div className="mt-5 grid gap-3">{openDays.map((item) => <div key={item.id} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><div className="flex items-start justify-between gap-3"><div><strong>{item.school}</strong><span className="mt-1 block text-sm text-[var(--jshs-primary)]">{item.eventDate}</span></div><button type="button" onClick={() => onRemove(item.id)} className="min-h-11 px-2 text-sm font-black text-[var(--jshs-danger)]">移除</button></div>{item.notes ? <p className="mt-2 text-sm leading-6 jshs-muted-copy">{item.notes}</p> : null}{item.url ? <a href={item.url} target="_blank" rel="noreferrer" className="mt-2 block break-all text-sm font-black text-[var(--jshs-primary)]">查看官方活動 ↗</a> : null}</div>)}{!openDays.length ? <p className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy">目前沒有已加入的活動。</p> : null}</div>{message ? <p className="mt-4 text-sm font-bold text-[var(--jshs-primary)]" role="status">{message}</p> : null}</article></div></section>;
 }
 
 function readJson<T>(key: string, fallback: T): T {
   try {
     const parsed = JSON.parse(window.localStorage.getItem(key) || "null");
     return parsed === null ? fallback : parsed as T;
-  } catch { return fallback; }
+  } catch {
+    return fallback;
+  }
+}
+
+function hasStoredValue(key: string, expected?: string) {
+  if (typeof window === "undefined") return false;
+  const value = window.localStorage.getItem(key);
+  return expected === undefined ? Boolean(value) : value === expected;
 }
 
 function calendarEvent(date: string, summary: string, description: string) {
-  return `BEGIN:VEVENT\nDTSTART;VALUE=DATE:${date.replaceAll("-", "")}\nSUMMARY:${escapeIcs(summary)}\nDESCRIPTION:${escapeIcs(description)}\nEND:VEVENT`;
+  return "BEGIN:VEVENT\nDTSTART;VALUE=DATE:" + date.replaceAll("-", "") + "\nSUMMARY:" + escapeIcs(summary) + "\nDESCRIPTION:" + escapeIcs(description) + "\nEND:VEVENT";
 }
 
 function escapeIcs(value: string) {

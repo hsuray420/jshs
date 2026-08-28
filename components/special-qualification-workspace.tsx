@@ -61,7 +61,7 @@ export function SpecialQualificationWorkspace() {
   }
 
   function exportSummary() {
-    const text = [`115學年度特殊資格準備摘要`, `就學區：${districts.find((item) => item.code === district)?.label}`, `特殊身分：${selectedIdentity.label}`, `狀態：${status}`, `文件：${requiredDocuments.map((key) => `${documentLabels[key]} ${documents[key] ? "已準備" : "待補"}`).join("；")}`, `已向學校承辦人確認：${confirmedWithSchool ? "是" : "否"}`, `下一步：${guidance.join("；")}`, `提醒：本摘要不是資格核定，仍以當年度簡章、學校與招生委員會審查為準。`].join("\n");
+    const text = [`115學年度特殊資格準備摘要`, `就學區：${districts.find((item) => item.code === district)?.label}`, `特殊身分：${selectedIdentity.label}`, `狀態：${status}`, `文件：${requiredDocuments.map((key) => `${documentLabels[key]} ${documents[key] ? "已準備" : "尚未提供"}`).join("；")}`, `已向學校承辦人確認：${confirmedWithSchool ? "是" : "否"}`, `下一步：${guidance.join("；")}`, `提醒：本摘要不是資格核定，仍以當年度簡章、學校與招生委員會審查為準。`].join("\n");
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob); const anchor = document.createElement("a"); anchor.href = url; anchor.download = "jshs-特殊資格準備摘要.txt"; anchor.click(); URL.revokeObjectURL(url);
   }

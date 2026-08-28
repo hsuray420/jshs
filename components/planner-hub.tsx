@@ -3,9 +3,21 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-export function PlannerHub() {
+type MemberScoreSnapshot = { total_score?: number };
+
+export function PlannerHub({ isMember }: { isMember: boolean }) {
   const [score, setScore] = useState<number | null>(null);
   useEffect(() => {
+    if (isMember) {
+      fetch("/api/admission/scores", { headers: { accept: "application/json" } })
+        .then((response) => response.ok ? response.json() as Promise<{ snapshots?: MemberScoreSnapshot[] }> : { snapshots: [] })
+        .then((payload) => {
+          const latest = payload.snapshots?.[0];
+          setScore(typeof latest?.total_score === "number" ? latest.total_score : null);
+        })
+        .catch(() => setScore(null));
+      return;
+    }
     const timer = window.setTimeout(() => {
       try {
         const latest = JSON.parse(window.localStorage.getItem("jshs_score_latest") || "null") as { result?: { totalScore?: number } } | null;
@@ -13,7 +25,7 @@ export function PlannerHub() {
       } catch { setScore(null); }
     }, 0);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [isMember]);
   const hasScore = score !== null;
   return <>
     <section className="jshs-hero-section"><div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-14"><p className="jshs-eyebrow">我的志願</p><h1 className="mt-3 max-w-3xl">先知道自己的分數，再開始排志願。</h1><p className="mt-4 max-w-2xl text-base leading-7 jshs-muted-copy">流程只保留兩種：讓系統依你的成績推薦，或自己排序學校並取得建議。</p></div></section>

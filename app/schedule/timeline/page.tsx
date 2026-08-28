@@ -4,5 +4,5 @@ import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
-export const metadata: Metadata = { title: "重要時程總覽｜全國國中升學資訊網", alternates: { canonical: "/schedule/timeline" } };
+export const metadata: Metadata = { title: "重要時程｜升學日程｜全國國中升學資訊網", description: "以 Timeline 查看已公告、待公告與上年度參考的升學日期，並在頁內比較就學區與匯出 ICS。", alternates: { canonical: "/schedule/timeline" } };
 export default function TimelinePage() { return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/schedule" /><DistrictGate><ScheduleWorkspace view="timeline" /></DistrictGate><SiteFooter /></main>; }

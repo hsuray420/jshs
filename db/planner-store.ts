@@ -49,6 +49,7 @@ export async function ensurePlannerSchema() {
       id TEXT PRIMARY KEY,
       planner_id TEXT NOT NULL,
       state_json TEXT NOT NULL,
+      items_json TEXT NOT NULL DEFAULT '[]',
       item_count INTEGER NOT NULL,
       created_at TEXT NOT NULL
     )`),
@@ -61,6 +62,10 @@ export async function ensurePlannerSchema() {
   const columns = await db.prepare("PRAGMA table_info(planner_items)").all<{ name: string }>();
   if (!(columns.results ?? []).some((column) => column.name === "tier")) {
     await db.prepare("ALTER TABLE planner_items ADD COLUMN tier TEXT NOT NULL DEFAULT ''").run();
+  }
+  const versionColumns = await db.prepare("PRAGMA table_info(planner_versions)").all<{ name: string }>();
+  if (!(versionColumns.results ?? []).some((column) => column.name === "items_json")) {
+    await db.prepare("ALTER TABLE planner_versions ADD COLUMN items_json TEXT NOT NULL DEFAULT '[]'").run();
   }
 }
 
@@ -126,24 +131,32 @@ export async function savePlannerState(plannerId: string, stateJson: string) {
   ).run();
 }
 
-export async function createPlannerVersion(plannerId: string, stateJson: string, itemCount: number) {
+export async function createPlannerVersion(plannerId: string, stateJson: string, items: readonly PlannerItem[]) {
   await ensurePlannerSchema();
-  await getD1().prepare(`INSERT INTO planner_versions (id, planner_id, state_json, item_count, created_at)
-    VALUES (?, ?, ?, ?, ?)`).bind(crypto.randomUUID(), plannerId, stateJson, itemCount, new Date().toISOString()).run();
+  await getD1().prepare(`INSERT INTO planner_versions (id, planner_id, state_json, items_json, item_count, created_at)
+    VALUES (?, ?, ?, ?, ?, ?)`).bind(crypto.randomUUID(), plannerId, stateJson, JSON.stringify(items), items.length, new Date().toISOString()).run();
 }
 
 export async function listPlannerVersions(plannerId: string) {
   await ensurePlannerSchema();
-  const result = await getD1().prepare(`SELECT id, planner_id, state_json, item_count, created_at
-    FROM planner_versions WHERE planner_id = ? ORDER BY created_at DESC LIMIT 30`).bind(plannerId).all<{ id: string; planner_id: string; state_json: string; item_count: number; created_at: string }>();
+  const result = await getD1().prepare(`SELECT id, planner_id, state_json, items_json, item_count, created_at
+    FROM planner_versions WHERE planner_id = ? ORDER BY created_at DESC LIMIT 30`).bind(plannerId).all<{ id: string; planner_id: string; state_json: string; items_json: string; item_count: number; created_at: string }>();
   return result.results ?? [];
 }
 
 export async function getPlannerVersion(plannerId: string, versionId: string) {
   await ensurePlannerSchema();
-  return getD1().prepare(`SELECT id, planner_id, state_json, item_count, created_at
+  return getD1().prepare(`SELECT id, planner_id, state_json, items_json, item_count, created_at
     FROM planner_versions WHERE planner_id = ? AND id = ? LIMIT 1`).bind(plannerId, versionId)
-    .first<{ id: string; planner_id: string; state_json: string; item_count: number; created_at: string }>();
+    .first<{ id: string; planner_id: string; state_json: string; items_json: string; item_count: number; created_at: string }>();
+}
+
+export async function replacePlannerItems(plannerId: string, items: readonly PlannerItem[]) {
+  await ensurePlannerSchema();
+  const db = getD1();
+  const statements = [db.prepare("DELETE FROM planner_items WHERE planner_id = ?").bind(plannerId), ...items.slice(0, 100).map((item) => db.prepare(`INSERT INTO planner_items (id, planner_id, district, school_code, school_name, department, tier, notes, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(item.id, plannerId, item.district, item.school_code, item.school_name, item.department, item.tier, item.notes, item.created_at))];
+  await db.batch(statements);
 }
 
 export async function confirmPlanner(plannerId: string, itemCount: number, stateJson: string) {

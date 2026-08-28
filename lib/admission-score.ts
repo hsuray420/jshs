@@ -50,7 +50,7 @@ export type EconomicStatus = "NONE" | "LOWER_MIDDLE_INCOME" | "LOW_INCOME";
 /** Only districts backed by an explicitly supplied 115 MD/JSON rule source may calculate. */
 export const SOURCE_BACKED_ADMISSION_DISTRICTS = ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "kaohsiung"] as const;
 
-type ScoreCategory = Readonly<{ key: string; label: string; max: number; description: string }>;
+export type ScoreCategory = Readonly<{ key: string; label: string; max: number; description: string; calculation?: string }>;
 export type AdmissionRule = Readonly<{
   code: AdmissionDistrict;
   label: string;
@@ -66,14 +66,14 @@ export type AdmissionRule = Readonly<{
 }>;
 
 type ResearchPreferenceScoring = Readonly<{ enabled?: boolean; max_choices?: number | null; grouping_method?: string | null; minimum_score?: number | null; score_cap?: number; ranges?: readonly { from: number; to: number; score: number }[] }>;
-type ResearchField = Readonly<{ field_id: string; label: string; input_type: string; category?: string; subcategory?: string; helper_text?: string; official_rule?: string; conditions?: readonly string[]; adopted_period?: string; score_cap?: number; evidence_description?: string; options?: readonly { label: string; value: unknown; score?: number | null }[]; validation?: { required?: boolean; min?: number; max?: number; min_items?: number } }>;
+export type ResearchField = Readonly<{ field_id: string; label: string; input_type: string; category?: string; subcategory?: string; helper_text?: string; official_rule?: string; conditions?: readonly string[]; adopted_period?: string; score_cap?: number; evidence_description?: string; calculation?: string; options?: readonly { label: string; value: unknown; score?: number | null }[]; validation?: { required?: boolean; min?: number; max?: number; min_items?: number } }>;
 type ResearchRule = { district_name: string; academic_year: number; total_score_max: number; version: string; categories: readonly { category_id: string; label: string; score_cap: number; calculation: string }[]; tie_breaking_rules: readonly { field: string }[]; fields: readonly ResearchField[]; verification_status: string; preference_scoring?: ResearchPreferenceScoring; sources?: readonly unknown[] };
 
 function researchRule(data: ResearchRule, code: AdmissionDistrict): AdmissionRule {
   return {
     code, label: data.district_name, academicYear: String(data.academic_year), totalScore: data.total_score_max,
     sourceNote: "依本區官方規則資料整理；正式送出前仍須核對當年度官方簡章。",
-    categories: data.categories.map((item) => ({ key: ({ exam: "examPerformanceScore", multiple_learning: "multipleLearningScore", multiple_development: "multipleLearningScore", adaptive_guidance: "adaptationScore" } as Record<string, string>)[item.category_id] ?? item.category_id, label: item.label, max: item.score_cap, description: `${item.label}依本區官方規則換算，最高採計${item.score_cap}分。` })),
+    categories: data.categories.map((item) => ({ key: ({ exam: "examPerformanceScore", multiple_learning: "multipleLearningScore", multiple_development: "multipleLearningScore", adaptive_guidance: "adaptationScore" } as Record<string, string>)[item.category_id] ?? item.category_id, label: item.label, max: item.score_cap, description: `${item.label}依本區官方規則換算，最高採計${item.score_cap}分。`, calculation: item.calculation })),
     tieBreakers: data.tie_breaking_rules.map((item) => item.field), sourceId: `${code}-115-research-json`, fields: data.fields, preferenceScoring: data.preference_scoring,
     verificationStatus: data.verification_status,
   };
@@ -115,7 +115,7 @@ export function resolveAdmissionFieldLabel(fieldId: string, rule: AdmissionRule)
   const exact = rule.fields?.find((field) => field.field_id === fieldId)?.label;
   if (exact) return exact;
   const normalized = normalizedFieldId(fieldId);
-  return DERIVED_FIELD_LABELS[fieldId] || DERIVED_FIELD_LABELS[normalized] || "必要資料";
+  return DERIVED_FIELD_LABELS[fieldId] || DERIVED_FIELD_LABELS[normalized] || "規則欄位";
 }
 
 export function resolveAdmissionMissingFieldLabels(fieldIds: readonly string[], rule: AdmissionRule): string[] {

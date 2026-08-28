@@ -24,11 +24,13 @@ test("admin content editor is protected and supports preview plus publish", asyn
   assert.match(route, /content_type/);
 });
 
-test("knowledge and schedule read mutable content with static fallbacks", async () => {
+test("knowledge and schedule follow the canonical information architecture", async () => {
   const knowledge = await read("app/knowledge/page.tsx");
   const scheduleApi = await read("app/api/schedule/route.ts");
-  assert.match(knowledge, /listPublishedContent/);
-  assert.match(knowledge, /KnowledgeHelper/);
+  for (const label of ["升學入門", "志願與積分", "特殊入學與資格", "升學百科", "生涯探索"]) {
+    assert.match(knowledge, new RegExp(label));
+  }
+  assert.doesNotMatch(knowledge, /KnowledgeHelper|更多|名詞小百科/);
   assert.match(scheduleApi, /listPublishedContent/);
   assert.match(scheduleApi, /schedule_task/);
 });
@@ -53,13 +55,14 @@ test("content publishing supports Word-like text size and color plus GitHub sync
   assert.match(sync, /GITHUB_TOKEN/);
 });
 
-test("media uploads are first-party, versioned in GitHub, and rendered by native players", async () => {
-  const [admin, route, sync, workspace, manifest] = await Promise.all([
+test("media administration remains first-party without becoming a public IA entry", async () => {
+  const [admin, route, sync, workspace, manifest, sitemap] = await Promise.all([
     read("app/admin/page.tsx"),
     read("app/api/admin/media/route.ts"),
     read("lib/github-sync.ts"),
     read("components/knowledge-topic-workspace.tsx"),
     read("content/media-library.json"),
+    read("content/site-map.json"),
   ]);
   assert.match(admin, /上傳 Podcast／影片/);
   assert.match(admin, /\/api\/admin\/media/);
@@ -68,7 +71,6 @@ test("media uploads are first-party, versioned in GitHub, and rendered by native
   assert.match(sync, /content\/media-library\.json/);
   assert.match(sync, /mediaPath/);
   assert.doesNotMatch(workspace, /youtube\.com/);
-  assert.match(workspace, /<video/);
-  assert.match(workspace, /<audio/);
+  assert.doesNotMatch(sitemap, /Podcast|影片|影音/);
   assert.match(manifest, /"items"/);
 });

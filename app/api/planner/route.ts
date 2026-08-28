@@ -27,6 +27,9 @@ export async function POST(request: Request) {
   if (!schoolName || !district) return Response.json({ ok: false, error: "school_required" }, { status: 400 });
   if (tier && !["challenge", "balanced", "stable"].includes(tier)) return Response.json({ ok: false, error: "invalid_tier" }, { status: 400 });
 
+  const existing = (await listPlannerItems(plannerId)).find((item) => item.district === district && item.school_code === schoolCode);
+  if (existing) return plannerResponse({ ok: true, item: existing, duplicate: true }, plannerId);
+
   const item = {
     id: crypto.randomUUID(), planner_id: plannerId, district, school_code: schoolCode,
     school_name: schoolName, department: clean(body.department, 1200), tier, notes,

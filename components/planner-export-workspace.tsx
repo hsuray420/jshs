@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { readLocalPlanner, type LocalPlannerItem } from "@/lib/planner-local";
+import { readLocalPlanner, type LocalPlannerItem, type LocalPlannerState } from "@/lib/planner-local";
 
 export function PlannerExportWorkspace({ isMember }: { isMember: boolean }) {
   const [items, setItems] = useState<LocalPlannerItem[]>([]);
   const [status, setStatus] = useState("正在讀取志願清單…");
   useEffect(() => {
     if (!isMember) { const timer = window.setTimeout(() => { setItems(readLocalPlanner().items); setStatus(""); }, 0); return () => window.clearTimeout(timer); }
-    fetch("/api/planner").then((response) => response.json() as Promise<{ items?: LocalPlannerItem[] }>).then((payload) => { setItems(payload.items || []); setStatus(""); }).catch(() => setStatus("目前無法讀取志願清單，請稍後再試。"));
+    Promise.all([fetch("/api/planner").then((response) => response.json() as Promise<{ items?: LocalPlannerItem[] }>), fetch("/api/planner/state").then((response) => response.json() as Promise<{ state?: LocalPlannerState }>)]).then(([itemsPayload, statePayload]) => { setItems(sortItems(itemsPayload.items || [], statePayload.state)); setStatus(""); }).catch(() => setStatus("目前無法讀取志願清單，請稍後再試。"));
   }, [isMember]);
   const summary = items.map((item, index) => `${index + 1}. ${item.school_name}${item.department ? ` - ${item.department}` : ""}`).join("\n");
   function downloadText() { download(new Blob([`JSHS.CC 116 學年度志願摘要\n\n${summary || "尚未建立志願"}`], { type: "text/plain;charset=utf-8" }), "jshs-116-volunteer-summary.txt"); }
@@ -20,3 +20,5 @@ function download(blob: Blob, filename: string) { const href = URL.createObjectU
 function ascii(value: string) { return value.replace(/[^\x20-\x7E]/g, "?"); }
 function escapePdf(value: string) { return ascii(value).replaceAll("\\", "\\\\").replaceAll("(", "\\(").replaceAll(")", "\\)"); }
 function makePdf(stream: string) { const objects = [`<< /Type /Catalog /Pages 2 0 R >>`, `<< /Type /Pages /Kids [3 0 R] /Count 1 >>`, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>`, `<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>`, `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`]; let output = "%PDF-1.4\n"; const offsets = [0]; objects.forEach((object, index) => { offsets.push(output.length); output += `${index + 1} 0 obj\n${object}\nendobj\n`; }); const start = output.length; output += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n${offsets.slice(1).map((offset) => `${String(offset).padStart(10, "0")} 00000 n `).join("\n")}\ntrailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${start}\n%%EOF`; return output; }
+
+function sortItems(items: readonly LocalPlannerItem[], state?: LocalPlannerState) { const order = new Map((state?.order || []).map((id, index) => [id, index])); return [...items].sort((left, right) => (order.get(left.id) ?? Number.MAX_SAFE_INTEGER) - (order.get(right.id) ?? Number.MAX_SAFE_INTEGER) || left.created_at.localeCompare(right.created_at)); }
