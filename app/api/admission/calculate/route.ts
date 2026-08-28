@@ -2,6 +2,7 @@ import { calculateAdmissionScore, isAdmissionCalculatorAvailable, isAdmissionDis
 import { createMemberScoreSnapshot } from "../../../../db/score-store";
 import { getMemberSession } from "../../../../lib/member-auth";
 import { notifyMember } from "../../../../lib/notifications";
+import { CURRENT_YEAR_CONTEXT, SOURCE_ACADEMIC_YEAR, SERVICE_YEAR, VERIFICATION_STATUS } from "../../../../lib/trust";
 
 export async function GET() {
   return Response.json({
@@ -50,7 +51,11 @@ export async function POST(request: Request) {
     }) : { sent: 0, skipped: true };
     return Response.json({
       ok: true,
-      source: `115_${district}_admission_rules`,
+      source: `${SOURCE_ACADEMIC_YEAR}_${district}_admission_rules`,
+      serviceYear: SERVICE_YEAR,
+      sourceAcademicYear: SOURCE_ACADEMIC_YEAR,
+      verificationStatus: VERIFICATION_STATUS,
+      yearContext: CURRENT_YEAR_CONTEXT,
       result,
       notification: { sent: notification.sent, skipped: notification.skipped },
     });

@@ -8,7 +8,7 @@ test("homepage exposes canonical task routes and progress context", async () => 
   const home = await readSource("app/page.tsx");
 
   assert.match(home, /href="\/tools"/);
-  assert.match(home, /href="\/knowledge"/);
+  assert.match(home, /href="\/knowledge\/admission-basics"/);
   assert.match(home, /href="\/knowledge\/fit-quiz"/);
   assert.match(home, /jshs-task-icon/);
   assert.match(home, /tone="green"/);

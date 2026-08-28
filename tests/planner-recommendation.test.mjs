@@ -29,11 +29,11 @@ test("沒有參考分數的學校不會被當成精準落點建議", () => {
   assert.equal(result.safe.length, 0);
 });
 
-test("保底推薦使用後端接受的 stable 層級", async () => {
+test("穩定推薦使用後端接受的 stable 層級", async () => {
   const source = await readFile(new URL("../components/planner-mode-workspace.tsx", import.meta.url), "utf8");
 
-  assert.match(source, /<Group title="保底"[\s\S]*tier="stable"/);
-  assert.doesNotMatch(source, /<Group title="保底"[\s\S]*tier="safe"/);
+  assert.match(source, /<Group title="穩定"[\s\S]*tier="stable"/);
+  assert.doesNotMatch(source, /<Group title="穩定"[\s\S]*tier="safe"/);
 });
 
 test("自選排序會把順序保存到 planner state", async () => {

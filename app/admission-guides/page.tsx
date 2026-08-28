@@ -4,8 +4,8 @@ import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
-export const metadata: Metadata = { title: "各區簡章下載｜115 學年度免試入學", description: "下載與查閱 15 個免試就學區的 115 學年度官方免試入學簡章。", alternates: { canonical: "/admission-guides" } };
+export const metadata: Metadata = { title: "官方簡章與規則｜116 學年度升學資訊", description: "查閱 15 個免試就學區的官方簡章、規則與原始招生網站，明確區分服務年度與來源年度。", alternates: { canonical: "/admission-guides" } };
 
 export default function AdmissionGuidesPage() {
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/eligibility" /><DistrictGate><AdmissionGuideLibrary /></DistrictGate><SiteFooter /></main>;
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/admission-guides" /><DistrictGate><AdmissionGuideLibrary /></DistrictGate><SiteFooter /></main>;
 }

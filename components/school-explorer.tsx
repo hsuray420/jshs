@@ -7,8 +7,9 @@ import { readStoredDistrict } from "@/lib/district-context";
 import { markProgress } from "@/lib/progress";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/status";
 import { PageContainer } from "@/components/ui/layout";
+import { SourceBadge } from "@/components/source-badge";
 
-type SchoolExplorerRecord = Pick<SchoolDirectoryRecord, "districtCode" | "districtLabel" | "academicYear" | "dataStatus" | "sourceName" | "code" | "name" | "ownership" | "program" | "city" | "area" | "website" | "departmentsRaw" | "groups" | "hasQuota" | "hasHistoricalData">;
+type SchoolExplorerRecord = Pick<SchoolDirectoryRecord, "districtCode" | "districtLabel" | "academicYear" | "dataStatus" | "sourceName" | "sourceType" | "code" | "name" | "ownership" | "program" | "city" | "area" | "website" | "departmentsRaw" | "groups" | "hasQuota" | "hasHistoricalData">;
 
 type SchoolDirectoryPayload = Readonly<{
   version: string;
@@ -183,7 +184,7 @@ export function SchoolExplorer({
             const key = `${school.districtCode}:${school.code}`;
             return (
               <article key={key} className="flex flex-col p-6 jshs-surface-card">
-                <div className="flex items-start justify-between gap-4"><div><p className="text-xs font-black tracking-[.12em] text-[var(--jshs-primary)]">{school.districtLabel} · {school.code}</p><h2 className="mt-2 text-2xl font-black leading-snug">{school.name}</h2></div><span className="jshs-chip">{school.dataStatus === "ready" ? "資料已校核" : "參考資料"}</span></div>
+                <div className="flex items-start justify-between gap-4"><div><p className="text-xs font-black tracking-[.12em] text-[var(--jshs-primary)]">{school.districtLabel} · {school.code}</p><h2 className="mt-2 text-2xl font-black leading-snug">{school.name}</h2></div><SourceBadge sourceType="jshs_curated" /></div>
                 <p className="mt-3 text-sm leading-6 jshs-muted-copy">{[school.city, school.area].filter(Boolean).join(" · ")} · {school.program || "學制分類待確認"} · {school.ownership || "公私立待確認"}</p>
                 <div className="mt-4 grid grid-cols-2 gap-2 text-xs font-bold"><Status label="資料年度" value={`${school.academicYear} 學年度`} /><Status label="資料狀態" value={school.dataStatus === "ready" ? "已校核" : "參考資料"} /><Status label="招生名額" value={school.hasQuota ? "已有資料" : "待公告"} /><Status label="歷年參考" value={school.hasHistoricalData ? "已有資料" : "待整理"} /><Status label="資料來源" value={school.sourceName} /></div>
                 <p className="mt-4 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-7 text-slate-700">科系／群科：{school.groups.length ? school.groups.join("、") : school.departmentsRaw || "待以學校公告確認"}</p>

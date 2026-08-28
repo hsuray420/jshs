@@ -6,12 +6,12 @@ import { SiteIcon, type SiteIconName } from "@/components/site-icons";
 import { getDistrictLabel, readStoredDistrict, subscribeToDistrict } from "@/lib/district-context";
 import { menuGroups, type MenuGroup, type MenuItem } from "@/lib/site-map";
 
-const finalNavigationLabels = ["查學校", "算成績", "時間日程", "我的志願", "特殊資格", "升學知識", "更多"] as const;
+const finalNavigationLabels = ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任"] as const;
 
 const quickActions = [
-  { label: "查學校", href: "/schools", icon: "school", description: "搜尋學校、科系與歷年資料" },
+  { label: "找學校", href: "/schools", icon: "school", description: "搜尋學校、科系與歷年資料" },
   { label: "算成績", href: "/tools", icon: "calculator", description: "依就學區規則完成積分試算" },
-  { label: "看日程", href: "/schedule", icon: "calendar", description: "掌握重要日期與升學待辦" },
+  { label: "升學日程", href: "/schedule", icon: "calendar", description: "掌握重要日期與升學待辦" },
   { label: "我的志願", href: "/planner", icon: "planner", description: "整理候選校科與志願順序" },
 ] as const satisfies ReadonlyArray<{ label: string; href: string; icon: SiteIconName; description: string }>;
 
@@ -23,13 +23,13 @@ const mobileNavigation = [
 ] as const;
 
 const groupIcons: Record<string, SiteIconName> = {
-  查學校: "school",
+  找學校: "school",
   算成績: "calculator",
-  時間日程: "calendar",
+  升學日程: "calendar",
   我的志願: "planner",
-  特殊資格: "shield",
-  升學知識: "knowledge",
-  更多: "more",
+  官方資訊: "knowledge",
+  升學指南: "knowledge",
+  資料與信任: "shield",
 };
 
 function notificationSnapshot() {
@@ -61,7 +61,6 @@ function MenuDestination({ item, onNavigate, compact = false }: { item: MenuItem
 }
 
 function GroupMenu({ group, onClose }: { group: MenuGroup; onClose: () => void }) {
-  if (group.label === "更多") return <div id={`menu-${group.label}`} className="absolute right-0 top-[calc(100%-2px)] z-50 w-[min(940px,calc(100vw-28px))] p-5 jshs-surface-card"><MenuHeader group={group} /><div className="mt-4 grid max-h-[min(600px,calc(100vh-160px))] gap-4 overflow-y-auto md:grid-cols-4">{group.items.map((section) => <section key={section.label} className="rounded-3xl bg-[var(--jshs-muted-surface)] p-2"><div className="px-3 pb-2 pt-2"><b className="text-sm text-[var(--jshs-primary)]">{section.label}</b><span className="mt-1 block text-xs leading-5 jshs-muted-copy">{section.description}</span></div>{section.children?.map((item) => <MenuDestination key={item.label} item={item} onNavigate={onClose} compact />)}</section>)}</div></div>;
   return <div id={`menu-${group.label}`} className="absolute left-1/2 top-[calc(100%-2px)] z-50 w-[min(760px,calc(100vw-28px))] -translate-x-1/2 p-5 jshs-surface-card"><MenuHeader group={group} /><div className="mt-3 grid max-h-[min(520px,calc(100vh-160px))] grid-cols-2 gap-2 overflow-y-auto">{group.items.map((item) => <MenuDestination key={item.label} item={item} onNavigate={onClose} />)}</div></div>;
 }
 
@@ -126,6 +125,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
         <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2 font-black text-[var(--jshs-ink)]"><span className="jshs-icon-tile shrink-0" aria-hidden="true"><SiteIcon name="school" size={18} /></span><span className="truncate text-xs sm:text-base">全國國中升學資訊網</span></Link>
         <nav aria-label="主要導覽" className="ml-auto hidden h-16 items-stretch xl:flex">{menuGroups.map((group) => { const open = openGroup === group.label; const active = activeHref === group.activeHref; return <div key={group.label} className="relative flex items-center"><button type="button" aria-expanded={open} aria-controls={`menu-${group.label}`} onClick={() => setOpenGroup(open ? null : group.label)} className={`flex h-11 items-center gap-1 px-3 text-sm font-black jshs-button ${active || open ? "bg-[var(--jshs-brand-tint)] text-[var(--jshs-primary)]" : "text-[var(--jshs-muted)]"}`}>{group.label}<SiteIcon name="chevron-down" size={15} /></button>{open ? <GroupMenu group={group} onClose={() => setOpenGroup(null)} /> : null}</div>; })}</nav>
         <div className="ml-auto flex shrink-0 items-center gap-1 xl:ml-2">
+          <Link href="/ai" aria-label="AI 問答" className="jshs-header-action grid h-11 w-11 place-items-center rounded-full text-[var(--jshs-primary)] hover:bg-[var(--jshs-muted-surface)]"><SiteIcon name="sparkle" size={20} /></Link>
           <Link href="/notifications" aria-label={`通知${notifications ? `，${notifications} 則未讀` : ""}`} className="jshs-header-action relative grid h-11 w-11 place-items-center rounded-full text-[var(--jshs-primary)] hover:bg-[var(--jshs-muted-surface)]"><SiteIcon name="bell" size={20} />{notifications ? <span className="absolute right-0 top-0 grid min-h-4 min-w-4 place-items-center rounded-full bg-[var(--jshs-danger)] px-1 text-[10px] text-white">{notifications > 9 ? "9+" : notifications}</span> : null}</Link>
           <Link href="/account" aria-label="帳號" className="jshs-header-action grid h-11 w-11 place-items-center rounded-full text-[var(--jshs-primary)] hover:bg-[var(--jshs-muted-surface)]"><SiteIcon name="account" size={20} /></Link>
           <Link href="/districts" className="hidden max-w-32 truncate rounded-full bg-[var(--jshs-muted-surface)] px-3 py-2 text-xs font-black text-[var(--jshs-primary)] md:block">目前：{districtLabel}<span className="sr-only">，切換就學區</span></Link>

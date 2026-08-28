@@ -18,9 +18,9 @@ test("root route is the canonical public homepage", async () => {
   const page = await readFile(appPageUrl, "utf8");
 
   assert.match(page, /canonical:\s*"\/"/);
-  assert.match(page, /先別急，來到這裡，就能找到下一步/);
-  for (const label of ["我已經知道要做什麼", "我第一次來，不知道要做什麼", "我想先找到適合的方向"]) assert.match(page, new RegExp(label));
-  assert.doesNotMatch(page, /選擇就學區|先選就學區|districts-title|HomeProgress/);
+  assert.match(page, /SERVICE_YEAR\} 學年度升學 Dashboard/);
+  for (const label of ["算我的積分", "找學校", "規劃志願", "HomeProgress"]) assert.match(page, new RegExp(label));
+  assert.doesNotMatch(page, /先別急，來到這裡，就能找到下一步/);
   assert.doesNotMatch(page, /redirect\(/);
   assert.doesNotMatch(page, /localStorage|role="dialog"|setSelectedDistrict/);
 });

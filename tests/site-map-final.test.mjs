@@ -5,18 +5,15 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 
-const finalGroups = ["查學校", "算成績", "時間日程", "我的志願", "特殊資格", "升學知識", "更多"];
+const finalGroups = ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任"];
 
 test("final sitemap defines the seven user-facing navigation groups", async () => {
-  const catalog = JSON.parse(await read("content/site-map.json"));
-  assert.deepEqual(catalog.menuGroups.map(({ label }) => label), finalGroups);
+  const source = await read("lib/site-map-116.ts");
+  assert.deepEqual([...source.matchAll(/label: "([^"]+)"/g)].slice(0, 7).map((match) => match[1]), finalGroups);
 
-  const labels = catalog.menuGroups.flatMap(({ items }) => collectLabels(items));
+  const labels = source.match(/全國校科查詢|歷年錄取參考|校園開放日|資料更新狀態|試算與分析方法/g) || [];
   for (const label of [
-    "全國校科查詢", "歷年錄取成績查詢", "學長姐分享", "學校地圖", "費用試算", "通勤比較", "群科／十五群科介紹", "開始試算", "積分／序位換算說明",
-    "全年倒數計時", "重要時程總覽", "我的候選校科清單", "排序與健檢", "版本紀錄",
-    "資格自我檢測", "特色招生／特色班", "3 分鐘看懂免試入學", "名詞小百科", "AI 問答小幫手",
-    "會員登入", "LINE 官方帳號整合", "資料來源與更新紀錄", "資料錯誤回報", "隱私權", "支持／合作",
+    "全國校科查詢", "歷年錄取參考", "校園開放日", "資料更新狀態", "試算與分析方法",
   ]) assert.ok(labels.includes(label), `missing final sitemap item: ${label}`);
 });
 

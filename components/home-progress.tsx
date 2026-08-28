@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { defaultProgress, PROGRESS_STORAGE_KEY, readProgress, type ProgressState } from "@/lib/progress";
+import { SERVICE_YEAR } from "@/lib/trust";
 
 const steps = [
   { key: "district", label: "選擇就學區", detail: "先確認適用區域與資料狀態。", href: "/districts" },
@@ -39,7 +40,7 @@ export function HomeProgress() {
       <div className="p-5 md:p-6 jshs-surface-card">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <p className="jshs-eyebrow">你的升學進度</p>
+            <p className="jshs-eyebrow">{SERVICE_YEAR} 學年度 · 你的升學進度</p>
             <h2 id="home-progress-title" className="mt-2 text-2xl font-black">下一步：{next.label}</h2>
             <p className="mt-2 text-sm leading-6 jshs-muted-copy">已完成 {completed} / {steps.length} 個核心步驟{progress.district ? ` · 目前：${districtLabels[progress.district] || progress.district}` : ""}</p>
           </div>

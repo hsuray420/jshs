@@ -1,13 +1,13 @@
 {
   "updatedAt": "2026-08-23",
   "primaryNavigation": [
-    { "label": "查學校", "href": "/schools", "activeHref": "/schools" },
+    { "label": "找學校", "href": "/schools", "activeHref": "/schools" },
     { "label": "算成績", "href": "/tools", "activeHref": "/tools" },
-    { "label": "時間日程", "href": "/schedule", "activeHref": "/schedule" },
     { "label": "我的志願", "href": "/planner", "activeHref": "/planner" },
-    { "label": "特殊資格", "href": "/eligibility", "activeHref": "/eligibility" },
-    { "label": "升學知識", "href": "/knowledge", "activeHref": "/knowledge" },
-    { "label": "更多", "href": "/trust", "activeHref": "/trust" }
+    { "label": "升學日程", "href": "/schedule", "activeHref": "/schedule" },
+    { "label": "官方資訊", "href": "/admission-guides", "activeHref": "/admission-guides" },
+    { "label": "升學指南", "href": "/knowledge", "activeHref": "/knowledge" },
+    { "label": "資料與信任", "href": "/trust", "activeHref": "/trust" }
   ],
   "menuGroups": [
     {

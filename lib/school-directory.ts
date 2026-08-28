@@ -16,6 +16,7 @@ import yunlinCsv from "../public/it_hs/yunlin/schools.csv?raw";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 import { toSchoolRecords, type SchoolDepartment } from "./school-catalog.mjs";
 import admissionHistoryData from "../public/it_hs/admission-history.json";
+import type { SourceType } from "@/lib/trust";
 
 export type SchoolDirectoryRecord = Readonly<{
   districtCode: string;
@@ -25,6 +26,7 @@ export type SchoolDirectoryRecord = Readonly<{
   updatedAt: string;
   sourceName: string;
   sourceUrl: string;
+  sourceType: SourceType;
   rank: string;
   code: string;
   name: string;
@@ -94,7 +96,7 @@ const historyKeys = new Set(admissionHistoryData.schools.map((school) => `${scho
 
 const districtRecords = Object.entries(csvByDistrict).flatMap(([districtCode, csv]) => {
   const district = districtMetadata.districts[districtCode as keyof typeof districtMetadata.districts];
-  return (toSchoolRecords(csv) as readonly Omit<SchoolDirectoryRecord, "districtCode" | "districtLabel" | "academicYear" | "dataStatus" | "updatedAt" | "sourceName" | "sourceUrl" | "groups" | "hasQuota" | "hasHistoricalData">[]).map((school) => {
+  return (toSchoolRecords(csv) as readonly Omit<SchoolDirectoryRecord, "districtCode" | "districtLabel" | "academicYear" | "dataStatus" | "updatedAt" | "sourceName" | "sourceUrl" | "sourceType" | "groups" | "hasQuota" | "hasHistoricalData">[]).map((school) => {
     const groups = groupRules
       .filter(([, keywords]) => keywords.some((keyword) => school.departmentsRaw.includes(keyword)))
       .map(([group]) => group);
@@ -107,6 +109,7 @@ const districtRecords = Object.entries(csvByDistrict).flatMap(([districtCode, cs
       updatedAt: district.updatedAt,
       sourceName: district.sourceName,
       sourceUrl: district.sourceUrl,
+      sourceType: "jshs_curated" as const,
       groups,
       hasQuota: Boolean(school.quota || school.departments.some((department) => department.quota !== null)),
       hasHistoricalData: historyKeys.has(`${districtCode}:${school.code}`),

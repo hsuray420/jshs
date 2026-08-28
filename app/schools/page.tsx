@@ -11,7 +11,7 @@ import { SiteHeader } from "@/components/site-header";
 import { schoolDistrictOptions } from "@/lib/school-directory";
 
 const title = "找學校｜全國高中職、校科與五專探索";
-const description = "從全國就學區、校科、十五群科與五專路徑探索升學選項，將學習內容、通勤與後續發展放在同一套決策流程。";
+const description = "從全國就學區、校科、十五群科與五專路徑探索升學選項，將學制分類、學習內容、通勤與後續發展放在同一套決策流程。";
 
 export const metadata: Metadata = {
   title,

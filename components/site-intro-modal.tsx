@@ -12,8 +12,14 @@ const introCards: readonly IntroCard[] = [
 ] as const;
 
 export function SiteIntroModal({ isMember }: { isMember: boolean }) {
-  const [open, setOpen] = useState(!isMember);
+  const [open, setOpen] = useState(() => typeof window !== "undefined" && !isMember && window.localStorage.getItem("jshs_intro_acknowledged") !== "1");
   const acknowledgeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (isMember) return;
+    const timer = window.setTimeout(() => setOpen(window.localStorage.getItem("jshs_intro_acknowledged") !== "1"), 0);
+    return () => window.clearTimeout(timer);
+  }, [isMember]);
 
   useEffect(() => {
     if (isMember || !open) return;
@@ -31,7 +37,7 @@ export function SiteIntroModal({ isMember }: { isMember: boolean }) {
         <div className="min-w-0 flex-1"><p className="jshs-eyebrow">第一次來到這裡</p><h2 id="site-intro-modal-title" className="mt-1 text-2xl md:text-3xl">先了解本站，再開始探索</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">我們希望你安心使用，也清楚知道這些資料的定位。</p></div>
       </div>
       <div className="mt-5 grid gap-3 md:grid-cols-3">{introCards.map((card) => <article key={card.eyebrow} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><span className="jshs-icon-tile h-10 w-10 text-[var(--jshs-primary)]" aria-hidden="true"><SiteIcon name={card.icon} size={19} /></span><p className="mt-4 text-xs font-black text-[var(--jshs-primary)]">{card.eyebrow}</p><h3 className="mt-1 text-lg">{card.title}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{card.body}</p></article>)}</div>
-      <div className="mt-6 flex flex-col-reverse items-stretch justify-between gap-3 border-t border-[var(--jshs-border)] pt-5 sm:flex-row sm:items-center"><p className="text-xs leading-5 jshs-muted-copy">未登入時，重新整理頁面會再次顯示；登入會員後不再顯示。</p><button ref={acknowledgeRef} type="button" onClick={() => setOpen(false)} className="px-5 py-3 text-sm jshs-button-primary">我已了解，開始使用</button></div>
+      <div className="mt-6 flex flex-col-reverse items-stretch justify-between gap-3 border-t border-[var(--jshs-border)] pt-5 sm:flex-row sm:items-center"><p className="text-xs leading-5 jshs-muted-copy">你可以隨時從資料與信任查看來源、年度與校核狀態。</p><button ref={acknowledgeRef} type="button" onClick={() => { window.localStorage.setItem("jshs_intro_acknowledged", "1"); setOpen(false); }} className="px-5 py-3 text-sm jshs-button-primary">我已了解，開始使用</button></div>
     </div>
   </div>;
 }

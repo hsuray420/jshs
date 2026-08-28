@@ -139,6 +139,13 @@ export async function listPlannerVersions(plannerId: string) {
   return result.results ?? [];
 }
 
+export async function getPlannerVersion(plannerId: string, versionId: string) {
+  await ensurePlannerSchema();
+  return getD1().prepare(`SELECT id, planner_id, state_json, item_count, created_at
+    FROM planner_versions WHERE planner_id = ? AND id = ? LIMIT 1`).bind(plannerId, versionId)
+    .first<{ id: string; planner_id: string; state_json: string; item_count: number; created_at: string }>();
+}
+
 export async function confirmPlanner(plannerId: string, itemCount: number, stateJson: string) {
   await ensurePlannerSchema();
   const confirmedAt = new Date().toISOString();

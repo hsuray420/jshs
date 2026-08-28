@@ -23,7 +23,8 @@ test("district metadata satisfies the P0 trust contract", async () => {
 
   assert.deepEqual(issues, []);
   assert.equal(metadata.schemaVersion, "1.0");
-  assert.equal(metadata.currentAcademicYear, "115");
+  assert.equal(metadata.currentAcademicYear, "116");
+  assert.equal(metadata.sourceAcademicYear, "115");
   assert.equal(metadata.canonicalOrigin, "https://jshs.cc");
 });
 

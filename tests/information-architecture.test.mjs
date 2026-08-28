@@ -15,13 +15,13 @@ const visitorSurfaceUrls = [
 ];
 
 const expectedNavigation = [
-  ["查學校", "/schools"],
+  ["找學校", "/schools"],
   ["算成績", "/tools"],
-  ["時間日程", "/schedule"],
   ["我的志願", "/planner"],
-  ["特殊資格", "/eligibility"],
-  ["升學知識", "/knowledge"],
-  ["更多", "/trust"],
+  ["升學日程", "/schedule"],
+  ["官方資訊", "/admission-guides"],
+  ["升學指南", "/knowledge"],
+  ["資料與信任", "/trust"],
 ];
 
 const expectedCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
@@ -36,7 +36,7 @@ test("the information architecture follows the final seven-group product sitemap
   assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 7);
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ activeHref }) => activeHref),
-    ["/schools", "/tools", "/schedule", "/planner", "/eligibility", "/knowledge", "/trust"],
+    ["/schools", "/tools", "/planner", "/schedule", "/admission-guides", "/knowledge", "/trust"],
   );
   assert.equal(siteMap.primaryNavigation.some(({ label }) => label === "就學區"), false);
 });
@@ -122,6 +122,7 @@ test("primary navigation lands on an interactive surface instead of an introduct
     else if (url.pathname === "/planner") assert.match(planner, /PlannerWorkspace/);
     else if (url.pathname === "/schedule") assert.match(schedule, /ScheduleWorkspace/);
     else if (url.pathname === "/eligibility") assert.match(eligibility, /AdmissionPathFinder/);
+    else if (url.pathname === "/admission-guides") assert.match(await readFile(new URL("../app/admission-guides/page.tsx", import.meta.url), "utf8"), /AdmissionGuideLibrary/);
     else if (url.pathname === "/knowledge") assert.match(knowledge, /KnowledgeHelper/);
     else assert.equal(url.pathname, "/trust");
   }

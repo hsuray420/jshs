@@ -1,4 +1,5 @@
 import siteMapCatalog from "@/content/site-map.json";
+import { menuGroups116, primaryNavigation116 } from "@/lib/site-map-116";
 
 export type PrimaryNavigationItem = Readonly<{
   label: string;
@@ -45,8 +46,8 @@ type SiteMapCatalog = Readonly<{
 const catalog = siteMapCatalog as SiteMapCatalog;
 
 export const siteMapUpdatedAt = catalog.updatedAt;
-export const primaryNavigation = Object.freeze([...catalog.primaryNavigation]);
-export const menuGroups = Object.freeze([...catalog.menuGroups]);
+export const primaryNavigation = Object.freeze([...primaryNavigation116]);
+export const menuGroups = Object.freeze([...menuGroups116]);
 export const newsCategories = Object.freeze([...catalog.newsCategories]);
 
 export function getNewsCategoryHub(slug: string): NewsCategoryHub | undefined {

@@ -1,4 +1,4 @@
-export type AdmissionScheduleStatus = "confirmed";
+export type AdmissionScheduleStatus = "confirmed" | "pending" | "previous_year_reference" | "provisional";
 
 export type AdmissionScheduleItem = {
   id: string;

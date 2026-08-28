@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getAdmissionRule, type AdmissionDistrict } from "@/lib/admission-score";
+import { SERVICE_YEAR, SOURCE_ACADEMIC_YEAR } from "@/lib/trust";
 
 type SavedScore = {
   savedAt: string;
   district: AdmissionDistrict;
   academicYear: string;
+  sourceAcademicYear?: string;
   result: {
     totalScore: number;
     otherItems: Record<string, number>;
@@ -35,7 +37,7 @@ export function ScoreHistoryWorkspace({ isMember }: { isMember: boolean }) {
     window.localStorage.removeItem("jshs_score_latest");
     setHistory([]);
   }
-  return <ScoreShell eyebrow="成績歷史紀錄" title="每一次試算都留下年度與規則版本。"><section className="mx-auto w-[min(1120px,calc(100%-32px))] pb-12"><div className="mb-5 flex flex-wrap items-center justify-between gap-3"><p className="text-sm leading-6 jshs-muted-copy">只保存在目前瀏覽器，不會把成績上傳到公開頁面。</p><button type="button" onClick={clearHistory} className="px-4 py-2 text-sm jshs-button-secondary">清除本機紀錄</button></div>{history.length ? <div className="grid gap-3">{history.map((item) => <article key={`${item.savedAt}-${item.district}`} className="flex flex-wrap items-center justify-between gap-4 p-5 jshs-surface-card"><div><p className="text-sm font-black text-[var(--jshs-primary)]">{item.result.rule.label} · {item.academicYear} 學年度</p><p className="mt-1 text-xs jshs-muted-copy">{new Date(item.savedAt).toLocaleString("zh-TW")}</p></div><div className="text-right"><strong className="block text-3xl text-[var(--jshs-primary)]">{item.result.totalScore}</strong><span className="text-xs jshs-muted-copy">滿分 {item.result.rule.totalScore}</span></div></article>)}</div> : <EmptyScoreState text="還沒有歷史紀錄。" />}</section></ScoreShell>;
+  return <ScoreShell eyebrow="成績歷史紀錄" title="每一次試算都留下年度與規則版本。"><section className="mx-auto w-[min(1120px,calc(100%-32px))] pb-12"><div className="mb-5 flex flex-wrap items-center justify-between gap-3"><p className="text-sm leading-6 jshs-muted-copy">只保存在目前瀏覽器，不會把成績上傳到公開頁面。</p><button type="button" onClick={clearHistory} className="px-4 py-2 text-sm jshs-button-secondary">清除本機紀錄</button></div>{history.length ? <div className="grid gap-3">{history.map((item) => <article key={`${item.savedAt}-${item.district}`} className="flex flex-wrap items-center justify-between gap-4 p-5 jshs-surface-card"><div><p className="text-sm font-black text-[var(--jshs-primary)]">{item.result.rule.label} · {SERVICE_YEAR} 學年度</p><p className="mt-1 text-xs jshs-muted-copy">規則來源 {item.sourceAcademicYear || SOURCE_ACADEMIC_YEAR} 學年度 · {new Date(item.savedAt).toLocaleString("zh-TW")}</p></div><div className="text-right"><strong className="block text-3xl text-[var(--jshs-primary)]">{item.result.totalScore}</strong><span className="text-xs jshs-muted-copy">滿分 {item.result.rule.totalScore}</span></div></article>)}</div> : <EmptyScoreState text="還沒有歷史紀錄。" />}</section></ScoreShell>;
 }
 
 export function ScorePlacementWorkspace({ isMember }: { isMember: boolean }) {
