@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AiAssistant } from "@/components/ai-assistant";
+import { SiteIntroModal } from "@/components/site-intro-modal";
 import { getMemberSession } from "@/lib/member-auth";
 
 const googleTagId = "G-Y9298RKYMZ";
@@ -21,6 +22,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const member = await getMemberSession();
+
   return (
     <html lang="zh-TW">
       <head>
@@ -39,7 +42,8 @@ export default async function RootLayout({
       <body>
         <a className="jshs-skip-link" href="#main-content">跳到主要內容</a>
         <div id="main-content">{children}</div>
-        <AiAssistant isMember={Boolean(await getMemberSession())} />
+        <SiteIntroModal isMember={Boolean(member)} />
+        <AiAssistant isMember={Boolean(member)} />
       </body>
     </html>
   );

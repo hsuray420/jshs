@@ -39,6 +39,7 @@ body {
 }
 
 body.jshs-nav-open { overflow: hidden; overscroll-behavior: none; }
+body.jshs-intro-modal-open { overflow: hidden; overscroll-behavior: none; }
 
 @media (max-width: 1023px) {
   body { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
