@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { CHANGHUA_COMPETITION_CATALOG, calculateAdmissionScore, assignPreferenceSequences } from "../lib/admission-score.ts";
+import { CHANGHUA_COMPETITION_CATALOG, calculateAdmissionScore, assignPreferenceSequences, isAdmissionCalculatorAvailable } from "../lib/admission-score.ts";
 
 const perfectExam = {
   chineseGrade: "A++",
@@ -15,6 +15,11 @@ const perfectExam = {
 function choices(count, prefix = "school") {
   return Array.from({ length: count }, (_, index) => ({ schoolId: `${prefix}-${index + 1}` }));
 }
+
+test("只有有研究 MD/JSON 的區域開放積分試算", () => {
+  for (const district of ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "kaohsiung"]) assert.equal(isAdmissionCalculatorAvailable(district), true);
+  for (const district of ["chiayi", "tainan", "pingtung", "hualien", "taitung", "penghu", "kinmen"]) assert.equal(isAdmissionCalculatorAvailable(district), false);
+});
 
 test("五區滿分案例都遵守各區總分上限", () => {
   const cases = [

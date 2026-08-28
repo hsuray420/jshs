@@ -47,6 +47,9 @@ export type AdmissionDistrict = "tp" | "ct" | "ilan" | "taoyuan-lienchiang" | "h
 export type ExamGrade = keyof typeof EXAM_SCORE_MAP;
 export type EconomicStatus = "NONE" | "LOWER_MIDDLE_INCOME" | "LOW_INCOME";
 
+/** Only districts backed by an explicitly supplied 115 MD/JSON rule source may calculate. */
+export const SOURCE_BACKED_ADMISSION_DISTRICTS = ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "kaohsiung"] as const;
+
 type ScoreCategory = Readonly<{ key: string; label: string; max: number; description: string }>;
 export type AdmissionRule = Readonly<{
   code: AdmissionDistrict;
@@ -244,6 +247,10 @@ const SUBJECT_KEYS = ["chinese", "math", "english", "social", "science"] as cons
 
 export function isAdmissionDistrict(value: string): value is AdmissionDistrict {
   return Object.prototype.hasOwnProperty.call(ADMISSION_RULES, value);
+}
+
+export function isAdmissionCalculatorAvailable(value: string): value is (typeof SOURCE_BACKED_ADMISSION_DISTRICTS)[number] {
+  return (SOURCE_BACKED_ADMISSION_DISTRICTS as readonly string[]).includes(value);
 }
 
 export function getAdmissionRule(district: string | undefined): AdmissionRule {

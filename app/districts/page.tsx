@@ -31,10 +31,8 @@ function normalizeTarget(value?: string): FunctionalTarget | undefined {
 }
 
 function resolveDistrictTarget(target: FunctionalTarget | undefined, district: District): FunctionalTarget {
-  // All area feature entry points are open; retain the legacy flag expressions only as migration markers.
-  // target === "calculator" && !district.calculator
-  // target === "analysis" && !district.analysis
-  void district;
+  if (target === "calculator" && !district.calculator) return "schools";
+  if (target === "analysis" && !district.analysis) return "schools";
   return target || "overview";
 }
 
@@ -87,11 +85,11 @@ export default async function DistrictsPage({
               <h2 className="mt-5 text-2xl font-black">{district.label}</h2>
               <p className="mt-2 min-h-12 text-sm leading-6 jshs-muted-copy">{district.areas}</p>
               <div className="mt-5 flex flex-wrap items-center gap-2"><DataStatus value={district.dataStatus} /><span className="jshs-chip">{district.academicYear} 學年度</span></div>
-              <div className="mt-3 flex flex-wrap gap-2"><Feature enabled={true}>學校查詢</Feature><Feature enabled={true}>積分試算</Feature><Feature enabled={true}>落點分析</Feature><Feature enabled={true}>規則</Feature></div>
+              <div className="mt-3 flex flex-wrap gap-2"><Feature enabled={district.schools}>學校查詢</Feature><Feature enabled={district.calculator}>積分試算</Feature><Feature enabled={district.analysis}>落點分析</Feature><Feature enabled={district.calculator}>規則</Feature></div>
               <small className="mt-5 block text-xs text-slate-400">更新：{district.updatedAt || districtMetadata.updatedAt}</small>
               <p className="mt-3 text-sm leading-6 text-slate-600">主要任務：{district.tasks?.[0] || "先確認適用區域與官方公告"}</p>
               <a className="mt-3 inline-block text-xs text-[var(--jshs-primary)]" href={district.sourceUrl} target="_blank" rel="noreferrer">官方委員會／來源 ↗</a>
-              <a className="mt-4 flex items-center justify-between text-sm text-[var(--jshs-primary)]" href={destinationFor(resolvedTarget, code)}>{fellBackToSchools ? "直接開啟功能入口" : `直接開啟${destinationLabel}`} <span className="transition group-hover:translate-x-1">→</span></a>
+              <a className="mt-4 flex items-center justify-between text-sm text-[var(--jshs-primary)]" href={destinationFor(resolvedTarget, code)}>{fellBackToSchools ? "積分試算尚未開放，先查學校" : `直接開啟${destinationLabel}`} <span className="transition group-hover:translate-x-1">→</span></a>
             </article>
           )})}
         </div>

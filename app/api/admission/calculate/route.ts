@@ -1,4 +1,4 @@
-import { calculateAdmissionScore, isAdmissionDistrict, type AdmissionScoreInput } from "../../../../lib/admission-score";
+import { calculateAdmissionScore, isAdmissionCalculatorAvailable, isAdmissionDistrict, type AdmissionScoreInput } from "../../../../lib/admission-score";
 import { createMemberScoreSnapshot } from "../../../../db/score-store";
 import { getMemberSession } from "../../../../lib/member-auth";
 import { notifyMember } from "../../../../lib/notifications";
@@ -21,6 +21,7 @@ export async function POST(request: Request) {
     if (!isAdmissionDistrict(district)) {
       return Response.json({ ok: false, error: "不支援的就學區，請重新選擇。" }, { status: 400 });
     }
+    if (!isAdmissionCalculatorAvailable(district)) return Response.json({ ok: false, error: "此區目前尚未開放積分試算，待研究規則資料建置完成後開放。" }, { status: 409 });
     const result = calculateAdmissionScore({ ...input, district });
     if ("status" in result && result.status === "incomplete") {
       return Response.json({ ok: false, error: "請補齊研究規則要求的欄位後再試算。", result }, { status: 422 });
