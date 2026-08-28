@@ -21,6 +21,8 @@ test("一般應屆生同區就學會得到可追溯的符合結果", () => {
   assert.match(general?.reasons.join(" ") || "", /應屆/);
   assert.equal(general?.ruleIds.includes("general-admission-115"), true);
   assert.equal(general?.officialSources[0]?.officialSourcePage, "資格審查／報名資格");
+  assert.equal(general?.nextActions.some((action) => action.href === "/tools"), true);
+  assert.equal(general?.nextActions.every((action) => action.href), true);
 });
 
 test("跨區需求會出現條件式問題尚未完成的確認結果", () => {
@@ -65,4 +67,11 @@ test("明確不具完全中學條件時，直升路徑會回傳目前不符合",
   const route = result.routes.find((item) => item.routeId === "direct-selection");
   assert.equal(route?.status, "ineligible");
   assert.match(route?.reasons.join(" ") || "", /不適用/);
+});
+
+test("不同路徑的下一步會導向不同的既有功能", () => {
+  const result = evaluateAdmissionEligibility({ ...base, specialNeeds: ["cross_zone"] });
+  const crossZone = result.routes.find((route) => route.routeId === "cross-zone");
+  assert.equal(crossZone?.nextActions[0]?.href, "/eligibility/cross-district");
+  assert.equal(crossZone?.nextActions.length, 2);
 });

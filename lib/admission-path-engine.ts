@@ -38,6 +38,7 @@ export type AdmissionPathRoute = Readonly<{
   missingInformation: readonly string[];
   requiredDocuments: readonly string[];
   nextSteps: readonly string[];
+  nextActions: readonly { label: string; href: string }[];
   ruleIds: readonly string[];
   officialSources: readonly OfficialSource[];
 }>;
@@ -147,8 +148,44 @@ function sourceFor(rule: PathRule, _zone: string, district: DistrictInfo): Offic
   return { officialSourceTitle: `${rule.official_source_title}（${district.label}）`, officialSourceUrl: guide?.file || district.sourceUrl, officialWebsiteUrl: guide?.sourceUrl || district.sourceUrl, officialSourcePage: rule.official_source_page, lastVerifiedAt: district.updatedAt, verificationStatus: rule.verification_status };
 }
 
-function routeFromRule(rule: PathRule, input: AdmissionPathInput, district: DistrictInfo, result: Omit<AdmissionPathRoute, "routeId" | "title" | "category" | "ruleIds"> & { officialSources: readonly OfficialSource[] }): AdmissionPathRoute {
-  return { routeId: routeIdFor(rule.rule_id), title: rule.title, category: rule.category, ruleIds: [rule.rule_id, `${input.zone}-${input.academicYear}-district-context`], ...result };
+function routeFromRule(rule: PathRule, input: AdmissionPathInput, district: DistrictInfo, result: Omit<AdmissionPathRoute, "routeId" | "title" | "category" | "ruleIds" | "nextActions"> & { officialSources: readonly OfficialSource[] }): AdmissionPathRoute {
+  const routeId = routeIdFor(rule.rule_id);
+  return { routeId, title: rule.title, category: rule.category, ruleIds: [rule.rule_id, `${input.zone}-${input.academicYear}-district-context`], nextActions: actionsForRoute(routeId), ...result };
 }
 
 function routeIdFor(ruleId: string) { return ruleId === "general-admission-115" ? "general-no-exam" : ruleId.replace(/-115$/, ""); }
+
+function actionsForRoute(routeId: string): readonly { label: string; href: string }[] {
+  const actions: Record<string, readonly { label: string; href: string }[]> = {
+    "general-no-exam": [
+      { label: "開始積分試算", href: "/tools" },
+      { label: "查看高中職", href: "/schools" },
+      { label: "開始志願模擬", href: "/planner" },
+    ],
+    "cross-zone": [
+      { label: "查看跨區規定", href: "/eligibility/cross-district" },
+      { label: "查看官方來源", href: "/trust/sources" },
+    ],
+    "special-identity": [
+      { label: "查看特殊身分加分", href: "/eligibility/extra-quota" },
+      { label: "查看外加名額規定", href: "/eligibility/extra-quota" },
+    ],
+    "special-admission": [
+      { label: "查看特色招生規定", href: "/eligibility/special-admission" },
+      { label: "查看官方來源", href: "/trust/sources" },
+    ],
+    "direct-selection": [
+      { label: "查看直升與甄選規定", href: "/eligibility/direct-selection" },
+      { label: "查看官方來源", href: "/trust/sources" },
+    ],
+    "special-education": [
+      { label: "查看資優／特殊教育規定", href: "/eligibility/gifted-special-education" },
+      { label: "查看官方來源", href: "/trust/sources" },
+    ],
+    "non-graduate": [
+      { label: "查看非應屆／轉學生規定", href: "/eligibility/non-graduate" },
+      { label: "查看官方來源", href: "/trust/sources" },
+    ],
+  };
+  return actions[routeId] || [{ label: "查看官方來源", href: "/trust/sources" }];
+}
