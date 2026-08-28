@@ -175,6 +175,13 @@ test("宜蘭、竹苗、雲林使用暫存研究 JSON 進行實際計分", () =>
   assert.equal(ylc.totalScore, 86);
 });
 
+test("已開放區域的結果大項使用明確研究分類，不顯示模糊的非會考名稱", () => {
+  const labels = ["ilan", "hsinchu-miaoli", "yunlin"].map((district) => calculateAdmissionScore({ district }).rule.categories.map((category) => category.label)).flat();
+  assert.ok(labels.includes("畢業資格、均衡學習、德行表現、服務表現、競賽表現、體適能與適性發展"));
+  assert.ok(labels.includes("扶助弱勢、就近入學與多元學習表現"));
+  assert.ok(!labels.some((label) => /非會考積分|非志願序及會考項目/.test(label)));
+});
+
 test("研究 JSON 的必填欄位缺漏時回傳 incomplete，不把缺漏當成零分", () => {
   const result = calculateAdmissionScore({ district: "ct", exam: { writingLevel: 6 } });
   assert.equal(result.status, "incomplete");

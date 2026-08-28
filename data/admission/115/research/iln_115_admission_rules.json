@@ -16,7 +16,7 @@
   "total_score_max":46,
   "total_score_max_note":"46為未加權基準；步驟一、二依目標校科最多54.5分，步驟三一律回到未加權46分。",
   "categories":[
-    {"category_id":"non_exam","label":"非會考積分","raw_score_max":31,"score_cap":31},
+    {"category_id":"non_exam","label":"畢業資格、均衡學習、德行表現、服務表現、競賽表現、體適能與適性發展","raw_score_max":31,"score_cap":31},
     {"category_id":"exam","label":"國中教育會考","raw_score_max":15,"score_cap":15}
   ],
   "fields":[

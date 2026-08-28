@@ -19,7 +19,7 @@
   "total_score_max": 90,
   "categories": [
     {"category_id":"preference","label":"志願序","raw_score_max":8,"score_cap":8},
-    {"category_id":"non_exam","label":"非志願序及會考項目","raw_score_max":57,"score_cap":52,"group_caps":[{"fields":["reward_score","competition_score","fitness_score"],"score_cap":25}]},
+    {"category_id":"non_exam","label":"扶助弱勢、就近入學與多元學習表現","raw_score_max":57,"score_cap":52,"group_caps":[{"fields":["reward_score","competition_score","fitness_score"],"score_cap":25}]},
     {"category_id":"exam","label":"國中教育會考","raw_score_max":30,"score_cap":30}
   ],
   "fields": [
