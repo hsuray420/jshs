@@ -55,9 +55,10 @@
       ]
     },
     {
-      "label": "特殊資格", "href": "/eligibility", "activeHref": "/eligibility", "eyebrow": "先確認你適用哪條路", "description": "用自我檢測先篩選可能的資格，再閱讀正式規定與應備文件。",
+      "label": "特殊資格", "href": "/eligibility", "activeHref": "/eligibility", "eyebrow": "先確認你適用哪條路", "description": "先判定可能適用的升學路徑，再回到官方簡章核對資格與文件。",
       "items": [
-        { "label": "資格自我檢測", "href": "/eligibility", "description": "用幾個問題找到要深入查的資格" },
+        { "label": "資格自我檢測", "href": "/eligibility", "description": "用幾個問題找到可能適用的升學路徑" },
+        { "label": "15 區官方簡章下載", "href": "/admission-guides", "description": "閱讀或下載 115 學年度各區官方簡章" },
         { "label": "特色招生／特色班", "href": "/eligibility/special-admission", "description": "了解報名條件、流程與時程" },
         { "label": "資優／特殊教育升學路徑", "href": "/eligibility/gifted-special-education", "description": "整理不同支持需求的升學路徑" },
         { "label": "直升與甄選入學說明", "href": "/eligibility/direct-selection", "description": "了解校內直升與甄選差異" },

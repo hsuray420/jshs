@@ -1,0 +1,22 @@
+{
+  "academicYear": "115",
+  "updatedAt": "2026-08-28",
+  "description": "15 個免試就學區的 115 學年度官方招生簡章。可用於時程、資格、特殊管道與升學知識查閱；成績計算另依獨立 JSON 規則處理。",
+  "guides": [
+    { "code": "tp", "label": "基北區", "file": "/admission-guides/115-tp.pdf", "pages": 161, "sourceUrl": "https://ttk.entry.edu.tw/" },
+    { "code": "ct", "label": "中投區", "file": "/admission-guides/115-ct.pdf", "pages": 96, "sourceUrl": "https://ct.entry.edu.tw/" },
+    { "code": "hsinchu-miaoli", "label": "竹苗區", "file": "/admission-guides/115-hsinchu-miaoli.pdf", "pages": 88, "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea" },
+    { "code": "taoyuan-lienchiang", "label": "桃連區", "file": "/admission-guides/115-taoyuan-lienchiang.pdf", "pages": 92, "sourceUrl": "https://tyc.entry.edu.tw/noexamimitate_tl/noexamimitate/apps/page/public/News.aspx" },
+    { "code": "changhua", "label": "彰化區", "file": "/admission-guides/115-changhua.pdf", "pages": 72, "sourceUrl": "https://chc.entry.edu.tw/" },
+    { "code": "yunlin", "label": "雲林區", "file": "/admission-guides/115-yunlin.pdf", "pages": 67, "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea" },
+    { "code": "chiayi", "label": "嘉義區", "file": "/admission-guides/115-chiayi.pdf", "pages": 91, "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea" },
+    { "code": "tainan", "label": "臺南區", "file": "/admission-guides/115-tainan.pdf", "pages": 128, "sourceUrl": "https://tn.entry.edu.tw/NoExamImitate_TN/NoExamImitate/Apps/Page/Public/News.aspx" },
+    { "code": "kaohsiung", "label": "高雄區", "file": "/admission-guides/115-kaohsiung.pdf", "pages": 115, "sourceUrl": "https://kh.entry.edu.tw/news/news-show.php?id=200&page=1" },
+    { "code": "pingtung", "label": "屏東區", "file": "/admission-guides/115-pingtung.pdf", "pages": 82, "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea" },
+    { "code": "ilan", "label": "宜蘭區", "file": "/admission-guides/115-ilan.pdf", "pages": 88, "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea" },
+    { "code": "hualien", "label": "花蓮區", "file": "/admission-guides/115-hualien.pdf", "pages": 77, "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea" },
+    { "code": "taitung", "label": "臺東區", "file": "/admission-guides/115-taitung.pdf", "pages": 71, "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea" },
+    { "code": "penghu", "label": "澎湖區", "file": "/admission-guides/115-penghu.pdf", "pages": 56, "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea" },
+    { "code": "kinmen", "label": "金門區", "file": "/admission-guides/115-kinmen.pdf", "pages": 53, "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea" }
+  ]
+}

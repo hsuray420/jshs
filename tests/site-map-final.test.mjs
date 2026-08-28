@@ -32,7 +32,8 @@ test("final sitemap exposes real hubs and all district-gated hubs use the shared
   ]);
 
   for (const source of [schools, tools, planner]) assert.match(source, /DistrictGate/);
-  for (const source of [schedule, eligibility, knowledge]) assert.doesNotMatch(source, /DistrictGate/);
+  for (const source of [schedule, eligibility]) assert.match(source, /DistrictGate/);
+  assert.doesNotMatch(knowledge, /DistrictGate/);
   assert.match(gate, /請選擇就學區/);
   assert.match(gate, /jshs_district/);
   assert.match(gate, /jshs-district-changed/);

@@ -121,7 +121,7 @@ test("primary navigation lands on an interactive surface instead of an introduct
     if (url.pathname === "/tools") assert.match(tools, /AdmissionCalculator/);
     else if (url.pathname === "/planner") assert.match(planner, /PlannerWorkspace/);
     else if (url.pathname === "/schedule") assert.match(schedule, /ScheduleWorkspace/);
-    else if (url.pathname === "/eligibility") assert.match(eligibility, /EligibilityChecker/);
+    else if (url.pathname === "/eligibility") assert.match(eligibility, /AdmissionPathFinder/);
     else if (url.pathname === "/knowledge") assert.match(knowledge, /KnowledgeHelper/);
     else assert.equal(url.pathname, "/trust");
   }
