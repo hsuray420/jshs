@@ -58,18 +58,20 @@ export type AdmissionRule = Readonly<{
   tieBreakers: readonly string[];
   sourceId?: string;
   fields?: readonly ResearchField[];
+  preferenceScoring?: Readonly<ResearchPreferenceScoring>;
   verificationStatus?: string;
 }>;
 
+type ResearchPreferenceScoring = Readonly<{ enabled?: boolean; max_choices?: number | null; grouping_method?: string | null; minimum_score?: number | null; score_cap?: number; ranges?: readonly { from: number; to: number; score: number }[] }>;
 type ResearchField = Readonly<{ field_id: string; label: string; input_type: string; category?: string; subcategory?: string; helper_text?: string; official_rule?: string; conditions?: readonly string[]; adopted_period?: string; score_cap?: number; evidence_description?: string; options?: readonly { label: string; value: unknown; score?: number | null }[]; validation?: { required?: boolean; min?: number; max?: number; min_items?: number } }>;
-type ResearchRule = { district_name: string; academic_year: number; total_score_max: number; version: string; categories: readonly { category_id: string; label: string; score_cap: number; calculation: string }[]; tie_breaking_rules: readonly { field: string }[]; fields: readonly ResearchField[]; verification_status: string; sources?: readonly unknown[] };
+type ResearchRule = { district_name: string; academic_year: number; total_score_max: number; version: string; categories: readonly { category_id: string; label: string; score_cap: number; calculation: string }[]; tie_breaking_rules: readonly { field: string }[]; fields: readonly ResearchField[]; verification_status: string; preference_scoring?: ResearchPreferenceScoring; sources?: readonly unknown[] };
 
 function researchRule(data: ResearchRule, code: AdmissionDistrict): AdmissionRule {
   return {
     code, label: data.district_name, academicYear: String(data.academic_year), totalScore: data.total_score_max,
     sourceNote: "依本區官方規則資料整理；正式送出前仍須核對當年度官方簡章。",
     categories: data.categories.map((item) => ({ key: ({ exam: "examPerformanceScore", multiple_learning: "multipleLearningScore", multiple_development: "multipleLearningScore", adaptive_guidance: "adaptationScore" } as Record<string, string>)[item.category_id] ?? item.category_id, label: item.label, max: item.score_cap, description: `${item.label}依本區官方規則換算，最高採計${item.score_cap}分。` })),
-    tieBreakers: data.tie_breaking_rules.map((item) => item.field), sourceId: `${code}-115-research-json`, fields: data.fields,
+    tieBreakers: data.tie_breaking_rules.map((item) => item.field), sourceId: `${code}-115-research-json`, fields: data.fields, preferenceScoring: data.preference_scoring,
     verificationStatus: data.verification_status,
   };
 }
@@ -293,6 +295,7 @@ function calculateResearchScore(input: AdmissionScoreInput, rule: AdmissionRule)
     }
     return minItems !== undefined && (!Array.isArray(listValue) || (listValue as unknown[]).length < minItems);
   }).map((field) => field.field_id);
+  if (rule.preferenceScoring?.enabled && !(rule.fields ?? []).some((field) => field.field_id === "preference_choices") && values.preference_rank === undefined) missingFields.push("preference_rank");
   if (rule.code === "changhua") missingFields.push(...validateChanghuaStructuredFields(values));
   const gradeKeys = rule.code === "tp" || rule.code === "taoyuan-lienchiang" || rule.code === "kaohsiung"
     ? ["chinese_exam_level", "math_exam_level", "english_exam_level", "social_exam_level", "science_exam_level"]
