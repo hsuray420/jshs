@@ -5,12 +5,19 @@ import Link from "next/link";
 import { getAdmissionRule, type AdmissionDistrict, type ResearchField, type ScoreCategory } from "@/lib/admission-score";
 import { SOURCE_ACADEMIC_YEAR, SERVICE_YEAR } from "@/lib/trust";
 import { SourceBadge } from "@/components/source-badge";
-import { humanizeRuleExplanation, humanizeRuleLabel } from "@/lib/rule-display";
+import { humanizeRuleExplanation } from "@/lib/rule-display";
 
 const districts: Array<[AdmissionDistrict, string]> = [
   ["ct", "中投區"], ["tp", "基北區"], ["ilan", "宜蘭區"], ["taoyuan-lienchiang", "桃連區"],
   ["hsinchu-miaoli", "竹苗區"], ["changhua", "彰化區"], ["yunlin", "雲林區"], ["kaohsiung", "高雄區"],
 ];
+
+const tieBreakerGroups = [
+  ["總積分與志願序", "先比較整體積分，再依志願選填順序判定先後。"],
+  ["就近入學與弱勢身分", "符合就近入學或扶助弱勢條件時，依本區規則列入比序。"],
+  ["多元學習表現", "依均衡學習、服務學習、品德與獎勵等已核對資料比較。"],
+  ["會考成績與同分比序", "若前項仍相同，再依會考成績、等級與官方公告順序比較。"],
+] as const;
 
 export function InteractiveRuleTable() {
   const [district, setDistrict] = useState<AdmissionDistrict>("ct");
@@ -42,8 +49,15 @@ export function InteractiveRuleTable() {
         </table>
       </div>
       <div className="mt-5 rounded-2xl bg-[var(--jshs-muted-surface)] p-5 text-sm leading-7">
-        <strong>同分比序：</strong>{rule.tieBreakers.length ? rule.tieBreakers.map(humanizeRuleLabel).join("、") : "請依本區正式簡章確認。"}
-        <p className="mt-2 jshs-muted-copy">這些項目來自已核對的規則資料；試算器、欄位提示、規則頁與結果頁共用同一套內容。116 正式規則公告後會重新校核。</p>
+        <strong>同分比序：</strong>分成四個容易理解的階段，實際順序依所選就學區規則套用。
+        <details className="mt-3 rounded-xl bg-white/70 p-4">
+          <summary className="cursor-pointer font-bold text-[var(--jshs-primary)]">查看同分比序說明</summary>
+          <div className="mt-3 grid gap-3">
+            {tieBreakerGroups.map(([label, description]) => <div key={label}><strong>{label}</strong><p className="jshs-muted-copy">{description}</p></div>)}
+            <p className="text-xs leading-5 text-slate-500">這裡呈現的是給學生與家長看的規則分組；完整欄位與逐項計算方式，請在上方切換「完整規則」後展開各採計項目。</p>
+          </div>
+        </details>
+        <p className="mt-2 jshs-muted-copy">同分比序會依已核對的規則資料套用；116 正式規則公告後會重新校核。</p>
         <Link href="/trust/sources" className="mt-2 inline-flex font-bold text-[var(--jshs-primary)]">查看資料來源與版本 →</Link>
       </div>
     </section>

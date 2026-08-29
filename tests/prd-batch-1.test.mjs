@@ -50,3 +50,20 @@ test("第一批補修不讓資料狀態互相矛盾", async () => {
   assert.doesNotMatch(calculator, /五個就學區/);
   assert.match(calculator, /目前開放 8／15 區/);
 });
+
+test("同分比序以學生看得懂的分組呈現，詳細說明可展開", async () => {
+  const source = await read("components/interactive-rule-table.tsx");
+  assert.match(source, /總積分與志願序/);
+  assert.match(source, /就近入學與弱勢身分/);
+  assert.match(source, /多元學習表現/);
+  assert.match(source, /會考成績與同分比序/);
+  assert.match(source, /查看同分比序說明/);
+  assert.doesNotMatch(source, /rule\.tieBreakers\.map\(humanizeRuleLabel\)\.join/);
+});
+
+test("資格檢測失敗時保留明確錯誤與重試入口", async () => {
+  const source = await read("components/admission-path-finder.tsx");
+  assert.match(source, /目前無法載入學校選單/);
+  assert.match(source, /重新載入/);
+  assert.match(source, /role="alert"/);
+});
