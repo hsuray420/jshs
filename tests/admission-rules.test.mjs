@@ -214,6 +214,32 @@ test("基北、桃連、高雄使用各自的 115 研究 JSON 與欄位 schema",
   }
 });
 
+test("研究規則的志願序必須使用各區 JSON 級距，不得 fallback 成中投區", () => {
+  const baseExam = { chinese_exam_level: "A++", math_exam_level: "A++", english_exam_level: "A++", social_exam_level: "A++", science_exam_level: "A++", writing_grade: 6 };
+  const tp = calculateAdmissionScore({ district: "tp", ruleValues: {
+    preference_choices: [{ schoolId: "tp-1" }], balanced_health_pe_passed: true, balanced_arts_passed: true,
+    balanced_integrated_passed: true, balanced_technology_passed: true, service_hours_112_s1: 6,
+    service_hours_112_s2: 6, service_hours_113_s1: 6, service_hours_113_s2: 6, service_hours_114_s1: 6,
+    ...baseExam,
+  }});
+  assert.equal(tp.otherItems.preference_score, 36);
+  assert.equal(tp.perChoiceResults[0].preferenceScore, 36);
+
+  const tyc = calculateAdmissionScore({ district: "taoyuan-lienchiang", ruleValues: {
+    preference_choices: [{ schoolId: "tyc-1" }], graduation_status: "graduated", career_parent_match: true,
+    career_homeroom_match: true, career_counselor_match: true, nearby_eligibility: "general",
+    balanced_health_pe_passed: true, balanced_arts_passed: true, balanced_integrated_passed: true,
+    balanced_technology_passed: true, major_merit_count: 0, minor_merit_count: 0, commendation_count: 0,
+    discipline_after_cancellation: "qualified", qualified_cadre_semesters: 0, certified_service_hours: 0,
+    talent_competition_results: [], fitness_any_item_qualified: false, local_language_certificate: "none",
+    chinese_exam_level: "A++", math_exam_level: "A++", english_exam_level: "A++", social_exam_level: "A++",
+    science_exam_level: "A++", exam_full_marks: { chinese: "A++", math: "A++", english: "A++", social: "A++", science: "A++" }, writing_grade: 6,
+    low_income_status: "none",
+  }});
+  assert.equal(tyc.otherItems.preference_score, 15);
+  assert.equal(tyc.perChoiceResults[0].preferenceScore, 15);
+});
+
 test("宜蘭、竹苗、雲林使用暫存研究 JSON 進行實際計分", () => {
   const fullExam = { chineseGrade: "A++", englishGrade: "A+", mathGrade: "A", socialGrade: "B++", scienceGrade: "B+", writingLevel: 6 };
   const iln = calculateAdmissionScore({ district: "ilan", ruleValues: {
