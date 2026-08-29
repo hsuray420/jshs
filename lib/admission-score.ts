@@ -71,20 +71,39 @@ export type AdmissionRule = Readonly<{
   preferenceScoring?: Readonly<ResearchPreferenceScoring>;
   examScoring?: Readonly<ResearchExamScoring>;
   verificationStatus?: string;
+  officialSourceName?: string;
+  officialSourceUrl?: string;
+  verifiedAt?: string;
+  status?: "已核對／準備版，116 待官方公告" | "待確認";
+  writingIncludedInTotal?: boolean;
 }>;
 
 type ResearchPreferenceScoring = Readonly<{ enabled?: boolean; max_choices?: number | null; grouping_method?: string | null; minimum_score?: number | null; score_cap?: number; ranges?: readonly { from: number; to: number | null; score: number }[] }>;
 type ResearchExamScoring = Readonly<{ subject_options?: readonly { value: string; score: number }[]; writing_options?: readonly { value: string; score: number }[]; score_cap?: number; base_score_cap?: number; writing_in_total?: boolean; violation_deduction?: { one_point?: number } }>;
 export type ResearchField = Readonly<{ field_id: string; label: string; input_type: string; category?: string; subcategory?: string; helper_text?: string; official_rule?: string; conditions?: readonly string[]; adopted_period?: string; score_cap?: number; evidence_description?: string; calculation?: string; options?: readonly { label: string; value: unknown; score?: number | null }[]; validation?: { required?: boolean; min?: number; max?: number; min_items?: number } }>;
-type ResearchRule = { district_name: string; academic_year: number; total_score_max: number; version: string; categories: readonly { category_id?: string; id?: string; label?: string; score_cap: number; calculation?: string }[]; tie_breaking_rules: readonly { field: string }[]; fields: readonly ResearchField[]; verification_status: string; preference_scoring?: ResearchPreferenceScoring; exam_scoring?: ResearchExamScoring; sources?: readonly unknown[] };
+type ResearchRule = { district_name: string; academic_year: number; total_score_max: number; version: string; categories: readonly { category_id?: string; id?: string; label?: string; score_cap: number; calculation?: string }[]; tie_breaking_rules: readonly { field: string }[]; fields: readonly ResearchField[]; verification_status: string; preference_scoring?: ResearchPreferenceScoring; exam_scoring?: ResearchExamScoring; sources?: readonly { document_title?: string; official_url?: string; accessed_date?: string }[] };
 
 function researchRule(data: ResearchRule, code: AdmissionDistrict): AdmissionRule {
+  const source = data.sources?.[0];
+  const keyMap: Record<string, string> = {
+    exam: "examPerformanceScore", preference: "preferenceScore", nearby: "nearbyEnrollmentScore",
+    disadvantaged: "disadvantagedScore", economic: "economicScore", balanced: "balancedScore",
+    multiple: "multipleLearningScore", multiple_learning: "multipleLearningScore",
+    multiple_development: "multipleLearningScore", adaptive: "adaptationScore",
+    adaptive_guidance: "adaptationScore", graduation: "graduationScore", morality: "moralityScore",
+    service: "serviceScore", competition: "competitionScore", fitness: "fitnessScore", other: "otherScore",
+  };
   return {
     code, label: data.district_name, academicYear: String(data.academic_year), totalScore: data.total_score_max,
     sourceNote: "依本區官方規則資料整理；正式送出前仍須核對當年度官方簡章。",
-    categories: data.categories.map((item) => { const id = item.category_id ?? item.id ?? "other"; const label = item.label ?? id; return { key: ({ exam: "examPerformanceScore", multiple_learning: "multipleLearningScore", multiple_development: "multipleLearningScore", adaptive_guidance: "adaptationScore" } as Record<string, string>)[id] ?? id, label, max: item.score_cap, description: `${label}依本區官方規則換算，最高採計${item.score_cap}分。`, calculation: item.calculation }; }),
+    categories: data.categories.map((item) => { const id = item.category_id ?? item.id ?? "other"; const label = item.label ?? id; return { key: keyMap[id] ?? id, label, max: item.score_cap, description: `${label}依本區官方規則換算，最高採計${item.score_cap}分。`, calculation: item.calculation }; }),
     tieBreakers: data.tie_breaking_rules.map((item) => item.field), sourceId: `${code}-115-research-json`, fields: data.fields, preferenceScoring: data.preference_scoring,
     examScoring: data.exam_scoring, verificationStatus: data.verification_status,
+    officialSourceName: source?.document_title ?? `${data.district_name} 115 學年度高級中等學校免試入學簡章`,
+    officialSourceUrl: source?.official_url ?? "https://www.edu.tw/",
+    verifiedAt: source?.accessed_date ?? "2026-08-28",
+    status: /unresolved|partial|blocker/i.test(data.verification_status) ? "待確認" : "已核對／準備版，116 待官方公告",
+    writingIncludedInTotal: data.exam_scoring?.writing_in_total ?? (code === "tp" || code === "tainan" || code === "taoyuan-lienchiang"),
   };
 }
 
@@ -143,6 +162,11 @@ const referenceRule = (code: AdmissionDistrict, label: string, totalScore = 100)
     category("examPerformanceScore", "國中教育會考小計", 30, "請依本區會考折算表輸入會考小計；五科標示仍會保留供同分比序參考。"),
   ],
   tieBreakers: ["依本區簡章公告之第一順位", "依本區簡章公告之第二順位", "依本區簡章公告之第三順位", "會考標示與科目順序", "志願序", "名額與超額比序規則"],
+  officialSourceName: `${label} 115 學年度高級中等學校免試入學簡章`,
+  officialSourceUrl: "https://www.edu.tw/",
+  verifiedAt: "2026-08-28",
+  status: "待確認",
+  writingIncludedInTotal: false,
 });
 
 const category = (key: string, label: string, max: number, description: string): ScoreCategory => ({ key, label, max, description });
@@ -286,7 +310,7 @@ export function calculateAdmissionScore(input: AdmissionScoreInput) {
   const otherItems = calculateDistrictItems(rule.code, input, preferenceScore);
   const totalScore = roundToTenth(Math.min(rule.totalScore, otherItems.otherItemsTotal + exam.examPerformanceScore));
 
-  return {
+  const output = {
     district: rule.code,
     rule,
     otherItems,
@@ -304,6 +328,7 @@ export function calculateAdmissionScore(input: AdmissionScoreInput) {
       return { ...choice, choiceSequence: index + 1, preferenceScore: choicePreferenceScore, totalScore: roundToTenth(Math.min(rule.totalScore, otherItems.otherItemsTotal - basePreferenceScore + choicePreferenceScore + exam.examPerformanceScore)) };
     }),
   };
+  return { ...output, scoreBreakdown: buildScoreBreakdown(rule, output.otherItems, output.exam.examPerformanceScore) };
 }
 
 function calculateResearchScore(input: AdmissionScoreInput, rule: AdmissionRule) {
@@ -327,7 +352,7 @@ function calculateResearchScore(input: AdmissionScoreInput, rule: AdmissionRule)
   if (missingFields.length) {
     const examPerformanceScore = grades.reduce((sum, grade) => sum + (grade ? (rule.code === "changhua" ? CHANGHUA_EXAM_SCORE_MAP[grade] : examScoreForResearch(rule.code, grade)) : 0), 0);
     const assigned = assignPreferenceSequences((values.preference_choices as Array<{ schoolId: string; departmentId?: string }> | undefined) ?? input.choiceList ?? [], rule.code);
-    return { district: rule.code, rule, status: "incomplete" as const, totalScore: null, missingFields, otherItems: {}, exam: { examPerformanceScore, examTotalPoints: grades.reduce((sum, grade) => sum + (grade ? EXAM_POINT_MAP[grade] : 0), 0) + Number(values.writing_grade ?? 0), writingScore: 0 }, comparisonKeys: {}, perChoiceResults: assigned.map((choice, index) => ({ ...choice, choiceSequence: index + 1, preferenceScore: rule.code === "changhua" ? (choice.preferenceSequence <= 20 ? 45 : 44) : calculatePreferenceScore(choice.preferenceSequence, "ct"), totalScore: null })) };
+    return { district: rule.code, rule, status: "incomplete" as const, totalScore: null, missingFields, otherItems: {}, exam: { examPerformanceScore, examTotalPoints: grades.reduce((sum, grade) => sum + (grade ? EXAM_POINT_MAP[grade] : 0), 0) + Number(values.writing_grade ?? 0), writingScore: 0 }, comparisonKeys: {}, perChoiceResults: assigned.map((choice, index) => ({ ...choice, choiceSequence: index + 1, preferenceScore: rule.code === "changhua" ? (choice.preferenceSequence <= 20 ? 45 : 44) : calculatePreferenceScore(choice.preferenceSequence, "ct"), totalScore: null })), scoreBreakdown: [] };
   }
   const choices = (values.preference_choices as Array<{ schoolId: string; departmentId?: string; vocationalClusterId?: string }> | undefined) ?? input.choiceList ?? [];
   const assigned = assignPreferenceSequences(choices, rule.code);
@@ -343,9 +368,23 @@ function calculateResearchScore(input: AdmissionScoreInput, rule: AdmissionRule)
   const examTotalPoints = examGrades.reduce((sum, grade) => sum + (EXAM_POINT_MAP[grade] ?? 0), 0) + writing;
   const calculatedItems = rule.code === "ct" ? calculateResearchCt(values, preferenceScore) : rule.code === "changhua" ? calculateResearchChc(values, preferenceScore) : rule.code === "tp" ? calculateResearchTtk(values, preferenceScore) : rule.code === "taoyuan-lienchiang" ? calculateResearchTyc(values, preferenceScore) : rule.code === "kaohsiung" ? calculateResearchKh(values, preferenceScore) : rule.code === "ilan" ? calculateResearchIln(values) : rule.code === "hsinchu-miaoli" ? calculateResearchHhm(values) : rule.code === "yunlin" ? calculateResearchYlc(values) : calculateNewDistrictResearch(rule, values, preferenceScore);
   const calculated = calculatedItems as Record<string, number>;
-  const otherItems = { ...calculated, otherItemsTotal: calculated.otherItemsTotal ?? 0, multipleLearningScore: calculated.multipleLearningScore ?? calculated.multiple_learning ?? 0, adaptationScore: calculated.adaptationScore ?? calculated.adaptive_guidance ?? 0 };
+  const otherItems = { ...calculated, otherItemsTotal: calculated.otherItemsTotal ?? 0, multipleLearningScore: calculated.multipleLearningScore ?? calculated.multiple_learning ?? calculated.multiple_score ?? calculated.multiple_development ?? 0, adaptationScore: calculated.adaptationScore ?? calculated.adaptive_guidance ?? calculated.adaptive_preference_score ?? calculated.adaptive_score ?? 0 };
   const totalScore = Math.min(rule.totalScore, otherItems.otherItemsTotal + examPerformanceScore);
-  return { district: rule.code, rule, status: "complete" as const, totalScore, missingFields: [], otherItems, exam: { examPerformanceScore, examTotalPoints, writingScore: 0 }, comparisonKeys: { totalScore, examTotalPoints }, perChoiceResults: assigned.map((choice, index) => ({ ...choice, choiceSequence: index + 1, preferenceScore, totalScore: Math.min(rule.totalScore, otherItems.otherItemsTotal - preferenceScore + (rule.code === "changhua" ? (choice.preferenceSequence <= 20 ? 45 : 44) : calculatePreferenceScore(choice.preferenceSequence, "ct")) + examPerformanceScore) })) };
+  return { district: rule.code, rule, status: "complete" as const, totalScore, missingFields: [], otherItems, exam: { examPerformanceScore, examTotalPoints, writingScore: 0 }, comparisonKeys: { totalScore, examTotalPoints }, perChoiceResults: assigned.map((choice, index) => ({ ...choice, choiceSequence: index + 1, preferenceScore, totalScore: Math.min(rule.totalScore, otherItems.otherItemsTotal - preferenceScore + (rule.code === "changhua" ? (choice.preferenceSequence <= 20 ? 45 : 44) : calculatePreferenceScore(choice.preferenceSequence, "ct")) + examPerformanceScore) })), scoreBreakdown: buildScoreBreakdown(rule, otherItems, examPerformanceScore) };
+}
+
+function buildScoreBreakdown(rule: AdmissionRule, otherItems: Record<string, number>, examScore: number) {
+  const aliases: Record<string, string[]> = {
+    preferenceScore: ["preferenceScore", "preference_score", "preference"],
+    multipleLearningScore: ["multipleLearningScore", "multiple_learning", "multiple_score", "multiple_development"],
+    adaptationScore: ["adaptationScore", "adaptive_guidance", "adaptive_preference_score"],
+  };
+  return rule.categories.map((category) => {
+    if (category.key === "examPerformanceScore") return { key: category.key, label: category.label, score: examScore, max: category.max, calculation: category.calculation ?? "依五科等級與寫作測驗規則折算", includedInTotal: rule.writingIncludedInTotal };
+    const keys = aliases[category.key] ?? [category.key, category.key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`), `${category.key.replace(/Score$/, "")}_score`];
+    const score = keys.map((key) => otherItems[key]).find((value) => typeof value === "number") ?? 0;
+    return { key: category.key, label: category.label, score, max: category.max, calculation: category.calculation ?? category.description, includedInTotal: true };
+  });
 }
 
 function researchPreferenceScore(district: AdmissionDistrict, values: Record<string, unknown>, rank: number) {

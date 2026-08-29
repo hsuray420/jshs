@@ -13,6 +13,12 @@ export type AdmissionScheduleItem = {
 // but must never render as confirmed 116 dates.
 const confirmed = (item: Omit<AdmissionScheduleItem, "status">): AdmissionScheduleItem => ({ ...item, status: "previous_year_reference" });
 
+// 116 會考日期已公布；這兩筆是全國共通考試日期，不是免試入學截止日。
+export const nationalAdmissionSchedule: readonly AdmissionScheduleItem[] = [
+  { id: "exam-116-day-1", eventDate: "2027-05-15", title: "116 年國中教育會考（第一天）", description: "116 年國中教育會考已公布於 2027 年 5 月 15 日舉行；應試科目與試場資訊仍以官方公告為準。", status: "confirmed", sourcePages: "I" },
+  { id: "exam-116-day-2", eventDate: "2027-05-16", title: "116 年國中教育會考（第二天）", description: "116 年國中教育會考已公布於 2027 年 5 月 16 日舉行；應試科目與試場資訊仍以官方公告為準。", status: "confirmed", sourcePages: "I" },
+];
+
 export const districtAdmissionSchedules: Record<string, AdmissionScheduleItem[]> = {
   changhua: [
     confirmed({ id: "ch-115-order-survey", eventDate: "2025-12-22", title: "簡章及報名表訂購調查（集體）", description: "114 年 12 月 22 日至 115 年 1 月 2 日；由承辦學校國立秀水高級工業職業學校辦理。", sourcePages: "I" }),

@@ -21,6 +21,32 @@ test("只有有研究 MD/JSON 的區域開放積分試算", () => {
   assert.equal(isAdmissionCalculatorAvailable("unknown"), false);
 });
 
+test("15 區規則都暴露官方來源、核對日期與116準備狀態", () => {
+  const districts = ["tp", "taoyuan-lienchiang", "hsinchu-miaoli", "ct", "changhua", "yunlin", "chiayi", "tainan", "kaohsiung", "pingtung", "ilan", "hualien", "taitung", "penghu", "kinmen"];
+  for (const district of districts) {
+    const result = calculateAdmissionScore({ district, ruleValues: {} });
+    assert.ok(result.rule.officialSourceName, `${district} official source name`);
+    assert.match(result.rule.officialSourceUrl, /^https?:\/\//, `${district} official source URL`);
+    assert.match(result.rule.verifiedAt, /^\d{4}-\d{2}-\d{2}$/, `${district} verified date`);
+    assert.ok(["已核對／準備版，116 待官方公告", "待確認"].includes(result.rule.status), `${district} status`);
+  }
+});
+
+test("結果明細逐項對應規則分類且不會把已算分數顯示成零分", () => {
+  const result = calculateAdmissionScore({ district: "chiayi", ruleValues: {
+    preference_rank: 1, low_income_status: "low_income", balanced_health_pe: true, balanced_arts: true,
+    balanced_integrated: true, balanced_technology: true, adaptive_parent_matches: true,
+    adaptive_teacher_matches: true, adaptive_counselor_matches: true, discipline_status: "none",
+    major_merit_count: 1, minor_merit_count: 0, commendation_count: 0, service_learning_hours: 16,
+    fitness_result: { qualified_items: 3, medal_bonus: 1 }, competition_records: [],
+    chinese_exam_grade: "A++", math_exam_grade: "A++", english_exam_grade: "A++", social_exam_grade: "A++", science_exam_grade: "A++", writing_grade: 6,
+  }});
+  assert.equal(result.totalScore, 82);
+  assert.equal(result.scoreBreakdown.find((item) => item.key === "multipleLearningScore").score, 26);
+  assert.equal(result.scoreBreakdown.find((item) => item.key === "examPerformanceScore").score, 27);
+  assert.ok(result.scoreBreakdown.every((item) => item.max >= item.score));
+});
+
 test("嘉南屏花東澎金七區使用各自的 115 官方規則 JSON 開放試算", () => {
   const expected = [
     ["chiayi", "嘉義區", 82, "chiayi-115-research-json", "preference_rank"],

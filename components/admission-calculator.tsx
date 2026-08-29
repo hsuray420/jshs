@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getAdmissionRule, isAdmissionCalculatorAvailable, isAdmissionDistrict, resolveAdmissionMissingFieldLabels, type AdmissionDistrict, type AdmissionRule } from "@/lib/admission-score";
+import { calculateAdmissionScore, getAdmissionRule, isAdmissionCalculatorAvailable, isAdmissionDistrict, resolveAdmissionMissingFieldLabels, type AdmissionDistrict, type AdmissionRule } from "@/lib/admission-score";
 import { readStoredDistrict } from "@/lib/district-context";
 import { markProgress } from "@/lib/progress";
 import { SourceBadge } from "@/components/source-badge";
@@ -62,12 +62,14 @@ type ScoreResult = {
   otherItems: Record<string, number>;
   exam: { examPerformanceScore: number; examTotalPoints: number; writingScore: number };
   rule: AdmissionRule;
+  scoreBreakdown?: readonly { key: string; label: string; score: number; max: number; calculation: string; includedInTotal: boolean }[];
 };
 type AdmissionFormField = NonNullable<AdmissionRule["fields"]>[number];
 type AdmissionOption = NonNullable<AdmissionFormField["options"]>[number];
 
 const emptyExam: ExamState = Object.fromEntries(subjects.map(([key]) => [key, ""])) as ExamState;
 const emptyExamMarks: ExamMarkState = Object.fromEntries(subjects.map(([key]) => [key, ""])) as ExamMarkState;
+const CALCULATOR_DRAFT_KEY = "jshs_admission_calculator_draft_v1";
 const defaultCriteria: CriteriaState = {
   choiceText: "", nearbyEligible: false, remoteAreaEligible: false, economicStatus: "NONE",
   balanced: { healthAndPE: false, arts: false, integrativeActivities: false, technology: false },
@@ -92,8 +94,42 @@ export function AdmissionCalculator({ initialDistrict, isMember }: { initialDist
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [status, setStatus] = useState("");
   const [showRuleIntro, setShowRuleIntro] = useState(() => typeof window !== "undefined" && window.localStorage.getItem(`jshs_rule_intro_seen:${requestedDistrict || "ct"}`) !== "1");
+  const draftHydrated = useRef(false);
   const rule = getAdmissionRule(district);
   const calculatorAvailable = academicYear === SERVICE_YEAR && isAdmissionCalculatorAvailable(district);
+  const invalidExamKeys = subjects.filter(([key]) => !exam[key] || (rule.sourceId && district !== "tp" && !examMarks[key])).map(([key]) => key);
+  const examHasError = invalidExamKeys.length > 0 || writingLevel === "" || Number(writingLevel) < 0 || Number(writingLevel) > 6;
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      try {
+        const draft = JSON.parse(window.localStorage.getItem(CALCULATOR_DRAFT_KEY) || "null") as Partial<{ district: AdmissionDistrict; academicYear: string; step: StepId; exam: ExamState; examMarks: ExamMarkState; writingLevel: string; criteria: CriteriaState; ruleValues: Record<string, unknown>; result: ScoreResult | null }> | null;
+        if (draft?.district && isAdmissionDistrict(draft.district)) setDistrict(draft.district);
+        if (draft?.academicYear) setAcademicYear(draft.academicYear);
+        if (draft?.step && steps.some(([id]) => id === draft.step)) setStep(draft.step);
+        if (draft?.exam) setExam({ ...emptyExam, ...draft.exam });
+        if (draft?.examMarks) setExamMarks({ ...emptyExamMarks, ...draft.examMarks });
+        if (typeof draft?.writingLevel === "string") setWritingLevel(draft.writingLevel);
+        if (draft?.criteria) setCriteria({ ...defaultCriteria, ...draft.criteria, balanced: { ...defaultCriteria.balanced, ...draft.criteria.balanced } });
+        if (draft?.ruleValues) setRuleValues(draft.ruleValues);
+        if (draft?.result) setResult(draft.result);
+      } catch {
+        window.localStorage.removeItem(CALCULATOR_DRAFT_KEY);
+      } finally {
+        draftHydrated.current = true;
+      }
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!draftHydrated.current) return;
+    try {
+      window.localStorage.setItem(CALCULATOR_DRAFT_KEY, JSON.stringify({ district, academicYear, step, exam, examMarks, writingLevel, criteria, ruleValues, result }));
+    } catch {
+      // Storage may be unavailable in private browsing; the calculator remains usable.
+    }
+  }, [district, academicYear, step, exam, examMarks, writingLevel, criteria, ruleValues, result]);
 
   useEffect(() => {
     const key = `jshs_rule_intro_seen:${district}`;
@@ -132,8 +168,9 @@ export function AdmissionCalculator({ initialDistrict, isMember }: { initialDist
 
   async function calculate() {
     if (missing.some((item) => item.includes("會考") || item.includes("作文"))) {
-      setStatus("先補齊五科會考與作文級分，才能產生可解釋的結果。");
+      setStatus(`尚缺 ${missing.filter((item) => item.includes("會考") || item.includes("作文")).length} 項資料；請依欄位旁的說明補齊後再試算。`);
       setStep("exam");
+      window.setTimeout(() => document.querySelector<HTMLElement>("[data-admission-error='true']")?.focus(), 0);
       return;
     }
     setStatus("正在依規則計算…");
@@ -195,16 +232,43 @@ export function AdmissionCalculator({ initialDistrict, isMember }: { initialDist
     setShowRuleIntro(false);
   }
 
+  function loadExample() {
+    setDistrict("ct");
+    setAcademicYear(SERVICE_YEAR);
+    setExam({ chineseGrade: "A++", mathGrade: "A+", englishGrade: "A", socialGrade: "B++", scienceGrade: "B+" });
+    setWritingLevel("5");
+    setRuleValues({
+      preference_choices: [{ schoolId: "example-school", departmentId: "普通科" }], nearby_eligibility: "ct_general", remote_school_three_years: false,
+      economic_weakness_status: "none", balanced_health_pe_passed: true, balanced_arts_passed: true,
+      balanced_integrated_passed: true, balanced_technology_passed: false, club_participation_by_semester: ["g7_s1"],
+      service_hours_by_semester: [6, 6, 0], discipline_status: "no_record_including_cleared", major_merit_count: 0,
+      minor_merit_count: 1, commendation_count: 1, chinese_exam_grade: "A++", math_exam_grade: "A+",
+      english_exam_grade: "A", social_exam_grade: "B++", science_exam_grade: "B+", writing_grade: 5, exam_violation_points: 0,
+    });
+    setResult(calculateAdmissionScore({ district: "ct", ruleValues: {
+      preference_choices: [{ schoolId: "example-school", departmentId: "普通科" }], nearby_eligibility: "ct_general", remote_school_three_years: false, economic_weakness_status: "none",
+      balanced_health_pe_passed: true, balanced_arts_passed: true, balanced_integrated_passed: true, balanced_technology_passed: false, club_participation_by_semester: ["g7_s1"], service_hours_by_semester: [6, 6, 0], discipline_status: "no_record_including_cleared", major_merit_count: 0, minor_merit_count: 1, commendation_count: 1,
+      chinese_exam_grade: "A++", math_exam_grade: "A+", english_exam_grade: "A", social_exam_grade: "B++", science_exam_grade: "B+", writing_grade: 5, exam_violation_points: 0,
+    } }) as ScoreResult);
+    setStep("result");
+    setStatus("已載入中投區使用範例資料；你可以返回前面逐項修改。");
+  }
+
+  function clearDraft() {
+    window.localStorage.removeItem(CALCULATOR_DRAFT_KEY);
+    setExam(emptyExam); setExamMarks(emptyExamMarks); setWritingLevel(""); setCriteria(defaultCriteria); setRuleValues({}); setResult(null); setStep("context"); setStatus("已清除試算資料；尚未保存任何結果。");
+  }
+
   return <>
     {showRuleIntro && step === "context" ? <section className="mx-auto mt-5 w-[min(1120px,calc(100%-32px))] rounded-2xl border border-[var(--jshs-border)] bg-white p-5 shadow-sm" role="status"><strong>先快速了解本區規則</strong><p className="mt-2 text-sm leading-6 jshs-muted-copy">不同就學區的採計方式差異很大，建議先快速了解本區積分規則。</p><div className="mt-4 flex flex-wrap gap-2"><Link href={`/tools/rules?district=${district}`} className="px-4 py-3 text-sm jshs-button-secondary">先看積分規則</Link><button type="button" onClick={acknowledgeRuleIntro} className="px-4 py-3 text-sm jshs-button-primary">我了解，直接開始</button></div></section> : null}
     <section className="jshs-hero-section"><div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-14"><p className="jshs-eyebrow">算成績 · 目前位於第 {stepNumber} 步／共 4 步 · {rule.label}</p><h1 className="mt-3 max-w-4xl">每一項輸入，都說清楚它怎麼影響分數。</h1><p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">先確認適用規則，再輸入會考、志願與多元表現。這是規則試算，不是錄取保證；正式送出前請回到當年度官方簡章核對。</p></div></section>
     <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-6 md:py-8"><nav aria-label="試算步驟" className="grid grid-cols-2 gap-2 md:grid-cols-4">{steps.map(([id, number, label]) => <button key={id} type="button" onClick={() => { if (id === "context" || calculatorAvailable) setStep(id); else setStatus("此區目前尚未開放積分試算。"); }} className={`flex items-center gap-3 p-3 text-left text-sm jshs-button ${step === id ? "jshs-button-primary" : "jshs-button-secondary"}`}><span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-black/5 font-black">{number}</span><span>{label}</span></button>)}</nav></section>
     <section className="mx-auto grid w-[min(1120px,calc(100%-32px))] gap-5 pb-12 lg:grid-cols-[minmax(0,1fr)_340px]"><div className="p-5 md:p-7 jshs-surface-card admission-rule-form">
-      {step === "context" ? <ContextStep district={district} academicYear={academicYear} rule={rule} calculatorAvailable={calculatorAvailable} onDistrictChange={(value) => { setDistrict(value); setRuleValues({}); setResult(null); setStatus(""); }} onYearChange={setAcademicYear} /> : null}
-      {step === "exam" ? <ExamStep district={district} exam={exam} examMarks={examMarks} writingLevel={writingLevel} onExamChange={(key, value) => setExam((current) => ({ ...current, [key]: value }))} onExamMarkChange={(key, value) => setExamMarks((current) => ({ ...current, [key]: value }))} onWritingChange={setWritingLevel} /> : null}
+      {step === "context" ? <ContextStep district={district} academicYear={academicYear} rule={rule} calculatorAvailable={calculatorAvailable} onDistrictChange={(value) => { setDistrict(value); setRuleValues({}); setResult(null); setStatus(""); }} onYearChange={setAcademicYear} onLoadExample={loadExample} /> : null}
+      {step === "exam" ? <ExamStep district={district} exam={exam} examMarks={examMarks} writingLevel={writingLevel} invalidExamKeys={invalidExamKeys} examHasError={examHasError} onExamChange={(key, value) => setExam((current) => ({ ...current, [key]: value }))} onExamMarkChange={(key, value) => setExamMarks((current) => ({ ...current, [key]: value }))} onWritingChange={setWritingLevel} /> : null}
       {step === "criteria" ? <CriteriaStep district={district} rule={rule} criteria={criteria} updateCriteria={updateCriteria} ruleValues={ruleValues} setRuleValues={setRuleValues} /> : null}
-      {step === "result" ? <ResultStep result={result} status={status} missing={missing} rule={{ ...rule, academicYear: SERVICE_YEAR }} /> : null}
-      {step !== "result" ? <p className="mt-6 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy"><strong className="text-[var(--jshs-primary)]">這一步會影響什麼？</strong> {step === "context" ? "它決定套用哪一套年度規則；五個就學區不能混算。" : step === "exam" ? "會考五科與作文會進入本區的總分或同分比序。" : "這些欄位會進入志願序、就近入學、多元學習或弱勢身分的計算；必填資料未完成時，系統會提醒你補齊，避免誤算。"}</p> : null}
+      {step === "result" ? <ResultStep result={result} status={status} missing={missing} rule={{ ...rule, academicYear: SERVICE_YEAR }} onClear={clearDraft} /> : null}
+      {step !== "result" ? <><p className="mt-6 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy"><strong className="text-[var(--jshs-primary)]">這一步會影響什麼？</strong> {step === "context" ? "它決定套用哪一套年度規則；五個就學區不能混算。" : step === "exam" ? "會考五科與作文會進入本區的總分或同分比序。" : "這些欄位會進入志願序、就近入學、多元學習或弱勢身分的計算；必填資料未完成時，系統會提醒你補齊，避免誤算。"}</p>{status && step === "exam" && examHasError ? <p className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-800" role="alert">{status}</p> : null}</> : null}
       <div className="mt-7 flex flex-wrap justify-between gap-3"><button type="button" disabled={step === "context"} onClick={() => setStep(steps[Math.max(steps.findIndex(([id]) => id === step) - 1, 0)][0])} className="px-4 py-3 text-sm jshs-button-secondary">← 上一步</button><button type="button" onClick={() => step === "result" ? setStep("criteria") : nextStep()} className="px-5 py-3 text-sm jshs-button-primary">{step === "criteria" ? "產生個人積分摘要" : step === "result" ? "重新檢查資料" : "下一步 →"}</button></div>
     </div><RuleAside rule={{ ...rule, academicYear: SERVICE_YEAR }} missing={result?.missingFields ?? missing} /></section>
   </>;
@@ -219,15 +283,15 @@ function readScoreHistory() {
   }
 }
 
-function ContextStep({ district, academicYear, rule, calculatorAvailable, onDistrictChange, onYearChange }: { district: AdmissionDistrict; academicYear: string; rule: AdmissionRule; calculatorAvailable: boolean; onDistrictChange: (value: AdmissionDistrict) => void; onYearChange: (value: string) => void }) {
-  return <div><p className="jshs-eyebrow">先做這件事</p><h2 className="mt-2">確認就學區與服務年度</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">每區的滿分、志願序、多元表現與會考折算都不一樣。這裡先把規則邊界固定下來。</p><div className="mt-6 grid gap-5 sm:grid-cols-2"><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">就學區<select value={district} onChange={(event) => onDistrictChange(event.target.value as AdmissionDistrict)}>{districtOptions.map((option) => <option key={option.code} value={option.code}>{option.label}{isAdmissionCalculatorAvailable(option.code) ? "" : "（尚未開放）"}</option>)}</select><small className="font-normal leading-5 jshs-muted-copy">只有已有研究 MD／JSON 的區域可進行積分試算；其餘區域不提供假試算器。</small></label><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">服務年度<select value={academicYear} onChange={(event) => onYearChange(event.target.value)}><option value="116">116 學年度</option><option value="115">115 學年度（僅來源參考）</option></select><small className="font-normal leading-5 jshs-muted-copy">{serviceYearNotice()}</small></label></div><p className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">服務年度：{SERVICE_YEAR}；規則來源年度：{SOURCE_ACADEMIC_YEAR}；狀態：116 正式規則待公告。</p>{!calculatorAvailable ? <div className="mt-6 rounded-2xl border border-dashed border-[var(--jshs-border)] p-5 text-sm leading-7 text-slate-600"><strong>此區目前不能試算，尚未開放。</strong><p className="mt-2">尚未完成規則建模，因此目前不開放試算。</p></div> : <RuleGuide rule={rule} />}</div>;
+function ContextStep({ district, academicYear, rule, calculatorAvailable, onDistrictChange, onYearChange, onLoadExample }: { district: AdmissionDistrict; academicYear: string; rule: AdmissionRule; calculatorAvailable: boolean; onDistrictChange: (value: AdmissionDistrict) => void; onYearChange: (value: string) => void; onLoadExample: () => void }) {
+  return <div><p className="jshs-eyebrow">先做這件事</p><h2 className="mt-2">確認就學區與服務年度</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">每區的滿分、志願序、多元表現與會考折算都不一樣。這裡先把規則邊界固定下來。</p><div className="mt-6 grid gap-5 sm:grid-cols-2"><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">就學區<select value={district} onChange={(event) => onDistrictChange(event.target.value as AdmissionDistrict)}>{districtOptions.map((option) => <option key={option.code} value={option.code}>{option.label}</option>)}</select><small className="font-normal leading-5 jshs-muted-copy">15 區皆提供 115 官方規則參考試算；116 正式簡章待公告。</small></label><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">服務年度<select value={academicYear} onChange={(event) => onYearChange(event.target.value)}><option value="116">116 學年度</option><option value="115">115 學年度（僅來源參考）</option></select><small className="font-normal leading-5 jshs-muted-copy">{serviceYearNotice()}</small></label></div><div className="mt-5 flex flex-wrap items-center gap-3"><button type="button" onClick={onLoadExample} className="min-h-11 px-4 py-3 text-sm jshs-button-secondary">載入使用範例資料</button><span className="text-xs text-slate-500">以中投區完整示範結果，方便先了解每個項目的計算方式。</span></div><p className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">服務年度：{SERVICE_YEAR}；規則來源年度：{SOURCE_ACADEMIC_YEAR}；狀態：116 正式規則待公告。</p>{!calculatorAvailable ? <div className="mt-6 rounded-2xl border border-dashed border-[var(--jshs-border)] p-5 text-sm leading-7 text-slate-600"><strong>此區目前不能試算，尚未開放。</strong><p className="mt-2">尚未完成規則建模，因此目前不開放試算。</p></div> : <RuleGuide rule={rule} />}</div>;
 }
 
-function ExamStep({ district, exam, examMarks, writingLevel, onExamChange, onExamMarkChange, onWritingChange }: { district: AdmissionDistrict; exam: ExamState; examMarks: ExamMarkState; writingLevel: string; onExamChange: (key: ExamStateKey, value: string) => void; onExamMarkChange: (key: ExamStateKey, value: string) => void; onWritingChange: (value: string) => void }) {
+function ExamStep({ district, exam, examMarks, writingLevel, invalidExamKeys, examHasError, onExamChange, onExamMarkChange, onWritingChange }: { district: AdmissionDistrict; exam: ExamState; examMarks: ExamMarkState; writingLevel: string; invalidExamKeys: readonly string[]; examHasError: boolean; onExamChange: (key: ExamStateKey, value: string) => void; onExamMarkChange: (key: ExamStateKey, value: string) => void; onWritingChange: (value: string) => void }) {
   const writingNote = district === "kaohsiung" || district === "ct" ? "不加進第一階段總分，但會進入本區同分比序。" : "會依本區級分表折算進入會考表現。";
   const scoreGrades = district === "tp" ? grades : ["A", "B", "C"];
   const showSeparateMarks = district !== "tp";
-  return <div><p className="jshs-eyebrow">使用者輸入</p><h2 className="mt-2">選擇五科會考等級與完整標示</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">輸入會考各科等級／標示。總分等級與同分比序的完整標示分開保存；只有桃連區會顯示「會考最高 33 分」，其他區域依各自簡章上限計算。</p><div className="mt-6 grid gap-4 sm:grid-cols-2">{subjects.map(([key, label]) => <div key={key} className="admission-field-group grid gap-2 text-sm font-black text-[var(--jshs-primary)]"><span className="admission-field-label">{label}會考等級</span><select value={exam[key]} onChange={(event) => onExamChange(key, event.target.value)}><option value="">尚未填寫</option>{scoreGrades.map((grade) => <option key={grade}>{grade}</option>)}</select>{showSeparateMarks ? <><span className="admission-field-label">{label}完整標示（同分比序）</span><select value={examMarks[key]} onChange={(event) => onExamMarkChange(key, event.target.value)}><option value="">尚未填寫</option>{grades.map((grade) => <option key={grade}>{grade}</option>)}</select></> : null}<small className="admission-field-helper">{exam[key] ? `${label}：${exam[key]}${showSeparateMarks ? `／完整標示 ${examMarks[key] || "尚缺"}` : ""}` : `尚缺${label}資料。`}</small></div>)}<label className="admission-field-group grid gap-2 text-sm font-black text-[var(--jshs-primary)]"><span className="admission-field-label">作文級分</span><select value={writingLevel} onChange={(event) => onWritingChange(event.target.value)}><option value="">尚未填寫</option>{Array.from({ length: 7 }, (_, value) => <option key={value} value={value}>{value} 級分</option>)}</select><small className="admission-field-helper">{writingNote}</small></label></div></div>;
+  return <div><p className="jshs-eyebrow">使用者輸入</p><h2 className="mt-2">選擇五科會考等級與完整標示</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">輸入會考各科等級／標示。總分等級與同分比序的完整標示分開保存；只有桃連區會顯示「會考最高 33 分」，其他區域依各自簡章上限計算。</p>{examHasError ? <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-950" role="status">尚缺 {invalidExamKeys.length + (writingLevel === "" ? 1 : 0)} 項會考資料；送出時會自動定位第一個錯誤欄位。</p> : null}<div className="mt-6 grid gap-4 sm:grid-cols-2">{subjects.map(([key, label]) => <div key={key} className="admission-field-group grid gap-2 text-sm font-black text-[var(--jshs-primary)]"><span className="admission-field-label">{label}會考等級</span><select value={exam[key]} data-admission-error={invalidExamKeys.includes(key) ? "true" : undefined} aria-invalid={invalidExamKeys.includes(key)} onChange={(event) => onExamChange(key, event.target.value)}><option value="">尚未填寫</option>{scoreGrades.map((grade) => <option key={grade}>{grade}</option>)}</select>{showSeparateMarks ? <><span className="admission-field-label">{label}完整標示（同分比序）</span><select value={examMarks[key]} data-admission-error={invalidExamKeys.includes(key) && !examMarks[key] ? "true" : undefined} aria-invalid={invalidExamKeys.includes(key) && !examMarks[key]} onChange={(event) => onExamMarkChange(key, event.target.value)}><option value="">尚未填寫</option>{grades.map((grade) => <option key={grade}>{grade}</option>)}</select></> : null}<small className="admission-field-helper">{exam[key] ? `${label}：${exam[key]}${showSeparateMarks ? `／完整標示 ${examMarks[key] || "尚缺"}` : ""}` : `尚缺${label}資料。`}</small></div>)}<label className="admission-field-group grid gap-2 text-sm font-black text-[var(--jshs-primary)]"><span className="admission-field-label">作文級分</span><select value={writingLevel} data-admission-error={writingLevel === "" ? "true" : undefined} aria-invalid={writingLevel === ""} onChange={(event) => onWritingChange(event.target.value)}><option value="">尚未填寫</option>{Array.from({ length: 7 }, (_, value) => <option key={value} value={value}>{value} 級分</option>)}</select><small className="admission-field-helper">{writingNote}</small></label></div></div>;
 }
 
 function CriteriaStep({ district, rule, criteria, updateCriteria, ruleValues, setRuleValues }: { district: AdmissionDistrict; rule: AdmissionRule; criteria: CriteriaState; updateCriteria: <Key extends keyof CriteriaState>(key: Key, value: CriteriaState[Key]) => void; ruleValues: Record<string, unknown>; setRuleValues: (value: Record<string, unknown>) => void }) {
@@ -299,6 +363,6 @@ function RuleAside({ rule: inputRule, missing }: { rule: AdmissionRule; missing:
   const tieBreakers = rule.tieBreakers.slice(0, 6).map((item) => resolveAdmissionMissingFieldLabels([item], rule)[0]);
   return <aside className="admission-summary p-5 md:sticky md:top-6 md:p-6 jshs-surface-card"><div className="flex flex-wrap items-center justify-between gap-2"><p className="jshs-eyebrow">目前進度</p><SourceBadge sourceType="official_based_calculation" /></div><h2 className="mt-2">{SERVICE_YEAR} 學年度・{rule.label}</h2><p className="mt-2 text-xs leading-5 jshs-muted-copy">規則來源 {SOURCE_ACADEMIC_YEAR} 學年度；116 正式規則待公告。</p><div className="mt-5 rounded-2xl bg-[var(--jshs-primary)] p-5 text-white"><span className="block text-sm text-white/75">目前積分</span><strong className="mt-1 block text-4xl font-black">尚未計算</strong><span className="mt-1 block text-sm text-white/75">滿分 {rule.totalScore} 分</span></div><div className="mt-5"><p className="jshs-info-group-title">填寫狀態</p><ul className="mt-3 grid gap-2 text-sm leading-6 text-slate-600">{rule.categories.map((category) => <li key={category.key} className="flex items-center justify-between gap-3"><span>{category.label}</span><span className="text-slate-400">待填寫</span></li>)}</ul></div>{missing.length ? <p className="mt-5 rounded-xl bg-[var(--jshs-muted-surface)] p-3 text-sm leading-6 text-slate-600">還有 {missing.length} 項資料尚未填寫</p> : null}<div className="mt-6 border-t border-[var(--jshs-border)] pt-5"><p className="jshs-info-group-title">同分比序</p><ol className="mt-3 grid gap-2 text-sm leading-6 text-slate-600">{tieBreakers.map((item, index) => <li key={`${item}-${index}`}>{index + 1}. {item}</li>)}</ol></div><details className="mt-6 border-t border-[var(--jshs-border)] pt-5"><summary className="cursor-pointer text-sm font-bold">官方資料依據</summary><p className="mt-2 text-sm leading-6 jshs-muted-copy">{rule.sourceNote}</p></details></aside>;
 }
-function ResultStep({ result, status, missing, rule }: { result: ScoreResult | null; status: string; missing: readonly string[]; rule: AdmissionRule }) { const displayedMissing = resolveAdmissionMissingFieldLabels(result?.missingFields ?? missing, rule); const rows = result ? [...rule.categories.filter((item) => item.key !== "examPerformanceScore").map((item) => [item.label, result.otherItems[item.key] ?? 0, item.max, item.description] as const), ["國中教育會考", result.exam.examPerformanceScore, rule.categories.find((item) => item.key === "examPerformanceScore")?.max ?? 0, "依五科等級與本區寫作測驗規則折算。" ] as const] : []; const district = districtCode(rule.code); return <div><div className="flex flex-wrap items-center justify-between gap-2"><p className="jshs-eyebrow">結果摘要</p><SourceBadge sourceType="official_based_calculation" /></div><h2 className="mt-2">這個結果可以怎麼用？</h2><p className="mt-2 text-xs leading-5 jshs-muted-copy">服務年度 {SERVICE_YEAR}；規則來源 {SOURCE_ACADEMIC_YEAR}；116 正式規則待公告。這是依官方規則計算的 JSHS 結果，不是官方公布的試算結果。</p>{result?.status === "incomplete" ? <p className="mt-5 rounded-2xl border border-dashed border-[var(--jshs-border)] p-5 text-sm leading-7 text-slate-600">部分官方規則尚待確認，因此目前無法產生完整試算結果。</p> : result ? <><div className="mt-6 flex flex-wrap items-end gap-4 rounded-2xl bg-[var(--jshs-primary)] p-6 text-white"><div><span className="block text-sm text-white/70">目前總分</span><strong className="mt-1 block text-5xl font-black text-white">{result.totalScore}</strong></div><span className="pb-2 text-sm text-white/80">滿分 {rule.totalScore} · {rule.label}</span></div><div className="mt-6 overflow-x-auto"><table><thead><tr><th>項目</th><th>目前分數</th><th>上限</th><th>怎麼來的</th></tr></thead><tbody>{rows.map(([label, score, cap, explanation]) => <tr key={String(label)}><th>{label}</th><td>{score}</td><td>{cap}</td><td>{explanation}</td></tr>)}<tr><th>會考同分比序點</th><td>{result.exam.examTotalPoints || "—"}</td><td>依本區規則</td><td>第一階段不一定加總，但會幫助同分時排序。</td></tr></tbody></table></div></> : <p className="mt-5 rounded-2xl bg-[var(--jshs-muted-surface)] p-5 leading-7 jshs-muted-copy">尚未產生結果。請回到前面補齊會考與志願序資料。</p>}<p className="mt-5 text-sm font-black text-[var(--jshs-primary)]" role="status">{status}</p><div className="mt-7 grid gap-4 md:grid-cols-2"><InfoCard title="可以用來做什麼" body="比較候選校科、看出哪一項仍可補強，並把結果帶到我的規劃。" /><InfoCard title="不能用來做什麼" body="不能當作正式錄取保證，也不能取代當年度簡章、名額、資格審查或招生委員會判定。" /></div>{displayedMissing.length ? <div className="mt-6 rounded-2xl border border-dashed border-[var(--jshs-border)] p-4 text-sm leading-6 text-slate-600"><strong>尚未完成／還有以下資料需要填寫：</strong>{displayedMissing.join("、")}</div> : null}<div className="mt-7"><h3 className="text-lg">下一步：規劃志願</h3><div className="mt-3 flex flex-wrap gap-3"><Link className="px-4 py-3 text-sm jshs-button-primary" href={`/planner/custom?district=${district}&score=${result?.totalScore ?? ""}`}>自己排</Link><Link className="px-4 py-3 text-sm jshs-button-secondary" href={`/planner/recommend?district=${district}&score=${result?.totalScore ?? ""}`}>系統推薦</Link></div></div></div>; }
+function ResultStep({ result, status, missing, rule, onClear }: { result: ScoreResult | null; status: string; missing: readonly string[]; rule: AdmissionRule; onClear: () => void }) { const displayedMissing = resolveAdmissionMissingFieldLabels(result?.missingFields ?? missing, rule); const rows = result?.scoreBreakdown?.map((item) => [item.label, item.score, item.max, item.calculation, item.includedInTotal] as const) ?? []; const district = districtCode(rule.code); return <div><div className="flex flex-wrap items-center justify-between gap-2"><p className="jshs-eyebrow">結果摘要</p><SourceBadge sourceType="official_based_calculation" /></div><h2 className="mt-2">這個結果可以怎麼用？</h2><p className="mt-2 text-xs leading-5 jshs-muted-copy">服務年度 {SERVICE_YEAR}；規則來源 {SOURCE_ACADEMIC_YEAR}；116 正式規則待公告。這是依官方規則計算的 JSHS 結果，不是官方公布的試算結果。</p>{result?.status === "incomplete" ? <p className="mt-5 rounded-2xl border border-dashed border-[var(--jshs-border)] p-5 text-sm leading-7 text-slate-600">部分官方規則尚待確認，因此目前無法產生完整試算結果。</p> : result ? <><div className="mt-6 flex flex-wrap items-end gap-4 rounded-2xl bg-[var(--jshs-primary)] p-6 text-white"><div><span className="block text-sm text-white/70">目前總分</span><strong className="mt-1 block text-5xl font-black text-white">{result.totalScore}</strong></div><span className="pb-2 text-sm text-white/80">滿分 {rule.totalScore} · {rule.label}</span></div><div className="mt-6 overflow-x-auto"><table><thead><tr><th>項目</th><th>目前分數</th><th>上限</th><th>怎麼來的</th><th>是否列入總分</th></tr></thead><tbody>{rows.map(([label, score, cap, explanation, included]) => <tr key={String(label)}><th>{label}</th><td>{score}</td><td>{cap}</td><td>{explanation}</td><td>{included ? "是" : "僅同分比序"}</td></tr>)}<tr><th>會考同分比序點</th><td>{result.exam.examTotalPoints || "—"}</td><td>依本區規則</td><td>五科標示與寫作依本區順序逐項比序。</td><td>僅同分比序</td></tr></tbody></table></div></> : <p className="mt-5 rounded-2xl bg-[var(--jshs-muted-surface)] p-5 leading-7 jshs-muted-copy">尚未產生結果。請回到前面補齊會考與志願序資料。</p>}<p className="mt-5 text-sm font-black text-[var(--jshs-primary)]" role="status">{status}</p><p className="mt-4 text-sm leading-6 text-slate-600">規則來源：<a className="font-bold underline" href={rule.officialSourceUrl} target="_blank" rel="noreferrer">{rule.officialSourceName}</a>（最後核對 {rule.verifiedAt}）。</p><div className="mt-7 grid gap-4 md:grid-cols-2"><InfoCard title="可以用來做什麼" body="比較候選校科、看出哪一項仍可補強，並把結果帶到我的規劃。" /><InfoCard title="不能用來做什麼" body="不能當作正式錄取保證，也不能取代當年度簡章、名額、資格審查或招生委員會判定。" /></div>{displayedMissing.length ? <div className="mt-6 rounded-2xl border border-dashed border-[var(--jshs-border)] p-4 text-sm leading-6 text-slate-600"><strong>尚未完成／還有以下資料需要填寫：</strong>{displayedMissing.join("、")}</div> : null}<div className="mt-7 flex flex-wrap gap-3"><Link className="px-4 py-3 text-sm jshs-button-primary" href={`/planner/custom?district=${district}&score=${result?.totalScore ?? ""}`}>自己排</Link><Link className="px-4 py-3 text-sm jshs-button-secondary" href={`/planner/recommend?district=${district}&score=${result?.totalScore ?? ""}`}>系統推薦</Link><button type="button" onClick={onClear} className="px-4 py-3 text-sm jshs-button-secondary">清除試算資料</button></div></div>; }
 function districtCode(code: AdmissionDistrict) { return code; }
 function InfoCard({ title, body }: { title: string; body: string }) { return <article className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><h3 className="text-base">{title}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{body}</p></article>; }
