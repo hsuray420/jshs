@@ -66,8 +66,10 @@ export function SchoolExplorer({
 
   useEffect(() => {
     let active = true;
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 8000);
 
-    fetch("/it_hs/school-directory.json", { headers: { accept: "application/json" } })
+    fetch("/it_hs/school-directory.json", { headers: { accept: "application/json" }, signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) throw new Error(`school_directory_${response.status}`);
         return response.json() as Promise<SchoolDirectoryPayload>;
@@ -85,6 +87,8 @@ export function SchoolExplorer({
 
     return () => {
       active = false;
+      window.clearTimeout(timeout);
+      controller.abort();
     };
   }, []);
 
@@ -180,7 +184,7 @@ export function SchoolExplorer({
         </div>
 
         <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
-          <div><p className="text-sm font-bold jshs-muted-copy">目前顯示 {filteredSchools.length} 所學校／校科資料</p><p className="mt-1 text-xs leading-5 text-slate-500">每筆結果保留資料年度、來源與欄位狀態；正式招生權益仍以官方公告為準。可匿名瀏覽與保存於目前裝置；登入 LINE 後可跨裝置同步。</p></div>
+          <div><p className="text-sm font-bold jshs-muted-copy">{loaded ? (loadError ? "學校資料暫時無法載入" : `目前顯示 ${filteredSchools.length} 所學校／校科資料`) : "學校資料準備載入中"}</p><p className="mt-1 text-xs leading-5 text-slate-500">每筆結果保留資料年度、來源與欄位狀態；正式招生權益仍以官方公告為準。可匿名瀏覽與保存於目前裝置；登入 LINE 後可跨裝置同步。</p></div>
           <Link className="text-sm font-black text-[var(--jshs-primary)]" href="/planner">查看我的規劃 →</Link>
         </div>
         {saveMessage ? <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-900" role="status">{saveMessage} <a className="ml-1 underline" href="/api/line/login/start">使用 LINE 登入</a></p> : null}

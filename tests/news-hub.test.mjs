@@ -41,7 +41,7 @@ test("news catalog contains six useful, source-backed guides", async () => {
   }
 });
 
-test("official information hub stays official-only and legacy articles redirect", async () => {
+test("official information hub stays official-only and article slugs render their own content", async () => {
   const [hubPage, articlePage, newsLibrary] = await Promise.all([
     readFile(hubPageUrl, "utf8"),
     readFile(articlePageUrl, "utf8"),
@@ -54,7 +54,10 @@ test("official information hub stays official-only and legacy articles redirect"
   assert.doesNotMatch(hubPage, /getFeaturedNews|SourceBadge sourceType="jshs_|SourceBadge sourceType="community/);
   assert.match(articlePage, /generateStaticParams/);
   assert.match(articlePage, /generateMetadata/);
-  assert.match(articlePage, /redirect\(destinationFor\(slug\)\)/);
+  assert.match(articlePage, /getNewsArticle/);
+  assert.match(articlePage, /article\.title/);
+  assert.match(articlePage, /notFound/);
+  assert.doesNotMatch(articlePage, /redirect\(destinationFor\(slug\)\)/);
   assert.doesNotMatch(articlePage, /application\/ld\+json/);
   assert.match(newsLibrary, /export function getNewsArticle/);
   assert.match(newsLibrary, /export function getRelatedNews/);

@@ -145,7 +145,8 @@ export function AdmissionPathFinder() {
   function start() { setState((current) => ({ ...current, started: true })); }
   function canContinue() { if (steps[currentStep] === "student") return Boolean(state.studentType); if (steps[currentStep] === "school") return Boolean(state.schoolCounty); if (steps[currentStep] === "zone") return Boolean(state.zone); return true; }
 
-  if (!hydrated) return <section className="mx-auto w-[min(1160px,calc(100%-32px))] py-10"><div className="p-6 jshs-surface-card">正在載入上次的檢測進度…</div></section>;
+  // localStorage is only available after hydration. Render the actionable empty state first.
+  if (!hydrated) return <WelcomeView onStart={start} />;
   if (state.completed && result) return <ResultView result={result} zone={selectedZone?.label || state.zone} onReset={reset} />;
   if (!state.started) return <WelcomeView onStart={start} />;
 

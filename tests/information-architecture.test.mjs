@@ -145,9 +145,11 @@ test("sitemap exposes canonical hubs and excludes redirect-only legacy homepage"
   assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/schedule\/(countdown|compare|export|open-days)<\/loc>/);
 });
 
-test("legacy article routes do not render a second content IA", async () => {
+test("article routes render canonical article content without generic redirects", async () => {
   const articlePage = await readFile(articlePageUrl, "utf8");
-  assert.match(articlePage, /redirect\(destinationFor\(slug\)\)/);
+  assert.match(articlePage, /getNewsArticle/);
+  assert.match(articlePage, /article\.title/);
+  assert.doesNotMatch(articlePage, /redirect\(destinationFor\(slug\)\)/);
   assert.match(articlePage, /robots: \{ index: false, follow: false \}/);
   assert.doesNotMatch(articlePage, /application\/ld\+json/);
 });

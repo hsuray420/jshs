@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getAdmissionRule, type AdmissionDistrict, type ResearchField, type ScoreCategory } from "@/lib/admission-score";
 import { SOURCE_ACADEMIC_YEAR, SERVICE_YEAR } from "@/lib/trust";
 import { SourceBadge } from "@/components/source-badge";
+import { humanizeRuleExplanation, humanizeRuleLabel } from "@/lib/rule-display";
 
 const districts: Array<[AdmissionDistrict, string]> = [
   ["ct", "中投區"], ["tp", "基北區"], ["ilan", "宜蘭區"], ["taoyuan-lienchiang", "桃連區"],
@@ -21,7 +22,7 @@ export function InteractiveRuleTable() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <label className="grid max-w-sm gap-2 text-sm font-black text-[var(--jshs-primary)]">
           選擇就學區
-          <select value={district} onChange={(event) => setDistrict(event.target.value as AdmissionDistrict)}>
+          <select id="rule-district" name="district" value={district} onChange={(event) => setDistrict(event.target.value as AdmissionDistrict)}>
             {districts.map(([code, label]) => <option key={code} value={code}>{label}</option>)}
           </select>
         </label>
@@ -41,8 +42,8 @@ export function InteractiveRuleTable() {
         </table>
       </div>
       <div className="mt-5 rounded-2xl bg-[var(--jshs-muted-surface)] p-5 text-sm leading-7">
-        <strong>同分比序：</strong>{rule.tieBreakers.length ? rule.tieBreakers.join("、") : "請依本區正式簡章確認。"}
-        <p className="mt-2 jshs-muted-copy">這些項目直接來自研究 JSON／MD，試算器、欄位提示、規則頁與結果頁共用同一份規則資料。116 正式規則公告後會重新校核。</p>
+        <strong>同分比序：</strong>{rule.tieBreakers.length ? rule.tieBreakers.map(humanizeRuleLabel).join("、") : "請依本區正式簡章確認。"}
+        <p className="mt-2 jshs-muted-copy">這些項目來自已核對的規則資料；試算器、欄位提示、規則頁與結果頁共用同一套內容。116 正式規則公告後會重新校核。</p>
         <Link href="/trust/sources" className="mt-2 inline-flex font-bold text-[var(--jshs-primary)]">查看資料來源與版本 →</Link>
       </div>
     </section>
@@ -55,10 +56,10 @@ function CategoryRow({ item, fields, mode, sourceNote, sourceId }: { item: Score
       <th>{item.label}</th><td>{item.max}</td><td>{item.description}</td>
       <td><details><summary className="cursor-pointer text-[var(--jshs-primary)]">查看</summary>
         <div className="min-w-[18rem] max-w-3xl py-3 text-left text-sm leading-6">
-          <p><strong>精確計算：</strong>{item.calculation || item.description}</p>
+          <p><strong>如何計算：</strong>{humanizeRuleExplanation(item.calculation, item.description)}</p>
           <p><strong>上限：</strong>{item.max} 分</p>
           {mode === "full" ? <>
-            {fields.length ? <div className="mt-3 grid gap-2"><strong>欄位、條件與原文</strong>{fields.map((field) => <FieldDetail key={field.field_id} field={field} />)}</div> : null}
+            {fields.length ? <div className="mt-3 grid gap-2"><strong>需要填寫的資料與說明</strong>{fields.map((field) => <FieldDetail key={field.field_id} field={field} />)}</div> : null}
             <p className="mt-3"><strong>規則來源：</strong>{sourceNote}{sourceId ? `（${sourceId}）` : ""}</p>
           </> : <p className="mt-3 jshs-muted-copy">切換「完整規則」可查看此項目使用的欄位、條件、上限、可核對分值與官方原文。</p>}
         </div>
@@ -70,7 +71,7 @@ function CategoryRow({ item, fields, mode, sourceNote, sourceId }: { item: Score
 function FieldDetail({ field }: { field: ResearchField }) {
   const optionScores = (field.options || []).filter((option) => option.score !== null && option.score !== undefined).map((option) => `${option.label}：${option.score} 分`);
   return <details className="rounded-xl bg-[var(--jshs-muted-surface)] p-3"><summary className="cursor-pointer font-bold">{field.label}</summary><div className="mt-2 grid gap-1 text-slate-700">
-    {field.calculation ? <p><strong>計算：</strong>{field.calculation}</p> : null}
+    {field.calculation ? <p><strong>如何計算：</strong>{humanizeRuleExplanation(field.calculation, field.helper_text || "依本區規則換算")}</p> : null}
     {field.conditions?.length ? <p><strong>條件：</strong>{field.conditions.join("；")}</p> : null}
     {field.score_cap !== undefined && field.score_cap !== null ? <p><strong>欄位上限：</strong>{field.score_cap} 分</p> : null}
     {optionScores.length ? <p><strong>可核對分值：</strong>{optionScores.join("；")}</p> : null}

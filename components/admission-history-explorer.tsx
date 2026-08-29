@@ -34,7 +34,9 @@ export function AdmissionHistoryExplorer({ districtOptions, initialDistrict = "a
 
   useEffect(() => {
     let active = true;
-    fetch("/it_hs/admission-history.json", { headers: { accept: "application/json" } })
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 8000);
+    fetch("/it_hs/admission-history.json", { headers: { accept: "application/json" }, signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) throw new Error(`admission_history_${response.status}`);
         return response.json() as Promise<HistoryPayload>;
@@ -49,7 +51,7 @@ export function AdmissionHistoryExplorer({ districtOptions, initialDistrict = "a
         setLoadError(true);
         setLoaded(true);
       });
-    return () => { active = false; };
+    return () => { active = false; window.clearTimeout(timeout); controller.abort(); };
   }, []);
 
   const filtered = useMemo(() => {
@@ -67,7 +69,7 @@ export function AdmissionHistoryExplorer({ districtOptions, initialDistrict = "a
         <label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">搜尋學校、科系、縣市或代碼<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="例如：中科實驗、普通科、060323" /></label>
         <FilterSelect label="就學區" value={district} onChange={setDistrict} options={[{ code: "all", label: "全部就學區" }, ...districtOptions]} />
       </div>
-      <div className="mt-5 flex flex-wrap items-center gap-3"><SourceBadge sourceType="community" /><span className="text-sm jshs-muted-copy">{loaded ? `${filtered.length} 筆` : "資料載入中"}</span><p className="text-xs leading-5 text-slate-500">本頁僅供經驗與趨勢參考；不代表今年錄取保證。</p></div>
+      <div className="mt-5 flex flex-wrap items-center gap-3"><SourceBadge sourceType="community" />{loaded ? <span className="text-sm jshs-muted-copy">{filtered.length} 筆</span> : null}<p className="text-xs leading-5 text-slate-500">本頁僅供經驗與趨勢參考；不代表今年錄取保證。</p></div>
       {!loaded ? <div className="mt-6 p-8 text-center jshs-surface-card">正在載入歷年錄取資料…</div> : null}
       {loadError ? <div className="mt-6 p-8 text-center jshs-surface-card"><h2 className="text-xl">歷年資料暫時無法載入</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">請重新載入；如果問題持續，請稍後再試。</p><button type="button" onClick={() => window.location.reload()} className="mt-4 min-h-11 px-4 py-3 text-sm jshs-button-primary">重新載入</button></div> : null}
       {loaded && !loadError ? <div className="mt-7 grid gap-8"><HistoryGroup schools={filtered} /></div> : null}
