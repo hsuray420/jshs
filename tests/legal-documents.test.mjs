@@ -16,8 +16,8 @@ test("privacy policy and terms routes render the complete repository documents",
   assert.match(page, /terms: \{ title: "服務條款"/);
   assert.doesNotMatch(page, /privacy: "\/trust\/credibility"/);
   assert.doesNotMatch(page, /terms: "\/trust\/credibility"/);
-  assert.match(page, /content\/trust\/privacy\.txt/);
-  assert.match(page, /content\/trust\/terms\.txt/);
+  assert.match(page, /LEGAL_DOCUMENTS/);
+  assert.doesNotMatch(page, /node:fs|readFileSync|content\/trust\//);
   assert.match(page, /whitespace-pre-wrap/);
   assert.ok(privacy.length > 5_000, "privacy policy must remain complete");
   assert.ok(terms.length > 5_000, "terms must remain complete");
