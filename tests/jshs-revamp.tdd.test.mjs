@@ -56,6 +56,7 @@ test("donation button uses a configurable external destination instead of creati
   assert.match(form, /target="_blank"/);
   assert.doesNotMatch(form, /fetch\("\/api\/donations"/);
   assert.match(header, /DonationLink/);
+  assert.match(header, /fallbackHref="\/support"/);
   assert.match(admin, /綠界付款連結（小額捐款／贊助）/);
   assert.match(admin, /name="donation_url"/);
   assert.match(settings, /donation_url/);
