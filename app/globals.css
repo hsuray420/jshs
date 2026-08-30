@@ -490,12 +490,13 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .jshs-donation-link:hover { background: #ffedbd; color: #704700 !important; }
 .jshs-header-menu-button { border-radius: var(--radius-sm) !important; }
 
-.jshs-home-hero { background: #F4F8FF; }
-.jshs-home-hero-inner { align-items: center; display: grid; gap: 32px; grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr); min-height: 340px; padding-block: 42px; }
+.jshs-home-hero { background: #F4F8FF; isolation: isolate; overflow: hidden; position: relative; }
+.jshs-home-hero-background { inset: 0; position: absolute; z-index: -2; }
+.jshs-home-hero-background::after { background: linear-gradient(90deg, rgba(255,255,255,.97) 0%, rgba(255,255,255,.84) 39%, rgba(244,248,255,.28) 65%, rgba(244,248,255,.05) 100%); content: ""; inset: 0; position: absolute; }
+.jshs-home-hero-background img { display: block; height: 100%; object-fit: cover; object-position: center; width: 100%; }
+.jshs-home-hero-inner { align-items: center; display: grid; min-height: 420px; padding-block: 64px; position: relative; }
 .jshs-home-hero h1 { font-size: clamp(38px, 4vw, 44px) !important; line-height: 1.25 !important; margin-top: 8px; }
 .jshs-home-hero p:not(.jshs-eyebrow) { font-size: 16px; line-height: 1.8; margin-top: 16px; }
-.jshs-home-hero-visual { height: 230px; overflow: hidden; position: relative; }
-.jshs-home-hero-visual img { display: block; height: 100%; object-fit: cover; object-position: right center; width: 100%; }
 .jshs-home-action-layout { display: grid; gap: 16px; grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr); padding-block: 28px; }
 .jshs-next-step-card, .jshs-home-quick-actions { border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 24px; }.jshs-next-step-card h2, .jshs-home-quick-actions h2 { font-size: 22px; margin-top: 6px; }.jshs-next-step-card > p { color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-top: 10px; }.jshs-next-step-card .jshs-button-primary { display: inline-flex; margin-top: 18px; }.jshs-text-button { background: transparent; border: 0; color: var(--brand-primary); font-size: 13px; font-weight: 700; padding: 0; }.jshs-next-choice { background: white; border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); min-height: 44px; padding: 10px 14px; text-align: left; }.jshs-next-choice.is-selected { background: var(--brand-tint); border-color: var(--brand-primary); color: var(--brand-primary); font-weight: 700; }
 .jshs-home-quick-actions > div:last-child { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }.jshs-home-quick-action { align-items: center; border: 1px solid currentColor; border-radius: 999px; display: inline-flex; font-size: 14px; font-weight: 700; gap: 7px; min-height: 42px; padding: 9px 12px; text-decoration: none !important; }.jshs-home-quick-action.is-school { background: #EAF2FE; color: #1A73E8; }.jshs-home-quick-action.is-score { background: #EAF7EE; color: #27843F; }.jshs-home-quick-action.is-planner { background: #FFF5D9; color: #B87800; }.jshs-home-quick-action.is-guide { background: #F1EBFF; color: #7044CE; }
@@ -516,7 +517,7 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 @media (max-width: 760px) {
   .jshs-container { padding-inline: 16px; }
   .jshs-header-inner { height: 60px; padding-inline: 16px; }.jshs-brand { font-size: 14px; }.jshs-brand-logo { height: 30px; width: 30px; }.jshs-login-link { font-size: 13px; padding: 7px 12px; }
-  .jshs-home-hero-inner { grid-template-columns: 1fr; min-height: 0; padding-block: 36px 24px; }.jshs-home-hero h1 { font-size: 34px !important; }.jshs-home-hero-visual { height: 150px; margin-top: -4px; }.jshs-home-hero-visual img { object-position: right center; }
+  .jshs-home-hero-inner { min-height: 390px; padding-block: 48px; }.jshs-home-hero h1 { font-size: 34px !important; }.jshs-home-hero-background img { object-position: 67% center; }.jshs-home-hero-background::after { background: linear-gradient(90deg, rgba(255,255,255,.95) 0%, rgba(255,255,255,.8) 59%, rgba(244,248,255,.34) 100%); }
   .jshs-home-action-layout { grid-template-columns: 1fr; padding-block: 20px; }.jshs-next-step-card, .jshs-home-quick-actions { padding: 20px; }
 }
 

@@ -25,8 +25,8 @@ test("the desktop header uses the shared eight-item navigation and full brand", 
   assert.match(header, />登入</);
 });
 
-test("the homepage starts with a next-step guide and compact fixed-colour actions", async () => {
-  const [home, nextStep] = await Promise.all([source("app/page.tsx"), source("components/home-next-step.tsx")]);
+test("the homepage starts with a full-bleed hero and compact fixed-colour actions", async () => {
+  const [home, nextStep, css] = await Promise.all([source("app/page.tsx"), source("components/home-next-step.tsx"), source("app/globals.css")]);
   assert.match(home, /jshs-home-hero/);
   assert.match(home, /先確認下一步/);
   assert.match(home, /HomeNextStep/);
@@ -35,7 +35,9 @@ test("the homepage starts with a next-step guide and compact fixed-colour action
   assert.match(nextStep, /我知道我要做什麼/);
   assert.match(nextStep, /jshs-home-quick-action/);
   assert.doesNotMatch(home, /jshs-home-task-card/);
-  assert.match(home, /jshs-home-hero-v1\.png/);
+  assert.match(home, /jshs-home-hero-v2\.png/);
+  assert.match(css, /jshs-home-hero-background/);
+  assert.match(css, /object-fit: cover/);
 });
 
 test("each core function page has a matching coloured feature band", async () => {
