@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { readFileSync } from "node:fs";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import type { ReactNode } from "react";
@@ -15,6 +16,13 @@ const pages = {
   versions: { title: "資料版本紀錄", eyebrow: "DATA VERSIONS", description: "查看資料發布、規則校核與版本變更脈絡。" },
   report: { title: "錯誤回報", eyebrow: "REPORT DATA", description: "提供可核對的資訊，協助修正學校、科別、名額、規則、日期或功能問題。" },
   credibility: { title: "平台可信度說明", eyebrow: "PLATFORM CREDIBILITY", description: "了解 JSHS 的角色、資料校核方式、官方與非官方界線，以及更正機制。" },
+  privacy: { title: "隱私權政策", eyebrow: "PRIVACY POLICY", description: "說明本站如何處理、保存與保護使用者資料及瀏覽器本機資料。" },
+  terms: { title: "服務條款", eyebrow: "TERMS OF SERVICE", description: "說明使用本站服務時的權利、責任與重要限制。" },
+} as const;
+
+const legalDocuments = {
+  privacy: readFileSync(new URL("../../../content/trust/privacy.txt", import.meta.url), "utf8"),
+  terms: readFileSync(new URL("../../../content/trust/terms.txt", import.meta.url), "utf8"),
 } as const;
 
 const legacyRedirects = {
@@ -22,8 +30,6 @@ const legacyRedirects = {
   community: "/trust/credibility",
   voting: "/trust/credibility",
   stories: "/schools/alumni",
-  privacy: "/trust/credibility",
-  terms: "/trust/credibility",
   support: "/trust/report",
 } as const;
 
@@ -60,8 +66,12 @@ function renderContent(slug: TrustSlug): ReactNode {
   if (slug === "methodology") return <MethodologyContent />;
   if (slug === "versions") return <VersionContent />;
   if (slug === "report") return <ReportContent />;
+  if (slug === "privacy") return <LegalDocument content={legalDocuments.privacy} />;
+  if (slug === "terms") return <LegalDocument content={legalDocuments.terms} />;
   return <CredibilityContent />;
 }
+
+function LegalDocument({ content }: { content: string }) { return <article className="whitespace-pre-wrap break-words text-sm leading-8 text-slate-700">{content}</article>; }
 
 function SourceContent() { const districts = Object.entries(districtMetadata.districts); return <><p className="max-w-3xl text-sm leading-7 text-slate-600">學校資料來自各區公開招生資料與校方官方來源；規則與日期以招生委員會、教育部與會考官方網站為優先。每筆資料會標示年度、狀態、來源與更新日。</p><div className="mt-5 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-[var(--jshs-brand-tint)] p-5"><div><p className="jshs-eyebrow">115 學年度原始文件</p><h2 className="mt-1 text-xl">15 區免試入學官方簡章</h2><p className="mt-2 text-sm leading-6 text-[var(--jshs-primary)]">重要時程、資格、特殊身分與應備文件的原始依據；成績計算另使用獨立規則資料。</p></div><Link href="/admission-guides" className="shrink-0 px-4 py-3 text-sm jshs-button-primary">查看與下載簡章 →</Link></div><div className="mt-5 grid gap-3 md:grid-cols-3">{districts.map(([code, district]) => { const guide = guideCatalog.guides.find((item) => item.code === code); return <div key={code} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><div className="flex items-center justify-between gap-2"><strong>{district.label}</strong><span className="jshs-data-tag is-reference">{district.dataStatus === "ready" ? "已整理" : "參考"}</span></div><p className="mt-2 text-xs leading-5 text-slate-500">{district.academicYear} 學年度 · 更新 {district.updatedAt}</p><div className="mt-3 flex flex-wrap gap-3 text-sm"><a className="text-[var(--jshs-primary)]" href={guide?.file || district.sourceUrl} target="_blank" rel="noreferrer">官方簡章 ↗</a><a className="text-[var(--jshs-primary)]" href={district.sourceUrl} target="_blank" rel="noreferrer">官方來源 ↗</a></div></div>; })}</div><p className="mt-5 text-xs leading-6 jshs-muted-copy">全站資料版本：{districtMetadata.version}；資料總更新日：{districtMetadata.updatedAt}。{districtMetadata.disclaimer}</p></>; }
 function StatusContent() { return <div className="grid gap-3 sm:grid-cols-2"><Metric label="服務年度" value="116" /><Metric label="規則來源年度" value="115" /><Metric label="最後資料更新" value={districtMetadata.updatedAt} /><Metric label="116 校核狀態" value="正式規則待公告" /><p className="sm:col-span-2 text-sm leading-7 text-slate-600">116 學年度服務不會把 115 官方資料改名冒充；在 116 正式簡章公告前，依規則計算的結果都會保留來源年度與待校核狀態。</p></div>; }
