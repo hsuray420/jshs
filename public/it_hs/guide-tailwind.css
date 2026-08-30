@@ -1483,6 +1483,11 @@
       top: calc(var(--spacing) * 6);
     }
   }
+  .md\:inline-flex {
+    @media (width >= 48rem) {
+      display: inline-flex;
+    }
+  }
   .md\:h-\[560px\] {
     @media (width >= 48rem) {
       height: 560px;
