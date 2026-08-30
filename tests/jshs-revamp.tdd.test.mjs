@@ -34,7 +34,20 @@ test("support and open-day ingestion surfaces are available", async () => {
   ]);
   assert.match(support, /小額捐款/);
   assert.match(support, /贊助我們/);
-  assert.match(support, /付款成功/);
+  assert.match(support, /外部付款服務/);
   assert.match(openDays, /使用者提供/);
   assert.match(openDays, /CSV/);
+});
+
+test("desktop welcome cards do not disappear merely because the visitor is signed in", async () => {
+  const intro = await source("components/site-intro-modal.tsx");
+  assert.doesNotMatch(intro, /!isMember/);
+  assert.doesNotMatch(intro, /if \(!open \|\| isMember\)/);
+});
+
+test("donation button uses a configurable external destination instead of creating a local payment order", async () => {
+  const form = await source("components/support-donation-form.tsx");
+  assert.match(form, /donation_url/);
+  assert.match(form, /target="_blank"/);
+  assert.doesNotMatch(form, /fetch\("\/api\/donations"/);
 });

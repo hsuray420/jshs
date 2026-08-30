@@ -23,7 +23,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const member = await getMemberSession();
-
   return (
     <html lang="zh-TW">
       <head>
@@ -42,7 +41,7 @@ export default async function RootLayout({
       <body>
         <a className="jshs-skip-link" href="#main-content">跳到主要內容</a>
         <div id="main-content">{children}</div>
-        <SiteIntroModal isMember={Boolean(member)} />
+        <SiteIntroModal />
         <AiAssistant isMember={Boolean(member)} />
       </body>
     </html>

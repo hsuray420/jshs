@@ -10,6 +10,9 @@ export async function GET() {
   if (!publicConfig.official_line_url && process.env.LINE_OFFICIAL_ACCOUNT_URL) {
     publicConfig.official_line_url = process.env.LINE_OFFICIAL_ACCOUNT_URL;
   }
+  if (!publicConfig.donation_url && process.env.DONATION_URL) {
+    publicConfig.donation_url = process.env.DONATION_URL;
+  }
   return Response.json(
     publicConfig,
     { headers: { "cache-control": "public, max-age=60" } },

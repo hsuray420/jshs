@@ -11,24 +11,23 @@ const introCards: readonly IntroCard[] = [
   { icon: "knowledge", eyebrow: "社群共建", title: "一起讓資料更完整", body: "如果你發現資料有誤、已經更新，或有值得補充的資訊，歡迎回報給我們。每一次回饋，都能幫助更多家庭找到可靠的升學方向。" },
 ] as const;
 
-export function SiteIntroModal({ isMember }: { isMember: boolean }) {
-  const [open, setOpen] = useState(() => typeof window !== "undefined" && !isMember && window.localStorage.getItem("jshs_intro_acknowledged") !== "1");
+export function SiteIntroModal() {
+  const [open, setOpen] = useState(() => typeof window !== "undefined" && window.localStorage.getItem("jshs_intro_acknowledged") !== "1");
   const acknowledgeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (isMember) return;
     const timer = window.setTimeout(() => setOpen(window.localStorage.getItem("jshs_intro_acknowledged") !== "1"), 0);
     return () => window.clearTimeout(timer);
-  }, [isMember]);
+  }, []);
 
   useEffect(() => {
-    if (isMember || !open) return;
+    if (!open) return;
     acknowledgeRef.current?.focus();
     document.body.classList.add("jshs-intro-modal-open");
     return () => document.body.classList.remove("jshs-intro-modal-open");
-  }, [isMember, open]);
+  }, [open]);
 
-  if (!open || isMember) return null;
+  if (!open) return null;
 
   return <div className="fixed inset-0 z-[100] overflow-y-auto bg-black/40 px-4 py-6 sm:grid sm:place-items-center sm:py-10" role="dialog" aria-modal="true" aria-labelledby="site-intro-modal-title">
     <div className="mx-auto w-full max-w-4xl rounded-[28px] bg-white p-5 shadow-2xl sm:p-8">
