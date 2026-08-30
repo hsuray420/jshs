@@ -37,3 +37,12 @@ test("public configuration failure responses do not disclose secret variable nam
   const webhook = await source("app/api/line/webhook/route.ts");
   assert.doesNotMatch(webhook, /LINE_CHANNEL_SECRET is not configured yet/);
 });
+
+test("score guidance describes admission rules rather than internal research artifacts", async () => {
+  const [calculator, route] = await Promise.all([
+    source("components/admission-calculator.tsx"),
+    source("app/api/admission/calculate/route.ts"),
+  ]);
+  assert.doesNotMatch(calculator, /本區研究資料的志願序/);
+  assert.doesNotMatch(route, /研究規則要求的欄位/);
+});

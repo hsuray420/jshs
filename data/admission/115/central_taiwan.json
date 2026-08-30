@@ -488,7 +488,7 @@
       "document_title": "115學年度中投區高級中等學校免試入學簡章", "issuing_authority": "115學年度中投區高級中等學校免試入學委員會",
       "document_type": "招生簡章附錄", "publication_date": "2026-01-15", "page": "簡章第73～75頁",
       "section": "中投區共同就學區對照表", "official_url": "https://www.tdvs.ntct.edu.tw/mediafile/1040/news/30/2026-1/2026115105416_0.pdf",
-      "accessed_date": "2026-08-27", "notes": "前端應以學校代碼對照表實作，不宜只用縣市判斷。"
+      "accessed_date": "2026-08-27", "notes": "共同就學區資格須依招生單位公告與學校代碼確認，不宜僅以縣市判斷。"
     },
     {
       "source_id": "CT-115-005", "district": "中投區", "academic_year": 115,
@@ -512,9 +512,9 @@
       "preference_formula_verified": true
     },
     "unresolved_items": [
-      "115簡章未提供與114學年度逐條變更表，因此changes_from_previous_year的細項保持null。",
-      "會考違規點數的理論最大值與總分最低界線未在中投區積分表明定；資料庫max保留null。",
-      "共同就學區應另將簡章第73～75頁完整學校代碼表匯入reference table；本檔只定義規則與三組映射方向。"
+      "115簡章未提供與114學年度逐條變更表，因此尚無法逐項確認制度變動。",
+      "會考違規點數的理論最大值與總分最低界線未在中投區積分表明定；相關限制仍待官方補充說明。",
+      "共同就學區完整學校代碼請以簡章第73～75頁為準；本資料僅整理主要規則與對照方向。"
     ]
   }
 }

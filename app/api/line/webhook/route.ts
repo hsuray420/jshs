@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       {
         ok: false,
         status: "setup_required",
-        message: "LINE_CHANNEL_SECRET is not configured yet.",
+        message: "服務目前暫時無法使用。",
       },
       { status: 503 },
     );
@@ -62,12 +62,7 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  return Response.json({
-    ok: true,
-    endpoint: "line-webhook",
-    configured: Boolean(process.env.LINE_CHANNEL_SECRET),
-    method: "POST",
-  });
+  return Response.json({ ok: true });
 }
 
 function parseLineEvents(body: string) {

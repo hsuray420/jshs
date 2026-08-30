@@ -539,7 +539,7 @@ function renderCalculationBreakdown() {
         { label: '基北區免試總積分', value: totalPoints, note: '志願序 36 分 + 多元學習表現 36 分 + 會考 36 分，滿分 108 分。' }
     ] : [
         { label: '志願序', value: pref, note: '第 1–10 志願 30 分；第 11–20 志願 29 分；第 21–50 志願 28 分。' },
-        { label: '就近入學', value: local, note: '符合目前開發區域免試/共同就學區為 10 分。' },
+        { label: '就近入學', value: local, note: '符合適用免試／共同就學區資格者為 10 分。' },
         { label: '扶助弱勢', value: weak, note: '一般 0 分；偏鄉／中低 1 分；低收 2 分（擇一計分）。' },
         { label: '均衡學習', value: bal, note: '各領域各 3 分，四領域共 12 分；低收入戶加 2 分。' },
         { label: '德行表現', value: mor, note: '社團（上限 2 分）+ 服務學習（上限 3 分），合計最多 5 分。' },
@@ -1325,7 +1325,7 @@ function initSchools() {
 
     const config = getSchoolDataConfig();
     if (!config.csvPath) {
-        summary.textContent = `${config.district} 學校資料建置中，完成後會在此區更新。`;
+        summary.textContent = `${config.district} 學校資料暫未提供。`;
         return;
     }
 
@@ -1343,7 +1343,7 @@ function initSchools() {
         })
         .catch(() => {
             if (useEmbeddedSchoolsData()) return;
-            summary.textContent = `無法載入 ${config.csvPath}，請稍後再試。`;
+            summary.textContent = '目前無法載入學校資料，請稍後再試。';
         });
 
     document.querySelectorAll('.school-filter').forEach(button => {

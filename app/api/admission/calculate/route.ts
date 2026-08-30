@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     if (!isAdmissionCalculatorAvailable(district)) return Response.json({ ok: false, error: "此區目前無法試算，請重新載入規則資料。" }, { status: 409 });
     const result = calculateAdmissionScore({ ...input, district });
     if ("status" in result && result.status === "incomplete") {
-      return Response.json({ ok: false, error: "請補齊研究規則要求的欄位後再試算。", result }, { status: 422 });
+      return Response.json({ ok: false, error: "請補齊本區試算所需項目後再試算。", result }, { status: 422 });
     }
     if (result.totalScore === null) return Response.json({ ok: false, error: "請補齊試算欄位。", result }, { status: 422 });
     const member = await getMemberSession();

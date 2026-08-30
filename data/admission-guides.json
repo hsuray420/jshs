@@ -1,7 +1,7 @@
 {
   "academicYear": "115",
   "updatedAt": "2026-08-28",
-  "description": "15 個免試就學區的 115 學年度官方招生簡章。可用於時程、資格、特殊管道與升學知識查閱；成績計算另依獨立 JSON 規則處理。",
+  "description": "15 個免試就學區的 115 學年度官方招生簡章。可用於時程、資格、特殊管道與升學知識查閱；成績試算另依各區適用規則處理。",
   "guides": [
     { "code": "tp", "label": "基北區", "file": "/admission-guides/115-tp.pdf", "pages": 161, "sourceUrl": "https://ttk.entry.edu.tw/" },
     { "code": "ct", "label": "中投區", "file": "/admission-guides/115-ct.pdf", "pages": 96, "sourceUrl": "https://ct.entry.edu.tw/" },
