@@ -46,8 +46,18 @@ test("desktop welcome cards do not disappear merely because the visitor is signe
 });
 
 test("donation button uses a configurable external destination instead of creating a local payment order", async () => {
-  const form = await source("components/support-donation-form.tsx");
+  const [form, header, admin, settings] = await Promise.all([
+    source("components/support-donation-form.tsx"),
+    source("components/site-header.tsx"),
+    source("app/admin/page.tsx"),
+    source("app/api/admin/settings/route.ts"),
+  ]);
   assert.match(form, /donation_url/);
   assert.match(form, /target="_blank"/);
   assert.doesNotMatch(form, /fetch\("\/api\/donations"/);
+  assert.match(header, /DonationLink/);
+  assert.match(admin, /綠界付款連結（小額捐款／贊助）/);
+  assert.match(admin, /name="donation_url"/);
+  assert.match(settings, /donation_url/);
+  assert.match(settings, /isValidEcpayUrl/);
 });
