@@ -9,6 +9,7 @@ import { SchoolComparisonExplorer } from "@/components/school-comparison-explore
 import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { FeaturePageBand } from "@/components/feature-page-band";
 import { schoolDistrictOptions } from "@/lib/school-directory";
 
 const title = "找學校｜全國高中職、校科與五專探索";
@@ -36,6 +37,7 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
   return (
     <main className="min-h-screen jshs-page-shell jshs-feature-school">
       <SiteHeader activeHref="/schools" />
+      <FeaturePageBand tone="school" />
       <DistrictGate initialDistrict={params.district}>
         {view === "history" ? <AdmissionHistoryExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
           : view === "alumni" ? <SchoolAlumniExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} initialSchoolCode={params.schoolCode} />

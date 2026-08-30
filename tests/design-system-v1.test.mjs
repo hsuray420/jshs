@@ -25,6 +25,7 @@ test("the desktop header uses the six task-first links and a simple login action
   assert.match(header, /官方資訊/);
   assert.match(header, /資料與信任/);
   assert.match(header, />登入</);
+  for (const tone of ["school", "score", "planner", "guide"]) assert.match(header, new RegExp(`tone: "${tone}"`));
 });
 
 test("the homepage starts with a compact education hero and four fixed-colour task cards", async () => {
@@ -36,4 +37,15 @@ test("the homepage starts with a compact education hero and four fixed-colour ta
   assert.match(home, /tone: "planner"/);
   assert.match(home, /tone: "guide"/);
   assert.match(home, /jshs-home-task-card is-\$\{tone\}/);
+  assert.match(home, /jshs-home-hero-v1\.png/);
+});
+
+test("each core function page has a matching coloured feature band", async () => {
+  const pages = await Promise.all(["app/schools/page.tsx", "app/tools/page.tsx", "app/planner/page.tsx", "app/schedule/page.tsx"].map(source));
+  for (const [page, tone] of pages.map((page, index) => [page, ["school", "score", "planner", "guide"][index]])) {
+    assert.match(page, new RegExp(`FeaturePageBand tone="${tone}"`));
+  }
+  const css = await source("app/globals.css");
+  assert.match(css, /\.jshs-feature-page-band/);
+  for (const tone of ["school", "score", "planner", "guide"]) assert.match(css, new RegExp(`feature-page-band\\.is-${tone}`));
 });

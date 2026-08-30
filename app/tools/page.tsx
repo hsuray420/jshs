@@ -3,6 +3,7 @@ import { AdmissionCalculator } from "@/components/admission-calculator";
 import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { FeaturePageBand } from "@/components/feature-page-band";
 import { isAdmissionDistrict, type AdmissionDistrict } from "@/lib/admission-score";
 import { getMemberSession } from "@/lib/member-auth";
 
@@ -22,6 +23,7 @@ export default async function ToolsPage({ searchParams }: { searchParams: Promis
   return (
     <main className="min-h-screen jshs-page-shell jshs-feature-score">
       <SiteHeader activeHref="/tools" />
+      <FeaturePageBand tone="score" />
       <DistrictGate initialDistrict={params.district}>
         <AdmissionCalculator initialDistrict={initialDistrict} isMember={Boolean(await getMemberSession())} />
       </DistrictGate>

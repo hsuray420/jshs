@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PlannerHub } from "@/components/planner-hub";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { FeaturePageBand } from "@/components/feature-page-band";
 import { getMemberSession } from "@/lib/member-auth";
 
 const title = "我的志願｜先試算，再選填方式";
@@ -20,6 +21,7 @@ export default async function PlannerPage() {
   return (
     <main className="min-h-screen jshs-page-shell jshs-feature-planner">
       <SiteHeader activeHref="/planner" />
+      <FeaturePageBand tone="planner" />
       <PlannerHub isMember={Boolean(member)} />
       <SiteFooter />
     </main>
