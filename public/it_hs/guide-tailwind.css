@@ -1401,11 +1401,6 @@
       grid-column: span 2 / span 2;
     }
   }
-  .sm\:block {
-    @media (width >= 40rem) {
-      display: block;
-    }
-  }
   .sm\:grid {
     @media (width >= 40rem) {
       display: grid;
