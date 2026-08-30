@@ -656,7 +656,7 @@ async function initLineFloatingLink() {
     uniqueLinks.forEach(link => {
         link.addEventListener('click', (event) => {
             event.preventDefault();
-            alert('後台尚未設定 LINE 官方帳號連結。請到後台「網站設定」填入 LINE 官方帳號連結。');
+            alert('官方 LINE 連結暫時無法使用，請稍後再試。');
         });
     });
 }

@@ -36,7 +36,7 @@ test("support and open-day ingestion surfaces are available", async () => {
   assert.match(support, /贊助我們/);
   assert.match(support, /外部付款服務/);
   assert.match(openDays, /使用者提供/);
-  assert.match(openDays, /CSV/);
+  assert.match(openDays, /官方公告/);
 });
 
 test("desktop welcome cards do not disappear merely because the visitor is signed in", async () => {

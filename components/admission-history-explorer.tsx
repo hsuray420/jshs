@@ -63,7 +63,7 @@ export function AdmissionHistoryExplorer({ districtOptions, initialDistrict = "a
   }, [district, query, schools]);
 
   return <>
-    <section className="border-b jshs-hero-section"><div className="mx-auto w-[min(1180px,calc(100%-32px))] py-12 md:py-16"><p className="jshs-eyebrow">歷年錄取參考</p><h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-6xl">獨立整理的歷年參考資料。</h1><p className="mt-5 max-w-3xl text-lg leading-8 jshs-muted-copy">這裡使用獨立的歷年資料檔，不與全國校科查詢共用 CSV。全部內容都是非官方整理，正式資格、名額與錄取結果請以當年度官方公告為準。</p></div></section>
+    <section className="border-b jshs-hero-section"><div className="mx-auto w-[min(1180px,calc(100%-32px))] py-12 md:py-16"><p className="jshs-eyebrow">歷年錄取參考</p><h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-6xl">獨立整理的歷年參考資料。</h1><p className="mt-5 max-w-3xl text-lg leading-8 jshs-muted-copy">全部內容都是非官方整理，正式資格、名額與錄取結果請以當年度官方公告為準。</p></div></section>
     <section className="mx-auto w-[min(1180px,calc(100%-32px))] py-8 md:py-12">
       <div className="grid gap-4 p-5 jshs-surface-card md:grid-cols-[1fr_220px] md:p-7">
         <label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">搜尋學校、科系、縣市或代碼<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="例如：中科實驗、普通科、060323" /></label>

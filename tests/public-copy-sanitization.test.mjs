@@ -58,3 +58,18 @@ test("open-day and account screens do not expose administration workflows or imp
   assert.doesNotMatch(account, /登入會員功能前，必須先加入全國國中升學資訊網官方 LINE 好友/);
   assert.doesNotMatch(account, /匯出只包含這台裝置上保存的偏好與進度/);
 });
+
+test("public notifications, school pages, and legacy guides avoid operations terminology", async () => {
+  const [notifications, detail, legacyGuide, centralGuide, taipeiGuide] = await Promise.all([
+    source("components/notification-feature-workspace.tsx"),
+    source("app/schools/[district]/[code]/page.tsx"),
+    source("public/it_hs/guide.js"),
+    source("public/it_hs/ct/it_hs.js"),
+    source("public/it_hs/tp/it_hs.js"),
+  ]);
+  assert.doesNotMatch(notifications, /日期由後台維護/);
+  assert.doesNotMatch(detail, /CSV 尚未提供/);
+  assert.doesNotMatch(legacyGuide, /後台尚未設定 LINE 官方帳號連結/);
+  assert.doesNotMatch(centralGuide, /CSV load failed/);
+  assert.doesNotMatch(taipeiGuide, /CSV load failed/);
+});
