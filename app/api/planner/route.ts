@@ -1,5 +1,6 @@
 import { createPlannerItem, deletePlannerItem, getOrCreateMemberPlanner, listPlannerItems } from "../../../db/planner-store";
 import { getMemberSession } from "../../../lib/member-auth";
+import { getAdmissionChoiceLimit } from "../../../lib/admission-score";
 
 export const dynamic = "force-dynamic";
 
@@ -27,8 +28,10 @@ export async function POST(request: Request) {
   if (!schoolName || !district) return Response.json({ ok: false, error: "school_required" }, { status: 400 });
   if (tier && !["challenge", "balanced", "stable"].includes(tier)) return Response.json({ ok: false, error: "invalid_tier" }, { status: 400 });
 
-  const existing = (await listPlannerItems(plannerId)).find((item) => item.district === district && item.school_code === schoolCode);
+  const existingItems = await listPlannerItems(plannerId);
+  const existing = existingItems.find((item) => item.district === district && item.school_code === schoolCode && item.department === clean(body.department, 1200));
   if (existing) return plannerResponse({ ok: true, item: existing, duplicate: true }, plannerId);
+  if (existingItems.filter((item) => item.district === district).length >= getAdmissionChoiceLimit(district)) return Response.json({ ok: false, error: "choice_limit_reached" }, { status: 409 });
 
   const item = {
     id: crypto.randomUUID(), planner_id: plannerId, district, school_code: schoolCode,

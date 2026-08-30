@@ -72,7 +72,7 @@ test("資料錯誤回報使用指定的 Google 表單", async () => {
 
 test("trust detail pages expose the PRD trust surfaces", async () => {
   const detailRoute = await read("app/trust/[slug]/page.tsx");
-  for (const label of ["來源年度", "服務年度", "8／15", "規則資料", "錯誤回報", "不取代", "錄取保證"]) {
+  for (const label of ["來源年度", "服務年度", "15 個就學區", "規則資料", "錯誤回報", "不取代", "錄取保證"]) {
     assert.match(detailRoute, new RegExp(label));
   }
 });

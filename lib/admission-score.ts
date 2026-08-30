@@ -83,6 +83,14 @@ type ResearchExamScoring = Readonly<{ subject_options?: readonly { value: string
 export type ResearchField = Readonly<{ field_id: string; label: string; input_type: string; category?: string; subcategory?: string; helper_text?: string; official_rule?: string; conditions?: readonly string[]; adopted_period?: string; score_cap?: number; evidence_description?: string; calculation?: string; options?: readonly { label: string; value: unknown; score?: number | null }[]; validation?: { required?: boolean; min?: number; max?: number; min_items?: number } }>;
 type ResearchRule = { district_name: string; academic_year: number; total_score_max: number; version: string; categories: readonly { category_id?: string; id?: string; label?: string; score_cap: number; calculation?: string }[]; tie_breaking_rules: readonly { field: string }[]; fields: readonly ResearchField[]; verification_status: string; preference_scoring?: ResearchPreferenceScoring; exam_scoring?: ResearchExamScoring; sources?: readonly { document_title?: string; official_url?: string; accessed_date?: string }[] };
 
+const CATEGORY_LABELS: Readonly<Record<string, string>> = {
+  preference: "志願序", adaptive_preference: "適性輔導與志願序", adaptive: "適性輔導", graduation: "畢業資格",
+  morality_service: "品德與服務", morality: "品德表現", multiple: "多元學習表現", multiple_learning: "多元學習表現",
+  multiple_development: "多元發展表現", balanced: "均衡學習", service: "服務學習", competition: "競賽表現",
+  fitness: "體適能", nearby: "就近入學", low_income: "弱勢身分", economic: "經濟弱勢", disadvantaged: "扶助弱勢",
+  other: "其他採計項目", weak: "弱勢身分", exam: "國中教育會考", exam_performance: "國中教育會考",
+};
+
 function researchRule(data: ResearchRule, code: AdmissionDistrict): AdmissionRule {
   const source = data.sources?.[0];
   const keyMap: Record<string, string> = {
@@ -96,8 +104,8 @@ function researchRule(data: ResearchRule, code: AdmissionDistrict): AdmissionRul
   return {
     code, label: data.district_name, academicYear: String(data.academic_year), totalScore: data.total_score_max,
     sourceNote: "依本區官方規則資料整理；正式送出前仍須核對當年度官方簡章。",
-    categories: data.categories.map((item) => { const id = item.category_id ?? item.id ?? "other"; const label = item.label ?? id; return { key: keyMap[id] ?? id, label, max: item.score_cap, description: `${label}依本區官方規則換算，最高採計${item.score_cap}分。`, calculation: item.calculation }; }),
-    tieBreakers: data.tie_breaking_rules.map((item) => item.field), sourceId: `${code}-115-research-json`, fields: data.fields, preferenceScoring: data.preference_scoring,
+    categories: data.categories.map((item) => { const id = item.category_id ?? item.id ?? "other"; const label = item.label && /[\u3400-\u9fff]/.test(item.label) ? item.label : CATEGORY_LABELS[id] ?? "其他採計項目"; const configuredMax = Number(item.score_cap); const max = Number.isFinite(configuredMax) ? configuredMax : Number(data.exam_scoring?.score_cap ?? data.exam_scoring?.base_score_cap ?? 0); return { key: keyMap[id] ?? id, label, max, description: `${label}依本區官方規則換算，最高採計${max}分。`, calculation: item.calculation }; }),
+    tieBreakers: data.tie_breaking_rules.map((item, index) => `第${index + 1}階段：${resolveResearchTieBreaker(item.field)}`), sourceId: `${code}-115-research-json`, fields: data.fields, preferenceScoring: data.preference_scoring,
     examScoring: data.exam_scoring, verificationStatus: data.verification_status,
     officialSourceName: source?.document_title ?? `${data.district_name} 115 學年度高級中等學校免試入學簡章`,
     officialSourceUrl: source?.official_url ?? "https://www.edu.tw/",
@@ -105,6 +113,12 @@ function researchRule(data: ResearchRule, code: AdmissionDistrict): AdmissionRul
     status: /unresolved|partial|blocker/i.test(data.verification_status) ? "待確認" : "已核對／準備版，116 待官方公告",
     writingIncludedInTotal: data.exam_scoring?.writing_in_total ?? (code === "tp" || code === "tainan" || code === "taoyuan-lienchiang"),
   };
+}
+
+function resolveResearchTieBreaker(field: string) {
+  const normalized = field.replace(/_score|_rank/g, "");
+  const labels: Record<string, string> = { total: "總積分", preference: "志願序", multiple_development: "多元發展表現", multiple: "多元學習表現", exam: "會考成績", exam_performance: "會考成績", exam_total_mark: "會考完整標示", economic_weakness: "經濟弱勢身分", school_order_within_same_preference_group: "同一志願群內的學校順序" };
+  return labels[normalized] ?? (/[\u3400-\u9fff]/.test(field) ? field : "依本區公告的下一項比序資料");
 }
 
 const DERIVED_FIELD_LABELS: Readonly<Record<string, string>> = {
@@ -291,6 +305,15 @@ export function isAdmissionDistrict(value: string): value is AdmissionDistrict {
 
 export function isAdmissionCalculatorAvailable(value: string): value is (typeof SOURCE_BACKED_ADMISSION_DISTRICTS)[number] {
   return (SOURCE_BACKED_ADMISSION_DISTRICTS as readonly string[]).includes(value);
+}
+
+export function getAdmissionChoiceLimit(district: string | undefined): number {
+  const rule = getAdmissionRule(district);
+  const configured = Number(rule.preferenceScoring?.max_choices);
+  if (Number.isFinite(configured) && configured > 0) return configured;
+  const preferenceField = rule.fields?.find((field) => field.field_id === "preference_choices");
+  const fieldLimit = Number(preferenceField?.validation?.max ?? preferenceField?.score_cap);
+  return Number.isFinite(fieldLimit) && fieldLimit > 0 ? fieldLimit : 30;
 }
 
 export function getAdmissionRule(district: string | undefined): AdmissionRule {

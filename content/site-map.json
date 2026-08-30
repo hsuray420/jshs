@@ -25,7 +25,7 @@
       ]
     },
     {
-      "label": "算成績", "href": "/tools", "activeHref": "/tools", "eyebrow": "先理解規則，再完成試算", "description": "目前開放 8 / 15 區；每個結果都保留規則年度與資料來源。",
+      "label": "算成績", "href": "/tools", "activeHref": "/tools", "eyebrow": "先理解規則，再完成試算", "description": "15 個就學區皆可試算與填志願；每個結果都保留規則年度與資料來源。",
       "items": [
         { "label": "成績積分試算", "href": "/tools", "description": "輸入資料並取得依官方規則計算的結果" },
         { "label": "積分規則", "href": "/tools/rules", "description": "互動查看項目、公式、上限與官方來源" },
@@ -77,7 +77,7 @@
       "items": [
         { "label": "資料來源", "href": "/trust/sources", "description": "查看官方、整理、計算、推估與社群資料的界線" },
         { "label": "資料更新狀態", "href": "/trust/status", "description": "查看服務年度、來源年度與最後校核" },
-        { "label": "15 區建置進度", "href": "/trust/progress", "description": "公開目前 8 / 15 區試算完成狀態" },
+        { "label": "15 區建置進度", "href": "/trust/progress", "description": "公開 15 個就學區的規則、試算與志願功能狀態" },
         { "label": "試算與分析方法", "href": "/trust/methodology", "description": "了解規則資料、計算與推估限制" },
         { "label": "資料版本紀錄", "href": "/trust/versions", "description": "查看目前資料版本與校核事件" },
         { "label": "錯誤回報", "href": "/trust/report", "description": "回報資料、規則、日期或功能問題" },

@@ -6,11 +6,9 @@ import { getAdmissionRule, type AdmissionDistrict, type ResearchField, type Scor
 import { SOURCE_ACADEMIC_YEAR, SERVICE_YEAR } from "@/lib/trust";
 import { SourceBadge } from "@/components/source-badge";
 import { humanizeRuleExplanation } from "@/lib/rule-display";
+import { getDistrictOptions } from "@/lib/district-context";
 
-const districts: Array<[AdmissionDistrict, string]> = [
-  ["ct", "中投區"], ["tp", "基北區"], ["ilan", "宜蘭區"], ["taoyuan-lienchiang", "桃連區"],
-  ["hsinchu-miaoli", "竹苗區"], ["changhua", "彰化區"], ["yunlin", "雲林區"], ["kaohsiung", "高雄區"],
-];
+const districts = getDistrictOptions().map(({ code, label }) => [code, label] as [AdmissionDistrict, string]);
 
 const tieBreakerGroups = [
   ["總積分與志願序", "先比較整體積分，再依志願選填順序判定先後。"],
@@ -45,7 +43,7 @@ export function InteractiveRuleTable() {
       <div className="mt-4 overflow-x-auto">
         <table>
           <thead><tr><th>採計項目</th><th>最高分</th><th>目前說明</th><th>展開</th></tr></thead>
-          <tbody>{rule.categories.map((item) => <CategoryRow key={item.key} item={item} fields={fieldsForCategory(rule.fields || [], item)} mode={mode} sourceNote={rule.sourceNote} sourceId={rule.sourceId} />)}</tbody>
+          <tbody>{rule.categories.map((item) => <CategoryRow key={item.key} item={item} fields={fieldsForCategory(rule.fields || [], item)} mode={mode} sourceNote={rule.sourceNote} />)}</tbody>
         </table>
       </div>
       <div className="mt-5 rounded-2xl bg-[var(--jshs-muted-surface)] p-5 text-sm leading-7">
@@ -64,7 +62,7 @@ export function InteractiveRuleTable() {
   );
 }
 
-function CategoryRow({ item, fields, mode, sourceNote, sourceId }: { item: ScoreCategory; fields: readonly ResearchField[]; mode: "quick" | "full"; sourceNote: string; sourceId?: string }) {
+function CategoryRow({ item, fields, mode, sourceNote }: { item: ScoreCategory; fields: readonly ResearchField[]; mode: "quick" | "full"; sourceNote: string }) {
   return (
     <tr>
       <th>{item.label}</th><td>{item.max}</td><td>{item.description}</td>
@@ -74,7 +72,7 @@ function CategoryRow({ item, fields, mode, sourceNote, sourceId }: { item: Score
           <p><strong>上限：</strong>{item.max} 分</p>
           {mode === "full" ? <>
             {fields.length ? <div className="mt-3 grid gap-2"><strong>需要填寫的資料與說明</strong>{fields.map((field) => <FieldDetail key={field.field_id} field={field} />)}</div> : null}
-            <p className="mt-3"><strong>規則來源：</strong>{sourceNote}{sourceId ? `（${sourceId}）` : ""}</p>
+            <p className="mt-3"><strong>規則來源：</strong>{sourceNote}</p>
           </> : <p className="mt-3 jshs-muted-copy">切換「完整規則」可查看此項目使用的欄位、條件、上限、可核對分值與官方原文。</p>}
         </div>
       </details></td>

@@ -48,7 +48,7 @@ test("第一批補修不讓資料狀態互相矛盾", async () => {
   assert.match(schools, /loaded \? \(loadError \?/);
   assert.match(history, /\{loaded \? <span/);
   assert.doesNotMatch(calculator, /五個就學區/);
-  assert.match(calculator, /目前開放 8／15 區/);
+  assert.match(calculator, /15 個就學區皆可/);
 });
 
 test("同分比序以學生看得懂的分組呈現，詳細說明可展開", async () => {

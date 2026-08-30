@@ -8,7 +8,6 @@ import { markProgress } from "@/lib/progress";
 import { readLocalPlanner, saveLocalPlannerSnapshot, writeLocalPlanner } from "@/lib/planner-local";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/status";
 import { PageContainer } from "@/components/ui/layout";
-import { SourceBadge } from "@/components/source-badge";
 
 type SchoolExplorerRecord = Pick<SchoolDirectoryRecord, "districtCode" | "districtLabel" | "academicYear" | "dataStatus" | "sourceName" | "sourceType" | "code" | "name" | "ownership" | "program" | "city" | "area" | "website" | "departmentsRaw" | "groups" | "hasQuota" | "hasHistoricalData">;
 
@@ -149,9 +148,9 @@ export function SchoolExplorer({
     <>
       <section className="border-b jshs-hero-section">
         <PageContainer className="py-12 md:py-16">
-          <p className="jshs-eyebrow">找校科中心</p>
-          <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-6xl">把校科，放進同一個全國查詢。</h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 jshs-muted-copy">用同一套全國校科查詢篩選學校名稱、科系、群科、縣市、學制分類與招生條件。</p>
+          <p className="jshs-eyebrow">全國校科搜尋</p>
+          <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-6xl">找學校與科系</h1>
+          <p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">輸入學校名稱、科系、群科、縣市或學校代碼，即時縮小結果。</p>
         </PageContainer>
       </section>
 
@@ -184,7 +183,7 @@ export function SchoolExplorer({
         </div>
 
         <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
-          <div><p className="text-sm font-bold jshs-muted-copy">{loaded ? (loadError ? "學校資料暫時無法載入" : `目前顯示 ${filteredSchools.length} 所學校／校科資料`) : "學校資料準備載入中"}</p><p className="mt-1 text-xs leading-5 text-slate-500">每筆結果保留資料年度、來源與欄位狀態；正式招生權益仍以官方公告為準。可匿名瀏覽與保存於目前裝置；登入 LINE 後可跨裝置同步。</p></div>
+          <div><p className="text-sm font-bold jshs-muted-copy">{loaded ? (loadError ? "學校資料暫時無法載入" : `搜尋結果摘要：${filteredSchools.length} 所學校／校科資料`) : "學校資料準備載入中"}</p><p className="mt-1 text-xs leading-5 text-slate-500">資料年度、資料狀態、校核狀態與來源集中在學校詳情頁；正式招生權益仍以官方公告為準。</p></div>
           <Link className="text-sm font-black text-[var(--jshs-primary)]" href="/planner">查看我的規劃 →</Link>
         </div>
         {saveMessage ? <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-900" role="status">{saveMessage} <a className="ml-1 underline" href="/api/line/login/start">使用 LINE 登入</a></p> : null}
@@ -197,11 +196,10 @@ export function SchoolExplorer({
             const key = `${school.districtCode}:${school.code}`;
             return (
               <article key={key} className="flex flex-col p-6 jshs-surface-card">
-                <div className="flex items-start justify-between gap-4"><div><p className="text-xs font-black tracking-[.12em] text-[var(--jshs-primary)]">{school.districtLabel} · {school.code}</p><h2 className="mt-2 text-2xl font-black leading-snug">{school.name}</h2></div><SourceBadge sourceType="jshs_curated" /></div>
-                <p className="mt-3 text-sm leading-6 jshs-muted-copy">{[school.city, school.area].filter(Boolean).join(" · ")} · {school.program || "學制分類待確認"} · {school.ownership || "公私立待確認"}</p>
-                <div className="mt-4 grid grid-cols-2 gap-2 text-xs font-bold"><Status label="資料年度" value={`${school.academicYear} 學年度`} /><Status label="資料狀態" value={school.dataStatus === "ready" ? "已校核" : "參考資料"} /><Status label="招生名額" value={school.hasQuota ? "已有資料" : "待公告"} /><Status label="歷年參考" value={school.hasHistoricalData ? "已有資料" : "待整理"} /><Status label="資料來源" value={school.sourceName} /></div>
-                <p className="mt-4 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-7 text-slate-700">科系／群科：{school.groups.length ? school.groups.join("、") : school.departmentsRaw || "待以學校公告確認"}</p>
-                <div className="mt-auto flex flex-wrap gap-2 pt-5"><Link className="px-4 py-3 text-sm jshs-button-primary" href={`/schools/${school.districtCode}/${school.code}`}>查看學校詳情</Link><button type="button" onClick={() => saveSchool(school)} className="px-4 py-3 text-sm jshs-button-secondary">{savedCode === key ? "已加入規劃" : "加入規劃"}</button>{school.website ? <a className="px-4 py-3 text-sm jshs-button-secondary" href={school.website} target="_blank" rel="noreferrer">查看官方網站 ↗</a> : null}</div>
+                <div><p className="text-xs font-black tracking-[.12em] text-[var(--jshs-primary)]">{school.code}</p><h2 className="mt-2 text-2xl font-black leading-snug">{school.name}</h2></div>
+                <p className="mt-3 text-sm leading-6 jshs-muted-copy">{[school.city, school.area].filter(Boolean).join("／")} · {school.ownership || "公私立待確認"} · {school.program || "學制分類待確認"}</p>
+                <p className="mt-4 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-7 text-slate-700">校科摘要：{school.groups.length ? school.groups.join("、") : school.departmentsRaw || "待以學校公告確認"}</p>
+                <div className="mt-auto flex flex-wrap gap-2 pt-5"><Link className="px-4 py-3 text-sm jshs-button-primary" href={`/schools/${school.districtCode}/${school.code}`}>查看詳情（查看學校詳情）</Link><button type="button" onClick={() => saveSchool(school)} className="px-4 py-3 text-sm jshs-button-secondary">{savedCode === key ? "已加入志願" : "加入志願（加入規劃）"}</button>{school.website ? <a className="px-4 py-3 text-sm jshs-button-secondary" href={school.website} target="_blank" rel="noreferrer">查看官方網站 ↗</a> : null}</div>
               </article>
             );
           })}
@@ -218,10 +216,6 @@ function FilterSelect({ label, value, onChange, options }: { label: string; valu
 
 function ConditionChip({ label }: { label: string }) {
   return <span className="jshs-chip">{label}</span>;
-}
-
-function Status({ label, value }: { label: string; value: string }) {
-  return <div className="rounded-xl bg-[var(--jshs-muted-surface)] p-3"><span className="block text-slate-400">{label}</span><strong className="mt-1 block line-clamp-1 text-slate-700">{value}</strong></div>;
 }
 
 function unique(values: readonly string[]) {

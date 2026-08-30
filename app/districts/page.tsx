@@ -68,7 +68,7 @@ export default async function DistrictsPage({
         <div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-12">
           <p className="jshs-eyebrow">15 ADMISSION DISTRICTS</p>
           <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-5xl">先選對就學區，直接進入{requestedLabel}。</h1>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">{target ? `選擇地區後會直接開啟${requestedLabel}；只有已完成規則建模的區域提供積分試算，其餘區域請先查看學校與官方資訊。` : description}</p>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">{target ? `選擇地區後會直接開啟${requestedLabel}；15 個就學區皆可使用對應的學校、規則、試算與志願功能。` : description}</p>
         </div>
       </section>
 
@@ -89,7 +89,7 @@ export default async function DistrictsPage({
               <small className="mt-5 block text-xs text-slate-400">更新：{district.updatedAt || districtMetadata.updatedAt}</small>
               <p className="mt-3 text-sm leading-6 text-slate-600">主要任務：{district.tasks?.[0] || "先確認適用區域與官方公告"}</p>
               <a className="mt-3 inline-block text-xs text-[var(--jshs-primary)]" href={district.sourceUrl} target="_blank" rel="noreferrer">官方委員會／來源 ↗</a>
-              <a className="mt-4 flex items-center justify-between text-sm text-[var(--jshs-primary)]" href={destinationFor(resolvedTarget, code)}>{fellBackToSchools ? "積分試算尚未開放，先查學校" : `直接開啟${destinationLabel}`} <span className="transition group-hover:translate-x-1">→</span></a>
+              <a className="mt-4 flex items-center justify-between text-sm text-[var(--jshs-primary)]" href={destinationFor(resolvedTarget, code)}>{fellBackToSchools ? "直接開啟學校查詢" : `直接開啟${destinationLabel}`} <span className="transition group-hover:translate-x-1">→</span></a>
             </article>
           )})}
         </div>

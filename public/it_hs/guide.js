@@ -302,7 +302,7 @@ function showDistrictUnavailablePage() {
     main.innerHTML = `
         <section class="section-panel panel-card max-w-3xl mx-auto my-10 text-center">
             <p class="text-xs uppercase tracking-[0.18em] text-neo-accent font-bold mb-3">就學區資料建置中</p>
-            <h1 class="section-title">${escapeHtml(district.label)}功能尚未開放</h1>
+            <h1 class="section-title">${escapeHtml(district.label)}功能說明</h1>
             <p class="section-copy mb-6">${escapeHtml(district.areas || district.label)}的學校資料、免試入學規則與時程正在依官方公告整理。請回首頁選擇可用地區，或於官方來源確認最新進度。</p>
             <div class="grid gap-3 sm:grid-cols-3">
                 <a class="ui-btn ui-btn-primary" href="/it_hs/it_hs.html?district=ct#schools">查看可用學校資料</a>
@@ -1296,7 +1296,7 @@ function renderPlannerDashboard() {
     if (score) score.textContent = totalPoints > 0 ? String(totalPoints) : '—';
     if (scoreHint) scoreHint.textContent = totalPoints > 0
         ? `已建立積分資料，接著比較你的 ${wishlistState.length} 個志願。`
-        : district.calculator ? '完成積分試算後，這裡會整理你的志願風險。' : '此區積分規則建置中，先從學校資料開始比較。';
+        : district.calculator ? '完成積分試算後，這裡會整理你的志願風險。' : '此區積分可直接使用規則與學校資料。';
     if (rule) rule.textContent = district.calculator
         ? `適用規則：${district.label} ${district.academicYear || '—'} 學年度已建置試算規則。`
         : `適用規則：${district.label}積分試算建置中，暫不產生落點推薦。`;

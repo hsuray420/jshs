@@ -50,14 +50,14 @@ test("district picker restores the last district and preserves the requested too
   assert.match(script, /localStorage\.setItem\('jshs_district', district\)/);
 });
 
-test("unavailable districts show a clear construction page", async () => {
+test("all districts show a clear functional entry point", async () => {
   const [script, districtIndex] = await Promise.all([
     readFile(districtScriptUrl, "utf8"),
     readFile(districtIndexUrl, "utf8"),
   ]);
 
   assert.match(script, /function showDistrictUnavailablePage\(\)/);
-  assert.match(script, /功能尚未開放/);
+  assert.match(script, /功能說明/);
   assert.match(script, /查看可用學校資料/);
   assert.match(script, /查看基北區資料/);
   assert.match(districtIndex, /district=\$\{encodeURIComponent\(district\)\}/);

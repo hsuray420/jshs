@@ -6,7 +6,7 @@ import { SERVICE_YEAR } from "@/lib/trust";
 const footerGroups = [
   { title: "快速入口", links: [["找學校", "/schools"], ["算成績", "/tools"], ["我的志願", "/planner"], ["升學日程", "/schedule"], ["官方資訊", "/admission-guides"]] },
   { title: "資料與信任", links: [["資料來源", "/trust/sources"], ["資料更新狀態", "/trust/status"], ["15 區建置進度", "/trust/progress"], ["錯誤回報", "/trust/report"], ["平台可信度說明", "/trust/credibility"]] },
-  { title: "平台", links: [["關於 JSHS", "/trust/credibility"], ["支持／合作", "/trust/support"], ["聯絡我們", "mailto:jshs.contact@gmail.com"], ["服務狀態", "/trust/status"]] },
+  { title: "平台", links: [["關於 JSHS", "/trust/credibility"], ["小額捐款", "/support"], ["贊助我們", "/support"], ["聯絡我們", "mailto:jshs.contact@gmail.com"], ["服務狀態", "/trust/status"]] },
   { title: "法律", links: [["隱私權政策", "/trust/privacy"], ["服務條款", "/trust/terms"], ["Cookie／資料使用說明", "/trust/credibility"]] },
 ] as const;
 
@@ -34,7 +34,7 @@ export function SiteFooter() {
           <span>JSHS.CC</span>
           <span>{SERVICE_YEAR} 學年度升學資訊</span>
           <span>資料最後更新：{districtMetadata.updatedAt}</span>
-          <span>目前試算開放：8 / 15 區</span>
+          <span>15 個就學區皆可試算與填志願</span>
         </div>
         <p className="mt-3 max-w-4xl text-xs leading-6 text-[var(--text-secondary)]">JSHS 提供資訊整理與輔助工具，不取代教育主管機關、招生委員會及學校正式公告。</p>
       </PageContainer>

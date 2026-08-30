@@ -4,6 +4,16 @@ export type RecommendationSchool = Readonly<{
   referenceScore: string;
   district?: string;
   department?: string;
+  city?: string;
+  program?: string;
+  groups?: readonly string[];
+  area?: string;
+  academicYear?: string;
+  dataStatus?: string;
+  hasQuota?: boolean;
+  hasHistoricalData?: boolean;
+  sourceName?: string;
+  updatedAt?: string;
 }>;
 
 export type PlannerRecommendations = Readonly<{
