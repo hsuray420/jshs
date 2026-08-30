@@ -92,17 +92,18 @@ test("core visitor surfaces use neutral design-system primitives for future page
   }
 });
 
-test("homepage task cards use the fixed four-colour task hierarchy", async () => {
-  const home = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+test("homepage uses a next-step guide and compact fixed four-colour actions", async () => {
+  const [home, nextStep] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/home-next-step.tsx", import.meta.url), "utf8"),
+  ]);
 
-  assert.match(home, /jshs-home-task-grid/);
-  assert.match(home, /jshs-home-task-card/);
-  assert.match(home, /tone: "school"/);
-  assert.match(home, /tone: "score"/);
-  assert.match(home, /tone: "planner"/);
-  assert.match(home, /tone: "guide"/);
-  assert.match(home, /SiteIcon/);
-  assert.doesNotMatch(home, /[▤⌂∑☷]/);
+  assert.match(home, /HomeNextStep/);
+  assert.match(home, /HomeQuickActions/);
+  assert.doesNotMatch(home, /jshs-home-task-(?:grid|card)/);
+  for (const tone of ["school", "score", "planner", "guide"]) assert.match(nextStep, new RegExp(`tone: "${tone}"`));
+  assert.match(nextStep, /SiteIcon/);
+  assert.doesNotMatch(nextStep, /[▤⌂∑☷]/);
   assert.match(home, /jshs-home-hero/);
   assert.doesNotMatch(home, /StatusItem[^\n]*border-b/);
   assert.doesNotMatch(home, /districtMetadata\.disclaimer[^\n]*border-t/);

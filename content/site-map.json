@@ -1,13 +1,14 @@
 {
   "updatedAt": "2026-08-28",
   "primaryNavigation": [
-    { "label": "找學校", "href": "/schools", "activeHref": "/schools" },
-    { "label": "算成績", "href": "/tools", "activeHref": "/tools" },
-    { "label": "我的志願", "href": "/planner", "activeHref": "/planner" },
-    { "label": "升學日程", "href": "/schedule", "activeHref": "/schedule" },
-    { "label": "官方資訊", "href": "/admission-guides", "activeHref": "/admission-guides" },
-    { "label": "升學指南", "href": "/knowledge", "activeHref": "/knowledge" },
-    { "label": "資料與信任", "href": "/trust", "activeHref": "/trust" }
+    { "label": "找學校", "href": "/schools", "activeHref": "/schools", "icon": "school", "tone": "school" },
+    { "label": "算成績", "href": "/tools", "activeHref": "/tools", "icon": "calculator", "tone": "score" },
+    { "label": "我的志願", "href": "/planner", "activeHref": "/planner", "icon": "planner", "tone": "planner" },
+    { "label": "升學日程", "href": "/schedule", "activeHref": "/schedule", "icon": "calendar", "tone": "guide" },
+    { "label": "官方資訊", "href": "/admission-guides", "activeHref": "/admission-guides", "icon": "knowledge", "tone": "school" },
+    { "label": "升學指南", "href": "/knowledge", "activeHref": "/knowledge", "icon": "knowledge", "tone": "guide" },
+    { "label": "資料與信任", "href": "/trust", "activeHref": "/trust", "icon": "shield", "tone": "trust" },
+    { "label": "其他", "href": "/trust/credibility", "activeHref": "/trust/credibility", "icon": "more", "tone": "trust" }
   ],
   "menuGroups": [
     {
@@ -66,10 +67,11 @@
       "label": "升學指南", "href": "/knowledge", "activeHref": "/knowledge", "eyebrow": "把制度講成人話", "description": "先建立全貌，再回到精確規則與工具完成決策。",
       "items": [
         { "label": "升學入門", "href": "/knowledge/admission-basics", "description": "理解會考、積分、序位、志願到放榜" },
-        { "label": "志願與積分", "href": "/knowledge/rules", "description": "用白話理解判斷概念，不取代精確規則" },
+        { "label": "志願與積分", "href": "/knowledge/rules", "description": "只用白話理解志願序、積分與同分比序；精確規則請前往算成績" },
         { "label": "特殊入學與資格", "href": "/eligibility", "description": "查看特殊管道與資格初步檢測" },
         { "label": "升學百科", "href": "/knowledge/glossary", "description": "查詢名詞、迷思與制度說明" },
-        { "label": "生涯探索", "href": "/knowledge/fit-quiz", "description": "探索高中、技高、五專與未來方向" }
+        { "label": "生涯探索", "href": "/knowledge/fit-quiz", "description": "探索高中、技高、五專與未來方向" },
+        { "label": "升學動態", "href": "/knowledge/updates", "description": "閱讀 JSHS 整理的升學消息、制度更新與重要提醒" }
       ]
     },
     {
@@ -82,6 +84,22 @@
         { "label": "資料版本紀錄", "href": "/trust/versions", "description": "查看目前資料版本與校核事件" },
         { "label": "錯誤回報", "href": "/trust/report", "description": "回報資料、規則、日期或功能問題" },
         { "label": "平台可信度說明", "href": "/trust/credibility", "description": "了解 JSHS 與官方招生單位的界線" }
+      ]
+    },
+    {
+      "label": "其他", "href": "/trust/credibility", "activeHref": "/trust/credibility", "eyebrow": "平台與使用說明", "description": "查看本站、聯絡方式、服務狀態與使用規範。",
+      "items": [
+        { "label": "平台", "href": "/trust/credibility", "description": "認識本站與取得協助", "children": [
+          { "label": "關於本站", "href": "/trust/credibility", "description": "了解本站定位與資料界線" },
+          { "label": "支持／合作", "href": "/support", "description": "支持維護或提出合作建議" },
+          { "label": "聯絡我們", "href": "/support", "description": "查看聯絡方式與回饋管道" },
+          { "label": "服務狀態", "href": "/trust/status", "description": "查看資料與服務更新狀態" }
+        ] },
+        { "label": "法律與使用", "href": "/trust/privacy", "description": "資料使用與服務規範", "children": [
+          { "label": "隱私權政策", "href": "/trust/privacy", "description": "了解個人資料與隱私處理方式" },
+          { "label": "服務條款", "href": "/trust/terms", "description": "查看服務使用規範" },
+          { "label": "Cookie／資料使用說明", "href": "/trust/credibility", "description": "了解裝置資料與使用方式" }
+        ] }
       ]
     }
   ]

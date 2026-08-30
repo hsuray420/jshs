@@ -5,9 +5,9 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 
-const finalGroups = ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任"];
+const finalGroups = ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"];
 
-test("final sitemap defines the seven user-facing navigation groups", async () => {
+test("final sitemap defines the eight user-facing navigation groups", async () => {
   const catalog = JSON.parse(await read("content/site-map.json"));
   assert.deepEqual(catalog.menuGroups.map(({ label }) => label), finalGroups);
 
@@ -78,11 +78,13 @@ test("trust detail pages expose the PRD trust surfaces", async () => {
 });
 
 test("shared header exposes the JSHS Design System V1 primary navigation", async () => {
-  const header = await read("components/site-header.tsx");
-  for (const label of ["找學校", "算成績", "我的志願", "升學指南", "官方資訊", "資料與信任", "登入"]) {
-    assert.match(header, new RegExp(label));
-  }
+  const [header, catalog] = await Promise.all([read("components/site-header.tsx"), read("content/site-map.json")]);
+  assert.deepEqual(JSON.parse(catalog).primaryNavigation.map(({ label }) => label), finalGroups);
   assert.match(header, /primaryNavigation/);
+  assert.match(header, /mobileNavigation = primaryNavigation/);
+  assert.match(header, /全國國中升學資訊網/);
+  assert.match(header, /SiteIcon/);
+  assert.match(header, /登入/);
   assert.match(header, /jshs-login-link/);
   assert.match(header, /useSyncExternalStore/);
 });

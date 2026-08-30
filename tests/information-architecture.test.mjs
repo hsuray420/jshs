@@ -22,21 +22,22 @@ const expectedNavigation = [
   ["官方資訊", "/admission-guides"],
   ["升學指南", "/knowledge"],
   ["資料與信任", "/trust"],
+  ["其他", "/trust/credibility"],
 ];
 
 const legacyNewsCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
 
-test("the information architecture follows the final seven-group product sitemap", async () => {
+test("the information architecture follows the final eight-group product sitemap", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
 
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ label, href }) => [label, href]),
     expectedNavigation,
   );
-  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 7);
+  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 8);
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ activeHref }) => activeHref),
-    ["/schools", "/tools", "/planner", "/schedule", "/admission-guides", "/knowledge", "/trust"],
+    ["/schools", "/tools", "/planner", "/schedule", "/admission-guides", "/knowledge", "/trust", "/trust/credibility"],
   );
   assert.equal(siteMap.primaryNavigation.some(({ label }) => label === "就學區"), false);
 });
@@ -57,7 +58,9 @@ test("shared header exposes scalable desktop, drawer, and mobile bottom navigati
   assert.match(header, /jshs-site-header/);
   assert.match(header, /jshs-desktop-nav/);
   assert.match(header, /jshs-login-link/);
-  assert.match(header, /finalNavigationLabels/);
+  assert.match(header, /mobileNavigation = primaryNavigation/);
+  assert.match(header, /mobileNavigation\.map/);
+  assert.match(header, /全國國中升學資訊網/);
   assert.doesNotMatch(header, />導覽選單</);
   assert.match(footer, /footerGroups\.map/);
   assert.match(footer, /JSHS\.CC/);
@@ -120,6 +123,7 @@ test("primary navigation lands on an interactive surface instead of an introduct
     else if (url.pathname === "/schedule") assert.match(schedule, /ScheduleWorkspace/);
     else if (url.pathname === "/admission-guides") assert.match(await readFile(new URL("../app/admission-guides/page.tsx", import.meta.url), "utf8"), /AdmissionGuideLibrary/);
     else if (url.pathname === "/knowledge") assert.match(knowledge, /guideSections/);
+    else if (url.pathname === "/trust/credibility") assert.match(await readFile(new URL("../app/trust/[slug]/page.tsx", import.meta.url), "utf8"), /credibility/);
     else assert.equal(url.pathname, "/trust");
   }
 });

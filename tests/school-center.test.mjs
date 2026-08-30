@@ -46,7 +46,7 @@ test("all school surfaces use the CSV field naming standard", async () => {
     [explorer, ["學校名稱", "科系", "學制分類", "縣市"]],
     [search, ["學制分類", "科系"]],
     [history, ["科系"]],
-    [header, ["搜尋學校、科系"]],
+    [header, ["搜尋學校、會考、志願、資格"]],
     [comparison, ["學校類型", "公私立", "科別", "招生名額", "資料年度"]],
   ]) {
     for (const label of labels) assert.match(source, new RegExp(label));

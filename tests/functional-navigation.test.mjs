@@ -5,24 +5,26 @@ import test from "node:test";
 const readSource = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 test("task hubs route users into the new first-party admission surfaces", async () => {
-  const [tools, schools, planner, home] = await Promise.all([
+  const [tools, schools, planner, home, quickActions] = await Promise.all([
     readSource("app/tools/page.tsx"),
     readSource("app/schools/page.tsx"),
     readSource("app/planner/page.tsx"),
     readSource("app/page.tsx"),
+    readSource("components/home-next-step.tsx"),
   ]);
 
   assert.match(tools, /AdmissionCalculator/);
   assert.match(schools, /SchoolExplorer/);
   assert.match(planner, /PlannerHub/);
-  assert.match(home, /href: "\/tools"/);
-  assert.match(home, /href: "\/schools"/);
-  assert.match(home, /href: "\/planner"/);
+  assert.match(home, /HomeQuickActions/);
+  assert.match(quickActions, /href: "\/tools"/);
+  assert.match(quickActions, /href: "\/schools"/);
+  assert.match(quickActions, /href: "\/planner"/);
   assert.doesNotMatch(home, /districts-title|HomeDistrictPicker/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm#(?:calculator|analysis|home)/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm\?district=/);
 
-  for (const source of [tools, schools, planner, home]) {
+  for (const source of [tools, schools, planner, home, quickActions]) {
     assert.doesNotMatch(source, /\/it_hs\/it_hs\.html/);
     assert.doesNotMatch(source, /原有功能|原有規劃|原有比較/);
   }

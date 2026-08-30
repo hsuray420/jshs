@@ -15,28 +15,26 @@ test("JSHS Design System V1 defines the requested restrained palette and 1200px 
   assert.match(tokens, /--radius-md: 12px/);
 });
 
-test("the desktop header uses the six task-first links and a simple login action", async () => {
-  const header = await source("components/site-header.tsx");
-  assert.match(header, /const primaryNavigation/);
-  assert.match(header, /找學校/);
-  assert.match(header, /算成績/);
-  assert.match(header, /我的志願/);
-  assert.match(header, /升學指南/);
-  assert.match(header, /官方資訊/);
-  assert.match(header, /資料與信任/);
+test("the desktop header uses the shared eight-item navigation and full brand", async () => {
+  const [header, catalog] = await Promise.all([source("components/site-header.tsx"), source("content/site-map.json")]);
+  assert.match(header, /mobileNavigation = primaryNavigation/);
+  assert.match(header, /mobileNavigation\.map/);
+  assert.match(header, /全國國中升學資訊網/);
+  assert.match(header, /<SiteIcon name="school"/);
+  assert.deepEqual(JSON.parse(catalog).primaryNavigation.map(({ label }) => label), ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"]);
   assert.match(header, />登入</);
-  for (const tone of ["school", "score", "planner", "guide"]) assert.match(header, new RegExp(`tone: "${tone}"`));
 });
 
-test("the homepage starts with a compact education hero and four fixed-colour task cards", async () => {
-  const home = await source("app/page.tsx");
+test("the homepage starts with a next-step guide and compact fixed-colour actions", async () => {
+  const [home, nextStep] = await Promise.all([source("app/page.tsx"), source("components/home-next-step.tsx")]);
   assert.match(home, /jshs-home-hero/);
-  assert.match(home, /找到你的方向/);
-  assert.match(home, /tone: "school"/);
-  assert.match(home, /tone: "score"/);
-  assert.match(home, /tone: "planner"/);
-  assert.match(home, /tone: "guide"/);
-  assert.match(home, /jshs-home-task-card is-\$\{tone\}/);
+  assert.match(home, /先確認下一步/);
+  assert.match(home, /HomeNextStep/);
+  assert.match(home, /HomeQuickActions/);
+  assert.match(nextStep, /第一次來？不知道從哪裡開始/);
+  assert.match(nextStep, /我知道我要做什麼/);
+  assert.match(nextStep, /jshs-home-quick-action/);
+  assert.doesNotMatch(home, /jshs-home-task-card/);
   assert.match(home, /jshs-home-hero-v1\.png/);
 });
 

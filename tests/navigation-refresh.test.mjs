@@ -19,7 +19,7 @@ test("header uses the common navigation config and one full brand component", as
   assert.doesNotMatch(header, /const primaryNavigation = \[/);
   assert.match(header, /全國國中升學資訊網/);
   assert.match(header, /SiteIcon name="school"/);
-  assert.match(header, /primaryNavigation\.map/);
+  assert.match(header, /mobileNavigation\.map/);
   assert.match(header, /mobileNavigation = primaryNavigation/);
 });
 
@@ -41,5 +41,5 @@ test("guide has six canonical sections and directs detailed score rules to the c
   const [catalog, page, workspace] = await Promise.all([source("content/site-map.json"), source("app/knowledge/page.tsx"), source("components/knowledge-topic-workspace.tsx")]);
   for (const label of ["升學入門", "志願與積分", "特殊入學與資格", "升學百科", "生涯探索", "升學動態"]) assert.match(catalog, new RegExp(label));
   assert.match(page, /升學動態/);
-  assert.match(workspace, /href: "\/tools\/rules"/);
+  assert.match(workspace, /"\/tools\/rules"/);
 });

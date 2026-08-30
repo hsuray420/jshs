@@ -5,6 +5,8 @@ export type PrimaryNavigationItem = Readonly<{
   label: string;
   href: string;
   activeHref: string;
+  icon?: string;
+  tone?: string;
 }>;
 
 export type MenuItem = Readonly<{

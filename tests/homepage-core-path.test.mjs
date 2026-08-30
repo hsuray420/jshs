@@ -4,13 +4,15 @@ import test from "node:test";
 
 const readSource = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("homepage exposes canonical task routes and progress context", async () => {
-  const home = await readSource("app/page.tsx");
+test("homepage exposes canonical compact task routes and progress context", async () => {
+  const [home, quickActions] = await Promise.all([readSource("app/page.tsx"), readSource("components/home-next-step.tsx")]);
 
-  assert.match(home, /href: "\/tools"/);
-  assert.match(home, /href: "\/schools"/);
-  assert.match(home, /href: "\/planner"/);
-  assert.match(home, /jshs-home-task-card/);
+  assert.match(quickActions, /href: "\/tools"/);
+  assert.match(quickActions, /href: "\/schools"/);
+  assert.match(quickActions, /href: "\/planner"/);
+  assert.match(home, /HomeNextStep/);
+  assert.match(home, /HomeQuickActions/);
+  assert.doesNotMatch(home, /jshs-home-task-card/);
   assert.match(home, /學年度升學規劃/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm#(?:calculator|analysis|home)/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm\?district=/);

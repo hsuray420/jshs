@@ -39,8 +39,8 @@ test("八區志願清單只顯示目前就學區的學校資料", async () => {
   assert.match(source, /school\.districtCode === district/);
 });
 
-test("desktop IA exposes exactly seven primary groups", () => {
-  assert.deepEqual(primaryNavigation116.map((item) => item.label), ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任"]);
+test("desktop IA exposes exactly eight primary groups", () => {
+  assert.deepEqual(primaryNavigation116.map((item) => item.label), ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"]);
   assert.equal(menuGroups116.some((group) => group.label === "更多"), false);
 });
 
