@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { readFileSync } from "node:fs";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { LEGAL_DOCUMENTS } from "@/lib/legal-documents";
 import districtMetadata from "../../../public/it_hs/district-metadata.json";
 import guideCatalog from "../../../data/admission-guides.json";
 
@@ -18,11 +18,6 @@ const pages = {
   credibility: { title: "平台可信度說明", eyebrow: "PLATFORM CREDIBILITY", description: "了解 JSHS 的角色、資料校核方式、官方與非官方界線，以及更正機制。" },
   privacy: { title: "隱私權政策", eyebrow: "PRIVACY POLICY", description: "說明本站如何處理、保存與保護使用者資料及瀏覽器本機資料。" },
   terms: { title: "服務條款", eyebrow: "TERMS OF SERVICE", description: "說明使用本站服務時的權利、責任與重要限制。" },
-} as const;
-
-const legalDocuments = {
-  privacy: readFileSync(new URL("../../../content/trust/privacy.txt", import.meta.url), "utf8"),
-  terms: readFileSync(new URL("../../../content/trust/terms.txt", import.meta.url), "utf8"),
 } as const;
 
 const legacyRedirects = {
@@ -66,8 +61,8 @@ function renderContent(slug: TrustSlug): ReactNode {
   if (slug === "methodology") return <MethodologyContent />;
   if (slug === "versions") return <VersionContent />;
   if (slug === "report") return <ReportContent />;
-  if (slug === "privacy") return <LegalDocument content={legalDocuments.privacy} />;
-  if (slug === "terms") return <LegalDocument content={legalDocuments.terms} />;
+  if (slug === "privacy") return <LegalDocument content={LEGAL_DOCUMENTS.privacy} />;
+  if (slug === "terms") return <LegalDocument content={LEGAL_DOCUMENTS.terms} />;
   return <CredibilityContent />;
 }
 
