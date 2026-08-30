@@ -17,27 +17,27 @@ const surfaceUrls = [
   new URL("../components/planner-mode-workspace.tsx", import.meta.url),
 ];
 
-test("design tokens follow the education iOS visual guide", async () => {
+test("design tokens follow the JSHS Design System V1 education guide", async () => {
   const tokens = await readFile(tokenCssUrl, "utf8");
 
-  assert.match(tokens, /--bg-page:\s*#F2F2F7/i);
-  assert.match(tokens, /--bg-subtle:\s*#F2F2F7/i);
-  assert.match(tokens, /--text-primary:\s*#1C1C1E/i);
-  assert.match(tokens, /--text-secondary:\s*#8E8E93/i);
-  assert.match(tokens, /--border-light:\s*#E5E5EA/i);
-  assert.match(tokens, /--brand-primary:\s*#007AFF/i);
-  assert.match(tokens, /--success:\s*#34C759/i);
-  assert.match(tokens, /--brand-tint:\s*#E8F2FF/i);
-  assert.match(tokens, /--radius-sm:\s*9px/i);
-  assert.match(tokens, /--radius-md:\s*20px/i);
+  assert.match(tokens, /--bg-page:\s*#F7F9FC/i);
+  assert.match(tokens, /--text-primary:\s*#172033/i);
+  assert.match(tokens, /--text-secondary:\s*#667085/i);
+  assert.match(tokens, /--border-light:\s*#E7EAF0/i);
+  assert.match(tokens, /--brand-primary:\s*#1A73E8/i);
+  assert.match(tokens, /--success:\s*#34A853/i);
+  assert.match(tokens, /--planner:\s*#F9AB00/i);
+  assert.match(tokens, /--guide:\s*#8B5CF6/i);
+  assert.match(tokens, /--radius-sm:\s*8px/i);
+  assert.match(tokens, /--radius-md:\s*12px/i);
   assert.match(tokens, /--radius-lg:\s*16px/i);
   assert.match(tokens, /--radius-xl:\s*20px/i);
   assert.match(tokens, /--radius-full:\s*999px/i);
-  assert.match(tokens, /--shadow-hover:\s*0 8px 20px rgba\(0, 0, 0, \.08\)/i);
-  assert.match(tokens, /--font-system:\s*-apple-system,\s*"SF Pro Text",\s*"PingFang TC",\s*"Noto Sans TC",\s*"Helvetica Neue",\s*Arial,\s*sans-serif/i);
+  assert.match(tokens, /--content-max:\s*1200px/i);
+  assert.match(tokens, /--font-system:\s*Inter,\s*"Noto Sans TC",\s*"PingFang TC",\s*"Microsoft JhengHei",\s*sans-serif/i);
   assert.match(tokens, /--font-weight-strong:\s*600/i);
   assert.match(tokens, /--font-size-body:\s*16px/i);
-  assert.match(tokens, /--font-size-h1:\s*32px/i);
+  assert.match(tokens, /--font-size-h1:\s*34px/i);
   assert.doesNotMatch(tokens, /organic-radius|#5D7052|#C18C5D|linear-gradient/i);
 });
 
@@ -92,14 +92,18 @@ test("core visitor surfaces use neutral design-system primitives for future page
   }
 });
 
-test("homepage task cards use icon tiles and grouped context spacing", async () => {
+test("homepage task cards use the fixed four-colour task hierarchy", async () => {
   const home = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
 
-  assert.equal((home.match(/jshs-icon-tile jshs-task-icon/g) || []).length, 1);
-  assert.match(home, /jshs-task-icon/);
+  assert.match(home, /jshs-home-task-grid/);
+  assert.match(home, /jshs-home-task-card/);
+  assert.match(home, /tone: "school"/);
+  assert.match(home, /tone: "score"/);
+  assert.match(home, /tone: "planner"/);
+  assert.match(home, /tone: "guide"/);
   assert.match(home, /SiteIcon/);
   assert.doesNotMatch(home, /[▤⌂∑☷]/);
-  assert.match(home, /jshs-surface-card/);
+  assert.match(home, /jshs-home-hero/);
   assert.doesNotMatch(home, /StatusItem[^\n]*border-b/);
   assert.doesNotMatch(home, /districtMetadata\.disclaimer[^\n]*border-t/);
 });

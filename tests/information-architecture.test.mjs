@@ -47,7 +47,7 @@ test("shared header exposes scalable desktop, drawer, and mobile bottom navigati
     readFile(footerUrl, "utf8"),
   ]);
 
-  assert.match(header, /menuGroups\.map/);
+  assert.match(header, /primaryNavigation/);
   assert.match(header, /aria-label="主要導覽"/);
   assert.match(header, /role="dialog"/);
   assert.match(header, /aria-modal="true"/);
@@ -55,7 +55,8 @@ test("shared header exposes scalable desktop, drawer, and mobile bottom navigati
   assert.match(header, /mobile-bottom-nav/);
   assert.match(header, /jshs-nav-open/);
   assert.match(header, /jshs-site-header/);
-  assert.match(header, /jshs-button/);
+  assert.match(header, /jshs-desktop-nav/);
+  assert.match(header, /jshs-login-link/);
   assert.match(header, /finalNavigationLabels/);
   assert.doesNotMatch(header, />導覽選單</);
   assert.match(footer, /footerGroups\.map/);

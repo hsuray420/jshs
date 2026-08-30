@@ -20,7 +20,7 @@ export default async function ToolsPage({ searchParams }: { searchParams: Promis
   const params = await searchParams;
   const initialDistrict: AdmissionDistrict | undefined = params.district && isAdmissionDistrict(params.district) ? params.district : undefined;
   return (
-    <main className="min-h-screen jshs-page-shell">
+    <main className="min-h-screen jshs-page-shell jshs-feature-score">
       <SiteHeader activeHref="/tools" />
       <DistrictGate initialDistrict={params.district}>
         <AdmissionCalculator initialDistrict={initialDistrict} isMember={Boolean(await getMemberSession())} />

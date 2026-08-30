@@ -504,6 +504,10 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .jshs-home-task-icon { align-items: center; background: rgba(255,255,255,.18); border-radius: var(--radius-sm); display: flex; flex: 0 0 42px; height: 42px; justify-content: center; width: 42px; }
 .jshs-home-task-card.is-school { background: #1A73E8; }.jshs-home-task-card.is-score { background: #34A853; }.jshs-home-task-card.is-planner { background: #F9AB00; }.jshs-home-task-card.is-guide { background: #8B5CF6; }
 .jshs-home-news { background: #fff; border-block: 1px solid var(--border-light); }
+.jshs-feature-school { --brand-primary: #1A73E8; --brand-primary-hover: #1558B0; --brand-tint: #EAF2FE; }
+.jshs-feature-score { --brand-primary: #34A853; --brand-primary-hover: #27843F; --brand-tint: #EAF7EE; }
+.jshs-feature-planner { --brand-primary: #D99300; --brand-primary-hover: #B87800; --brand-tint: #FFF5D9; }
+.jshs-feature-guide { --brand-primary: #8B5CF6; --brand-primary-hover: #7044CE; --brand-tint: #F1EBFF; }
 
 @media (min-width: 1180px) { .jshs-desktop-nav { display: flex; } }
 @media (max-width: 1179px) { .jshs-header-inner { gap: 16px; }.jshs-wordmark { font-size: 17px; } }

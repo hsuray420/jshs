@@ -77,9 +77,12 @@ test("trust detail pages expose the PRD trust surfaces", async () => {
   }
 });
 
-test("shared header contains the final fixed context controls", async () => {
+test("shared header exposes the JSHS Design System V1 primary navigation", async () => {
   const header = await read("components/site-header.tsx");
-  for (const label of finalGroups) assert.match(header, new RegExp(label));
-  for (const label of ["通知", "帳號", "目前：", "全站搜尋"]) assert.match(header, new RegExp(label));
+  for (const label of ["找學校", "算成績", "我的志願", "升學指南", "官方資訊", "資料與信任", "登入"]) {
+    assert.match(header, new RegExp(label));
+  }
+  assert.match(header, /primaryNavigation/);
+  assert.match(header, /jshs-login-link/);
   assert.match(header, /useSyncExternalStore/);
 });

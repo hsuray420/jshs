@@ -18,7 +18,7 @@ export const dynamic = "force-dynamic";
 export default async function PlannerPage() {
   const member = await getMemberSession();
   return (
-    <main className="min-h-screen jshs-page-shell">
+    <main className="min-h-screen jshs-page-shell jshs-feature-planner">
       <SiteHeader activeHref="/planner" />
       <PlannerHub isMember={Boolean(member)} />
       <SiteFooter />

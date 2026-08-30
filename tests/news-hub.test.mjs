@@ -70,8 +70,8 @@ test("homepage and sitemap expose the canonical official information entry", asy
     readFile(sitemapUrl, "utf8"),
   ]);
 
-  assert.match(homePage, /href="\/news"/);
+  assert.match(homePage, /href="\/admission-guides"/);
   assert.doesNotMatch(homePage, /getFeaturedNews/);
-  assert.match(sitemap, /<loc>https:\/\/jshs\.cc\/news<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/jshs\.cc\/admission-guides<\/loc>/);
   assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/news\/[^<]+<\/loc>/);
 });

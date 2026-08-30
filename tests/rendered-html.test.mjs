@@ -18,8 +18,8 @@ test("root route is the canonical public homepage", async () => {
   const page = await readFile(appPageUrl, "utf8");
 
   assert.match(page, /canonical:\s*"\/"/);
-  assert.match(page, /SERVICE_YEAR\} 學年度升學 Dashboard/);
-  for (const label of ["算我的積分", "找學校", "規劃志願", "HomeProgress"]) assert.match(page, new RegExp(label));
+  assert.match(page, /SERVICE_YEAR\} 學年度升學規劃/);
+  for (const label of ["找學校", "算成績", "我的志願", "升學指南", "HomeProgress"]) assert.match(page, new RegExp(label));
   assert.doesNotMatch(page, /先別急，來到這裡，就能找到下一步/);
   assert.doesNotMatch(page, /redirect\(/);
   assert.doesNotMatch(page, /localStorage|role="dialog"|setSelectedDistrict/);
@@ -109,7 +109,7 @@ test("district guide persists a private local planning workspace and exposes com
   assert.match(script, /analysis-tier/);
 });
 
-test("homepage and district guide share the education iOS design token system", async () => {
+test("homepage and district guide share the JSHS Design System V1 token system", async () => {
   const [globalCss, districtGuide, districtCss, tokens] = await Promise.all([
     readFile(globalCssUrl, "utf8"),
     readFile(districtGuideUrl, "utf8"),
@@ -117,21 +117,21 @@ test("homepage and district guide share the education iOS design token system", 
     readFile(tokenCssUrl, "utf8"),
   ]);
 
-  assert.match(tokens, /--bg-page:\s*#F2F2F7/i);
-  assert.match(tokens, /--bg-subtle:\s*#F2F2F7/i);
-  assert.match(tokens, /--text-primary:\s*#1C1C1E/i);
-  assert.match(tokens, /--text-secondary:\s*#8E8E93/i);
-  assert.match(tokens, /--border-light:\s*#E5E5EA/i);
-  assert.match(tokens, /--brand-primary:\s*#007AFF/i);
-  assert.match(tokens, /--success:\s*#34C759/i);
-  assert.match(tokens, /--brand-tint:\s*#E8F2FF/i);
+  assert.match(tokens, /--bg-page:\s*#F7F9FC/i);
+  assert.match(tokens, /--bg-subtle:\s*#F7F9FC/i);
+  assert.match(tokens, /--text-primary:\s*#172033/i);
+  assert.match(tokens, /--text-secondary:\s*#667085/i);
+  assert.match(tokens, /--border-light:\s*#E7EAF0/i);
+  assert.match(tokens, /--brand-primary:\s*#1A73E8/i);
+  assert.match(tokens, /--success:\s*#34A853/i);
+  assert.match(tokens, /--brand-tint:\s*#EAF2FE/i);
   assert.match(tokens, /--jshs-space-1:\s*4px/i);
   assert.match(tokens, /--radius-lg:\s*16px/i);
   assert.doesNotMatch(tokens, /organic-radius|#FDFCF8|#5D7052|#C18C5D/i);
   assert.doesNotMatch(globalCss, /main\.min-h-screen > section\s*\{[^}]*min-height:\s*100vh/s);
   assert.match(globalCss, /@import url\("\/design-tokens\.css"\)/);
   assert.match(globalCss, /font-family:\s*var\(--font-system\)/);
-  assert.match(tokens, /--font-system:\s*-apple-system,\s*"SF Pro Text",\s*"PingFang TC",\s*"Noto Sans TC"/);
+  assert.match(tokens, /--font-system:\s*Inter,\s*"Noto Sans TC",\s*"PingFang TC",\s*"Microsoft JhengHei"/);
   assert.match(globalCss, /\.jshs-surface-card/);
   assert.match(globalCss, /\.jshs-button-primary/);
   assert.match(globalCss, /\.jshs-input/);

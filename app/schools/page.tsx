@@ -34,7 +34,7 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
     history: params.history === "yes" || params.history === "no" ? params.history : "all",
   };
   return (
-    <main className="min-h-screen jshs-page-shell">
+    <main className="min-h-screen jshs-page-shell jshs-feature-school">
       <SiteHeader activeHref="/schools" />
       <DistrictGate initialDistrict={params.district}>
         {view === "history" ? <AdmissionHistoryExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
