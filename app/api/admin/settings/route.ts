@@ -11,6 +11,10 @@ export async function POST(request: Request) {
   }
 
   const formData = await request.formData();
+  const donationUrl = String(formData.get("donation_url") || "").trim();
+  if (donationUrl && !isValidEcpayUrl(donationUrl)) {
+    redirect("/admin?updated=settings_invalid");
+  }
   await upsertSiteSetting(
     "site_notice",
     String(formData.get("site_notice") || "").slice(0, 1000),
@@ -26,6 +30,20 @@ export async function POST(request: Request) {
     String(formData.get("contact_email") || "").slice(0, 200),
     admin.user.displayName,
   );
+  await upsertSiteSetting(
+    "donation_url",
+    donationUrl,
+    admin.user.displayName,
+  );
 
-  redirect("/admin");
+  redirect("/admin?updated=settings");
+}
+
+function isValidEcpayUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" && (url.hostname === "ecpay.com.tw" || url.hostname.endsWith(".ecpay.com.tw"));
+  } catch {
+    return false;
+  }
 }

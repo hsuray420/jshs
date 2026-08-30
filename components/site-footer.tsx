@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DonationLink } from "@/components/donation-link";
 import { PageContainer } from "@/components/ui/layout";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 import { SERVICE_YEAR } from "@/lib/trust";
@@ -24,7 +25,7 @@ export function SiteFooter() {
               <section key={group.title}>
                 <h2 className="text-sm font-black text-[var(--text-primary)]">{group.title}</h2>
                 <div className="mt-3 grid gap-2">
-                  {group.links.map(([label, href]) => href.startsWith("mailto:") ? <a key={label} href={href} className="text-xs leading-5 text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">{label}</a> : <Link key={label} href={href} className="text-xs leading-5 text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">{label}</Link>)}
+                  {group.links.map(([label, href]) => label === "小額捐款" || label === "贊助我們" ? <DonationLink key={label} fallbackHref={href} className="text-xs leading-5 text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">{label}</DonationLink> : href.startsWith("mailto:") ? <a key={label} href={href} className="text-xs leading-5 text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">{label}</a> : <Link key={label} href={href} className="text-xs leading-5 text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">{label}</Link>)}
                 </div>
               </section>
             ))}

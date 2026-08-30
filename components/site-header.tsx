@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { SiteIcon, type SiteIconName } from "@/components/site-icons";
+import { DonationLink } from "@/components/donation-link";
 import { getDistrictLabel, readStoredDistrict, subscribeToDistrict } from "@/lib/district-context";
 import { menuGroups, primaryNavigation, type MenuGroup, type MenuItem, type PrimaryNavigationItem } from "@/lib/site-map";
 
@@ -65,7 +66,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
           if (item.label === "其他" && group) return <details key={item.label} className={`jshs-desktop-more is-${item.tone || "trust"}`}><summary><NavIcon item={item} /><span>{item.label}</span><SiteIcon name="chevron-down" size={14} /></summary><div><GroupItems group={group} /></div></details>;
           return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={`is-${item.tone || "trust"} ${active ? "is-active" : ""}`}><NavIcon item={item} /><span>{item.label}</span></Link>;
         })}</nav>
-        <div className="ml-auto flex shrink-0 items-center gap-2"><Link href="/account" className="jshs-login-link">登入</Link><button type="button" onClick={openDrawer} aria-label="開啟全站導覽" aria-expanded={drawerOpen} className="jshs-header-action jshs-header-menu-button grid place-items-center xl:hidden"><SiteIcon name="menu" size={23} /></button></div>
+        <div className="ml-auto flex shrink-0 items-center gap-2"><DonationLink className="jshs-donation-link hidden md:inline-flex">小額捐款</DonationLink><Link href="/account" className="jshs-login-link">登入</Link><button type="button" onClick={openDrawer} aria-label="開啟全站導覽" aria-expanded={drawerOpen} className="jshs-header-action jshs-header-menu-button grid place-items-center xl:hidden"><SiteIcon name="menu" size={23} /></button></div>
       </div>
     </header>
 

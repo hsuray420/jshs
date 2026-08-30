@@ -91,6 +91,8 @@ export default async function AdminPage({
           {params.updated === "review_rejected" ? "分享已退回，不會公開。" : null}
           {params.updated === "notifications" ? "通知設定已更新。" : null}
           {params.updated === "important_date" ? "重要日期已更新。" : null}
+          {params.updated === "settings" ? "網站設定已更新。" : null}
+          {params.updated === "settings_invalid" ? "綠界付款連結格式不正確，尚未更新。" : null}
           {params.updated === "notifications_invalid" || params.updated === "important_date_invalid" ? "通知資料格式不正確，未更新。" : null}
           {params.tested === "line" ? "LINE 測試通知已送出。" : null}
         </section>
@@ -505,6 +507,17 @@ export default async function AdminPage({
               defaultValue={settingsMap.get("official_line_url") ?? ""}
             />
           </label>
+          <label>
+            綠界付款連結（小額捐款／贊助）
+            <input
+              name="donation_url"
+              type="url"
+              inputMode="url"
+              placeholder="https://payment.ecpay.com.tw/..."
+              defaultValue={settingsMap.get("donation_url") ?? ""}
+            />
+          </label>
+          <p className="admin-muted">儲存後，Header、頁尾與支持頁會使用同一個綠界外部連結；本站不處理信用卡資料或付款結果。</p>
           <button className="admin-button" type="submit">
             儲存設定
           </button>
