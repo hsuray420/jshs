@@ -31,8 +31,9 @@ test("the homepage starts with a compact education hero and four fixed-colour ta
   const home = await source("app/page.tsx");
   assert.match(home, /jshs-home-hero/);
   assert.match(home, /找到你的方向/);
-  assert.match(home, /jshs-home-task-card is-school/);
-  assert.match(home, /jshs-home-task-card is-score/);
-  assert.match(home, /jshs-home-task-card is-planner/);
-  assert.match(home, /jshs-home-task-card is-guide/);
+  assert.match(home, /tone: "school"/);
+  assert.match(home, /tone: "score"/);
+  assert.match(home, /tone: "planner"/);
+  assert.match(home, /tone: "guide"/);
+  assert.match(home, /jshs-home-task-card is-\$\{tone\}/);
 });

@@ -4,9 +4,18 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { SiteIcon, type SiteIconName } from "@/components/site-icons";
 import { getDistrictLabel, readStoredDistrict, subscribeToDistrict } from "@/lib/district-context";
-import { menuGroups, type MenuGroup, type MenuItem } from "@/lib/site-map";
+import { menuGroups, type MenuItem } from "@/lib/site-map";
 
-const finalNavigationLabels = ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任"] as const;
+const finalNavigationLabels = ["找學校", "算成績", "我的志願", "升學指南", "官方資訊", "資料與信任"] as const;
+
+const primaryNavigation = [
+  { label: "找學校", href: "/schools" },
+  { label: "算成績", href: "/tools" },
+  { label: "我的志願", href: "/planner" },
+  { label: "升學指南", href: "/schedule" },
+  { label: "官方資訊", href: "/admission-guides" },
+  { label: "資料與信任", href: "/trust" },
+] as const;
 
 const quickActions = [
   { label: "找學校", href: "/schools", icon: "school", description: "搜尋學校、科系與歷年資料" },
@@ -32,16 +41,6 @@ const groupIcons: Record<string, SiteIconName> = {
   資料與信任: "shield",
 };
 
-function notificationSnapshot() {
-  const value = Number(window.localStorage.getItem("jshs_notification_count") || "0");
-  return Number.isFinite(value) ? value : 0;
-}
-
-function subscribeToNotifications(callback: () => void) {
-  window.addEventListener("storage", callback);
-  return () => window.removeEventListener("storage", callback);
-}
-
 function districtSnapshot() {
   return getDistrictLabel(readStoredDistrict());
 }
@@ -60,25 +59,9 @@ function MenuDestination({ item, onNavigate, compact = false }: { item: MenuItem
   return <Link onClick={onNavigate} href={item.href} className={`${className} block`}><b className="block text-sm text-[var(--jshs-primary)]">{item.label}</b><span className="mt-1 block text-xs leading-5 jshs-muted-copy">{item.description}</span></Link>;
 }
 
-function GroupMenu({ group, onClose }: { group: MenuGroup; onClose: () => void }) {
-  return <div id={`menu-${group.label}`} className="absolute left-1/2 top-[calc(100%-2px)] z-50 w-[min(760px,calc(100vw-28px))] -translate-x-1/2 p-5 jshs-surface-card"><MenuHeader group={group} /><div className="mt-3 grid max-h-[min(520px,calc(100vh-160px))] grid-cols-2 gap-2 overflow-y-auto">{group.items.map((item) => <MenuDestination key={item.label} item={item} onNavigate={onClose} />)}</div></div>;
-}
-
-function MenuHeader({ group }: { group: MenuGroup }) {
-  return <div className="border-b border-[var(--jshs-border)] pb-4"><p className="jshs-eyebrow">{group.eyebrow}</p><p className="mt-2 max-w-2xl text-sm leading-6 jshs-muted-copy">{group.description}</p></div>;
-}
-
-function openDrawerAndFocus(setDrawerOpen: (open: boolean) => void, searchRef: React.RefObject<HTMLInputElement | null>) {
-  setDrawerOpen(true);
-  window.setTimeout(() => searchRef.current?.focus(), 80);
-}
-
 export function SiteHeader({ activeHref }: { activeHref?: string }) {
-  const [openGroup, setOpenGroup] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const notifications = useSyncExternalStore(subscribeToNotifications, notificationSnapshot, () => 0);
-  const headerRef = useRef<HTMLElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const lastFocusRef = useRef<HTMLElement | null>(null);
   const districtLabel = useSyncExternalStore(subscribeToDistrict, districtSnapshot, () => "選擇就學區");
@@ -88,14 +71,6 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
     if (!needle) return [];
     return searchItems.filter((item) => `${item.label} ${item.description}`.toLocaleLowerCase("zh-TW").includes(needle)).slice(0, 12);
   }, [query, searchItems]);
-
-  useEffect(() => {
-    const close = (event: PointerEvent) => { if (!headerRef.current?.contains(event.target as Node)) setOpenGroup(null); };
-    const escape = (event: KeyboardEvent) => { if (event.key === "Escape") { setOpenGroup(null); setDrawerOpen(false); } };
-    document.addEventListener("pointerdown", close);
-    document.addEventListener("keydown", escape);
-    return () => { document.removeEventListener("pointerdown", close); document.removeEventListener("keydown", escape); };
-  }, []);
 
   useEffect(() => {
     document.body.classList.toggle("jshs-nav-open", drawerOpen);
@@ -120,17 +95,13 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
   function closeDrawer() { setDrawerOpen(false); setQuery(""); window.setTimeout(() => lastFocusRef.current?.focus(), 0); }
 
   return <>
-    <header ref={headerRef} className="sticky top-0 z-40 w-full border-b border-[var(--jshs-border)] bg-white/95 shadow-sm backdrop-blur jshs-site-header">
-      <div className="mx-auto flex min-h-16 w-[min(1240px,calc(100%-24px))] items-center gap-2 px-1">
-        <Link href="/" className="flex min-w-0 shrink-0 items-center gap-2 font-black text-[var(--jshs-ink)]"><span className="jshs-icon-tile shrink-0" aria-hidden="true"><SiteIcon name="school" size={18} /></span><span className="truncate text-xs sm:text-base">全國國中升學資訊網</span></Link>
-        <nav aria-label="主要導覽" className="ml-auto hidden h-16 items-stretch xl:flex">{menuGroups.map((group) => { const open = openGroup === group.label; const active = activeHref === group.activeHref; return <div key={group.label} className="relative flex items-center"><button type="button" aria-expanded={open} aria-controls={`menu-${group.label}`} onClick={() => setOpenGroup(open ? null : group.label)} className={`flex h-11 items-center gap-1 px-3 text-sm font-black jshs-button ${active || open ? "bg-[var(--jshs-brand-tint)] text-[var(--jshs-primary)]" : "text-[var(--jshs-muted)]"}`}>{group.label}<SiteIcon name="chevron-down" size={15} /></button>{open ? <GroupMenu group={group} onClose={() => setOpenGroup(null)} /> : null}</div>; })}</nav>
-        <div className="ml-auto flex shrink-0 items-center gap-1 xl:ml-2">
-          <button type="button" onClick={() => openDrawerAndFocus(setDrawerOpen, searchRef)} aria-label="全站搜尋" className="jshs-header-action grid h-11 w-11 place-items-center rounded-full text-[var(--jshs-primary)] hover:bg-[var(--jshs-muted-surface)]"><SiteIcon name="search" size={20} /></button>
-          <Link href="/ai" aria-label="AI 問答" className="jshs-header-action grid h-11 w-11 place-items-center rounded-full text-[var(--jshs-primary)] hover:bg-[var(--jshs-muted-surface)]"><SiteIcon name="sparkle" size={20} /></Link>
-          <Link href="/notifications" aria-label={`通知${notifications ? `，${notifications} 則未讀` : ""}`} className="jshs-header-action relative grid h-11 w-11 place-items-center rounded-full text-[var(--jshs-primary)] hover:bg-[var(--jshs-muted-surface)]"><SiteIcon name="bell" size={20} />{notifications ? <span className="absolute right-0 top-0 grid min-h-4 min-w-4 place-items-center rounded-full bg-[var(--jshs-danger)] px-1 text-[10px] text-white">{notifications > 9 ? "9+" : notifications}</span> : null}</Link>
-          <Link href="/account" aria-label="帳號" className="jshs-header-action grid h-11 w-11 place-items-center rounded-full text-[var(--jshs-primary)] hover:bg-[var(--jshs-muted-surface)]"><SiteIcon name="account" size={20} /></Link>
-          <Link href="/districts" className="hidden max-w-32 truncate rounded-full bg-[var(--jshs-muted-surface)] px-3 py-2 text-xs font-black text-[var(--jshs-primary)] md:block">目前：{districtLabel}<span className="sr-only">，切換就學區</span></Link>
-          <button type="button" onClick={openDrawer} aria-label="開啟全站導覽" aria-expanded={drawerOpen} className="jshs-header-action grid place-items-center rounded-full text-[var(--jshs-primary)] xl:hidden"><SiteIcon name="menu" size={28} className="jshs-header-menu-icon" /></button>
+    <header className="sticky top-0 z-40 w-full border-b border-[var(--jshs-border)] bg-white jshs-site-header">
+      <div className="jshs-header-inner">
+        <Link href="/" className="jshs-wordmark" aria-label="JSHS 首頁">JSHS</Link>
+        <nav aria-label="主要導覽" className="jshs-desktop-nav">{primaryNavigation.map((item) => <Link key={item.href} href={item.href} aria-current={activeHref === item.href ? "page" : undefined} className={activeHref === item.href ? "is-active" : ""}>{item.label}</Link>)}</nav>
+        <div className="ml-auto flex shrink-0 items-center gap-2">
+          <Link href="/account" className="jshs-login-link">登入</Link>
+          <button type="button" onClick={openDrawer} aria-label="開啟全站導覽" aria-expanded={drawerOpen} className="jshs-header-action jshs-header-menu-button grid place-items-center text-[var(--jshs-primary)] xl:hidden"><SiteIcon name="menu" size={23} /></button>
         </div>
       </div>
     </header>
