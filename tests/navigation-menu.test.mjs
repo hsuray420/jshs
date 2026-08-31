@@ -37,6 +37,11 @@ test("desktop and mobile navigation render the same complete submenu model", asy
   assert.match(header, /SiteIcon/);
   assert.match(header, /jshs-mobile-nav-item/);
   assert.match(header, /開啟更多功能選單/);
+  assert.match(header, /MobileNavigationGroup/);
+  assert.match(header, /jshs-mobile-group-heading/);
+  assert.match(header, /jshs-mobile-group-items/);
+  assert.match(header, /查看全部/);
+  assert.doesNotMatch(header, /<details key=\{item\.label\} className=\{`jshs-mobile-group/);
   assert.doesNotMatch(header, /[♧♙⌕☰↗]/);
   assert.match(header, /group\.items/);
   assert.doesNotMatch(header, /功能準備中/);
