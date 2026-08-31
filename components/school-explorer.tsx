@@ -145,33 +145,23 @@ export function SchoolExplorer({
   }
 
   return (
-    <>
-      <section className="border-b jshs-hero-section">
-        <PageContainer className="py-12 md:py-16">
-          <p className="jshs-eyebrow">全國校科搜尋</p>
-          <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-6xl">找學校與科系</h1>
-          <p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">輸入學校名稱、科系、群科、縣市或學校代碼，即時縮小結果。</p>
-        </PageContainer>
-      </section>
-
-      <PageContainer as="section" className="py-8 md:py-12">
-        <div className="grid gap-5 p-5 jshs-surface-card md:p-7">
+    <PageContainer as="section" className="jshs-school-workspace">
+        <div className="grid gap-5 p-5 jshs-surface-card jshs-school-search-card md:p-7">
           <label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">
             搜尋學校名稱、科系、群科、縣市、學校代碼
             <input value={filters.query} onChange={(event) => updateFilter("query", event.target.value)} placeholder="例如：資訊科、電機與電子群、臺中、060323" />
           </label>
-          <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <FilterSelect label="就學區" value={filters.district} onChange={(value) => updateFilter("district", value)} options={[{ code: "all", label: "全部就學區" }, ...districtOptions]} />
             <FilterSelect label="學制分類" value={filters.program} onChange={(value) => updateFilter("program", value)} options={[{ code: "all", label: "全部學制分類" }, ...programs.map((value) => ({ code: value, label: value }))]} />
             <FilterSelect label="公私立" value={filters.ownership} onChange={(value) => updateFilter("ownership", value)} options={[{ code: "all", label: "公私立皆可" }, { code: "公立", label: "公立" }, { code: "私立", label: "私立" }]} />
             <FilterSelect label="縣市" value={filters.city} onChange={(value) => updateFilter("city", value)} options={[{ code: "all", label: "全部縣市" }, ...cities.map((value) => ({ code: value, label: value }))]} />
-            <FilterSelect label="招生名額" value={filters.quota} onChange={(value) => updateFilter("quota", value as FilterValue)} options={[{ code: "all", label: "名額皆可" }, { code: "yes", label: "有招生名額" }, { code: "no", label: "待公告" }]} />
-            <FilterSelect label="歷年資料" value={filters.history} onChange={(value) => updateFilter("history", value as FilterValue)} options={[{ code: "all", label: "資料皆可" }, { code: "yes", label: "有歷年參考資料" }, { code: "no", label: "待整理" }]} />
           </div>
+          <details className="jshs-advanced-filters"><summary>更多條件：招生名額、歷年資料</summary><div className="mt-4 grid gap-4 md:grid-cols-2"><FilterSelect label="招生名額" value={filters.quota} onChange={(value) => updateFilter("quota", value as FilterValue)} options={[{ code: "all", label: "名額皆可" }, { code: "yes", label: "有招生名額" }, { code: "no", label: "待公告" }]} /><FilterSelect label="歷年資料" value={filters.history} onChange={(value) => updateFilter("history", value as FilterValue)} options={[{ code: "all", label: "資料皆可" }, { code: "yes", label: "有歷年參考資料" }, { code: "no", label: "待整理" }]} /></div></details>
         </div>
 
-        <div className="sticky top-0 z-10 mt-5 flex flex-wrap items-center gap-3 border-y border-[var(--jshs-border)] bg-[var(--jshs-page)] py-3" aria-label="已選條件">
-          <strong className="text-sm text-slate-700">已選條件</strong>
+        <div className="sticky top-0 z-10 mt-5 flex flex-wrap items-center gap-3 border-y border-[var(--jshs-border)] bg-[var(--jshs-page)] py-3" aria-label="搜尋結果工具列">
+          <strong className="text-sm text-slate-700"><span className="sr-only">已選條件：</span>{loaded && !loadError ? `找到 ${filteredSchools.length} 所學校／校科` : "搜尋條件"}</strong>
           <ConditionChip label={filters.district === "all" ? "全部就學區" : districtOptions.find((item) => item.code === filters.district)?.label || filters.district} />
           {filters.query ? <ConditionChip label={`關鍵字：${filters.query}`} /> : null}
           {filters.program !== "all" ? <ConditionChip label={`學制分類：${filters.program}`} /> : null}
@@ -183,7 +173,7 @@ export function SchoolExplorer({
         </div>
 
         <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
-          <div><p className="text-sm font-bold jshs-muted-copy">{loaded ? (loadError ? "學校資料暫時無法載入" : `搜尋結果摘要：${filteredSchools.length} 所學校／校科資料`) : "學校資料準備載入中"}</p><p className="mt-1 text-xs leading-5 text-slate-500">資料年度、資料狀態、校核狀態與來源集中在學校詳情頁；正式招生權益仍以官方公告為準。</p></div>
+          <div><p className="text-sm font-bold jshs-muted-copy">{loaded ? (loadError ? "學校資料暫時無法載入" : "資料年度、資料狀態與來源均在學校詳情中清楚標示。") : "學校資料準備載入中"}</p><p className="mt-1 text-xs leading-5 text-slate-500">正式招生權益仍以官方公告為準。</p></div>
           <Link className="text-sm font-black text-[var(--jshs-primary)]" href="/planner">查看我的規劃 →</Link>
         </div>
         {saveMessage ? <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-900" role="status">{saveMessage} <a className="ml-1 underline" href="/api/line/login/start">使用 LINE 登入</a></p> : null}
@@ -206,7 +196,6 @@ export function SchoolExplorer({
         </div> : null}
         {loaded && !loadError && filteredSchools.length > 120 ? <p className="mt-6 text-center text-sm font-bold text-slate-500">目前先顯示前 120 筆；請用條件繼續縮小範圍。</p> : null}
       </PageContainer>
-    </>
   );
 }
 

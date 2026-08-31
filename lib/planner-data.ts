@@ -7,7 +7,7 @@ export function getPlannerSchools() {
     code: school.code,
     name: school.name,
     department: school.departmentsRaw,
-    city: school.city, program: school.program, groups: school.groups, area: school.area,
+    city: school.city, program: school.program, ownership: school.ownership, groups: school.groups, area: school.area,
     academicYear: school.academicYear, dataStatus: school.dataStatus, hasQuota: school.hasQuota,
     hasHistoricalData: school.hasHistoricalData, sourceName: school.sourceName, updatedAt: school.updatedAt,
     referenceScore: getAdmissionHistoryRecord(school.districtCode, school.code)?.referenceScore || "",

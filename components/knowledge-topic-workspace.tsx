@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { technicalGroupDirectory } from "@/lib/technical-group-directory";
 
 export type Topic = "admission-basics" | "rules" | "glossary" | "fit-quiz" | "groups";
 
@@ -26,12 +27,6 @@ const misconceptions = [
   ["分數越高就一定能錄取", "不一定。名額、志願序、同分比序與資格審查都可能影響結果。"],
   ["歷年最低分就是今年門檻", "不是。歷年資料只能參考，不能當成今年錄取保證。"],
   ["技高只適合不想讀書的人", "不是。技高有完整的專業課程、實作與升學路徑。"],
-] as const;
-
-const pathways = [
-  ["普通高中", "重視學科基礎與升學準備", "大學學系、學術研究、跨領域探索"],
-  ["技術型高中", "專業群科、實作與證照", "科技大學、技專校院、產學與就業"],
-  ["五專", "五年制專業學習", "副學士、二技、專業職涯"],
 ] as const;
 
 export function KnowledgeTopicWorkspace({ topic }: { topic: Topic }) {
@@ -76,5 +71,10 @@ function FitQuiz() {
 }
 
 function GroupsGuide() {
-  return <div className="grid gap-4 md:grid-cols-3">{pathways.slice(1).map(([title, learning, future]) => <article key={title} className="p-6 jshs-surface-card"><h2 className="text-xl">{title}</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">{learning}</p><div className="mt-5 rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><strong>後續方向</strong><p className="mt-2 text-sm leading-7 jshs-muted-copy">{future}</p></div><Link href="/schools" className="mt-5 inline-flex px-4 py-3 text-sm jshs-button-secondary">回到校科查詢 →</Link></article>)}</div>;
+  const groups = technicalGroupDirectory;
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState("all");
+  const normalizedQuery = query.trim().toLocaleLowerCase("zh-TW");
+  const filtered = groups.filter(({ group, programs }) => (selected === "all" || group === selected) && (!normalizedQuery || `${group} ${programs.map((program) => program.name).join(" ")}`.toLocaleLowerCase("zh-TW").includes(normalizedQuery)));
+  return <div><section className="p-6 jshs-surface-card"><p className="jshs-eyebrow">技高群科探索</p><h2 className="mt-2 text-2xl">依群別與現有校科目錄探索</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">科別名稱來自現有學校目錄並保留來源 ID；尚未匯入官方課程資料時會直接標示待補。</p><div className="mt-5 grid gap-3 md:grid-cols-2"><label className="grid gap-2 text-sm font-black">搜尋科別或群別<input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="例如：電機、餐旅" /></label><label className="grid gap-2 text-sm font-black">群別篩選<select value={selected} onChange={(event) => setSelected(event.target.value)}><option value="all">全部群別</option>{groups.map(({ group }) => <option key={group}>{group}</option>)}</select></label></div></section><section className="mt-5"><div className="flex flex-wrap items-end justify-between gap-3"><div><p className="jshs-eyebrow">群別 → 科別</p><h2 className="mt-2 text-2xl">{filtered.length} 個群別</h2></div></div><div className="mt-4 grid gap-4 md:grid-cols-2">{filtered.map(({ group, programs }) => <article key={group} className="p-5 jshs-surface-card"><h3 className="text-xl">{group}</h3><dl className="mt-4 grid gap-3 text-sm leading-6"><div><dt className="font-black">科別名稱</dt><dd className="jshs-muted-copy">{programs.length ? programs.map((program) => program.name).join("、") : "待補資料：現有學校目錄尚無可對應科別。"}</dd></div><div><dt className="font-black">主要學習內容／常見專業課程／可能升學方向</dt><dd className="jshs-muted-copy">待補資料：尚未匯入逐科可驗證的官方或校方課程來源。</dd></div></dl><Link href={`/schools?q=${encodeURIComponent(group)}`} className="mt-5 inline-flex px-4 py-3 text-sm jshs-button-secondary">查看相關學校 →</Link></article>)}{!filtered.length ? <div className="rounded-2xl border border-dashed p-7 text-center text-sm leading-6 jshs-muted-copy">找不到符合條件的群別或科別，請調整搜尋或群別篩選。</div> : null}</div></section></div>;
 }

@@ -20,12 +20,13 @@ test("admission calculator uses structured sections and fact-based controls", as
   assert.match(source, /<select value=\{writingLevel\}/);
 });
 
-test("planner exposes parallel manual/recommendation workspaces with shared ordering and health checks", async () => {
+test("planner exposes manual and non-predictive discovery workspaces with shared ordering and health checks", async () => {
   const [planner, page] = await Promise.all([
     read("components/planner-mode-workspace.tsx"),
     read("app/planner/page.tsx"),
   ]);
-  for (const label of ["我的志願順序", "志願健檢", "推薦理由", "挑戰", "適中", "穩定", "拖曳", "查看學校"]) assert.match(planner, new RegExp(label));
+  for (const label of ["我的志願順序", "志願健檢", "志願探索", "位於你的就學區", "拖曳", "查看學校"]) assert.match(planner, new RegExp(label));
+  assert.doesNotMatch(planner, /Group title="挑戰"/);
   assert.match(planner, /draggable/);
   assert.match(planner, /\/api\/planner\/state/);
   assert.match(page, /PlannerHub/);

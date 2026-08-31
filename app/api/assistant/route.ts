@@ -50,6 +50,8 @@ export async function POST(request: Request) {
     }
   }
 
+  if (intent === "OFFICIAL_SOURCE_REQUIRED" && !sources.length) return json({ ok: true, intent, answer: "目前本站沒有足夠的官方資料可以確認這項規定。請前往官方簡章與規則頁，依你的就學區與學年度查看原始來源。", sources: [], schoolYear: null, usage }, 200, shouldSetGuestCookie ? guestId : undefined);
+
   const ai = runtimeEnv.AI;
   if (!ai) return json({ ok: false, error: "assistant_not_configured" }, 503, shouldSetGuestCookie ? guestId : undefined);
   const model = runtimeEnv.WORKERS_AI_MODEL || "@cf/meta/llama-3.1-8b-instruct-fast";
@@ -68,7 +70,7 @@ export async function POST(request: Request) {
   });
   const answer = extractWorkersAnswer(payload);
   if (!answer) return json({ ok: false, error: "assistant_empty_response" }, 503, shouldSetGuestCookie ? guestId : undefined);
-  return json({ ok: true, answer, sources: intent === "GENERAL" ? [] : sources, intent, usage }, 200, shouldSetGuestCookie ? guestId : undefined);
+  return json({ ok: true, answer, sources: intent === "GENERAL" ? [] : sources, intent, schoolYear: intent === "GENERAL" ? null : "115", usage }, 200, shouldSetGuestCookie ? guestId : undefined);
 }
 
 function extractWorkersAnswer(payload: unknown): string {

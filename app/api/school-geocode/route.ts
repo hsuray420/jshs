@@ -28,7 +28,9 @@ const districtBBoxes: Readonly<Record<string, readonly [number, number, number, 
 
 export const dynamic = "force-dynamic";
 
-type DistrictCoordinates = Readonly<{ coordinates: Readonly<Record<string, { lat: number; lon: number }>>; matched: number; total: number }>;
+type CoordinateConfidence = "high" | "medium" | "low";
+type SchoolCoordinate = Readonly<{ schoolCode: string; lat: number; lon: number; coordinateSource: "overpass"; matchedName: string; matchMethod: "exact_name" | "normalized_name_city" | "fuzzy_or_address"; confidence: CoordinateConfidence; verifiedAt: string }>;
+type DistrictCoordinates = Readonly<{ coordinates: Readonly<Record<string, SchoolCoordinate>>; matched: number; total: number }>;
 const districtCache = new Map<string, Readonly<{ expiresAt: number; value: DistrictCoordinates }>>();
 const districtRequests = new Map<string, Promise<DistrictCoordinates | null>>();
 
@@ -92,16 +94,20 @@ async function loadDistrictCoordinatesFromOverpass(district: string, query: stri
   const schools = schoolDirectory.filter((school) => school.districtCode === district);
   const byName = new Map<string, typeof schools[number]>();
   for (const school of schools) for (const alias of schoolAliases(school.name)) if (!byName.has(alias)) byName.set(alias, school);
-  const coordinates: Record<string, { lat: number; lon: number }> = {};
+  const coordinates: Record<string, SchoolCoordinate> = {};
   for (const element of payload?.elements || []) {
     const name = normalizeSchoolName(element.tags?.["name:zh"] || element.tags?.name || "");
     const address = normalizeAddress(`${element.tags?.["addr:street"] || ""}${element.tags?.["addr:housenumber"] || ""}`);
-    const school = byName.get(name)
-      || schools.find((candidate) => [...schoolAliases(candidate.name)].some((alias) => fuzzySchoolMatch(name, alias)))
-      || (address.length >= 4 ? schools.find((candidate) => normalizeAddress(candidate.address).includes(address)) : undefined);
+    const exact = byName.get(name);
+    const fuzzy = !exact ? schools.find((candidate) => [...schoolAliases(candidate.name)].some((alias) => fuzzySchoolMatch(name, alias))) : undefined;
+    const addressMatch = !exact && !fuzzy && address.length >= 4 ? schools.find((candidate) => normalizeAddress(candidate.address).includes(address)) : undefined;
+    const school = exact || fuzzy || addressMatch;
     const lat = Number(element.lat ?? element.center?.lat);
     const lon = Number(element.lon ?? element.center?.lon);
-    if (school && Number.isFinite(lat) && Number.isFinite(lon)) coordinates[`${district}:${school.code}`] = { lat, lon };
+    if (school && Number.isFinite(lat) && Number.isFinite(lon)) {
+      const matchMethod = exact ? "exact_name" : fuzzy ? "normalized_name_city" : "fuzzy_or_address";
+      coordinates[`${district}:${school.code}`] = { schoolCode: school.code, lat, lon, coordinateSource: "overpass", matchedName: element.tags?.["name:zh"] || element.tags?.name || "", matchMethod, confidence: exact ? "high" : fuzzy ? "medium" : "low", verifiedAt: new Date().toISOString() };
+    }
   }
   return { coordinates, matched: Object.keys(coordinates).length, total: schools.length };
 }

@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { getMemberSession } from "@/lib/member-auth";
 import { getPlannerSchools } from "@/lib/planner-data";
 
-export const metadata: Metadata = { title: "系統推薦志願｜我的志願", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "志願探索｜我的志願", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 export default async function RecommendPlannerPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const params = await searchParams;

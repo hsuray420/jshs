@@ -40,12 +40,15 @@ test("the homepage starts with a full-bleed hero and compact fixed-colour action
   assert.match(css, /object-fit: cover/);
 });
 
-test("each core function page has a matching coloured feature band", async () => {
-  const pages = await Promise.all(["app/schools/page.tsx", "app/tools/page.tsx", "app/planner/page.tsx", "app/schedule/page.tsx"].map(source));
-  for (const [page, tone] of pages.map((page, index) => [page, ["school", "score", "planner", "guide"][index]])) {
-    assert.match(page, new RegExp(`FeaturePageBand tone="${tone}"`));
-  }
-  const css = await source("app/globals.css");
-  assert.match(css, /\.jshs-feature-page-band/);
-  for (const tone of ["school", "score", "planner", "guide"]) assert.match(css, new RegExp(`feature-page-band\\.is-${tone}`));
+test("reference function pages use the reusable feature hero instead of a coloured feature band", async () => {
+  const [schools, tools, hero, themes, illustrations, css] = await Promise.all(["app/schools/page.tsx", "app/tools/page.tsx", "components/feature-hero.tsx", "lib/feature-themes.ts", "components/feature-illustrations.tsx", "app/globals.css"].map(source));
+  assert.match(schools, /FeatureHero theme="schools"/);
+  assert.match(tools, /FeatureHero theme="tools"/);
+  assert.doesNotMatch(schools, /FeaturePageBand/);
+  assert.doesNotMatch(tools, /FeaturePageBand/);
+  for (const theme of ["schools", "tools", "planner", "schedule", "official", "guide", "trust"]) assert.match(themes, new RegExp(`${theme}:`));
+  assert.match(hero, /FeatureIllustration/);
+  assert.match(illustrations, /school-search/);
+  assert.match(illustrations, /score-calculator/);
+  assert.match(css, /\.jshs-feature-hero/);
 });

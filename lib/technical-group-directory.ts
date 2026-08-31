@@ -1,0 +1,5 @@
+import vocationalGroups from "@/data/vocational-groups.json";
+
+export type TechnicalGroupRecord = Readonly<{ group: string; groupId: string; programs: readonly Readonly<{ name: string; learningContent: string | null; courses: string | null; progression: string | null; status: "PENDING" | "VERIFIED"; sourceId: string }> []; source: "school_directory" }>;
+type Department = { name: string; groupId: string; sourceId: string; status: string; learningContent: string | null; commonCourses: string | null; progression: string | null };
+export const technicalGroupDirectory: readonly TechnicalGroupRecord[] = Object.freeze(vocationalGroups.groups.map((group) => ({ group: group.name, groupId: group.id, source: "school_directory" as const, programs: (vocationalGroups.departments as Department[]).filter((department) => department.groupId === group.id).map((department) => ({ name: department.name, learningContent: department.learningContent, courses: department.commonCourses, progression: department.progression, status: department.status === "verified" ? "VERIFIED" as const : "PENDING" as const, sourceId: department.sourceId })) })));

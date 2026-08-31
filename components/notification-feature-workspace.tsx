@@ -1,21 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { NotificationCenter } from "@/components/notification-center";
 
 type Feature = "push" | "line" | "email" | "calendar";
-type DateItem = { id: string; title: string; description: string; eventDate: string };
+type ChannelStatus = "available" | "requires_login" | "requires_permission" | "not_configured" | "unavailable";
+// Existing LINE preference key retained for delivery compatibility; it is not an Email switch.
+const linePreferenceKeys = ["weekly_report_enabled"] as const;
+
+const labels: Record<ChannelStatus, string> = { available: "可使用", requires_login: "需要登入", requires_permission: "需要授權", not_configured: "尚未設定", unavailable: "目前未提供" };
 
 export function NotificationFeatureWorkspace({ feature, isMember }: { feature: Feature; isMember: boolean }) {
-  const [officialLineUrl, setOfficialLineUrl] = useState("");
-  const [dates, setDates] = useState<DateItem[]>([]);
-  useEffect(() => {
-    if (feature === "line") fetch("/api/site-config").then((response) => response.json() as Promise<{ official_line_url?: string }>).then((payload) => setOfficialLineUrl(payload.official_line_url || "")).catch(() => undefined);
-    if (feature === "calendar") fetch("/api/schedule").then((response) => response.json() as Promise<{ dates?: DateItem[] }>).then((payload) => setDates(payload.dates || [])).catch(() => undefined);
-  }, [feature]);
-  if (feature === "calendar") return <section className="mx-auto w-[min(1160px,calc(100%-32px))] pb-12"><div className="p-6 md:p-8 jshs-surface-card"><p className="jshs-eyebrow">重要日期訂閱</p><h2 className="mt-2">選擇要追蹤的升學日期</h2><p className="mt-3 text-sm leading-6 jshs-muted-copy">日期僅供規劃參考；涉及報名權益時請再次核對官方公告。</p><div className="mt-6 grid gap-3">{dates.length ? dates.map((item) => <article key={item.id} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><strong className="block">{item.title}</strong><span className="mt-1 block text-sm font-bold text-[var(--jshs-primary)]">{item.eventDate}</span><p className="mt-2 text-sm leading-6 jshs-muted-copy">{item.description}</p></article>) : <p className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy">目前無法讀取日期，請稍後再試。</p>}</div><div className="mt-6 flex flex-wrap gap-3"><Link href="/schools/open-days" className="px-4 py-3 text-sm jshs-button-secondary">前往校園開放日</Link><Link href="/schedule/timeline" className="px-4 py-3 text-sm jshs-button-primary">前往重要時程</Link></div></div><NotificationCenter isMember={isMember} focus={["important_date_enabled"]} title="開通重要日期 LINE 提醒" intro="開通後，重要日期提醒會透過 LINE 發送。" /></section>;
-  if (feature === "line") return <><NotificationCenter isMember={isMember} title="連結 LINE 並管理通知" intro="先加入官方 LINE 好友，再使用 LINE 登入；完成後可在這裡開通通知分類。" />{officialLineUrl ? <section className="mx-auto w-[min(1160px,calc(100%-32px))] pb-12"><a className="inline-flex px-4 py-3 text-sm jshs-button-secondary" href={officialLineUrl} target="_blank" rel="noreferrer">加入官方 LINE 好友 ↗</a></section> : null}</>;
-  if (feature === "email") return <NotificationCenter isMember={isMember} focus={["weekly_report_enabled"]} title="管理 LINE 週報訂閱" intro="Email 週報已改為 LINE 每週摘要；會員可隨時開啟或關閉。" />;
-  return <NotificationCenter isMember={isMember} focus={["score_calculated_enabled", "planner_finalized_enabled", "important_date_enabled"]} title="管理手機 LINE 推播" intro="重要結果與規劃狀態會透過 LINE 官方帳號提醒你。" />;
+  const officialLineUrl = "";
+  const lineStatus: ChannelStatus = isMember ? "available" : "requires_login";
+  if (feature === "line") return <><ChannelState status={lineStatus} title="LINE 通知" body={isMember ? `此 channel 已有送達機制；可管理 ${linePreferenceKeys.length} 組既有 LINE 設定。` : "請先登入 LINE 會員，才能讀取與開通通知設定。"} action={!isMember ? <a href={officialLineUrl || "/api/line/login/start"} className="mt-4 inline-flex px-4 py-3 text-sm jshs-button-primary">使用 LINE 登入</a> : undefined} />{isMember ? <NotificationCenter isMember focus={undefined} title="管理 LINE 通知" intro="每個分類預設關閉，只有已開通的 LINE 通知才會送出。" /> : null}</>;
+  if (feature === "calendar") return <ChannelState status="available" title="行事曆匯出" body="目前提供 ICS 匯出，不是背景推播服務。" action={<div className="mt-4 flex flex-wrap gap-3"><Link href="/schedule/timeline" className="inline-flex px-4 py-3 text-sm jshs-button-primary">前往重要時程匯出 ICS</Link><Link href="/schools/open-days" className="inline-flex px-4 py-3 text-sm jshs-button-secondary">管理校園開放日紀錄</Link></div>} />;
+  if (feature === "email") return <ChannelState status="not_configured" title="Email 通知" body="目前尚未提供 Email 通知，也沒有可開啟的寄送 switch。" />;
+  return <ChannelState status="unavailable" title="手機推播" body="目前尚未提供手機推播；不會顯示無法實際送達的啟用開關。" />;
 }
+
+function ChannelState({ status, title, body, action }: { status: ChannelStatus; title: string; body: string; action?: React.ReactNode }) { return <section className="mx-auto w-[min(1160px,calc(100%-32px))] py-10"><div className="p-6 md:p-8 jshs-surface-card"><p className="jshs-eyebrow">通知方式</p><h2 className="mt-2">{title}</h2><span className="mt-3 inline-flex jshs-chip">{labels[status]}</span><p className="mt-4 text-sm leading-7 jshs-muted-copy">{body}</p>{action}</div></section>; }

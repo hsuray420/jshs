@@ -30,6 +30,7 @@ const districtEntries = await Promise.all(districtCodes.map(async (districtCode)
     scoreYear: at(row, "分數年度"),
     sourceNote: at(row, "分數來源備註"),
     sourceType: "community",
+    sourceId: `history-community-${districtCode}-115`,
   })).filter((school) => school.code && school.name && school.referenceScore);
 }));
 
@@ -37,6 +38,34 @@ const schools = districtEntries.flat();
 await writeFile(
   resolve(root, "public/it_hs/admission-history.json"),
   `${JSON.stringify({ version: metadata.version, updatedAt: metadata.updatedAt, sourceType: "community", schools })}\n`,
+  "utf8",
+);
+const records = schools.map((school, index) => ({
+  id: `${school.districtCode}-${school.code}-${school.scoreYear || school.academicYear}-${index + 1}`,
+  district: school.districtCode,
+  schoolCode: school.code,
+  schoolName: school.name,
+  programCode: school.program || "unclassified",
+  programName: school.program || "未標示",
+  schoolYear: school.scoreYear || school.academicYear,
+  recordType: "admission_reference",
+  metricType: "community_reference",
+  scoreValue: school.referenceScore,
+  scoreLabel: "社群整理的歷年參考分數",
+  sourceType: "community",
+  sourceId: school.sourceId,
+  sourceTitle: school.sourceName,
+  sourceUrl: school.sourceUrl,
+  verifiedAt: "",
+  retrievedAt: metadata.updatedAt,
+  dataSchoolYear: school.scoreYear || school.academicYear,
+  yearStatus: "current",
+  status: "pending_verification",
+  notes: school.sourceNote || "非官方社群參考，不能用作當年度錄取預測。",
+}));
+await writeFile(
+  resolve(root, "public/it_hs/historical-records.json"),
+  `${JSON.stringify({ version: metadata.version, updatedAt: metadata.updatedAt, records })}\n`,
   "utf8",
 );
 console.log(`Generated non-official admission history: ${schools.length} records.`);

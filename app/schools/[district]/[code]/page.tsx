@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/site-header";
 import { getRelatedSchools, getSchoolDirectoryRecord, schoolDirectory } from "@/lib/school-directory";
 import { getMemberSession } from "@/lib/member-auth";
 import { SourceBadge } from "@/components/source-badge";
+import type { SchoolFieldProvenance } from "@/lib/school-field-provenance";
 
 type SchoolPageProps = { params: Promise<{ district: string; code: string }> };
 
@@ -75,8 +76,11 @@ function SchoolSection({ id, title, eyebrow, open = false, children }: { id: str
 }
 
 function Fact({ label, value }: { label: string; value: string }) {
-  return <div className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><span className="block text-xs font-black text-slate-400">{label}</span><strong className="mt-2 block leading-6 text-[var(--jshs-primary)]">{value}</strong></div>;
+  const provenance = { value, sourceType: "jshs_curated", sourceUrl: "", sourceTitle: "JSHS 學校目錄", schoolYear: "", verifiedAt: "", status: value.includes("待確認") || value.includes("未提供") ? "pending" : "available" } as SchoolFieldProvenance;
+  return <FieldProvenance label={label} provenance={provenance} />;
 }
+
+function FieldProvenance({ label, provenance }: { label: string; provenance: SchoolFieldProvenance }) { return <div className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><span className="block text-xs font-black text-slate-400">{label}</span><strong className="mt-2 block leading-6 text-[var(--jshs-primary)]">{provenance.value}</strong><details className="mt-2 text-xs text-slate-500"><summary className="cursor-pointer font-black">查看資料來源</summary><p className="mt-2">狀態：{provenance.status} · 年度：{provenance.schoolYear || "待確認"} · {provenance.sourceTitle}</p>{provenance.sourceUrl ? <a href={provenance.sourceUrl} target="_blank" rel="noreferrer" className="mt-1 inline-block font-black text-[var(--jshs-primary)]">查看來源 ↗</a> : <p className="mt-1">目前沒有可追查的來源網址。</p>}</details></div>; }
 
 function InfoBlock({ title, value }: { title: string; value: string }) {
   return <div className="mt-4 rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><h4 className="font-black text-[var(--jshs-primary)]">{title}</h4><p className="mt-2 text-sm leading-7 text-slate-600">{value}</p></div>;

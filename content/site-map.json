@@ -30,16 +30,16 @@
       "items": [
         { "label": "成績積分試算", "href": "/tools", "description": "輸入資料並取得依官方規則計算的結果" },
         { "label": "積分規則", "href": "/tools/rules", "description": "互動查看項目、公式、上限與官方來源" },
-        { "label": "模擬考落點", "href": "/tools/placement", "description": "JSHS 推估的挑戰／適中／穩定參考" },
+        { "label": "模擬考落點", "href": "/tools/placement", "description": "查看資料條件與歷史參考；資料不足時不提供錄取預測" },
         { "label": "個人積分摘要", "href": "/tools/summary", "description": "查看最近一次試算與同分比序資料" },
         { "label": "成績歷史", "href": "/tools/history", "description": "查看保存在裝置或帳號的試算紀錄" }
       ]
     },
     {
-      "label": "我的志願", "href": "/planner", "activeHref": "/planner", "eyebrow": "把選項整理成可討論的清單", "description": "自己排與系統推薦共用同一份志願清單，完成後可進行客觀健檢。",
+      "label": "我的志願", "href": "/planner", "activeHref": "/planner", "eyebrow": "把選項整理成可討論的清單", "description": "自己排與志願探索共用同一份志願清單，完成後可進行客觀健檢。",
       "items": [
         { "label": "自己排", "href": "/planner/custom", "description": "加入、排序、備註並查看志願健檢" },
-        { "label": "系統推薦", "href": "/planner/recommend", "description": "依目前資料提供挑戰、適中、穩定選項" },
+        { "label": "志願探索", "href": "/planner/recommend", "description": "依就學區與偏好探索候選校科，不預測錄取結果" },
         { "label": "版本紀錄", "href": "/planner/versions", "description": "查看與恢復真正保存的志願快照" },
         { "label": "列印／下載", "href": "/planner/export", "description": "取得志願摘要或列印版本" },
         { "label": "官方選填平台", "href": "/planner/official-platform", "description": "前往正式官方志願選填平台" }
@@ -57,7 +57,7 @@
     {
       "label": "官方資訊", "href": "/admission-guides", "activeHref": "/admission-guides", "eyebrow": "只放官方原始資訊", "description": "公告、簡章、官方招生時程與正式平台，與 JSHS 分析分開。",
       "items": [
-        { "label": "官方最新公告", "href": "/news", "description": "查看正式招生單位發布的公告" },
+        { "label": "官方資訊入口", "href": "/news", "description": "查看已登錄的官方資訊；尚未收錄公告時不冒充最新公告" },
         { "label": "官方簡章與規則", "href": "/admission-guides", "description": "查看各區原始 PDF 與官方網站" },
         { "label": "官方招生時程", "href": "/admission-guides/schedule", "description": "查看已公告、待公告與上年度參考日期" },
         { "label": "官方招生平台", "href": "/planner/official-platform", "description": "前往報名、選填、序位與錄取查詢平台" }

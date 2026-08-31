@@ -5,9 +5,10 @@ import { readFile } from "node:fs/promises";
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 test("school search uses a concise search-first result card", async () => {
-  const page = await source("components/school-explorer.tsx");
-  assert.match(page, /找學校與科系/);
-  assert.match(page, /搜尋結果摘要/);
+  const [page, route] = await Promise.all([source("components/school-explorer.tsx"), source("app/schools/page.tsx")]);
+  assert.match(route, /FeatureHero theme="schools"/);
+  assert.match(route, /找學校與科系/);
+  assert.match(page, /找到 \$\{filteredSchools\.length\} 所學校/);
   assert.doesNotMatch(page, /<Status label="資料年度"/);
   assert.doesNotMatch(page, /<Status label="資料狀態"/);
 });
@@ -20,9 +21,9 @@ test("map requests native location only after an explicit action and never links
   assert.doesNotMatch(page, /google\.com\/maps/);
 });
 
-test("history only routes a record to its school detail", async () => {
+test("history routes a record to its school detail without unrelated sharing", async () => {
   const page = await source("components/admission-history-explorer.tsx");
-  assert.match(page, />查看學校詳情/);
+  assert.match(page, />查看學校 →/);
   assert.doesNotMatch(page, /學長姐分享/);
   assert.doesNotMatch(page, /#alumni/);
 });

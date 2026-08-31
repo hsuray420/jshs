@@ -34,13 +34,13 @@ function ChoiceGroup({ value, onChange, options, labels }: { value: string; onCh
   return <div className="mt-5 grid gap-2">{options.map((option, index) => <button key={option} type="button" className={`jshs-next-choice ${value === option ? "is-selected" : ""}`} onClick={() => onChange(option)}>{labels?.[index] || option}</button>)}</div>;
 }
 
-const quickActions: ReadonlyArray<{ title: string; href: string; tone: "school" | "score" | "planner" | "guide"; icon: SiteIconName }> = [
-  { title: "找學校", href: "/schools", tone: "school", icon: "school" },
-  { title: "算成績", href: "/tools", tone: "score", icon: "calculator" },
-  { title: "我的志願", href: "/planner", tone: "planner", icon: "planner" },
-  { title: "升學指南", href: "/knowledge", tone: "guide", icon: "knowledge" },
+const quickActions: ReadonlyArray<{ title: string; description: string; href: string; tone: "school" | "score" | "planner" | "guide"; icon: SiteIconName }> = [
+  { title: "找學校", description: "搜尋全國高中職與科系", href: "/schools", tone: "school", icon: "school" },
+  { title: "算成績", description: "依就學區試算免試積分", href: "/tools", tone: "score", icon: "calculator" },
+  { title: "我的志願", description: "建立與整理志願清單", href: "/planner", tone: "planner", icon: "planner" },
+  { title: "升學指南", description: "看懂制度與升學方向", href: "/knowledge", tone: "guide", icon: "knowledge" },
 ];
 
 export function HomeQuickActions() {
-  return <section className="jshs-home-quick-actions" aria-labelledby="quick-actions-title"><div><p className="jshs-eyebrow">快速入口</p><h2 id="quick-actions-title">我知道我要做什麼</h2></div><div>{quickActions.map((item) => <Link key={item.href} href={item.href} className={`jshs-home-quick-action is-${item.tone}`}><SiteIcon name={item.icon} size={18} /><span>{item.title}</span></Link>)}</div></section>;
+  return <section className="jshs-home-quick-actions" aria-labelledby="quick-actions-title"><div className="jshs-home-quick-heading"><p className="jshs-eyebrow">快速入口</p><h2 id="quick-actions-title">我知道我要做什麼</h2><p>直接選擇你現在想完成的事情。</p></div><div className="jshs-home-quick-grid">{quickActions.map((item) => <Link key={item.href} href={item.href} className={`jshs-home-quick-action is-${item.tone}`}><span className="jshs-home-quick-icon"><SiteIcon name={item.icon} size={21} /></span><span><b>{item.title}</b><small>{item.description}</small></span><span className="jshs-home-quick-arrow" aria-hidden="true">→</span></Link>)}</div></section>;
 }

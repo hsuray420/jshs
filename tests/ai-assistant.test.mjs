@@ -62,7 +62,7 @@ test("assistant routes general questions separately from site education data and
   const policy = await read("lib/assistant-policy.ts");
   const route = await read("app/api/assistant/route.ts");
   assert.match(policy, /AssistantIntent/);
-  assert.match(policy, /GENERAL.*SITE_EDUCATION_DATA.*SITE_HELP/s);
+  assert.match(policy, /GENERAL.*JSHS_DATA.*OFFICIAL_SOURCE_REQUIRED.*SITE_HELP/s);
   assert.match(policy, /routeAssistantIntent/);
   assert.match(route, /intent !== "GENERAL"/);
   assert.match(route, /ROUTING_INTENT/);

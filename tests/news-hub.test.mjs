@@ -49,9 +49,9 @@ test("official information hub stays official-only and article slugs render thei
   ]);
 
   assert.match(hubPage, /canonical:\s*"\/news"/);
-  assert.match(hubPage, /官方最新公告/);
-  assert.match(hubPage, /SourceBadge sourceType="official"/);
-  assert.doesNotMatch(hubPage, /getFeaturedNews|SourceBadge sourceType="jshs_|SourceBadge sourceType="community/);
+  assert.match(hubPage, /官方資訊入口/);
+  assert.match(hubPage, /OfficialInformationExplorer/);
+  assert.doesNotMatch(hubPage, /getFeaturedNews|newsArticles|article\.title/);
   assert.match(articlePage, /generateStaticParams/);
   assert.match(articlePage, /generateMetadata/);
   assert.match(articlePage, /getNewsArticle/);
@@ -61,7 +61,6 @@ test("official information hub stays official-only and article slugs render thei
   assert.doesNotMatch(articlePage, /application\/ld\+json/);
   assert.match(newsLibrary, /export function getNewsArticle/);
   assert.match(newsLibrary, /export function getRelatedNews/);
-  assert.doesNotMatch(hubPage, /newsArticles|article\.title/);
 });
 
 test("homepage and sitemap expose the canonical official information entry", async () => {

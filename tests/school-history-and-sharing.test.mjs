@@ -34,18 +34,18 @@ test("全國校科查詢不再顯示獨立比較與地圖功能", async () => {
   assert.doesNotMatch(explorer, /加入比較|比較工作區/);
 });
 
-test("歷年錄取查詢使用獨立資料並明確標示非官方整理", async () => {
+test("歷年錄取查詢使用可稽核資料契約並分開官方與社群資料", async () => {
   const [page, history] = await Promise.all([
     read("app/schools/history/page.tsx"),
     read("components/admission-history-explorer.tsx"),
   ]);
   assert.match(page, /AdmissionHistoryExplorer/);
   assert.match(page, /AdmissionHistoryExplorer/);
-  assert.match(history, /admission-history\.json/);
+  assert.match(history, /historical-records\.json/);
   assert.doesNotMatch(history, /school-directory\.json/);
-  assert.match(history, /最低錄取成績/);
-  assert.match(history, /社群資料/);
-  assert.doesNotMatch(history, /官方歷年錄取資料/);
+  assert.match(history, /官方資料/);
+  assert.match(history, /社群參考資料/);
+  assert.match(history, /目前沒有找到這個年度的官方歷史資料/);
 });
 
 test("校科目錄與歷年資料各自有獨立資產", async () => {
@@ -131,7 +131,7 @@ test("歷年與學長姐資料保留在獨立工具，不混入全國校科查�
     read("db/school-review-store.ts"),
   ]);
   assert.doesNotMatch(page, /HISTORICAL REFERENCE|歷年參考|ALUMNI SHARING|學長姐分享/);
-  assert.match(history, /最低錄取成績/);
+  assert.match(history, /歷年錄取資料探索/);
   assert.match(alumni, /學長姐分享/);
   assert.doesNotMatch(page, /maps\/search/);
   assert.match(api, /schoolCode/);

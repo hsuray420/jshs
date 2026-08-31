@@ -45,7 +45,7 @@ test("all school surfaces use the CSV field naming standard", async () => {
     [detail, ["學制分類", "縣市", "區", "科系與名額", "招生名額", "招生區", "正式簡章連結", "交通方式", "通勤資訊", "住宿資訊", "生活資料來源"]],
     [explorer, ["學校名稱", "科系", "學制分類", "縣市"]],
     [search, ["學制分類", "科系"]],
-    [history, ["科系"]],
+    [history, ["科別"]],
     [header, ["搜尋學校、會考、志願、資格"]],
     [comparison, ["學校類型", "公私立", "科別", "招生名額", "資料年度"]],
   ]) {

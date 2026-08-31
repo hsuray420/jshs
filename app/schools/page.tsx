@@ -9,7 +9,7 @@ import { SchoolComparisonExplorer } from "@/components/school-comparison-explore
 import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { FeaturePageBand } from "@/components/feature-page-band";
+import { FeatureHero } from "@/components/feature-hero";
 import { schoolDistrictOptions } from "@/lib/school-directory";
 
 const title = "找學校｜全國高中職、校科與五專探索";
@@ -37,7 +37,7 @@ export default async function SchoolsPage({ searchParams }: { searchParams: Prom
   return (
     <main className="min-h-screen jshs-page-shell jshs-feature-school">
       <SiteHeader activeHref="/schools" />
-      <FeaturePageBand tone="school" />
+      <FeatureHero theme="schools" eyebrow="全國校科搜尋" title="找學校與科系" description="搜尋學校名稱、科系、群科、縣市或學校代碼，快速找到符合條件的學校與招生資料。" illustration="school-search" status={<><span>15 個就學區</span><span>全國校科資料</span><span>官方來源優先</span></>} />
       <DistrictGate initialDistrict={params.district}>
         {view === "history" ? <AdmissionHistoryExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} />
           : view === "alumni" ? <SchoolAlumniExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} initialSchoolCode={params.schoolCode} />

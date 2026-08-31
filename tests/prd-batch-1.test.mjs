@@ -46,7 +46,9 @@ test("第一批補修不讓資料狀態互相矛盾", async () => {
   ]);
   assert.match(eligibility, /if \(!hydrated\) return <WelcomeView/);
   assert.match(schools, /loaded \? \(loadError \?/);
-  assert.match(history, /\{loaded \? <span/);
+  assert.match(history, /state === "loading"/);
+  assert.match(history, /state === "error"/);
+  assert.match(history, /state === "success"/);
   assert.doesNotMatch(calculator, /五個就學區/);
   assert.match(calculator, /15 個就學區皆可/);
 });
