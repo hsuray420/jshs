@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PlannerHub } from "@/components/planner-hub";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { FeaturePageBand } from "@/components/feature-page-band";
+import { FeatureHero } from "@/components/feature-hero";
 import { getMemberSession } from "@/lib/member-auth";
 
 const title = "我的志願｜先試算，再選填方式";
@@ -21,7 +21,7 @@ export default async function PlannerPage() {
   return (
     <main className="min-h-screen jshs-page-shell jshs-feature-planner">
       <SiteHeader activeHref="/planner" />
-      <FeaturePageBand tone="planner" />
+      <FeatureHero theme="planner" eyebrow="我的志願" title="先試算，再選擇適合的填志願方式" description="完成積分試算後，可用系統推薦或自己排序建立志願清單。" illustration="planner" />
       <PlannerHub isMember={Boolean(member)} />
       <SiteFooter />
     </main>

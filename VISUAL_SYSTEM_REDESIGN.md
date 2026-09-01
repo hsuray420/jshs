@@ -49,3 +49,17 @@ Before release, repeat the same screenshot inspection at 320, 375, 430, 768, 102
 ## Remaining visual-system work
 
 The reusable themes and illustrations are ready, but Phase C has not been applied to all remaining function pages. The next pass should give `/planner`, `/schedule`, `/admission-guides`, `/knowledge`, `/trust`, and their child workspaces feature-specific Heroes and compositions without changing Batch 1–3 data semantics.
+# FULL SITE ROLLOUT
+
+Phase C extends the existing FeatureHero, `featureThemes`, spacing tokens and illustration module—no second visual system was introduced. Full route inventory and the coverage gate are in [FEATURE_PAGE_AUDIT.md](FEATURE_PAGE_AUDIT.md).
+
+| Route group | Parent theme | Hero | Illustration | Workspace | Desktop | Mobile | Status |
+|---|---|---|---|---|---|---|---|
+| Schools subpages | BLUE | FeatureHero | history/map/compare/commute/cost/alumni/open-day | purpose-specific tools | pending screenshot QA | pending screenshot QA | PARTIAL |
+| Tools subpages | GREEN | FeatureHero | rules/placement/summary/history | rule, score and history workspaces | pending screenshot QA | pending screenshot QA | PARTIAL |
+| Planner hub/custom/recommend | AMBER | FeatureHero | planner/recommendation | planner board | pending screenshot QA | pending screenshot QA | PARTIAL |
+| Schedule views | PURPLE | FeatureHero | schedule/timeline/now/todo | schedule workspace | pending screenshot QA | pending screenshot QA | PARTIAL |
+| Guide hub/topics | PURPLE | FeatureHero / CompactFeatureHero | guide/topic compositions | guide reading navigation | pending screenshot QA | pending screenshot QA | PARTIAL |
+| Official guides | BLUE | FeatureHero | official-document | guide library | pending screenshot QA | pending screenshot QA | PARTIAL |
+
+Still incomplete: school detail pages, planner versions/export/official platform, official news/article pages, trust pages, eligibility detail pages and the remaining utility surfaces. These are recorded as `PARTIAL`/`MISSING` rather than counted as covered.

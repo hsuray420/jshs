@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getMemberSession } from "@/lib/member-auth";
 import { getPlannerSchools } from "@/lib/planner-data";
+import { FeatureHero } from "@/components/feature-hero";
 
 export const metadata: Metadata = { title: "自選排序志願｜我的志願", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -12,5 +13,5 @@ export default async function CustomPlannerPage({ searchParams }: { searchParams
   const district = typeof params.district === "string" ? params.district : undefined;
   const scoreValue = typeof params.score === "string" ? Number(params.score) : NaN;
   const score = Number.isFinite(scoreValue) && scoreValue >= 0 ? scoreValue : undefined;
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/planner" /><PlannerModeWorkspace mode="custom" schools={getPlannerSchools()} isMember={Boolean(await getMemberSession())} initialDistrict={district} initialScore={score} /><SiteFooter /></main>;
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/planner" /><FeatureHero theme="planner" eyebrow="我的志願 · 自己排" title="依你的想法安排志願順序" description="把校科加入清單、調整順序，並在送出前檢查條件與資料狀態。" illustration="planner" /><PlannerModeWorkspace mode="custom" schools={getPlannerSchools()} isMember={Boolean(await getMemberSession())} initialDistrict={district} initialScore={score} /><SiteFooter /></main>;
 }

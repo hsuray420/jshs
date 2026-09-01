@@ -4,6 +4,7 @@ import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { schoolDistrictOptions } from "@/lib/school-directory";
+import { FeatureHero } from "@/components/feature-hero";
 
 export const metadata: Metadata = {
   title: "學長姐分享｜找學校｜全國國中升學資訊網",
@@ -13,5 +14,5 @@ export const metadata: Metadata = {
 
 export default async function AlumniRoute({ searchParams }: { searchParams: Promise<{ district?: string; schoolCode?: string }> }) {
   const params = await searchParams;
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/schools" /><DistrictGate initialDistrict={params.district}><SchoolAlumniExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} initialSchoolCode={params.schoolCode} /></DistrictGate><SiteFooter /></main>;
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/schools" /><FeatureHero theme="schools" eyebrow="找學校 · 學長姐分享" title="查看並分享校園與錄取經驗" description="社群內容會清楚標示為個人經驗，不取代當年度官方公告。" illustration="alumni" /><DistrictGate initialDistrict={params.district}><SchoolAlumniExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} initialSchoolCode={params.schoolCode} /></DistrictGate><SiteFooter /></main>;
 }

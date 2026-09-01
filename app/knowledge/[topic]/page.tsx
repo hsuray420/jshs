@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { KnowledgeTopicWorkspace, type Topic } from "@/components/knowledge-topic-workspace";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { CompactFeatureHero } from "@/components/feature-hero";
 
 const pages: Record<Exclude<Topic, "groups">, { title: string; description: string }> = {
   "admission-basics": { title: "升學入門", description: "理解會考、積分、序位、志願到放榜的整體流程。" },
@@ -38,5 +39,7 @@ export default async function KnowledgeTopicPage({ params }: { params: Promise<{
   const destination = legacyRedirects[topic];
   if (destination) redirect(destination);
   if (!pages[topic as Exclude<Topic, "groups">]) notFound();
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/knowledge" /><KnowledgeTopicWorkspace topic={topic as Exclude<Topic, "groups">} /><SiteFooter /></main>;
+  const page = pages[topic as Exclude<Topic, "groups">];
+  const illustration = topic === "admission-basics" ? "admission-basics" : topic === "rules" ? "choice-score" : topic === "glossary" ? "encyclopedia" : "career-explore" as const;
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/knowledge" /><CompactFeatureHero theme="guide" eyebrow="升學指南" title={page.title} description={page.description} illustration={illustration} /><KnowledgeTopicWorkspace topic={topic as Exclude<Topic, "groups">} /><SiteFooter /></main>;
 }

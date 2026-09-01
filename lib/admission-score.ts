@@ -403,11 +403,22 @@ function buildScoreBreakdown(rule: AdmissionRule, otherItems: Record<string, num
     adaptationScore: ["adaptationScore", "adaptive_guidance", "adaptive_preference_score"],
   };
   return rule.categories.map((category) => {
-    if (category.key === "examPerformanceScore") return { key: category.key, label: category.label, score: examScore, max: category.max, calculation: category.calculation ?? "依五科等級與寫作測驗規則折算", includedInTotal: rule.writingIncludedInTotal };
+    if (category.key === "examPerformanceScore") return { key: category.key, label: category.label, score: examScore, max: category.max, calculation: calculationDisplayMetadata(category.label, category.calculation ?? "依五科等級與寫作測驗規則折算"), includedInTotal: rule.writingIncludedInTotal };
     const keys = aliases[category.key] ?? [category.key, category.key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`), `${category.key.replace(/Score$/, "")}_score`];
     const score = keys.map((key) => otherItems[key]).find((value) => typeof value === "number") ?? 0;
-    return { key: category.key, label: category.label, score, max: category.max, calculation: category.calculation ?? category.description, includedInTotal: true };
+    return { key: category.key, label: category.label, score, max: category.max, calculation: calculationDisplayMetadata(category.label, category.calculation ?? category.description), includedInTotal: true };
   });
+}
+
+/** Presentation-only mapping. Calculation semantics and persisted inputs stay unchanged. */
+function calculationDisplayMetadata(label: string, calculation: string) {
+  const raw = calculation.toLowerCase();
+  const explanation = raw.includes("preference_score") ? "依志願序與本區官方規則計分。"
+    : raw.includes("nearby_score") ? "依就近入學資格與本區官方規則計分。"
+    : raw.includes("balanced_learning_score") || raw.includes("club_score") ? "依多元學習表現與本區官方規則計分。"
+    : raw.includes("subject_level_scores") || raw.includes("exam_violation") ? "依會考成績與本區官方規則整理。"
+    : `依「${label}」的官方規則與已填資料計分。`;
+  return explanation;
 }
 
 function researchPreferenceScore(district: AdmissionDistrict, values: Record<string, unknown>, rank: number) {
