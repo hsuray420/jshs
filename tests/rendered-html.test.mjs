@@ -19,7 +19,7 @@ test("root route is the canonical public homepage", async () => {
   const [page, nextStep] = await Promise.all([readFile(appPageUrl, "utf8"), readFile(homeNextStepUrl, "utf8")]);
 
   assert.match(page, /canonical:\s*"\/"/);
-  assert.match(page, /SERVICE_YEAR\} 學年度升學規劃/);
+  assert.match(page, /SERVICE_YEAR\} 學年度 <i[^>]*>·<\/i> 升學規劃/);
   for (const label of ["HomeNextStep", "HomeQuickActions", "HomeProgress"]) assert.match(page, new RegExp(label));
   for (const label of ["找學校", "算成績", "我的志願", "升學指南"]) assert.match(nextStep, new RegExp(label));
   assert.doesNotMatch(page, /先別急，來到這裡，就能找到下一步/);

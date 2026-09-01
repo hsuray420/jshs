@@ -57,7 +57,10 @@ test("global app stylesheet uses system typography and shared component primitiv
   assert.match(globalCss, /\.jshs-table/);
   assert.match(globalCss, /Education platform visual system/);
   assert.match(globalCss, /backdrop-filter:\s*none/);
-  assert.doesNotMatch(globalCss, /fonts\.googleapis|Fraunces|Nunito|body::before|mix-blend-mode|linear-gradient|organic/i);
+  // The homepage hero intentionally owns its gradients as part of the full-bleed
+  // editorial treatment; the shared system still must not import decorative fonts
+  // or apply global blending/organic treatments.
+  assert.doesNotMatch(globalCss, /fonts\.googleapis|Fraunces|Nunito|body::before|mix-blend-mode|organic/i);
   assert.match(publicAppCss, /tailwindcss v4/);
   assert.match(publicAppCss, /@import url\("\/design-tokens\.css"\)/);
   assert.match(publicAppCss, /\.jshs-surface-card/);

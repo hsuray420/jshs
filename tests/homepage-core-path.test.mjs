@@ -13,7 +13,7 @@ test("homepage exposes canonical compact task routes and progress context", asyn
   assert.match(home, /HomeNextStep/);
   assert.match(home, /HomeQuickActions/);
   assert.doesNotMatch(home, /jshs-home-task-card/);
-  assert.match(home, /學年度升學規劃/);
+  assert.match(home, /學年度 <i[^>]*>·<\/i> 升學規劃/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm#(?:calculator|analysis|home)/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm\?district=/);
   assert.doesNotMatch(home, /HomeDistrictPicker|districts-title/);
