@@ -63,3 +63,11 @@ Phase C extends the existing FeatureHero, `featureThemes`, spacing tokens and il
 | Official guides | BLUE | FeatureHero | official-document | guide library | pending screenshot QA | pending screenshot QA | PARTIAL |
 
 Still incomplete: school detail pages, planner versions/export/official platform, official news/article pages, trust pages, eligibility detail pages and the remaining utility surfaces. These are recorded as `PARTIAL`/`MISSING` rather than counted as covered.
+
+## Presentation Leakage QA
+
+- Result breakdown text is a display-only mapping: calculation identifiers and expressions are never rendered to students or parents.
+- A completed result binds the summary card to the same result state, so it cannot show a total score beside “尚未計算”.
+- Unknown tie-breaker keys are treated as data-incomplete, never as an implied official rule.
+- Tools surfaces inherit the existing green `tools` theme token through `jshs-feature-score`; blue is reserved for semantic information rather than the feature accent.
+- Audit checks reject internal keys, raw JSON, raw enum/provenance codes, `undefined`, `null`, `NaN`, and `[object Object]` in user-facing copy.
