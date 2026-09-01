@@ -137,7 +137,6 @@ test("sitemap exposes canonical hubs and excludes redirect-only legacy homepage"
     "/tools",
     "/schools",
     "/schools/groups",
-    "/planner/official-platform",
     "/trust",
   ];
 
@@ -146,6 +145,8 @@ test("sitemap exposes canonical hubs and excludes redirect-only legacy homepage"
   }
 
   assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/jshs\/home<\/loc>/);
+  assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/search<\/loc>/);
+  assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/planner/);
   for (const slug of legacyNewsCategories) assert.doesNotMatch(sitemap, new RegExp(`<loc>https://jshs\\.cc/news/${slug}</loc>`));
   assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/schedule\/(countdown|compare|export|open-days)<\/loc>/);
 });

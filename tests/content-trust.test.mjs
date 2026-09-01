@@ -39,6 +39,8 @@ test("sitemap and robots expose absolute canonical URLs", async () => {
   assert.match(sitemap, /<loc>https:\/\/jshs\.cc\/<\/loc>/);
   assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/jshs\/home<\/loc>/);
   assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/it_hs\//);
+  assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/it_5\/it_5\.html<\/loc>/);
+  assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/(search|ai|account|notifications)<\/loc>/);
   assert.match(robots, /Sitemap: https:\/\/jshs\.cc\/sitemap\.xml/);
 });
 

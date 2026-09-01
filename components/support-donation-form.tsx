@@ -27,7 +27,7 @@ export function SupportDonationForm() {
         <div>
           <h2 className="text-2xl">小額捐款</h2>
           <p className="mt-2 text-sm leading-6 jshs-muted-copy">
-            本站由民間無償開發與維護，不收取使用費，也沒有任何盈利。若覺得網站有幫助，歡迎以小額捐款或贊助支持網站持續維護。
+            本站目前核心功能免費使用，由民間投入時間整理與維護。若覺得網站有幫助，歡迎以小額捐款或贊助支持網站持續維護。
           </p>
         </div>
         {!ready ? <p role="status" className="text-sm jshs-muted-copy">正在準備外部付款連結…</p> : null}

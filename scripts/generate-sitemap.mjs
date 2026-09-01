@@ -4,34 +4,12 @@ import { toSchoolRecords } from "../lib/school-catalog.mjs";
 
 const root = process.cwd();
 const districtMetadata = await readJson("public/it_hs/district-metadata.json");
+const routeMetadata = await readJson("content/route-metadata.json");
 
 const updatedAt = districtMetadata.updatedAt;
-const staticEntries = [
-  entry("/", updatedAt, "weekly", "1.0"),
-  entry("/it_5/it_5.html", updatedAt, "weekly", "0.7"),
-  entry("/news", updatedAt, "weekly", "0.8"),
-  entry("/admission-guides", updatedAt, "monthly", "0.8"),
-  entry("/admission-guides/schedule", updatedAt, "weekly", "0.8"),
-  entry("/schools", updatedAt, "weekly", "0.9"),
-  entry("/schools/groups", updatedAt, "monthly", "0.7"),
-  entry("/tools", updatedAt, "weekly", "0.9"),
-  entry("/tools/rules", updatedAt, "monthly", "0.8"),
-  entry("/tools/placement", updatedAt, "monthly", "0.7"),
-  entry("/tools/summary", updatedAt, "monthly", "0.7"),
-  entry("/tools/history", updatedAt, "monthly", "0.7"),
-  entry("/planner", updatedAt, "weekly", "0.8"),
-  entry("/planner/versions", updatedAt, "monthly", "0.6"),
-  entry("/planner/export", updatedAt, "monthly", "0.6"),
-  entry("/planner/official-platform", updatedAt, "monthly", "0.7"),
-  entry("/schedule", updatedAt, "weekly", "0.9"),
-  ...["timeline", "now", "tasks"].map((slug) => entry(`/schedule/${slug}`, updatedAt, "weekly", "0.8")),
-  entry("/knowledge", updatedAt, "monthly", "0.8"),
-  ...["admission-basics", "rules", "glossary", "fit-quiz"].map((slug) => entry(`/knowledge/${slug}`, updatedAt, "monthly", "0.7")),
-  entry("/eligibility", updatedAt, "monthly", "0.7"),
-  ...["sources", "status", "progress", "methodology", "versions", "report", "credibility"].map((slug) => entry(`/trust/${slug}`, updatedAt, "monthly", "0.6")),
-  entry("/search", updatedAt, "weekly", "0.8"),
-  entry("/trust", updatedAt, "monthly", "0.7"),
-];
+const staticEntries = routeMetadata.routes
+  .filter((route) => route.indexable && route.sitemap)
+  .map((route) => entry(route.pathname, updatedAt, route.changefreq, route.priority));
 const schoolEntries = Object.entries(districtMetadata.districts).flatMap(([districtCode, district]) => {
   const file = districtCode === "tp" ? "schools_tp.csv" : districtCode === "taoyuan-lienchiang" ? "schools_tl.csv" : "schools.csv";
   return readFile(resolve(root, `public/it_hs/${districtCode}/${file}`), "utf8")

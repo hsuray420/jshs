@@ -7,13 +7,79 @@
         <priority>1.0</priority>
     </url>
     <url>
-        <loc>https://jshs.cc/it_5/it_5.html</loc>
+        <loc>https://jshs.cc/schools</loc>
         <lastmod>2026-08-14</lastmod>
         <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schools/groups</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.7</priority>
     </url>
     <url>
-        <loc>https://jshs.cc/news</loc>
+        <loc>https://jshs.cc/schools/history</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schools/map</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schools/compare</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schools/commute</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schools/cost</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schools/alumni</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schools/open-days</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/tools</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/tools/rules</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schedule</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/schedule/timeline</loc>
         <lastmod>2026-08-14</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -31,91 +97,7 @@
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://jshs.cc/schools</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/schools/groups</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/tools</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/tools/rules</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/tools/placement</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/tools/summary</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/tools/history</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/planner</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/planner/versions</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/planner/export</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.6</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/planner/official-platform</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/schedule</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/schedule/timeline</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/schedule/now</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/schedule/tasks</loc>
+        <loc>https://jshs.cc/news</loc>
         <lastmod>2026-08-14</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
@@ -151,7 +133,25 @@
         <priority>0.7</priority>
     </url>
     <url>
+        <loc>https://jshs.cc/knowledge/updates</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
         <loc>https://jshs.cc/eligibility</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/districts</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/trust</loc>
         <lastmod>2026-08-14</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
@@ -199,16 +199,22 @@
         <priority>0.6</priority>
     </url>
     <url>
-        <loc>https://jshs.cc/search</loc>
-        <lastmod>2026-08-14</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://jshs.cc/trust</loc>
+        <loc>https://jshs.cc/trust/privacy</loc>
         <lastmod>2026-08-14</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/trust/terms</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
+        <loc>https://jshs.cc/support</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
     </url>
     <url>
         <loc>https://jshs.cc/schools/tp/170404</loc>

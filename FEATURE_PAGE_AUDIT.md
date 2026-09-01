@@ -1,43 +1,54 @@
-# Feature Page Visual Audit
+# Feature Page Audit
 
-Audit sources: App Router routes, desktop/mobile header groups, home links, feature links and compatibility redirects. `COMPLETE` means theme, Hero, illustration and direct workspace are all present; redirects intentionally inherit their destination.
+Last refreshed: 2026-09-01
 
-| Route | Page name | Parent feature | Type | Hero | Illustration | Theme | Workspace | Status |
-|---|---|---|---|---|---|---|---|---|
-| `/schools` | 找學校 | 找學校 | FUNCTION_PAGE | FeatureHero | school-search | BLUE | school explorer | COMPLETE |
-| `/schools/history` | 歷年錄取 | 找學校 | FUNCTION_PAGE | FeatureHero | admissions-history | BLUE | history filters/results | COMPLETE |
-| `/schools/map` | 學校地圖 | 找學校 | FUNCTION_PAGE | FeatureHero | school-map | BLUE | map workspace | COMPLETE |
-| `/schools/compare` | 學校比較 | 找學校 | FUNCTION_PAGE | FeatureHero | school-compare | BLUE | selector/comparison | COMPLETE |
-| `/schools/commute` | 通勤比較 | 找學校 | FUNCTION_PAGE | FeatureHero | commute | BLUE | route comparison | COMPLETE |
-| `/schools/cost` | 費用試算 | 找學校 | FUNCTION_PAGE | FeatureHero | cost-calculator | BLUE | calculator/result | COMPLETE |
-| `/schools/alumni` | 學長姐分享 | 找學校 | FUNCTION_PAGE | FeatureHero | alumni | BLUE | community explorer | COMPLETE |
-| `/schools/open-days` | 校園開放日 | 找學校 | FUNCTION_PAGE | FeatureHero | open-day | BLUE | calendar workspace | COMPLETE |
-| `/schools/groups` | 群科介紹 | 找學校 | CONTENT_PAGE | CompactFeatureHero | career-groups | BLUE | reading navigation | COMPLETE |
-| `/schools/[district]`, `/schools/[district]/[code]` | 學校／校科頁 | 找學校 | CONTENT_PAGE | legacy | none | BLUE | detail content | PARTIAL |
-| `/tools` | 算成績 | 算成績 | FUNCTION_PAGE | FeatureHero | score-calculator | GREEN | step calculator | COMPLETE |
-| `/tools/rules` | 積分規則 | 算成績 | FUNCTION_PAGE | FeatureHero | score-rules | GREEN | rule table | COMPLETE |
-| `/tools/placement` | 模擬考落點 | 算成績 | FUNCTION_PAGE | FeatureHero | placement | GREEN | guarded placement workspace | COMPLETE |
-| `/tools/summary` | 個人積分摘要 | 算成績 | FUNCTION_PAGE | FeatureHero | score-summary | GREEN | saved score summary | COMPLETE |
-| `/tools/history` | 成績歷史 | 算成績 | FUNCTION_PAGE | FeatureHero | score-history | GREEN | saved score history | COMPLETE |
-| `/planner`, `/planner/custom`, `/planner/recommend` | 我的志願 | 我的志願 | FUNCTION_PAGE | FeatureHero | planner / planner-recommendation | AMBER | planner board | COMPLETE |
-| `/planner/versions`, `/planner/export`, `/planner/official-platform` | 版本／匯出／官方選填 | 我的志願 | FUNCTION_PAGE | legacy | partial | AMBER | versions/export/links | PARTIAL |
-| `/schedule`, `/schedule/timeline`, `/schedule/now`, `/schedule/tasks` | 升學日程 | 升學日程 | FUNCTION_PAGE | FeatureHero | schedule / timeline / schedule-now / todo | PURPLE | schedule workspace | COMPLETE |
-| `/schedule/compare`, `/schedule/countdown`, `/schedule/export`, `/schedule/open-days` | compatibility routes | 升學日程 | FUNCTION_PAGE | redirect | destination | destination | redirect | COMPLETE |
-| `/admission-guides` | 官方簡章與規則 | 官方資訊 | FUNCTION_PAGE | FeatureHero | official-document | BLUE | guide library | COMPLETE |
-| `/admission-guides/schedule`, `/news`, `/news/*` | 公告／文章 | 官方資訊 | CONTENT_PAGE | legacy | none | BLUE | information/article | PARTIAL |
-| `/knowledge` | 升學指南 | 升學指南 | CONTENT_PAGE | FeatureHero | guide | PURPLE | guide navigation | COMPLETE |
-| `/knowledge/[topic]`, `/knowledge/updates` | 指南主題／動態 | 升學指南 | CONTENT_PAGE | CompactFeatureHero / legacy | topic illustration / none | PURPLE | reading content | PARTIAL |
-| `/eligibility`, `/eligibility/[topic]` | 特殊入學與資格 | 升學指南 | FUNCTION_PAGE | FeatureHero / legacy | eligibility / none | PURPLE | path finder/content | PARTIAL |
-| `/trust`, `/trust/[slug]` | 資料與信任 | 資料與信任 | FUNCTION_PAGE / CONTENT_PAGE | legacy | none | SLATE | source/status/capability | MISSING |
-| `/ai`, `/districts`, `/search`, `/support`, `/account`, `/notifications` | 其他功能 | 其他 | FUNCTION_PAGE | legacy / app shell | partial | SLATE | individual tools | PARTIAL |
+This file is now backed by `content/route-metadata.json` and `scripts/audit-route-metadata.mjs`. The route registry is the shared source for sitemap inclusion, noindex decisions, canonical paths, search categories, and route QA.
 
-## Coverage gate
+## Automated Gate
 
-Header and mobile menu destination routes were checked against theme + hero + illustration + workspace. Compatibility redirects are complete through their canonical destination. The rows marked `PARTIAL` or `MISSING` are deliberately not presented as rollout complete and remain the Phase C follow-up list.
+Run:
 
-## Presentation scan rules
+```bash
+pnpm run generate:sitemap
+pnpm run audit:routes
+pnpm run audit:search
+pnpm run audit:leakage
+```
+
+Current gate coverage:
+
+| Check | Source |
+| --- | --- |
+| Route exists | `content/route-metadata.json` + `app/**/page.tsx` |
+| Metadata registry exists | `content/route-metadata.json` |
+| Sitemap excludes noindex routes | `scripts/audit-route-metadata.mjs` |
+| FeatureHero requirement | `scripts/audit-route-metadata.mjs` |
+| Mobile QA markers | `app/globals.css` checked by audit |
+| Presentation leakage markers | `scripts/audit-presentation-leakage.mjs` |
+
+## Current Status
+
+| Route group | Status | Notes |
+| --- | --- | --- |
+| `/schools`, school tools | COMPLETE | FeatureHero and canonical pages present. School detail life-data changes are deferred to 604/604. |
+| `/tools`, score tools | COMPLETE | Public calculator and rule pages are indexable; personal history/summary/placement are noindex and excluded from sitemap. |
+| `/planner` and planner tools | COMPLETE / PRIVATE | Functional routes exist; all planner routes are noindex and excluded from sitemap because they handle personal planning state. |
+| `/schedule`, `/schedule/timeline` | COMPLETE | Public schedule routes remain in sitemap. |
+| `/schedule/now`, `/schedule/tasks` | PRIVATE | Personalized/task routes are noindex and excluded from sitemap. |
+| `/admission-guides`, `/news`, `/knowledge`, `/eligibility` | COMPLETE | Public information routes are searchable and sitemap-controlled by the registry. |
+| `/trust`, `/trust/*` | COMPLETE | Trust, privacy, terms, source, status, and methodology pages are registered and indexable where public. |
+| `/search`, `/ai`, `/account`, `/notifications` | PRIVATE / UTILITY | Discoverable inside site search, but noindex and excluded from sitemap. |
+| `/it_5/it_5.html` | LEGACY | Static compatibility page still exists; canonical discoverability points to `/knowledge/fit-quiz`, and it is not in sitemap. |
+
+## Deferred Until 604/604
+
+- School detail `就學生活` presentation and integrations.
+- School comparison lodging/transport data.
+- School-life filter, provenance UI, ingestion, audit, schema, and records.
+- Any school component changes likely to conflict with the 604-school research batch.
+
+## Presentation Scan Rules
 
 - Do not expose calculation identifiers, function names, schema keys, raw enums, JSON, `undefined`, `null`, `NaN`, or `[object Object]` in customer UI.
-- Use a display-only mapping for calculation explanations; it must never affect score semantics.
-- A complete result must never be accompanied by an “尚未計算” summary; raw / placeholder tie-breaker labels must disclose their actual data status.
-- Preserve visible official/JSHS/community and VERIFIED/PARTIAL/previous-year status cues.
+- Use display-only wording for calculation explanations; it must never affect score semantics.
+- Preserve intentional user-facing trust statuses such as official, verified, partial, community reference, and previous-year reference.

@@ -35,12 +35,14 @@ test("planner exposes manual and non-predictive discovery workspaces with shared
 
 test("search and trust centers are real routes and discoverable", async () => {
   await Promise.all([access(new URL("../app/search/page.tsx", import.meta.url)), access(new URL("../app/trust/page.tsx", import.meta.url))]);
-  const [search, trust, sitemap] = await Promise.all([read("app/search/page.tsx"), read("app/trust/page.tsx"), read("scripts/generate-sitemap.mjs")]);
-  for (const label of ["學校／校科", "升學指南", "百科與規則名詞", "重要日程", "官方來源"]) assert.match(search, new RegExp(label));
+  const [search, trust, sitemap, routes] = await Promise.all([read("app/search/page.tsx"), read("app/trust/page.tsx"), read("scripts/generate-sitemap.mjs"), read("content/route-metadata.json")]);
+  for (const label of ["學校", "科別", "升學指南", "積分規則", "官方資訊", "日程", "功能", "Trust", "公告"]) assert.match(search, new RegExp(label));
   for (const label of ["資料來源", "資料更新狀態", "15 區建置進度", "試算與分析方法", "錯誤回報", "平台可信度說明"]) assert.match(trust, new RegExp(label));
   assert.doesNotMatch(trust, /隱私權|服務條款|支持／合作與售後/);
-  assert.match(sitemap, /entry\("\/search"/);
-  assert.match(sitemap, /entry\("\/trust"/);
+  assert.match(sitemap, /routeMetadata\.routes/);
+  assert.match(routes, /"pathname": "\/search"/);
+  assert.match(routes, /"indexable": false/);
+  assert.match(routes, /"pathname": "\/trust"/);
 });
 
 test("CT and Changhua timelines contain only source-confirmed page I/II fields", async () => {
