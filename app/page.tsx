@@ -24,7 +24,7 @@ const officialDistricts = Object.entries(districtMetadata.districts).slice(0, 3)
 
 export default function HomePage() {
   return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/" />
-    <section className="jshs-home-hero"><div className="jshs-home-hero-background" aria-hidden="true"><img src="/images/jshs-home-hero-v2.png" alt="" /></div><PageContainer className="jshs-home-hero-inner"><div><p className="jshs-eyebrow">{SERVICE_YEAR} 學年度升學規劃</p><h1>先確認下一步，<br />升學規劃會更清楚。</h1><p className="jshs-muted-copy">第一次來可用幾個問題找到起點；已經知道目標，也能直接使用需要的工具。</p></div></PageContainer></section>
+    <section className="jshs-home-hero"><div className="jshs-home-hero-background" aria-hidden="true"><img src="/images/jshs-home-hero-v2.png" alt="" /></div><PageContainer className="jshs-home-hero-inner"><div className="jshs-home-hero-copy"><p className="jshs-home-hero-eyebrow"><span aria-hidden="true">●</span>{SERVICE_YEAR} 學年度 <i aria-hidden="true">·</i> 升學規劃</p><span className="jshs-home-hero-rule" aria-hidden="true" /><h1>先確認下一步，<br />升學規劃會<span>更清楚。</span></h1><p className="jshs-muted-copy">第一次來？用幾個問題找到升學起點。<br />已經知道目標？直接前往需要的工具。</p></div></PageContainer></section>
     <PageContainer as="section" className="jshs-home-action-layout"><HomeQuickActions /></PageContainer>
     <PageContainer as="section" className="jshs-home-guidance"><HomeNextStep /></PageContainer>
     <HomeProgress />

@@ -509,13 +509,21 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .jshs-donation-link:hover { background: #ffedbd; color: #704700 !important; }
 .jshs-header-menu-button { border-radius: var(--radius-sm) !important; }
 
-.jshs-home-hero { background: #F4F8FF; isolation: isolate; overflow: hidden; position: relative; }
-.jshs-home-hero-background { inset: 0; position: absolute; z-index: -2; }
+.jshs-home-hero { background: #eaf3fc; isolation: isolate; min-height: 520px; overflow: hidden; position: relative; }
+.jshs-home-hero::before { background: linear-gradient(90deg, rgb(255 253 247 / 94%) 0%, rgb(246 250 255 / 78%) 26%, rgb(230 242 253 / 36%) 51%, rgb(220 237 251 / 0%) 72%), radial-gradient(ellipse 46% 82% at 15% 48%, rgb(255 255 255 / 78%) 0%, rgb(241 248 255 / 42%) 51%, transparent 82%); content: ""; inset: 0; pointer-events: none; position: absolute; z-index: -1; }
+.jshs-home-hero::after { background: radial-gradient(ellipse 28% 60% at 44% 52%, rgb(255 255 255 / 26%), transparent 76%); content: ""; inset: 0; pointer-events: none; position: absolute; z-index: -1; }
+.jshs-home-hero-background { filter: saturate(.92) contrast(.9); inset: 0; position: absolute; z-index: -2; }
 .jshs-home-hero-background img { display: block; height: 100%; object-fit: cover; object-position: center; width: 100%; }
-.jshs-home-hero-inner { align-items: center; display: grid; min-height: 420px; padding-block: 64px; position: relative; }
-.jshs-home-hero-inner > div { text-shadow: 0 1px 18px rgb(255 255 255 / 92%); }
-.jshs-home-hero h1 { font-size: clamp(38px, 4vw, 44px) !important; line-height: 1.25 !important; margin-top: 8px; }
-.jshs-home-hero p:not(.jshs-eyebrow) { font-size: 16px; line-height: 1.8; margin-top: 16px; }
+.jshs-home-hero-inner { align-items: center; display: grid; min-height: 520px; padding-block: 72px; position: relative; }
+.jshs-home-hero-copy { max-width: 700px; padding-left: clamp(0px, 2.8vw, 38px); }
+.jshs-home-hero-eyebrow { align-items: center; background: rgb(35 117 232 / 9%); border: 1px solid rgb(35 117 232 / 12%); border-radius: 999px; color: #2375e8; display: inline-flex; font-size: 16px; font-weight: 650; gap: 8px; letter-spacing: .04em; line-height: 1.4; padding: 7px 13px 7px 11px; }
+.jshs-home-hero-eyebrow span { font-size: 9px; }
+.jshs-home-hero-eyebrow i { font-style: normal; opacity: .55; }
+.jshs-home-hero-rule { background: #2375e8; display: block; height: 3px; margin: 28px 0 18px; position: relative; width: 50px; }
+.jshs-home-hero-rule::after { background: #2375e8; border-radius: 50%; content: ""; height: 6px; position: absolute; right: -10px; top: -1.5px; width: 6px; }
+.jshs-home-hero h1 { color: #172033 !important; font-size: clamp(52px, 6vw, 72px) !important; font-weight: 800; letter-spacing: -.065em; line-height: 1.15 !important; margin: 0; max-width: 700px; }
+.jshs-home-hero h1 span { color: #2375e8; }
+.jshs-home-hero p:not(.jshs-home-hero-eyebrow) { color: #637083; font-size: 20px; line-height: 1.65; margin-top: 22px; max-width: 600px; }
 .jshs-home-action-layout { padding-block: 32px 20px; }
 .jshs-home-guidance { padding-block: 12px 28px; }
 .jshs-next-step-card, .jshs-home-quick-actions { border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 24px; }.jshs-next-step-card h2, .jshs-home-quick-actions h2 { font-size: 22px; margin-top: 6px; }.jshs-next-step-card > p { color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-top: 10px; }.jshs-next-step-card .jshs-button-primary { display: inline-flex; margin-top: 18px; }.jshs-text-button { background: transparent; border: 0; color: var(--brand-primary); font-size: 13px; font-weight: 700; padding: 0; }.jshs-next-choice { background: white; border: 1px solid var(--border-light); border-radius: var(--radius-sm); color: var(--text-primary); min-height: 44px; padding: 10px 14px; text-align: left; }.jshs-next-choice.is-selected { background: var(--brand-tint); border-color: var(--brand-primary); color: var(--brand-primary); font-weight: 700; }
@@ -541,7 +549,7 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 @media (max-width: 760px) {
   .jshs-container { padding-inline: 16px; }
   .jshs-header-inner { height: 60px; padding-inline: 16px; }.jshs-brand { font-size: 14px; }.jshs-brand-logo { height: 30px; width: 30px; }.jshs-login-link { font-size: 13px; padding: 7px 12px; }
-  .jshs-home-hero-inner { min-height: 390px; padding-block: 48px; }.jshs-home-hero h1 { font-size: 34px !important; }.jshs-home-hero-background img { object-position: 67% center; }
+  .jshs-home-hero { min-height: 520px; }.jshs-home-hero::before { background: linear-gradient(180deg, rgb(255 253 247 / 94%) 0%, rgb(246 250 255 / 80%) 48%, rgb(230 242 253 / 20%) 76%, transparent 100%), radial-gradient(ellipse 90% 55% at 24% 26%, rgb(255 255 255 / 66%), transparent 76%); }.jshs-home-hero-background { filter: saturate(.88) contrast(.88); }.jshs-home-hero-inner { min-height: 520px; padding-block: 48px 205px; }.jshs-home-hero-copy { padding-left: 0; }.jshs-home-hero-eyebrow { font-size: 14px; }.jshs-home-hero-rule { margin: 22px 0 14px; }.jshs-home-hero h1 { font-size: clamp(38px, 10vw, 50px) !important; }.jshs-home-hero p:not(.jshs-home-hero-eyebrow) { font-size: 17px; margin-top: 18px; }
   .jshs-home-action-layout { padding-block: 20px 10px; }.jshs-home-quick-actions { gap: 24px; grid-template-columns: 1fr; min-height: 0; padding: 24px 20px; }.jshs-home-quick-grid { gap: 10px; }.jshs-home-quick-action { align-items: flex-start; flex-direction: column; gap: 8px; min-height: 142px; padding: 14px; }.jshs-home-quick-arrow { margin-left: 0; margin-top: auto; }.jshs-home-guidance { padding-block: 10px 22px; }.jshs-next-step-card { padding: 20px; }
   .jshs-feature-hero { border-radius: 22px; gap: 8px; grid-template-columns: 1fr; margin-top: 18px; min-height: 0; padding: 24px 20px 16px; }.jshs-feature-hero h1 { font-size: clamp(30px, 9vw, 36px) !important; }.jshs-feature-description { font-size: 16px; }.jshs-feature-illustration { height: 158px; justify-self: center; margin-top: -3px; width: 240px; }.jshs-school-workspace { padding-block: 24px 36px; }.jshs-school-search-card { margin-top: 0; }
   .jshs-feature-hero.is-compact { gap: 4px; min-height: 0; padding: 20px 20px 12px; }.jshs-feature-hero.is-compact .jshs-feature-illustration { height: 132px; width: 190px; }.jshs-feature-workspace { padding-block: 20px 36px; }
