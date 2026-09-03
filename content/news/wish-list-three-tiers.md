@@ -12,6 +12,7 @@ oneLineConclusion: "先建立願意就讀的候選池，再用挑戰、適中、
 preparation: ["一份願意進一步了解的校科清單","個人興趣、通勤與家庭討論條件"]
 publishedAt: 2026-08-14
 updatedAt: 2026-08-14
+status: published
 readMinutes: 7
 featured: false
 keywords: ["高中志願怎麼填","免試入學志願序","高中志願選填","落點分層"]

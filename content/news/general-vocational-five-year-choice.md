@@ -12,6 +12,7 @@ oneLineConclusion: "選學制要先比較學習方式、課程內容與未來路
 preparation: ["自己喜歡的學習方式與願意投入的內容","目標學校的課程、實習、通勤與升學資料"]
 publishedAt: 2026-08-14
 updatedAt: 2026-08-14
+status: published
 readMinutes: 7
 featured: false
 keywords: ["普高技高五專比較","高中職怎麼選","五專免試入學","國中生生涯選擇"]

@@ -12,6 +12,7 @@ oneLineConclusion: "積分、序位與落點是三種不同證據，應用來設
 preparation: ["確認自己適用的就學區與學年度","準備會考成績與該區必要比序資料"]
 publishedAt: 2026-08-14
 updatedAt: 2026-08-14
+status: published
 readMinutes: 6
 featured: true
 keywords: ["免試入學積分","會考序位","高中落點分析","志願選填"]

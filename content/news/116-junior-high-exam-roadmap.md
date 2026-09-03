@@ -12,6 +12,7 @@ oneLineConclusion: "先把已公告的會考日期固定下來，再依就學區
 preparation: ["目前就讀國中與可能適用的就學區","家庭行事曆與想先解決的升學問題"]
 publishedAt: 2026-08-14
 updatedAt: 2026-08-14
+status: published
 readMinutes: 6
 featured: true
 keywords: ["116國中教育會考","116會考日期","高中免試入學時程","國三升學準備"]

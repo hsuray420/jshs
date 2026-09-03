@@ -12,6 +12,7 @@ oneLineConclusion: "家庭會議先對齊事實，再談偏好與待辦，讓家
 preparation: ["學生與家長各自寫下想法與疑問","目前已知的校科、規則與時程資料"]
 publishedAt: 2026-08-14
 updatedAt: 2026-08-14
+status: published
 readMinutes: 5
 featured: false
 keywords: ["高中志願親子溝通","升學規劃家長","高中志願討論","國三家長"]

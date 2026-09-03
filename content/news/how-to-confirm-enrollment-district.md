@@ -12,6 +12,7 @@ oneLineConclusion: "就學區要先依學籍與招生管道確認，再查當年
 preparation: ["目前就讀國中與學籍異動資訊","目標學校所在縣市與招生管道"]
 publishedAt: 2026-08-14
 updatedAt: 2026-08-14
+status: published
 readMinutes: 5
 featured: true
 keywords: ["高中免試入學就學區","跨區免試入學","免試入學學籍","就學區查詢"]
