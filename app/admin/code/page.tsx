@@ -21,7 +21,7 @@ export default async function AdminCodePage({
     SOURCE_FILES.find((file) => file.path === params.file) ?? SOURCE_FILES[0];
 
   return (
-    <main className="admin-shell">
+    <main className="admin-module-page">
       <header className="admin-header">
         <div>
           <p className="admin-eyebrow">Code</p>

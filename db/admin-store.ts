@@ -15,6 +15,16 @@ export type AdminFile = {
 
 export type AdminFileWithBlob = AdminFile & { file_blob: ArrayBuffer };
 
+export type DeploymentEvent = {
+  id: string;
+  file_id: string;
+  action: "validate" | "test" | "deploy" | "rollback";
+  status: "pending" | "requested" | "success" | "failed";
+  note: string;
+  created_by: string;
+  created_at: string;
+};
+
 export type SiteSetting = {
   key: string;
   value: string;
@@ -72,6 +82,17 @@ export async function ensureAdminSchema() {
       ON admin_files(visibility)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_line_users_last_seen_at
       ON line_users(last_seen_at)`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS deployment_events (
+      id TEXT PRIMARY KEY,
+      file_id TEXT NOT NULL,
+      action TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      note TEXT NOT NULL DEFAULT '',
+      created_by TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    )`),
+    db.prepare(`CREATE INDEX IF NOT EXISTS idx_deployment_events_created_at
+      ON deployment_events(created_at)`),
   ]);
   const columns = await db.prepare(`PRAGMA table_info(admin_files)`).all<{ name: string }>();
   if (!(columns.results ?? []).some((column) => column.name === "file_blob")) {
@@ -87,6 +108,34 @@ export async function listAdminFiles() {
       FROM admin_files ORDER BY created_at DESC LIMIT 100`)
     .all<AdminFile>();
   return result.results ?? [];
+}
+
+export async function listDeploymentFiles() {
+  await ensureAdminSchema();
+  const result = await getD1()
+    .prepare(`SELECT id, object_key, file_name, content_type, size, category,
+      visibility, description, uploaded_by, created_at
+      FROM admin_files WHERE category = 'code-deploy' ORDER BY created_at DESC LIMIT 50`)
+    .all<AdminFile>();
+  return result.results ?? [];
+}
+
+export async function listDeploymentEvents() {
+  await ensureAdminSchema();
+  const result = await getD1()
+    .prepare(`SELECT id, file_id, action, status, note, created_by, created_at
+      FROM deployment_events ORDER BY created_at DESC LIMIT 100`)
+    .all<DeploymentEvent>();
+  return result.results ?? [];
+}
+
+export async function createDeploymentEvent(input: Omit<DeploymentEvent, "created_at">) {
+  await ensureAdminSchema();
+  await getD1().prepare(`INSERT INTO deployment_events
+    (id, file_id, action, status, note, created_by, created_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?)`)
+    .bind(input.id, input.file_id, input.action, input.status, input.note, input.created_by, new Date().toISOString())
+    .run();
 }
 
 export async function getAdminFile(id: string) {

@@ -15,5 +15,5 @@ export async function POST(
 
   const { id } = await context.params;
   await deleteAdminFile(id);
-  redirect("/admin");
+  redirect("/admin/media");
 }

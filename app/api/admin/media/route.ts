@@ -15,14 +15,14 @@ export async function POST(request: Request) {
   const kind: MediaKind = form.get("kind") === "video" ? "video" : "podcast";
   const title = clean(form.get("title"), 160);
   const summary = clean(form.get("summary"), 1000);
-  if (!(upload instanceof File) || !title || upload.size > MAX_MEDIA_BYTES) return redirect("/admin?updated=media_invalid");
+  if (!(upload instanceof File) || !title || upload.size > MAX_MEDIA_BYTES) return redirect("/admin/media?updated=media_invalid");
   const validType = kind === "video" ? allowedVideo.has(upload.type) : allowedAudio.has(upload.type);
-  if (!validType) return redirect("/admin?updated=media_type_invalid");
+  if (!validType) return redirect("/admin/media?updated=media_type_invalid");
   const id = crypto.randomUUID();
   const safeName = upload.name.replace(/[^\w.\-\u4e00-\u9fff]/g, "_");
   const src = `/media/${id}-${safeName}`;
   const result = await syncMediaToGitHub({ item: { id, kind, title, summary, src, mimeType: upload.type }, bytes: await upload.arrayBuffer() });
-  redirect(`/admin?updated=${result.synced ? "media_synced" : "media_failed"}`);
+  redirect(`/admin/media?updated=${result.synced ? "media_synced" : "media_failed"}`);
 }
 
 function clean(value: FormDataEntryValue | null, maxLength: number) { return typeof value === "string" ? value.trim().slice(0, maxLength) : ""; }

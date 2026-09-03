@@ -21,7 +21,7 @@ export default async function AdminContentPage({ searchParams }: { searchParams:
   const editing = entries.find((entry) => entry.id === params.edit);
   const contentType = isContentType(params.type) ? params.type : editing?.content_type || "knowledge_term";
 
-  return <main className="admin-shell">
+  return <main className="admin-module-page">
     <header className="admin-header">
       <div><p className="admin-eyebrow">Content Studio</p><h1>內容中心</h1><p className="admin-muted">管理員：{admin.user.displayName} · 內容發布後前台直接讀取，不需要修改 GitHub。</p></div>
       <div className="admin-actions"><Link href="/admin">回後台</Link><Link href="/knowledge" target="_blank">看升學指南 ↗</Link><Link href="/schedule" target="_blank">看升學日程 ↗</Link><a href={admin.signOutPath}>登出</a></div>

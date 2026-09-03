@@ -18,7 +18,7 @@ test("前台只讀已公開分享，管理員才能審核 pending", async () => 
   const [store, adminRoute, adminPage] = await Promise.all([
     read("db/school-review-store.ts"),
     read("app/api/admin/school-reviews/route.ts"),
-    read("app/admin/page.tsx"),
+    read("app/admin/data/operations/page.tsx"),
   ]);
   assert.match(store, /listPendingSchoolReviews/);
   assert.match(store, /moderateSchoolReview/);

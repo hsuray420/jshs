@@ -57,7 +57,7 @@ test("content publishing supports Word-like text size and color plus GitHub sync
 
 test("media administration remains first-party without becoming a public IA entry", async () => {
   const [admin, route, sync, workspace, manifest, sitemap] = await Promise.all([
-    read("app/admin/page.tsx"),
+    read("app/admin/data/operations/page.tsx"),
     read("app/api/admin/media/route.ts"),
     read("lib/github-sync.ts"),
     read("components/knowledge-topic-workspace.tsx"),

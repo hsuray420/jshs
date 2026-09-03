@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   if (!id || (status !== "published" && status !== "rejected")) return Response.json({ ok: false, error: "invalid_moderation" }, { status: 400 });
   try {
     const updated = await moderateSchoolReview(id, status);
-    return Response.redirect(new URL(`/admin?updated=review_${updated ? status : "not_found"}`, request.url), 303);
+    return Response.redirect(new URL(`/admin/data/reviews?updated=review_${updated ? status : "not_found"}`, request.url), 303);
   } catch {
     return Response.json({ ok: false, error: "review_service_unavailable" }, { status: 503 });
   }

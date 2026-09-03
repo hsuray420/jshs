@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   const formData = await request.formData();
   const donationUrl = String(formData.get("donation_url") || "").trim();
   if (donationUrl && !isValidEcpayUrl(donationUrl)) {
-    redirect("/admin?updated=settings_invalid");
+    redirect("/admin/settings?updated=settings_invalid");
   }
   await upsertSiteSetting(
     "site_notice",
@@ -47,5 +47,5 @@ export async function POST(request: Request) {
     admin.user.displayName,
   );
 
-  redirect("/admin?updated=settings");
+  redirect("/admin/settings?updated=settings");
 }

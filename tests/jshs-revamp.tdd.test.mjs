@@ -50,7 +50,7 @@ test("donation button uses a configurable external destination instead of creati
   const [form, header, admin, settings] = await Promise.all([
     source("components/support-donation-form.tsx"),
     source("components/site-header.tsx"),
-    source("app/admin/page.tsx"),
+    source("app/admin/payments/page.tsx"),
     source("app/api/admin/settings/route.ts"),
   ]);
   assert.match(form, /donation_url/);

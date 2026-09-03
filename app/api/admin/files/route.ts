@@ -45,5 +45,5 @@ export async function POST(request: Request) {
     file_blob: await upload.arrayBuffer(),
   });
 
-  redirect("/admin");
+  redirect("/admin/media");
 }

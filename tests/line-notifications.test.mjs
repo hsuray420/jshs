@@ -11,7 +11,7 @@ async function source(relativePath) {
 test("notification controls define all three admin-managed LINE events", async () => {
   const notifications = await source("lib/notifications.ts");
   const store = await source("db/notification-store.ts");
-  const adminPage = await source("app/admin/page.tsx");
+  const adminPage = await source("app/admin/notifications/page.tsx");
   const adminRoute = await source("app/api/admin/notifications/route.ts");
 
   for (const eventKey of ["planner_finalized", "score_calculated", "important_date"]) {
@@ -27,7 +27,7 @@ test("notification controls define all three admin-managed LINE events", async (
   assert.match(store, /score_calculated_enabled/);
   assert.match(store, /important_date_enabled/);
   assert.match(adminPage, /重要日期/);
-  assert.match(adminPage, /通知開關|通知主控/);
+  assert.match(adminPage, /通知開關|通知中心/);
   assert.match(adminRoute, /requireAdmin/);
   assert.match(adminRoute, /upsertNotificationSetting/);
 });

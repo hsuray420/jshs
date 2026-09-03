@@ -50,7 +50,7 @@ export async function POST(request: Request) {
   await upsertSiteSetting("schools_csv_file_name", fileName, admin.user.displayName);
   await upsertSiteSetting("schools_csv_updated_at", now, admin.user.displayName);
 
-  redirect("/admin?updated=schools_csv");
+  redirect("/admin/data/csv?updated=schools_csv");
 }
 
 function safeFileName(fileName: string) {

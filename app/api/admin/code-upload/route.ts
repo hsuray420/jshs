@@ -52,5 +52,5 @@ export async function POST(request: Request) {
     file_blob: await upload.arrayBuffer(),
   });
 
-  redirect("/admin?updated=code_upload");
+  redirect("/admin/deployments?updated=code_upload");
 }
