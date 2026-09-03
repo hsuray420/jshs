@@ -517,7 +517,20 @@ export default async function AdminPage({
               defaultValue={settingsMap.get("donation_url") ?? ""}
             />
           </label>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label>
+              付款平台（預留）
+              <select name="donation_provider" defaultValue={settingsMap.get("donation_provider") ?? "ecpay"}>
+                <option value="ecpay">綠界 ECPay</option>
+              </select>
+            </label>
+            <label>
+              綠界商店／商戶 ID（預留）
+              <input name="donation_merchant_id" defaultValue={settingsMap.get("donation_merchant_id") ?? ""} placeholder="拿到綠界資料後貼上" />
+            </label>
+          </div>
           <p className="admin-muted">請填入綠界 HTTPS 付款連結；若要讓捐款金額自動帶入，請在網址要帶金額的位置寫入 <code>{"{amount}"}</code>，例如 <code>https://payment.ecpay.com.tw/...?amount={"{amount}"}</code>。本站不處理信用卡資料或付款結果。</p>
+          <p className="admin-muted">未來若改成正式 API 建單，再由環境變數設定 HashKey／HashIV 等機密，不會要求你把機密貼進一般後台欄位。</p>
           <button className="admin-button" type="submit">
             儲存設定
           </button>

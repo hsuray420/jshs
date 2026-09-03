@@ -36,6 +36,16 @@ export async function POST(request: Request) {
     donationUrl,
     admin.user.displayName,
   );
+  await upsertSiteSetting(
+    "donation_provider",
+    String(formData.get("donation_provider") || "ecpay").trim().slice(0, 40),
+    admin.user.displayName,
+  );
+  await upsertSiteSetting(
+    "donation_merchant_id",
+    String(formData.get("donation_merchant_id") || "").trim().slice(0, 40),
+    admin.user.displayName,
+  );
 
   redirect("/admin?updated=settings");
 }

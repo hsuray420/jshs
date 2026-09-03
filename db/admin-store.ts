@@ -239,6 +239,7 @@ export async function removeExtraAdminLineUserId(lineUserId: string, updatedBy: 
 
 export const PUBLIC_SETTING_KEYS = new Set([
   "official_line_url",
+  "donation_url",
 ]);
 
 export async function listPublicSiteSettings() {
