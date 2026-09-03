@@ -2,39 +2,18 @@
 
 import { useEffect, useMemo, useState } from "react";
 import districtMetadata from "../public/it_hs/district-metadata.json" with { type: "json" };
+import eligibilityFinderContent from "@/content/features/eligibility-finder.json";
 import { readStoredDistrict } from "@/lib/district-context";
 import { evaluateAdmissionEligibility, type AdmissionPathInput, type AdmissionPathResult, type AdmissionPathRoute, type Identity, type SpecialNeed, type StudentType } from "@/lib/admission-path-engine";
 
 const STORAGE_KEY = "jshs_admission_path_finder";
-const academicYears = [{ value: "115", label: "115 學年度" }] as const;
+const academicYears = eligibilityFinderContent.academicYears as readonly { value: string; label: string }[];
 
-const studentTypes: readonly { value: StudentType; label: string; description: string }[] = [
-  { value: "current_graduate", label: "國中應屆畢業生", description: "今年完成國中畢業，準備參加高中職升學。" },
-  { value: "non_current_graduate", label: "非應屆畢業生", description: "已畢業、重讀、休學或其他非一般應屆狀況。" },
-  { value: "transfer_student", label: "轉學生", description: "曾轉學或目前學籍異動，需要個案確認。" },
-  { value: "overseas_returning", label: "境外／海外返臺學生", description: "有境外就學或返臺學歷資料需要核對。" },
-  { value: "overseas_student", label: "僑生／境外學生", description: "身分或學歷可能涉及特殊申請管道。" },
-  { value: "other", label: "其他情況", description: "不確定時先選這裡，結果會安排人工確認。" },
-];
+const studentTypes = eligibilityFinderContent.studentTypes as readonly { value: StudentType; label: string; description: string }[];
 
-const identities: readonly { value: Identity; label: string }[] = [
-  { value: "none", label: "無以上身分" },
-  { value: "indigenous", label: "原住民" }, { value: "disability", label: "身心障礙" }, { value: "overseas_chinese", label: "僑生" },
-  { value: "mongolian_tibetan", label: "蒙藏生" }, { value: "government_assigned_child", label: "政府派外人員子女" },
-  { value: "overseas_science_child", label: "境外優秀科學技術人才子女" }, { value: "veteran", label: "退伍軍人相關身分" },
-  { value: "unknown", label: "我不確定" },
-];
+const identities = eligibilityFinderContent.identities as readonly { value: Identity; label: string }[];
 
-const needs: readonly { value: SpecialNeed; label: string; description: string }[] = [
-  { value: "none", label: "沒有／不知道", description: "先以一般免試入學路徑整理，之後仍可重新檢測。" },
-  { value: "special_admission", label: "特色招生／特色班", description: "學校特色、專長、面試或作品甄選。" },
-  { value: "gifted", label: "資優班", description: "資優鑑定、安置或相關升學需求。" },
-  { value: "arts", label: "藝才班", description: "音樂、美術、舞蹈或其他藝術才能管道。" },
-  { value: "sports", label: "體育班", description: "體育專長、術科或運動績優管道。" },
-  { value: "direct_selection", label: "直升／甄選", description: "完全中學直升或學校甄選入學。" },
-  { value: "cross_zone", label: "跨區就學", description: "希望到原就讀區以外的就學區升學。" },
-  { value: "special_education", label: "特殊教育", description: "特殊教育安置、IEP 或學習支持。" },
-];
+const needs = eligibilityFinderContent.needs as readonly { value: SpecialNeed; label: string; description: string }[];
 
 const countyOptions = [...new Set(Object.values(districtMetadata.districts).flatMap((district) => district.areas.split("、")))].sort((a, b) => a.localeCompare(b, "zh-TW"));
 const districtOptions = Object.entries(districtMetadata.districts).map(([code, district]) => ({ code, label: district.label, areas: district.areas }));

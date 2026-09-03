@@ -95,7 +95,7 @@ const schoolDocuments = schoolDirectory.flatMap((school) => {
 const articleDocuments = newsArticles.map((article) => ({
   id: `article:${article.slug}`,
   title: article.title,
-  body: article.description,
+  body: `${article.description} ${article.oneLineConclusion} ${article.content}`,
   href: `/news/${article.slug}`,
   category: "公告" as const,
   meta: `更新 ${article.updatedAt} · ${article.districtScope}`,

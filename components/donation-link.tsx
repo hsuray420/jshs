@@ -24,7 +24,7 @@ export function DonationLink({ children, className, fallbackHref }: DonationLink
       .finally(() => setReady(true));
   }, []);
 
-  if (donationUrl) return <a href={donationUrl} target="_blank" rel="noreferrer" className={className}>{children}</a>;
   if (ready && fallbackHref) return <Link href={fallbackHref} className={className}>{children}</Link>;
+  if (donationUrl) return <a href={donationUrl} target="_blank" rel="noreferrer" className={className}>{children}</a>;
   return null;
 }

@@ -517,7 +517,7 @@ export default async function AdminPage({
               defaultValue={settingsMap.get("donation_url") ?? ""}
             />
           </label>
-          <p className="admin-muted">儲存後，Header、頁尾與支持頁會使用同一個綠界外部連結；本站不處理信用卡資料或付款結果。</p>
+          <p className="admin-muted">請填入綠界 HTTPS 付款連結；若要讓捐款金額自動帶入，請在網址要帶金額的位置寫入 <code>{"{amount}"}</code>，例如 <code>https://payment.ecpay.com.tw/...?amount={"{amount}"}</code>。本站不處理信用卡資料或付款結果。</p>
           <button className="admin-button" type="submit">
             儲存設定
           </button>

@@ -21,7 +21,7 @@ const districtEntries = Object.entries(districtMetadata.districts).map(([code, d
 const articleEntries = newsArticles.map((article) => ({
   title: article.title,
   url: `https://jshs.cc/news/${article.slug}`,
-  snippet: `${article.description} ${article.oneLineConclusion} ${article.summary.join("；")} ${article.sections.flatMap((section) => [section.heading, ...section.paragraphs, ...(section.bullets || [])]).join("；")} 來源：${article.sources.map((source) => `${source.label} ${source.url}`).join("；")}`,
+  snippet: `${article.description} ${article.oneLineConclusion} ${article.content} 來源：${article.sources.map((source) => `${source.label} ${source.url}`).join("；")}`,
   searchable: `${article.title} ${article.description} ${article.keywords.join(" ")} ${article.summary.join(" ")}`,
 }));
 const schoolEntries = schoolDirectory.map((school) => ({

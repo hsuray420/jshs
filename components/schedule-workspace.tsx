@@ -7,18 +7,14 @@ import { readStoredDistrict, subscribeToDistrict, type DistrictCode } from "@/li
 import { getDistrictAdmissionSchedule, nationalAdmissionSchedule, type AdmissionScheduleStatus } from "@/lib/admission-schedules";
 import { defaultProgress, PROGRESS_STORAGE_KEY, readProgress, type ProgressState } from "@/lib/progress";
 import { SERVICE_YEAR, SOURCE_ACADEMIC_YEAR } from "@/lib/trust";
+import scheduleTasksContent from "@/content/schedule/tasks.json";
 
 export type ScheduleView = "overview" | "timeline" | "now" | "tasks" | "open-days";
 type ImportantDate = { id: string; title: string; description: string; eventDate?: string; status?: AdmissionScheduleStatus; sourcePages?: "I" | "II" | "i" | "ii" | "iii"; sourceUrl?: string };
 type OpenDay = { id: string; school: string; title: string; eventDate: string; eventTime: string; location: string; sourceUrl: string; notes: string; done: boolean };
 type UserTask = { id: string; title: string; done: boolean };
 
-const fallbackTasks = [
-  { id: "read-rules", title: "查看適用就學區的積分規則", detail: "先了解採計項目、同分比序與資料來源。" },
-  { id: "check-score", title: "完成一次成績試算", detail: "留下服務年度、規則來源年度與尚未完成的欄位。" },
-  { id: "try-schools", title: "收藏有興趣的校科", detail: "從找學校開始，比較課程、通勤與錄取參考。" },
-  { id: "make-planner", title: "建立志願清單", detail: "加入校科後，再用自己排與系統推薦整理順序。" },
-] as const;
+const fallbackTasks = scheduleTasksContent;
 
 const statusLabels: Record<AdmissionScheduleStatus, string> = {
   confirmed: "已公告",

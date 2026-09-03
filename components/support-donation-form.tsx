@@ -1,47 +1,54 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { MAX_DONATION_AMOUNT, MIN_DONATION_AMOUNT } from "../lib/donation";
+
+const PRESET_AMOUNTS = [10, 50, 100, 200, 300, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 30_000, 50_000, 80_000, 100_000];
 
 export function SupportDonationForm() {
   const [donationUrl, setDonationUrl] = useState("");
+  const [amount, setAmount] = useState("100");
+  const [customAmount, setCustomAmount] = useState("");
   const [ready, setReady] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetch("/api/site-config", { headers: { accept: "application/json" } })
-      .then((response) =>
-        response.ok
-          ? (response.json() as Promise<{ donation_url?: string }>)
-          : ({} as { donation_url?: string }),
-      )
-      .then((config) => {
-        const url = String(config.donation_url || "").trim();
-        if (/^https:\/\//i.test(url)) setDonationUrl(url);
-      })
+      .then((response): Promise<{ donation_url?: string }> => response.ok ? response.json() as Promise<{ donation_url?: string }> : Promise.resolve({}))
+      .then((config) => setDonationUrl(String(config.donation_url || "").trim()))
       .catch(() => undefined)
       .finally(() => setReady(true));
   }, []);
 
+  const selectedAmount = amount === "custom" ? customAmount : amount;
+
+  function submitDonation(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const numericAmount = Number(selectedAmount);
+    if (!Number.isInteger(numericAmount) || numericAmount < MIN_DONATION_AMOUNT || numericAmount > MAX_DONATION_AMOUNT) {
+      setError(`請輸入 ${MIN_DONATION_AMOUNT.toLocaleString()} 至 ${MAX_DONATION_AMOUNT.toLocaleString()} 元的整數金額。`);
+      return;
+    }
+    setError("");
+    window.open(`/api/donation/checkout?amount=${numericAmount}`, "_blank", "noopener,noreferrer");
+  }
+
   return (
-    <section className="mx-auto w-[min(840px,calc(100%-32px))] py-10">
+    <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-10">
       <div className="grid gap-5 p-6 jshs-surface-card">
-        <div>
-          <h2 className="text-2xl">小額捐款</h2>
-          <p className="mt-2 text-sm leading-6 jshs-muted-copy">
-            本站目前核心功能免費使用，由民間投入時間整理與維護。若覺得網站有幫助，歡迎以小額捐款或贊助支持網站持續維護。
-          </p>
-        </div>
-        {!ready ? <p role="status" className="text-sm jshs-muted-copy">正在準備外部付款連結…</p> : null}
-        {ready && donationUrl ? (
-          <a href={donationUrl} target="_blank" rel="noreferrer" className="w-fit min-h-11 px-5 py-3 text-sm jshs-button-primary">
-            前往外部付款頁面 ↗
-          </a>
-        ) : null}
-        {ready && !donationUrl ? (
-          <p role="status" className="text-sm font-bold text-amber-700">目前外部付款連結尚未設定，請稍後再試。</p>
-        ) : null}
-        <p className="text-xs leading-6 text-slate-500">
-          點擊後會在新分頁開啟外部付款服務；付款資料與結果以該服務頁面顯示為準，本站不蒐集信用卡資料。
-        </p>
+        <div className="text-center"><h2 className="text-2xl">— 選擇捐款金額 —</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">感謝你支持 JSHS.cc。選擇或輸入金額後，系統會前往綠界付款頁面。</p></div>
+        <form className="grid gap-4" target="_blank" onSubmit={submitDonation}>
+          <fieldset className="grid gap-3"><legend className="sr-only">捐款金額（最低 10 元，最高 100,000 元）</legend><div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            {PRESET_AMOUNTS.map((preset) => <label key={preset} className="cursor-pointer"><input className="sr-only" type="radio" name="amount" value={preset} checked={amount === String(preset)} onChange={(event) => setAmount(event.target.value)} /><span className={`block rounded-lg border px-3 py-4 text-center text-lg ${amount === String(preset) ? "border-emerald-600 bg-emerald-50 font-bold text-emerald-800" : "border-slate-200"}`}>{preset.toLocaleString()}<small className="ml-1 text-sm font-normal">元</small></span></label>)}
+            <label className="cursor-pointer"><input className="sr-only" type="radio" name="amount" value="custom" checked={amount === "custom"} onChange={(event) => setAmount(event.target.value)} /><span className={`block rounded-lg border px-3 py-4 text-center text-lg ${amount === "custom" ? "border-emerald-600 bg-emerald-50 font-bold text-emerald-800" : "border-slate-200"}`}>自訂金額</span></label>
+          </div></fieldset>
+          {amount === "custom" ? <label className="mx-auto grid w-full max-w-sm gap-2 text-sm"><span>自訂金額（元）</span><input className="min-h-11 rounded-lg border border-slate-300 px-3" type="number" min={MIN_DONATION_AMOUNT} max={MAX_DONATION_AMOUNT} step="1" value={customAmount} onChange={(event) => setCustomAmount(event.target.value)} placeholder="10～100,000" required /></label> : null}
+          {error ? <p role="alert" className="text-center text-sm font-bold text-red-700">{error}</p> : null}
+          {!ready ? <p role="status" className="text-center text-sm jshs-muted-copy">正在準備外部付款連結…</p> : null}
+          {ready && donationUrl ? <button type="submit" className="mx-auto min-h-11 px-6 py-3 text-sm jshs-button-primary">前往綠界付款頁面 ↗</button> : null}
+          {ready && !donationUrl ? <p role="status" className="text-center text-sm font-bold text-amber-700">目前外部付款連結尚未設定，請稍後再試。</p> : null}
+        </form>
+        <p className="text-center text-xs leading-6 text-slate-500">付款資料與結果以綠界頁面顯示為準；本站不蒐集信用卡資料。</p>
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { upsertSiteSetting } from "../../../../db/admin-store";
+import { isValidDonationUrl as isValidEcpayUrl } from "../../../../lib/donation";
 import { requireAdmin } from "../../../admin/auth";
 
 export const dynamic = "force-dynamic";
@@ -37,13 +38,4 @@ export async function POST(request: Request) {
   );
 
   redirect("/admin?updated=settings");
-}
-
-function isValidEcpayUrl(value: string) {
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" && (url.hostname === "ecpay.com.tw" || url.hostname.endsWith(".ecpay.com.tw"));
-  } catch {
-    return false;
-  }
 }

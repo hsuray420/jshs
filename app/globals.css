@@ -2,6 +2,12 @@
 @import "leaflet/dist/leaflet.css";
 @import "tailwindcss";
 
+.jshs-article-copy { margin-top: 2.5rem; display: grid; gap: 1rem; line-height: 2; }
+.jshs-article-copy h1, .jshs-article-copy h2, .jshs-article-copy h3 { margin-top: 1.5rem; line-height: 1.35; font-weight: 900; }
+.jshs-article-copy h2 { font-size: 1.5rem; }
+.jshs-article-copy h3 { font-size: 1.2rem; }
+.jshs-article-copy ul { list-style: disc; padding-left: 1.5rem; }
+
 :root {
   --background: var(--bg-page);
   --foreground: var(--text-primary);
