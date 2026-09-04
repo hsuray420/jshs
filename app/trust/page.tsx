@@ -16,6 +16,9 @@ const sections = [
   ["versions", "資料版本紀錄", "查看目前資料版本、來源更新與規則校核事件。"],
   ["report", "錯誤回報", "回報學校、科別、名額、規則、日期、來源或功能問題。"],
   ["credibility", "平台可信度說明", "了解 JSHS 的角色、校核方式、官方界線與更正機制。"],
+  ["about", "關於 JSHS", "了解我們為什麼做這個平台、資料從哪裡來，以及誰負責維護。"],
+  ["sponsor", "贊助與編輯獨立", "查看支持方式、經費用途與不影響內容判斷的原則。"],
+  ["updates", "資料更新紀錄", "查看網站有人維護的證據，以及最近發生的資料與功能更新。"],
 ] as const;
 
 export default function TrustPage() {
@@ -23,5 +26,5 @@ export default function TrustPage() {
 }
 
 function TrustStatus() {
-  return <section className="mx-auto w-[min(1120px,calc(100%-32px))] pt-8"><div className="grid gap-3 md:grid-cols-3"><article className="p-5 jshs-surface-card"><SourceBadge sourceType="jshs_curated" /><h2 className="mt-3 text-lg">{SERVICE_YEAR} 服務年度</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">目前狀態：{VERIFICATION_STATUS === "awaiting_116_official_release" ? "116 正式規則待公告" : "已校核"}。</p></article><article className="p-5 jshs-surface-card"><SourceBadge sourceType="official_based_calculation" /><h2 className="mt-3 text-lg">規則來源年度</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">目前試算暫依 {SOURCE_ACADEMIC_YEAR} 學年度官方規則，不將來源年度改寫成 116。</p></article><article className="p-5 jshs-surface-card"><SourceBadge sourceType="jshs_estimated" /><h2 className="mt-3 text-lg">15 區資料狀態</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">每個就學區的能力與來源限制，都可在建置進度中查看。</p></article></div></section>;
+  return <section className="mx-auto w-[min(1120px,calc(100%-32px))] pt-8"><div className="grid gap-3 md:grid-cols-3"><article className="p-5 jshs-surface-card"><SourceBadge sourceType="jshs_curated" /><h2 className="mt-3 text-lg">{SERVICE_YEAR} 服務年度</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">目前狀態：{VERIFICATION_STATUS === "awaiting_116_official_release" ? "116 正式規則待公告" : "已校核"}。</p></article><article className="p-5 jshs-surface-card"><SourceBadge sourceType="official_based_calculation" /><h2 className="mt-3 text-lg">規則來源年度</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">目前試算暫依 {SOURCE_ACADEMIC_YEAR} 學年度官方規則，不將來源年度改寫成 116。</p></article><article className="p-5 jshs-surface-card"><SourceBadge sourceType="jshs_estimated" /><h2 className="mt-3 text-lg">15 區資料狀態</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">每個就學區的能力與來源限制，都可在建置進度中查看。</p></article></div><div className="mt-4 flex flex-wrap gap-2" aria-label="資料狀態定義"><span className="jshs-chip">🟢 官方確認</span><span className="jshs-chip">🟡 多來源整理</span><span className="jshs-chip">🔵 使用者提供</span><span className="jshs-chip">⚪ 尚待確認</span></div></section>;
 }

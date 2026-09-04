@@ -18,6 +18,7 @@
     "generate:data-foundation": "node scripts/generate-data-foundation.mjs",
     "generate:vocational-groups": "node scripts/generate-vocational-groups.mjs",
     "validate:production": "node scripts/check-production-placeholders.mjs",
+    "release:gate": "node scripts/check-release-gate.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next --ignore-pattern .wrangler",
     "generate:source-snapshot": "node scripts/generate-source-snapshot.mjs",
     "generate:admission-history": "node scripts/generate-admission-history.mjs",

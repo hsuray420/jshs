@@ -58,3 +58,21 @@ export const plannerConfirmations = sqliteTable("planner_confirmations", {
   stateJson: text("state_json").notNull(),
   confirmedAt: text("confirmed_at").notNull(),
 });
+
+export const dataReports = sqliteTable("data_reports", {
+  id: text("id").primaryKey(),
+  pageUrl: text("page_url").notNull(),
+  category: text("category").notNull(),
+  dataset: text("dataset").notNull().default(""),
+  academicYear: text("academic_year").notNull().default(""),
+  field: text("field").notNull().default(""),
+  currentValue: text("current_value").notNull().default(""),
+  suggestedValue: text("suggested_value").notNull(),
+  sourceUrl: text("source_url").notNull().default(""),
+  note: text("note").notNull().default(""),
+  contact: text("contact").notNull().default(""),
+  status: text("status").notNull().default("pending"),
+  reviewNote: text("review_note").notNull().default(""),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+}, (table) => [index("idx_data_reports_status_created").on(table.status, table.createdAt)]);

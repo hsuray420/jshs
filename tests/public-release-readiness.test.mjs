@@ -5,11 +5,12 @@ import test from "node:test";
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 test("public trust surfaces explain the JSHS promise and editorial independence", async () => {
-  const [home, trust, detail, siteMap] = await Promise.all([
+  const [home, trust, detail, siteMap, routeMetadata] = await Promise.all([
     read("app/page.tsx"),
     read("app/trust/page.tsx"),
     read("app/trust/[slug]/page.tsx"),
     read("content/site-map.json"),
+    read("content/route-metadata.json"),
   ]);
 
   for (const principle of ["看得懂", "查得到", "算得清楚", "自己決定"]) {
@@ -21,6 +22,10 @@ test("public trust surfaces explain the JSHS promise and editorial independence"
   assert.match(detail, /贊助不影響|編輯獨立/);
   assert.match(trust, /資料狀態|官方確認|多來源整理|使用者提供|尚待確認/);
   assert.match(siteMap, /關於本站|支持／合作|資料更新紀錄/);
+  const publicRoutes = JSON.parse(routeMetadata).routes;
+  for (const pathname of ["/trust/about", "/trust/sponsor", "/trust/updates"]) {
+    assert.equal(publicRoutes.find((route) => route.pathname === pathname)?.sitemap, true, `${pathname} should be discoverable`);
+  }
 });
 
 test("data reporting is a first-party moderated flow", async () => {
@@ -39,7 +44,7 @@ test("data reporting is a first-party moderated flow", async () => {
   assert.match(form, /目前內容/);
   assert.match(form, /官方來源/);
   assert.match(adminPage, /資料回報/);
-  assert.match(dashboard, /data-reports/);
+  assert.match(dashboard, /data\/reports/);
 });
 
 test("release gate and discovery metadata are wired into the project", async () => {

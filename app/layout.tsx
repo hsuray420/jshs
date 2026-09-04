@@ -15,6 +15,8 @@ export const metadata: Metadata = {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
   },
+  openGraph: { type: "website", locale: "zh_TW", siteName: "全國國中升學資訊網", images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: "JSHS 全國國中升學資訊網" }] },
+  twitter: { card: "summary_large_image", images: ["/og-image.svg"] },
 };
 
 export default async function RootLayout({

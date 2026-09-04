@@ -1,0 +1,10 @@
+import { listPendingDataReports } from "../../../../db/data-report-store";
+import { requireAdmin } from "../../auth";
+
+export const dynamic = "force-dynamic";
+
+export default async function DataReportsPage() {
+  await requireAdmin();
+  const reports = await listPendingDataReports();
+  return <><section className="admin-page-heading"><div><p className="admin-eyebrow">Data / Trust</p><h1>資料回報</h1><p className="admin-muted">使用者回報先進入待確認；只有核對後才標記接受、已修正或不採用。</p></div></section><section className="admin-panel"><div className="admin-section-head"><div><h2>待確認 {reports.length} 筆</h2><p className="admin-muted">保留頁面、欄位、目前內容、建議內容與官方來源，方便留下可追溯的處理紀錄。</p></div></div><div className="admin-deployment-list">{reports.map((report) => <article className="admin-deployment-item" key={report.id}><div><strong>{report.category} · {report.page_url}</strong><p className="admin-muted">{report.field || "未指定欄位"} · {report.academic_year || "未標示年度"}</p><p>目前：{report.current_value || "未提供"}</p><p>建議：{report.suggested_value}</p>{report.source_url ? <a href={report.source_url} target="_blank" rel="noreferrer">官方來源 ↗</a> : null}<small>{report.contact ? `聯絡：${report.contact} · ` : ""}{report.created_at}</small></div><div className="admin-actions"><form action="/api/admin/data-reports" method="post"><input type="hidden" name="id" value={report.id} /><input type="hidden" name="status" value="accepted" /><button className="admin-button" type="submit">接受</button></form><form action="/api/admin/data-reports" method="post"><input type="hidden" name="id" value={report.id} /><input type="hidden" name="status" value="fixed" /><button className="admin-button" type="submit">已修正</button></form><form action="/api/admin/data-reports" method="post"><input type="hidden" name="id" value={report.id} /><input type="hidden" name="status" value="rejected" /><button className="admin-button admin-button-danger" type="submit">不採用</button></form></div></article>)}{!reports.length ? <p className="admin-muted">目前沒有待確認的資料回報。</p> : null}</div></section></>;
+}

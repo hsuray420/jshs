@@ -21,6 +21,12 @@ export const metadata: Metadata = {
 };
 
 const officialDistricts = Object.entries(districtMetadata.districts).slice(0, 3);
+const brandPrinciples = [
+  ["看得懂", "把簡章、積分規則與升學流程整理成學生和家長能理解的內容。"],
+  ["查得到", "重要數字保留資料年度、來源與最後確認日期。"],
+  ["算得清楚", "試算結果附上項目拆解與計算依據，不只給一個分數。"],
+  ["自己決定", "提供資料和工具，但不替你宣稱哪間學校最好。"],
+] as const;
 
 export default function HomePage() {
   return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/" />
@@ -28,6 +34,7 @@ export default function HomePage() {
     <PageContainer as="section" className="jshs-home-action-layout"><HomeQuickActions /></PageContainer>
     <PageContainer as="section" className="jshs-home-guidance"><HomeNextStep /></PageContainer>
     <HomeProgress />
+    <PageContainer as="section" aria-labelledby="principles-title" className="py-10"><SectionHeading eyebrow="JSHS 的原則" id="principles-title" title="讓每一個升學選擇，都有資料可以理解、有來源可以確認。" body="我們整理資訊，也把限制說清楚；最後的選擇留給學生、家長與老師一起討論。" /><div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{brandPrinciples.map(([title, body]) => <article key={title} className="p-5 jshs-surface-card"><h3 className="text-lg">{title}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{body}</p></article>)}</div><Link href="/trust/credibility" className="mt-5 inline-block text-sm font-bold text-[var(--jshs-primary)]">查看資料與信任原則 →</Link></PageContainer>
     <PageContainer as="section" aria-labelledby="status-title" className="py-8"><SectionHeading eyebrow="升學資訊" id="status-title" title="讓資料與規則清楚可查" body="資料年度、規則來源與更新狀態都會明確標示。" /><div className="mt-6 grid gap-4 md:grid-cols-3"><article className="p-5 jshs-surface-card"><SourceBadge sourceType="jshs_curated" /><h3 className="mt-3">{SERVICE_YEAR} 學年度服務</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">目前狀態：{VERIFICATION_STATUS === "awaiting_116_official_release" ? "正式規則待公告" : "已完成校核"}。</p></article><article className="p-5 jshs-surface-card"><SourceBadge sourceType="official_based_calculation" /><h3 className="mt-3">試算規則來源</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">目前依 {SOURCE_ACADEMIC_YEAR} 學年度官方規則提供試算參考。</p><Link href="/tools/rules" className="mt-4 inline-block text-sm font-bold">查看積分規則 →</Link></article><article className="p-5 jshs-surface-card"><SourceBadge sourceType="jshs_estimated" /><h3 className="mt-3">15 區都能開始規劃</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">可先選擇就學區、試算成績並建立志願清單。</p><Link href="/districts" className="mt-4 inline-block text-sm font-bold">選擇就學區 →</Link></article></div></PageContainer>
     <section aria-labelledby="official-title" className="jshs-home-news"><PageContainer className="py-8 md:py-10"><SectionHeading eyebrow="官方資訊" id="official-title" title="各區官方資訊入口" body="涉及報名、資格與錄取時，請以官方公告為準。" /><div className="mt-6 grid gap-4 md:grid-cols-3">{officialDistricts.map(([code, district]) => <article key={code} className="p-5 jshs-surface-card"><SourceBadge sourceType="official" /><h3 className="mt-3">{district.label}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{district.sourceName}</p><a href={district.sourceUrl} target="_blank" rel="noreferrer" className="mt-4 inline-block text-sm font-bold">查看官方資訊 ↗</a></article>)}</div><Link href="/admission-guides" className="mt-5 inline-block text-sm font-bold">查看全部官方資訊 →</Link></PageContainer></section><SiteFooter />
   </main>;

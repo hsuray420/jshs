@@ -7,7 +7,7 @@ import { SERVICE_YEAR } from "@/lib/trust";
 const footerGroups = [
   { title: "快速入口", links: [["找學校", "/schools"], ["算成績", "/tools"], ["我的志願", "/planner"], ["升學日程", "/schedule"], ["官方資訊", "/admission-guides"]] },
   { title: "資料與信任", links: [["資料來源", "/trust/sources"], ["資料更新狀態", "/trust/status"], ["15 區建置進度", "/trust/progress"], ["錯誤回報", "/trust/report"], ["平台可信度說明", "/trust/credibility"]] },
-  { title: "平台", links: [["關於 JSHS", "/trust/credibility"], ["小額捐款", "/support"], ["贊助我們", "/support"], ["聯絡我們", "mailto:jshs.contact@gmail.com"], ["服務狀態", "/trust/status"]] },
+  { title: "平台", links: [["關於 JSHS", "/trust/about"], ["資料更新紀錄", "/trust/updates"], ["小額捐款", "/support"], ["聯絡我們", "mailto:jshs.contact@gmail.com"], ["服務狀態", "/trust/status"]] },
   { title: "法律", links: [["隱私權政策", "/trust/privacy"], ["服務條款", "/trust/terms"], ["Cookie／資料使用說明", "/trust/credibility"]] },
 ] as const;
 
@@ -25,7 +25,7 @@ export function SiteFooter() {
               <section key={group.title}>
                 <h2 className="text-sm font-black text-[var(--text-primary)]">{group.title}</h2>
                 <div className="mt-3 grid gap-2">
-                  {group.links.map(([label, href]) => label === "小額捐款" || label === "贊助我們" ? <DonationLink key={label} fallbackHref={href} className="text-xs leading-5 text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">{label}</DonationLink> : href.startsWith("mailto:") ? <a key={label} href={href} className="text-xs leading-5 text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">{label}</a> : <Link key={label} href={href} className="text-xs leading-5 text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">{label}</Link>)}
+                  {group.links.map(([label, href]) => label === "小額捐款" ? <DonationLink key={label} fallbackHref={href} className="text-xs leading-5 text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">{label}</DonationLink> : href.startsWith("mailto:") ? <a key={label} href={href} className="text-xs leading-5 text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">{label}</a> : <Link key={label} href={href} className="text-xs leading-5 text-[var(--text-secondary)] hover:text-[var(--brand-primary)]">{label}</Link>)}
                 </div>
               </section>
             ))}

@@ -83,14 +83,16 @@
         { "label": "試算與分析方法", "href": "/trust/methodology", "description": "了解規則資料、計算與推估限制" },
         { "label": "資料版本紀錄", "href": "/trust/versions", "description": "查看目前資料版本與校核事件" },
         { "label": "錯誤回報", "href": "/trust/report", "description": "回報資料、規則、日期或功能問題" },
-        { "label": "平台可信度說明", "href": "/trust/credibility", "description": "了解 JSHS 與官方招生單位的界線" }
+        { "label": "平台可信度說明", "href": "/trust/credibility", "description": "了解 JSHS 與官方招生單位的界線" },
+        { "label": "資料更新紀錄", "href": "/trust/updates", "description": "查看資料與功能的實際更新紀錄" }
       ]
     },
     {
       "label": "其他", "href": "/trust/credibility", "activeHref": "/trust/credibility", "eyebrow": "平台與使用說明", "description": "查看本站、聯絡方式、服務狀態與使用規範。",
       "items": [
         { "label": "平台", "href": "/trust/credibility", "description": "認識本站與取得協助", "children": [
-          { "label": "關於本站", "href": "/trust/credibility", "description": "了解本站定位與資料界線" },
+          { "label": "關於本站", "href": "/trust/about", "description": "了解本站定位與資料界線" },
+          { "label": "贊助與編輯獨立", "href": "/trust/sponsor", "description": "查看支持方式與內容獨立原則" },
           { "label": "支持／合作", "href": "/support", "description": "支持維護或提出合作建議" },
           { "label": "聯絡我們", "href": "/support", "description": "查看聯絡方式與回饋管道" },
           { "label": "服務狀態", "href": "/trust/status", "description": "查看資料與服務更新狀態" }
