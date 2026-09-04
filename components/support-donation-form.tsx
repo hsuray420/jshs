@@ -1,24 +1,14 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { MAX_DONATION_AMOUNT, MIN_DONATION_AMOUNT } from "../lib/donation";
 
 const PRESET_AMOUNTS = [10, 50, 100, 200, 300, 500, 1_000, 2_000, 5_000, 10_000, 20_000, 30_000, 50_000, 80_000, 100_000];
 
 export function SupportDonationForm() {
-  const [donationUrl, setDonationUrl] = useState("");
   const [amount, setAmount] = useState("100");
   const [customAmount, setCustomAmount] = useState("");
-  const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    fetch("/api/site-config", { headers: { accept: "application/json" } })
-      .then((response): Promise<{ donation_url?: string }> => response.ok ? response.json() as Promise<{ donation_url?: string }> : Promise.resolve({}))
-      .then((config) => setDonationUrl(String(config.donation_url || "").trim()))
-      .catch(() => undefined)
-      .finally(() => setReady(true));
-  }, []);
 
   const selectedAmount = amount === "custom" ? customAmount : amount;
 
@@ -44,9 +34,7 @@ export function SupportDonationForm() {
           </div></fieldset>
           {amount === "custom" ? <label className="mx-auto grid w-full max-w-sm gap-2 text-sm"><span>自訂金額（元）</span><input className="min-h-11 rounded-lg border border-slate-300 px-3" type="number" min={MIN_DONATION_AMOUNT} max={MAX_DONATION_AMOUNT} step="1" value={customAmount} onChange={(event) => setCustomAmount(event.target.value)} placeholder="10～100,000" required /></label> : null}
           {error ? <p role="alert" className="text-center text-sm font-bold text-red-700">{error}</p> : null}
-          {!ready ? <p role="status" className="text-center text-sm jshs-muted-copy">正在準備外部付款連結…</p> : null}
-          {ready && donationUrl ? <button type="submit" className="mx-auto min-h-11 px-6 py-3 text-sm jshs-button-primary">前往綠界付款頁面 ↗</button> : null}
-          {ready && !donationUrl ? <p role="status" className="text-center text-sm font-bold text-amber-700">目前外部付款連結尚未設定，請稍後再試。</p> : null}
+          <button type="submit" className="mx-auto min-h-11 px-6 py-3 text-sm jshs-button-primary">前往綠界付款頁面 ↗</button>
         </form>
         <p className="text-center text-xs leading-6 text-slate-500">付款資料與結果以綠界頁面顯示為準；本站不蒐集信用卡資料。</p>
       </div>

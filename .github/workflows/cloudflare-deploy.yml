@@ -45,3 +45,15 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Configure ECPay production secrets
+        env:
+          ECPAY_MERCHANT_ID: ${{ secrets.ECPAY_MERCHANT_ID }}
+          ECPAY_HASH_KEY: ${{ secrets.ECPAY_HASH_KEY }}
+          ECPAY_HASH_IV: ${{ secrets.ECPAY_HASH_IV }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          printf '%s' "$ECPAY_MERCHANT_ID" | pnpm exec wrangler secret put ECPAY_MERCHANT_ID
+          printf '%s' "$ECPAY_HASH_KEY" | pnpm exec wrangler secret put ECPAY_HASH_KEY
+          printf '%s' "$ECPAY_HASH_IV" | pnpm exec wrangler secret put ECPAY_HASH_IV

@@ -15,7 +15,7 @@ test("admin IA exposes independent module routes and a shared shell", async () =
 test("payment UI never renders payment secrets to the client", async () => {
   const page = await read("app/admin/payments/page.tsx");
   assert.match(page, /HashKey/);
-  assert.match(page, /僅由環境變數管理/);
+  assert.match(page, /僅由 GitHub Secret 管理/);
   assert.doesNotMatch(page, /settings\.get\("(?:hashkey|hashiv|ecpay_hash|ecpay_iv)"\)/i);
 });
 
