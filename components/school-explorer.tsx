@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
-import type { SchoolSummary } from "@/lib/school-repository";
+import type { SchoolSummary } from "@/lib/school-summary-repository";
 import "@/components/schools-v2.css";
 
 export type SchoolExplorerFilters = { query?: string; district?: string; city?: string; area?: string; ownership?: string; program?: string; gender?: string; department?: string; life?: string };

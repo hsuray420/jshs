@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { SchoolExplorer } from "@/components/school-explorer";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { getSchoolSummaries } from "@/lib/school-repository";
+import { getSchoolSummaries } from "@/lib/school-summary-repository";
 import { districtLabel } from "@/lib/school-districts";
 
 export const metadata: Metadata = { title: "全國高中職查詢｜招生科別、交通、住宿與課程", description: "依學校正式公開資料，搜尋全國高中、高職、綜高與進修部的招生科別、課程、交通與住宿資訊。", alternates: { canonical: "/schools" } };
