@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { parseCsvRows } from "../lib/school-catalog.mjs";
+import { regionalCsvPath } from "./school-csv-source.mjs";
 import { validateAdmissionHistoryRecords, validateOfficialInformationRecords, validateSourceRegistry, validateVocationalGroupRecords } from "./data-foundation.mjs";
 
 const root = process.cwd();
@@ -13,11 +14,13 @@ const groups = await readJson("data/vocational-groups.json");
 const districtCodes = Object.keys(metadata.districts);
 const schoolKeys = new Set();
 const knownPrograms = new Set();
+const canonicalSchools = await readJson("content/schools/generated/schools.json");
+for (const school of canonicalSchools) for (const department of school.departments || []) if (department.name) knownPrograms.add(department.name);
 for (const district of districtCodes) {
-  const csv = await readFile(resolve(root, `public/it_hs/${district}/schools${district === "tp" ? "_tp" : district === "taoyuan-lienchiang" ? "_tl" : ""}.csv`), "utf8");
+  const csv = await readFile(regionalCsvPath(district), "utf8");
   const rows = parseCsvRows(csv); const headers = rows[0].map((item) => item.replace(/^\uFEFF/, "").trim());
   const codeIndex = headers.indexOf("學校代碼"); const departmentsIndex = headers.indexOf("科系與名額");
-  for (const row of rows.slice(1)) { if (row[codeIndex]) schoolKeys.add(`${district}:${row[codeIndex].trim()}`); for (const department of (row[departmentsIndex] || "").split("；")) { const name = department.split(":")[0]?.trim(); if (name) knownPrograms.add(name); } }
+  for (const row of rows.slice(1)) { if (row[codeIndex]) schoolKeys.add(`${district}:${row[codeIndex].trim()}`); for (const department of (row[departmentsIndex] || "").split(/[；;]/u)) { const raw = department.trim(); const name = raw.split(/[:：]/u)[0]?.trim(); if (raw) knownPrograms.add(raw); if (name) knownPrograms.add(name); } }
 }
 const officialInformation = guides.guides.map((guide) => ({ id: `guide-${guide.code}-115`, title: `${guide.label}免試入學簡章`, issuer: metadata.districts[guide.code].sourceName, district: guide.code, schoolYear: "115", dataSchoolYear: "115", yearStatus: "current", publishDate: "", updatedAt: guides.updatedAt, type: "guide", sourceId: `guide-${guide.code}-115`, sourceUrl: guide.file, sourceType: "official_original", summary: "official guide" }));
 const results = [

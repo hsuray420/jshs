@@ -1,7 +1,7 @@
 import { newsArticles } from "./news";
 import { getOfficialInformationRecords } from "./official-information";
 import { routeMetadata, searchableRoutes, type RouteCategory } from "./route-metadata";
-import { schoolDirectory } from "./school-directory";
+import { getSchools } from "./school-repository";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 
 export type SearchResultCategory = RouteCategory;
@@ -25,6 +25,7 @@ type SearchDocument = Readonly<{
   category: SearchResultCategory;
   meta: string;
   external?: boolean;
+  summary?: string;
   aliases: readonly string[];
   keywords: readonly string[];
   categoryWeight: number;
@@ -43,6 +44,8 @@ const categoryWeights: Record<SearchResultCategory, number> = {
 };
 
 const synonyms: Record<string, readonly string[]> = {
+  ai: ["人工智慧", "科技"],
+  餐飲: ["餐旅", "烘焙"],
   中投志願序: ["中投", "志願序", "積分規則", "超額比序"],
   中投積分: ["中投", "積分", "超額比序", "志願序"],
   台中: ["臺中", "中投"],
@@ -66,31 +69,20 @@ const staticDocuments = searchableRoutes.map((route) => ({
   categoryWeight: categoryWeights[route.category],
 })) satisfies readonly SearchDocument[];
 
-const schoolDocuments = schoolDirectory.flatMap((school) => {
-  const schoolDoc: SearchDocument = {
-    id: `school:${school.districtCode}:${school.code}`,
-    title: school.name,
-    body: `${school.districtLabel} · ${school.program || "學制分類待確認"} · ${school.departmentsRaw || "科別資料未提供"}`,
-    href: `/schools/${school.districtCode}/${school.code}`,
-    category: "學校",
-    meta: `${school.academicYear} 學年度 · ${school.dataStatus === "ready" ? "已校核" : "參考資料"}`,
-    aliases: [school.code, school.city, school.area, school.districtLabel],
-    keywords: [school.program, school.ownership, ...school.groups],
-    categoryWeight: categoryWeights.學校,
-  };
-  const departmentDocs = school.departments.slice(0, 8).map((department) => ({
-    id: `department:${school.districtCode}:${school.code}:${department.name}`,
-    title: `${school.name} ${department.name}`,
-    body: `${school.districtLabel} · ${school.city}${school.area ? ` ${school.area}` : ""} · ${department.quota ?? "名額以簡章為準"}`,
-    href: `/schools/${school.districtCode}/${school.code}`,
-    category: "科別" as const,
-    meta: school.program || "校科資料",
-    aliases: [department.name, school.name, school.code, school.districtLabel],
-    keywords: [school.departmentsRaw, ...school.groups],
-    categoryWeight: categoryWeights.科別,
-  }));
-  return [schoolDoc, ...departmentDocs];
-});
+const schoolDocuments = getSchools().map((school): SearchDocument => ({
+  id: `school:${school.code}`,
+  title: school.name,
+  body: [school.city, school.area, ...school.admissionDistricts, school.schoolType,
+    school.departmentRaw, school.features, school.courseDirection, school.project,
+    school.transport, school.commute, school.lodging].filter(Boolean).join(" · "),
+  summary: `${school.city} ${school.area} · ${school.schoolType} · ${school.departments.map((department) => department.name).slice(0, 4).join("、")} · ${school.admissionDistricts.join("、")}`,
+  href: `/schools/${school.code}`,
+  category: "學校",
+  meta: "115 學年度 · 學校與分區招生資料",
+  aliases: [school.code, school.city, school.area, ...school.admissionDistricts],
+  keywords: [school.schoolType, school.ownership, school.gender, ...school.departments.map((department) => department.name)],
+  categoryWeight: categoryWeights.學校,
+}));
 
 const articleDocuments = newsArticles.map((article) => ({
   id: `article:${article.slug}`,
@@ -190,7 +182,7 @@ export function searchSite(query: string, limit = 60): readonly SearchResult[] {
         return score;
       }, 0);
       const score = document.categoryWeight + exactTitle + exactAlias + exactKeyword + exactBody + tokenScore;
-      return { ...document, score };
+      return { ...document, body: document.summary ?? document.body, score };
     })
     .filter((result) => result.score > result.categoryWeight)
     .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title, "zh-TW"))

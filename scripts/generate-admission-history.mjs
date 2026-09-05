@@ -1,6 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { parseCsvRows } from "../lib/school-catalog.mjs";
+import { regionalAdmissionHistoryPath } from "./school-csv-source.mjs";
 
 const root = process.cwd();
 const metadata = JSON.parse(await readFile(resolve(root, "public/it_hs/district-metadata.json"), "utf8"));
@@ -8,7 +9,7 @@ const districtCodes = Object.keys(metadata.districts);
 
 const districtEntries = await Promise.all(districtCodes.map(async (districtCode) => {
   const district = metadata.districts[districtCode];
-  const csv = await readFile(resolve(root, `public/it_hs/${districtCode}/admission-history.csv`), "utf8");
+  const csv = await readFile(regionalAdmissionHistoryPath(districtCode), "utf8");
   const rows = parseCsvRows(csv);
   const headers = (rows[0] || []).map((header) => header.replace(/^\uFEFF/, "").trim());
   const indexes = new Map(headers.map((header, index) => [header, index]));

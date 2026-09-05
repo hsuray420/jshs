@@ -23,6 +23,7 @@ test("district-aware clients restore stored district instead of resetting it to 
     readFile(new URL("../components/school-explorer.tsx", import.meta.url), "utf8"),
   ]);
   assert.match(calculator, /readStoredDistrict/);
-  assert.match(explorer, /readStoredDistrict/);
+  assert.match(explorer, /initialFilters/);
+  assert.doesNotMatch(explorer, /readStoredDistrict/); // National discovery must not silently hide schools outside a saved district.
   assert.doesNotMatch(explorer, /filters\.district === "all" \? "ct" : filters\.district/);
 });

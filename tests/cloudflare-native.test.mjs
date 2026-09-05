@@ -62,8 +62,8 @@ test("school and planner data are served by Cloudflare Assets and D1", async () 
     readSource("wrangler.jsonc"),
   ]);
 
-  assert.match(schoolRoute, /env\.ASSETS\.fetch/);
-  assert.match(schoolRoute, /district/);
+  assert.match(schoolRoute, /schoolsMasterCsv/);
+  assert.match(schoolRoute, /schools_master\.csv/);
   assert.match(plannerStore, /CREATE TABLE IF NOT EXISTS planner_items/);
   assert.match(plannerStore, /CREATE TABLE IF NOT EXISTS planner_states/);
   assert.match(plannerStore, /\.prepare\(/);

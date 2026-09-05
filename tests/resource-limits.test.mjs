@@ -4,21 +4,18 @@ import test from "node:test";
 
 const readSource = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("school explorer data is a compact static asset, not an SSR prop", async () => {
+test("school discovery excludes raw relation ledgers from its server-to-client prop", async () => {
   const [dataset, page, explorer] = await Promise.all([
-    readFile(new URL("../public/it_hs/school-directory.json", import.meta.url), "utf8"),
+    readFile(new URL("../content/schools/generated/metadata.json", import.meta.url), "utf8"),
     readSource("app/schools/page.tsx"),
     readSource("components/school-explorer.tsx"),
   ]);
   const payload = JSON.parse(dataset);
 
-  assert.ok(Array.isArray(payload.schools));
-  assert.ok(payload.schools.length >= 600);
-  assert.ok(payload.schools.every((school) => school.code && school.name && school.districtCode));
-  assert.ok(payload.schools.every((school) => "address" in school && !("courseDirection" in school)));
-  assert.doesNotMatch(page, /schoolDirectory/);
-  assert.match(explorer, /school-directory\.json/);
-  assert.match(explorer, /正在載入學校資料/);
+  assert.equal(payload.schoolCount, 545);
+  assert.match(page, /getSchoolSummaries/);
+  assert.match(explorer, /SchoolSummary/);
+  assert.doesNotMatch(explorer, /\.raw|\.admissionRecords/);
 });
 
 test("public document responses receive a short edge-cache policy", async () => {

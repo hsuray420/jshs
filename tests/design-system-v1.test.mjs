@@ -42,7 +42,8 @@ test("the homepage starts with a full-bleed hero and compact fixed-colour action
 
 test("reference function pages use the reusable feature hero instead of a coloured feature band", async () => {
   const [schools, tools, hero, themes, illustrations, css] = await Promise.all(["app/schools/page.tsx", "app/tools/page.tsx", "components/feature-hero.tsx", "lib/feature-themes.ts", "components/feature-illustrations.tsx", "app/globals.css"].map(source));
-  assert.match(schools, /FeatureHero theme="schools"/);
+  assert.match(schools, /jshs-feature-school/);
+  assert.match(await source("components/school-explorer.tsx"), /sv-hero/);
   assert.match(tools, /FeatureHero theme="tools"/);
   assert.doesNotMatch(schools, /FeaturePageBand/);
   assert.doesNotMatch(tools, /FeaturePageBand/);

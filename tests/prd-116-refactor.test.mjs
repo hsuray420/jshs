@@ -32,11 +32,11 @@ test("計算器草稿與清除入口具備重新整理後的資料契約", async
   assert.match(source, /清除試算資料/);
 });
 
-test("八區志願清單只顯示目前就學區的學校資料", async () => {
+test("志願清單按招生區關聯篩選學校", async () => {
   const source = await (await import("node:fs/promises")).readFile(new URL("../components/admission-calculator.tsx", import.meta.url), "utf8");
   assert.match(source, /AdmissionField key=\{field\.field_id\} district=\{rule\.code\}/);
   assert.match(source, /PreferenceList district=\{district\}/);
-  assert.match(source, /school\.districtCode === district/);
+  assert.match(source, /schoolMatchesDistrict\(school, district\)/);
 });
 
 test("desktop IA exposes exactly eight primary groups", () => {

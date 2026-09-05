@@ -1,0 +1,271 @@
+{
+  "schemaVersion": "1.0",
+  "description": "School-by-school life research ledger. A record may be marked COMPLETE only after an official source and a school-specific Google Maps source have both been checked.",
+  "records": [
+    {
+      "district": "kinmen",
+      "school_code": "710301",
+      "school_name": "國立金門高中",
+      "address": "金門縣金城鎮光前路94號",
+      "status": "COMPLETE",
+      "academic_year": "115",
+      "checked_at": "2026-09-01",
+      "transport": "校方地理位置頁說明，從尚義機場可搭 3 路公車至金城車站，再轉 10 路至「金門高中站」；或搭 7 路至「西南門里公所站」，沿光前路步行約 5 分鐘到校。",
+      "commute_info": "校方提供尚義機場、金城車站與校門的轉乘方式；未把飛行或道路行車時間當作每日固定通勤時間。",
+      "public_transport": "公車：3 路（尚義機場－金城車站）、10 路（金城車站－金門高中站）；另有 7 路至西南門里公所站後步行。金門本島沒有臺鐵或捷運，應依金門縣公車實際班次安排。",
+      "school_bus": "校方 115 學年度住宿規定提到「家住專車行經路線附近」者不得申請住宿，證實有學生專車服務；截至 2026-09-01，查閱校方地理位置、新生住宿與學生手冊頁面，未找到 115 學年度公開路線、停靠站或申請方式。",
+      "lodging": "A．有校內宿舍且資格有限。115 學年度新生住宿優先順序為臺籍臺商子弟、偏遠地區或需轉乘兩班公車者、校隊學生；住宿費暫列新臺幣 2,600 元，115 年新生申請截止日為 7 月 15 日。校方頁面列有學生宿舍勤樸樓與人傑樓。",
+      "life_info": "Google Maps 已定位於金城鎮光前路校址；校方交通頁以金城車站與西南門里公所為主要通學節點。校方宿舍制度可供符合資格的學生申請；未列入未逐一查核的商店或餐飲名稱。",
+      "checked_sources": [
+        "https://www.kmsh.km.edu.tw/home?cid=1909",
+        "https://www.kmsh.km.edu.tw/ischool/public/news_view/show.php?nid=21576",
+        "https://www.kmsh.km.edu.tw/resource/openfid.php?id=12128",
+        "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3428.595000985648!2d118.3140801698005!3d24.434477413582922!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3414a26e91cb05d9:0x6d02b63d8de4ddd0!2z6YeR6ZaA6auY5Lit!5e0!3m2!1szh-TW!2stw!4v1524444962599"
+      ],
+      "sources": [
+        { "type": "official", "title": "國立金門高中｜地理位置、新生住宿與學生手冊", "url": "https://www.kmsh.km.edu.tw/home?cid=1909", "checked_at": "2026-09-01" },
+        { "type": "google_maps", "title": "Google Maps｜國立金門高中（校方地理位置頁嵌入地圖）", "url": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3428.595000985648!2d118.3140801698005!3d24.434477413582922!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3414a26e91cb05d9:0x6d02b63d8de4ddd0!2z6YeR6ZaA6auY5Lit!5e0!3m2!1szh-TW!2stw!4v1524444962599", "checked_at": "2026-09-01" }
+      ]
+    },
+    {
+      "district": "penghu",
+      "school_code": "160302",
+      "school_name": "國立馬公高中",
+      "address": "澎湖縣馬公市中華路369號",
+      "status": "COMPLETE",
+      "academic_year": "115",
+      "checked_at": "2026-09-01",
+      "transport": "校方交通資訊載明校址在馬公市中華路369號，距馬公機場約 7 公里，經 204 縣道車程約 15 分鐘；頁面並提供機場公車時刻表與計程車資訊連結。",
+      "commute_info": "從馬公機場前往的約 15 分鐘是校方對道路車程的說明，非固定通勤承諾；搭乘公車仍須以當日班次和步行路線確認。",
+      "public_transport": "澎湖沒有臺鐵、捷運或輕軌。校方交通頁提供澎湖機場公車時刻表入口，並以馬公機場與 204 縣道說明對外交通；可依公車班次或計程車前往。",
+      "school_bus": "截至 2026-09-01，已查閱校方交通資訊、新生／學務相關頁面及宿舍管理頁，未找到公開的 115 學年度學生專車路線、停靠站或申請資訊。",
+      "lodging": "A．有校內住宿制度。校方「宿舍管理」頁公開學生宿舍管理實施要點與寒暑假學生住宿申請作業要點；另有校外租屋資訊網，提供租屋常識、法律問題與賃居安全檢核資料。頁面未直接列出本筆可核實的名額與費用。",
+      "life_info": "Google Maps 已定位於馬公市中華路369號；校方以馬公機場與 204 縣道說明主要對外交通。校方另公開校外租屋安全與法律資訊頁，作為非校內住宿學生的生活／租屋資料入口。",
+      "checked_sources": [
+        "https://www.mksh.phc.edu.tw/%E5%AD%B8%E6%A0%A1%E7%B0%A1%E4%BB%8B/%E4%BA%A4%E9%80%9A%E8%B3%87%E8%A8%8A",
+        "https://www.mksh.phc.edu.tw/%E6%95%99%E5%AE%98%E5%AE%A4/%E5%AE%BF%E8%88%8D%E7%AE%A1%E7%90%86",
+        "https://www.mksh.phc.edu.tw/%E6%95%99%E5%AE%98%E5%AE%A4/%E7%A7%9F%E5%B1%8B%E8%B3%87%E8%A8%8A%E7%B6%B2",
+        "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1882.0470325036542!2d119.5797128328216!3d23.570683098144784!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346c5ac299a08aff:0x5986eda4948c87f8!2z5ZyL56uL6aas5YWs6auY57Sa5Lit5a24!5e0!3m2!1szh-TW!2stw!4v1653960283344!5m2!1szh-TW!2stw"
+      ],
+      "sources": [
+        { "type": "official", "title": "國立馬公高中｜交通資訊、宿舍管理與租屋資訊網", "url": "https://www.mksh.phc.edu.tw/%E5%AD%B8%E6%A0%A1%E7%B0%A1%E4%BB%8B/%E4%BA%A4%E9%80%9A%E8%B3%87%E8%A8%8A", "checked_at": "2026-09-01" },
+        { "type": "google_maps", "title": "Google Maps｜國立馬公高中（校方交通頁嵌入地圖）", "url": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1882.0470325036542!2d119.5797128328216!3d23.570683098144784!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x346c5ac299a08aff:0x5986eda4948c87f8!2z5ZyL56uL6aas5YWs6auY57Sa5Lit5a24!5e0!3m2!1szh-TW!2stw!4v1653960283344!5m2!1szh-TW!2stw", "checked_at": "2026-09-01" }
+      ]
+    },
+    {
+      "district": "kinmen",
+      "school_code": "710401",
+      "school_name": "國立金門高級農工職業學校",
+      "address": "金門縣金湖鎮新市里復興路1之11號",
+      "status": "COMPLETE",
+      "academic_year": "115",
+      "checked_at": "2026-09-01",
+      "transport": "金門區免試入學簡章的學校位置圖說明：自尚義機場搭往山外車站的公車，下車後步行約 10 分鐘到校；由水頭碼頭可搭 7 路至金城車站，再轉 1 或 2 路至山外車站後步行約 10 分鐘。",
+      "commute_info": "校方／金門區簡章所列的約 10 分鐘為山外車站至校門步行說明；實際公車轉乘與等候時間依當日班次而定。",
+      "public_transport": "金門本島沒有臺鐵或捷運。主要公共交通為金門縣市區公車：尚義機場往山外車站班車；水頭碼頭可 7 路轉 1 或 2 路至山外車站後步行。",
+      "school_bus": "截至 2026-09-01，已查閱校方首頁、生輔組宿舍頁、學生手冊及金門區位置圖，未找到公開的 115 學年度學生專車路線、停靠站或申請方式。",
+      "lodging": "A．有校內宿舍。校方生輔組公開男生宿舍及女生宿舍舍監資訊，並提供住宿申請表單；填表後須向生輔組確認。公開頁面未列出本筆可核實的 115 學年度費用或名額。",
+      "life_info": "Google Maps 已確認校址為金湖鎮新市里復興路1之11號；地圖在校址周邊列出復興路上的餐飲店家，另有金門縣農會等服務節點。主要公車轉乘點為山外車站，步行到校約 10 分鐘（依金門區簡章）。",
+      "checked_sources": [
+        "https://www.kmvs.km.edu.tw/ischool/publish_page/13/?cid=2079",
+        "https://www.kmvs.km.edu.tw/home?cid=605",
+        "https://www.km.edu.tw/ischool/news/attached/179/%E9%99%84%E4%BB%B62-%E4%BF%AE%E6%AD%A3%E5%BE%8C%E3%80%8C110%E5%AD%B8%E5%B9%B4%E5%BA%A6%E9%87%91%E9%96%80%E5%8D%80%E9%AB%98%E7%B4%9A%E4%B8%AD%E7%AD%89%E5%AD%B8%E6%A0%A1%E5%85%8D%E8%A9%A6%E5%85%A5%E5%AD%B8%E7%B0%A1%E7%AB%A0%E3%80%8D-%E6%95%99%E8%82%B2%E9%83%A8110%E5%B9%B46%E6%9C%889%E6%97%A5%E8%87%BA%E6%95%99%E6%8E%88%E5%9C%8B%E5%AD%97%E7%AC%AC1100070868A%E8%99%9F%E5%87%BD%E6%A0%B8%E5%AE%9A%E4%BF%AE%E6%AD%A3.pdf",
+        "https://www.google.com/maps/place/%E5%9C%8B%E7%AB%8B%E9%87%91%E9%96%80%E9%AB%98%E7%B4%9A%E8%BE%B2%E5%B7%A5%E8%81%B7%E6%A5%AD%E5%AD%B8%E6%A0%A1/@24.4417606,118.4208501,17z/data=!3m1!4b1!4m6!3m5!1s0x3414a4ee9bc7cfa3:0x50e1476564bf9b2a!8m2!3d24.4417606!4d118.423425!16s%2Fg%2F155rlk44?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D"
+      ],
+      "sources": [
+        { "type": "official", "title": "國立金門農工｜生輔組宿舍與金門區免試入學位置圖", "url": "https://www.kmvs.km.edu.tw/ischool/publish_page/13/?cid=2079", "checked_at": "2026-09-01" },
+        { "type": "google_maps", "title": "Google Maps｜國立金門高級農工職業學校", "url": "https://www.google.com/maps/place/%E5%9C%8B%E7%AB%8B%E9%87%91%E9%96%80%E9%AB%98%E7%B4%9A%E8%BE%B2%E5%B7%A5%E8%81%B7%E6%A5%AD%E5%AD%B8%E6%A0%A1/@24.4417606,118.4208501,17z/data=!3m1!4b1!4m6!3m5!1s0x3414a4ee9bc7cfa3:0x50e1476564bf9b2a!8m2!3d24.4417606!4d118.423425!16s%2Fg%2F155rlk44?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D", "checked_at": "2026-09-01" }
+      ]
+    },
+    {
+      "district": "penghu",
+      "school_code": "160401",
+      "school_name": "國立澎湖高級海事水產職業學校",
+      "address": "澎湖縣馬公市光明里民族路63號",
+      "status": "COMPLETE",
+      "academic_year": "115",
+      "checked_at": "2026-09-01",
+      "transport": "Google Maps 與校方招生資料確認校址在馬公市民族路63號。校方公開網站與招生資料本次未提供可核實的到校公車轉乘說明。",
+      "commute_info": "校址在馬公市民族路；澎湖沒有鐵路、捷運或輕軌。從住家或機場前往應依澎湖縣公車當日班次、計程車或家長接送安排。",
+      "public_transport": "截至 2026-09-01，已查閱校方首頁、校園配置圖、招生資料與 Google Maps；未找到校方公開的 115 學年度校門公車站名或固定到校公車路線。",
+      "school_bus": "截至 2026-09-01，已查閱校方首頁、學生事務公告、校園配置圖及 Google Maps，未找到公開的 115 學年度學生專車路線、停靠站或申請資訊。",
+      "lodging": "A．有校內學生宿舍。校方 112 學年度校園配置圖標示「學生宿舍」；本次查閱的目前公開校方頁面未列出 115 學年度學生宿舍名額、費用或申請資格，不能據此推定。",
+      "life_info": "Google Maps 已定位於馬公市民族路63號；校方校園配置圖標示校內員生社與學生宿舍。校址在馬公市區，日常校內採買可利用員生社；校外店家與公車班次仍需依實際路線確認。",
+      "checked_sources": [
+        "https://www.phmhs.phc.edu.tw/",
+        "https://www.phmhs.phc.edu.tw/uploads/web/112Classroom0811.pdf",
+        "https://www.google.com/maps/place/%E5%9C%8B%E7%AB%8B%E6%BE%8E%E6%B9%96%E9%AB%98%E7%B4%9A%E6%B5%B7%E4%BA%8B%E6%B0%B4%E7%94%A2%E8%81%B7%E6%A5%AD%E5%AD%B8%E6%A0%A1/@23.5702986,119.5627607,17z/data=!3m1!4b1!4m6!3m5!1s0x346c5af15c42dedb:0x7f6bd4fab326c199!8m2!3d23.5702986!4d119.5653356!16s%2Fg%2F155svyh0?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D"
+      ],
+      "sources": [
+        { "type": "official", "title": "國立澎湖海事｜官方網站與校園配置圖", "url": "https://www.phmhs.phc.edu.tw/uploads/web/112Classroom0811.pdf", "checked_at": "2026-09-01" },
+        { "type": "google_maps", "title": "Google Maps｜國立澎湖高級海事水產職業學校", "url": "https://www.google.com/maps/place/%E5%9C%8B%E7%AB%8B%E6%BE%8E%E6%B9%96%E9%AB%98%E7%B4%9A%E6%B5%B7%E4%BA%8B%E6%B0%B4%E7%94%A2%E8%81%B7%E6%A5%AD%E5%AD%B8%E6%A0%A1/@23.5702986,119.5627607,17z/data=!3m1!4b1!4m6!3m5!1s0x346c5af15c42dedb:0x7f6bd4fab326c199!8m2!3d23.5702986!4d119.5653356!16s%2Fg%2F155svyh0?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D", "checked_at": "2026-09-01" }
+      ]
+    },
+    {
+      "district": "ilan",
+      "school_code": "020301",
+      "school_name": "國立蘭陽女子高級中學",
+      "address": "宜蘭縣宜蘭市女中路二段355號",
+      "status": "COMPLETE",
+      "academic_year": "115",
+      "checked_at": "2026-09-01",
+      "transport": "校方地理交通頁載明，宜蘭火車站至校約 1.3 公里、步行約 17 分鐘；宜蘭轉運站至校約 1.1 公里、步行約 15 分鐘，皆可循省道 9 號與女中路前往。",
+      "commute_info": "可由臺鐵宜蘭站或宜蘭轉運站步行到校；步行時間是校方說明，實際依步行速度與路況而異。",
+      "public_transport": "臺鐵：宜蘭站。國道客運：國光 1878、首都 1571、噶瑪蘭 1915 至宜蘭轉運站後步行；校方提供三家業者的路線入口。",
+      "school_bus": "截至 2026-09-01，已查閱校方地理交通頁、官方首頁與學生資訊頁，未找到公開的 115 學年度學生專車路線、停靠站或申請資訊。",
+      "lodging": "D．查無目前公開學生宿舍資訊。截至 2026-09-01，已查閱校方官方首頁、地理交通與學生資訊頁，未找到學生宿舍、住宿生或宿舍申請的公開資訊；此結果不等同於校方明確表示無宿舍。",
+      "life_info": "Google Maps 已定位女中路二段355號。校方列出宜蘭火車站與宜蘭轉運站為步行可達的通學節點，校址位於宜蘭市區道路網內；生活店家未逐一列名，以避免把未核實的地圖資訊寫入。",
+      "checked_sources": ["https://www.lygsh.ilc.edu.tw/home?cid=203", "https://www.lygsh.ilc.edu.tw/home", "https://www.google.com/maps/place/%E5%9C%8B%E7%AB%8B%E8%98%AD%E9%99%BD%E5%A5%B3%E5%AD%90%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@24.7453914,121.7507981,17z/data=!3m1!4b1!4m6!3m5!1s0x3467e4e89fae68d3:0x664a46fe05cb6680!8m2!3d24.7453914!4d121.753373!16s%2Fg%2F155rb7db?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D"],
+      "sources": [
+        { "type": "official", "title": "國立蘭陽女中｜地理交通", "url": "https://www.lygsh.ilc.edu.tw/home?cid=203", "checked_at": "2026-09-01" },
+        { "type": "google_maps", "title": "Google Maps｜國立蘭陽女子高級中學", "url": "https://www.google.com/maps/place/%E5%9C%8B%E7%AB%8B%E8%98%AD%E9%99%BD%E5%A5%B3%E5%AD%90%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@24.7453914,121.7507981,17z/data=!3m1!4b1!4m6!3m5!1s0x3467e4e89fae68d3:0x664a46fe05cb6680!8m2!3d24.7453914!4d121.753373!16s%2Fg%2F155rb7db?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D", "checked_at": "2026-09-01" }
+      ]
+    },
+    {
+      "district": "ilan", "school_code": "020302", "school_name": "國立宜蘭高級中學", "address": "宜蘭縣宜蘭市復興路三段8號", "status": "COMPLETE", "academic_year": "115", "checked_at": "2026-09-01",
+      "transport": "校方交通頁說明，可由宜蘭轉運站或臺鐵宜蘭站轉乘市區客運 771 線至「文化中心（宜蘭高中）站」下車。",
+      "commute_info": "771 線約 20 分鐘一班（校方交通頁所載）；實際候車與道路時間依班次、路況為準。",
+      "public_transport": "臺鐵：宜蘭站後站轉市區客運 771 線。國道客運：葛瑪蘭或首都客運至宜蘭轉運站，再轉 771 線至文化中心（宜蘭高中）站。",
+      "school_bus": "截至 2026-09-01，已查閱校方交通資訊、新生入學頁與官方首頁；未找到公開的 115 學年度學生專車路線、停靠站或申請資訊。",
+      "lodging": "A．有校內學生宿舍。校方新生入學頁提供「學生宿舍資訊」連結，校園環境頁與校史亦列有學生宿舍；本次公開頁面未核實 115 學年度名額、費用及申請資格。",
+      "life_info": "Google Maps 已定位於復興路三段8號；校方將文化中心（宜蘭高中）站列為下車點，且校園位於宜蘭市文教區，校內有圖書館、活動中心與運動設施。",
+      "checked_sources": ["https://www.ylsh.ilc.edu.tw/ischool/publish_page/38/", "https://www.ylsh.ilc.edu.tw/ischool/publish_page/24/?cid=626", "https://www.google.com/maps/place/%E5%9C%8B%E7%AB%8B%E5%AE%9C%E8%98%AD%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@24.7507581,121.7392632,17z/data=!3m1!4b1!4m6!3m5!1s0x3467e4c006de5b97:0xa908e583b510795!8m2!3d24.7507581!4d121.7418381!16s%2Fm%2F027k6c6?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D"],
+      "sources": [{"type":"official","title":"國立宜蘭高中｜交通資訊與新生入學","url":"https://www.ylsh.ilc.edu.tw/ischool/publish_page/38/","checked_at":"2026-09-01"},{"type":"google_maps","title":"Google Maps｜國立宜蘭高級中學","url":"https://www.google.com/maps/place/%E5%9C%8B%E7%AB%8B%E5%AE%9C%E8%98%AD%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@24.7507581,121.7392632,17z/data=!3m1!4b1!4m6!3m5!1s0x3467e4c006de5b97:0xa908e583b510795!8m2!3d24.7507581!4d121.7418381!16s%2Fm%2F027k6c6?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D","checked_at":"2026-09-01"}]
+    },
+    {
+      "district": "ilan",
+      "school_code": "020308",
+      "school_name": "國立羅東高級中學",
+      "address": "宜蘭縣羅東鎮公正路324號",
+      "status": "COMPLETE",
+      "academic_year": "115",
+      "checked_at": "2026-09-01",
+      "transport": "校方交通資訊載明，可搭公車或火車到校；臺鐵羅東站下車後步行約 10 至 15 分鐘。另有校方公告建議由羅東轉運站或羅東火車站步行前往，約 25 分鐘。",
+      "commute_info": "兩項步行時間分別出自校方不同公告，可能對應不同出入口或路線；實際步行與候車時間依班次、路況及校門開放位置而異。",
+      "public_transport": "臺鐵：羅東站。公車：校方公告附列 1767、1797、學56、學58 路線與時刻資訊；可依住處確認適用班次後往返。",
+      "school_bus": "C．官方明確表示無校車。校方 2024-04-15 公告稱「無配置校車」且「無九人座專車」；此為 113 學年度參考，尚未找到 115 學年度替代公告。",
+      "lodging": "D．查無目前公開學生宿舍資訊。截至 2026-09-01，已查閱校方首頁、校園地圖／交通與學務交通安全頁，未找到學生宿舍、住宿生或宿舍申請的公開資訊；此結果不等同於校方明確表示無宿舍。",
+      "life_info": "Google Maps 已確認校址在羅東鎮樹林里公正路324號，位於羅東市區道路網內；地圖所列校內／周邊節點包括羅東高中圖書館、田徑場、羅東高商與羅東國中。羅東站、羅東轉運站是校方列出的通學節點。",
+      "checked_sources": [
+        "https://www.ldsh.ilc.edu.tw/",
+        "https://www.ldsh.ilc.edu.tw/p/16-1015-117228.php?Lang=zh-tw",
+        "https://www.ldsh.ilc.edu.tw/p/412-1015-197.php?Lang=zh-tw",
+        "https://www.google.com/maps/place/%E5%9C%8B%E7%AB%8B%E7%BE%85%E6%9D%B1%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@24.6807186,121.7595823,17z/data=!3m1!4b1!4m6!3m5!1s0x3467e681aea5ee1b:0x2a44a538ef2551c3!8m2!3d24.6807186!4d121.7621572!16s%2Fg%2F155pnc4b?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D"
+      ],
+      "sources": [
+        { "type": "official", "title": "國立羅東高中｜學生搭乘大眾交通運輸工具資訊", "url": "https://www.ldsh.ilc.edu.tw/p/16-1015-117228.php?Lang=zh-tw", "checked_at": "2026-09-01" },
+        { "type": "google_maps", "title": "Google Maps｜國立羅東高級中學", "url": "https://www.google.com/maps/place/%E5%9C%8B%E7%AB%8B%E7%BE%85%E6%9D%B1%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@24.6807186,121.7595823,17z/data=!3m1!4b1!4m6!3m5!1s0x3467e681aea5ee1b:0x2a44a538ef2551c3!8m2!3d24.6807186!4d121.7621572!16s%2Fg%2F155pnc4b?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D", "checked_at": "2026-09-01" }
+      ]
+    },
+    {
+      "district": "tp",
+      "school_code": "170404",
+      "school_name": "國立基隆高級商工職業學校",
+      "address": "基隆市七堵區東新街22號",
+      "status": "COMPLETE",
+      "academic_year": "115",
+      "checked_at": "2026-09-01",
+      "transport": "校方地理交通頁載明，搭火車可於臺鐵七堵站下車，經東新街、明德國中方向步行約 2 分鐘到校。",
+      "commute_info": "七堵站至校的約 2 分鐘為校方說明；實際時間依出站位置、步行速度與道路狀況而異。",
+      "public_transport": "臺鐵：七堵站。公車：校方公告列有基隆市公車 402 堵南里、403 東新街，並公開基隆市公車學生專車資訊；應依當日班表確認。",
+      "school_bus": "校方教官室頁明確表示「現無校車提供服務」，但基隆市公車處會加派學生專車；新生注意事項列出上學期間由信義國中、大武崙、中山高中、八斗子等方向開往本校的學生專車，屬 114 學年度參考。",
+      "lodging": "D．查無目前公開學生宿舍資訊。截至 2026-09-01，已查閱校方首頁、地理交通、教官室公車頁與新生到校注意事項，未找到學生宿舍、住宿生或宿舍申請的公開資訊；此結果不等同於校方明確表示無宿舍。",
+      "life_info": "Google Maps 已確認校址為七堵區長興里東新街22號；校方說明七堵站步行約 2 分鐘可達，周邊另有明德國中與教育部基隆市聯絡處等文教／行政節點。日常店家以七堵車站周邊為主要步行生活範圍。",
+      "checked_sources": [
+        "https://www.klcivs.kl.edu.tw/home?cid=1069",
+        "https://www.klcivs.kl.edu.tw/ischool/publish_page/11/?cid=626",
+        "https://www.klcivs.kl.edu.tw/ischool/news/attached/1063/%E5%9C%8B%E7%AB%8B%E5%9F%BA%E9%9A%86%E9%AB%98%E7%B4%9A%E5%95%86%E5%B7%A5%E8%81%B7%E6%A5%AD%E5%AD%B8%E6%A0%A1%E6%96%B0%E7%94%9F%E5%88%B0%E6%A0%A1%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A0%85.pdf",
+        "https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%95%86%E5%B7%A5/@25.0941889,121.7147254,17z/data=!3m1!4b1!4m6!3m5!1s0x345d52204bede831:0x10634c08df4f6696!8m2!3d25.0941889!4d121.7173003!16s%2Fm%2F0pcgr6r?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D"
+      ],
+      "sources": [
+        { "type": "official", "title": "國立基隆商工｜地理交通資訊與教官室公車資訊", "url": "https://www.klcivs.kl.edu.tw/home?cid=1069", "checked_at": "2026-09-01" },
+        { "type": "google_maps", "title": "Google Maps｜國立基隆高級商工職業學校", "url": "https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%95%86%E5%B7%A5/@25.0941889,121.7147254,17z/data=!3m1!4b1!4m6!3m5!1s0x345d52204bede831:0x10634c08df4f6696!8m2!3d25.0941889!4d121.7173003!16s%2Fm%2F0pcgr6r?entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D", "checked_at": "2026-09-01" }
+      ]
+    },
+    {
+      "district": "tp",
+      "school_code": "170301",
+      "school_name": "國立基隆女子高級中學",
+      "address": "基隆市信義區東信路324號",
+      "status": "COMPLETE",
+      "academic_year": "115",
+      "checked_at": "2026-09-01",
+      "transport": "校方地理交通頁列出市公車 201、202、203、204 至「基隆女中」站下車；搭臺鐵至基隆站後也可轉乘上述公車。",
+      "commute_info": "由基隆車站或基隆市政府下車的國道客運乘客，可轉 201、202、203、204 至基隆女中站；北市方向另有 2088 至基隆女中／月眉路口後步行約 5 分鐘（校方說明）。",
+      "public_transport": "臺鐵：基隆站。市公車：201、202、203、204 至基隆女中站；客運：基隆－金瓜石線至基隆女中站，及 2088、1800、1801、1802、1813、9006、1032、1191、1550／1550A／1551、1558、1573、1579、1070 等先至基隆站／市府轉乘（以校方交通頁與當日班次為準）。",
+      "school_bus": "有學生接駁專車。114 學年度新生通報列出基隆市區接駁（基隆火車站北站－仁二路循環站－劉銘傳路口－基隆女中）及 2088 學生專車（市府轉運站－基隆女中）上下學班次；屬 114 學年度參考，115 學年度應再核對校方生輔組公告。",
+      "lodging": "A．有校內學生宿舍。校方新生專區公開 114 學年度第 1 學期新生住宿資訊，也有 114-2 住宿名單與宿舍管理計畫；112 新生通報指出床位有限，且交通車可達區域原則上不提供住宿申請。名額、費用與資格須以後續學年度公告為準。",
+      "life_info": "Google Maps 已確認校址在信義區信綠里東信路324號；校門對應「基隆女中」公車站，日常通學可利用東信路公車走廊。校方所列基隆站與市府轉運站為較主要的轉乘／市區生活節點。",
+      "checked_sources": [
+        "https://www.klgsh.kl.edu.tw/%E9%97%9C%E6%96%BC%E5%9F%BA%E5%A5%B3/%E5%9C%B0%E7%90%86%E4%BA%A4%E9%80%9A/",
+        "https://www.klgsh.kl.edu.tw/wp-content/uploads/sites/67/2025/07/114%E6%96%B0%E7%94%9F%E5%A0%B1%E5%88%B0%E5%AD%B8%E5%8B%99%E8%99%95%E9%80%9A%E5%A0%B11140709-%E5%AE%8C%E6%95%B4%E6%9C%80%E6%96%B0.pdf",
+        "https://www.klgsh.kl.edu.tw/category/freshmen-area/",
+        "https://www.google.com/maps/search/?api=1&query=%E5%9C%8B%E7%AB%8B%E5%9F%BA%E9%9A%86%E5%A5%B3%E5%AD%90%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8"
+      ],
+      "sources": [
+        { "type": "official", "title": "國立基隆女中｜地理交通與 114 新生學務處通報", "url": "https://www.klgsh.kl.edu.tw/%E9%97%9C%E6%96%BC%E5%9F%BA%E5%A5%B3/%E5%9C%B0%E7%90%86%E4%BA%A4%E9%80%9A/", "checked_at": "2026-09-01" },
+        { "type": "google_maps", "title": "Google Maps｜國立基隆女子高級中學", "url": "https://www.google.com/maps/search/?api=1&query=%E5%9C%8B%E7%AB%8B%E5%9F%BA%E9%9A%86%E5%A5%B3%E5%AD%90%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8", "checked_at": "2026-09-01" }
+      ]
+    },
+    {
+      "district": "tp",
+      "school_code": "170302",
+      "school_name": "國立基隆高級中學",
+      "address": "基隆市暖暖區源遠路20號",
+      "status": "COMPLETE",
+      "academic_year": "115",
+      "checked_at": "2026-09-01",
+      "transport": "校方交通頁載明，臺鐵八堵站出站後沿八堵路、轉源遠路，步行約 10 分鐘可到校；校方學校日公告另記為約 6 分鐘，實際取決於路線與出入口。",
+      "commute_info": "公車可於校門口站下車；八堵站是主要鐵路轉乘節點，步行時間為校方公告，實際依步行速度與路況而異。",
+      "public_transport": "臺鐵：八堵站。公車：交通頁列 601、605，115 學校日公告另列 R86、787、R82、601、603、605 至校門口；其他路線可查「八堵國小」或「礦工醫院」站位與當日班次。",
+      "school_bus": "僅找到前一學年度參考。113 新生注意事項稱交通車若登記人數未達 28 人，該年度不提供專車；112 亦公告因各線未達 28 人而不提供專車。未找到 115 學年度固定學生專車公告，不能推定目前有校車。",
+      "lodging": "A．有校內學生宿舍。校方已公布 115 學年度第一學期男女住宿生名冊與入住事項；114 新生住宿申請以特教班（體育、美術、音樂）優先，餘床再衡酌普通班、戶籍遠近、交通與表現。宿舍不供膳食及網路，住宿費併入註冊費，寒暑假與例假日原則不開放。",
+      "life_info": "Google Maps 已確認校址在暖暖區八堵里源遠路20號；校方將八堵站及校門口公車站列為通學節點。周邊生活採買與轉乘可優先利用八堵站周邊，校內宿舍不供餐，住宿生需自行安排日常餐食。",
+      "checked_sources": [
+        "https://www.klsh.kl.edu.tw/about/traffic/",
+        "https://www.klsh.kl.edu.tw/2026/08/12/115%E5%AD%B8%E5%B9%B4%E5%BA%A6%E7%AC%AC%E4%B8%80%E5%AD%B8%E6%9C%9F%E4%BD%8F%E5%AE%BF%E7%94%9F%E6%A0%B8%E5%AE%9A%E5%90%8D%E5%86%8A%E6%9A%A8%E5%AD%B8%E7%94%9F%E5%AE%BF%E8%88%8D%E5%85%A5%E4%BD%8F/",
+        "https://www.klsh.kl.edu.tw/2025/07/08/114-1%E9%AB%98%E4%B8%80%E6%96%B0%E7%94%9F%E4%BD%8F%E5%AE%BF%E7%94%B3%E8%AB%8B%E8%B3%87%E8%A8%8A/",
+        "https://www.google.com/maps/search/?api=1&query=%E5%9C%8B%E7%AB%8B%E5%9F%BA%E9%9A%86%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8"
+      ],
+      "sources": [
+        { "type": "official", "title": "國立基隆高中｜交通資訊與 115-1 宿舍入住公告", "url": "https://www.klsh.kl.edu.tw/2026/08/12/115%E5%AD%B8%E5%B9%B4%E5%BA%A6%E7%AC%AC%E4%B8%80%E5%AD%B8%E6%9C%9F%E4%BD%8F%E5%AE%BF%E7%94%9F%E6%A0%B8%E5%AE%9A%E5%90%8D%E5%86%8A%E6%9A%A8%E5%AD%B8%E7%94%9F%E5%AE%BF%E8%88%8D%E5%85%A5%E4%BD%8F/", "checked_at": "2026-09-01" },
+        { "type": "google_maps", "title": "Google Maps｜國立基隆高級中學", "url": "https://www.google.com/maps/search/?api=1&query=%E5%9C%8B%E7%AB%8B%E5%9F%BA%E9%9A%86%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8", "checked_at": "2026-09-01" }
+      ]
+    },
+    {
+      "district": "tp",
+      "school_code": "170403",
+      "school_name": "國立臺灣海洋大學附屬基隆海事高級中等學校",
+      "address": "基隆市中正區祥豐街246號",
+      "status": "COMPLETE",
+      "academic_year": "115",
+      "checked_at": "2026-09-01",
+      "transport": "校方說明可先搭客運或臺鐵至基隆火車站（海洋廣場），再換基隆市公車或計程車到校；臺北－基隆 1579 可在海大（祥豐校門）站下車後步行約 3 至 5 分鐘。",
+      "commute_info": "基隆站（海洋廣場）是主要轉乘點；步行時間為校方說明，實際依下車位置與路況而異。",
+      "public_transport": "臺鐵：基隆站後轉市公車或計程車。客運：各客運至基隆火車站（海洋廣場）轉乘；1579 可於海大（祥豐校門）站下車。",
+      "school_bus": "有學生專車。校方交通頁稱學生專車須事先申請繳費並洽學務處生輔組；官方首頁另公告 115-1 學生專車路線、站點及時間，請以該學期公告為準。",
+      "lodging": "B．有住宿制度但名額／資格有限。校方已公告 115-1 宿舍申請核准名單且標示額滿，並公告代辦租借海洋大學男生宿舍申請；本次來源未完整列出每種住宿的名額、費用與資格。",
+      "life_info": "Google Maps 已確認校址在中正區海濱里祥豐街246號，位於祥豐街、北寧路與海大校區一帶；海大（祥豐校門）站與基隆火車站／海洋廣場是校方列出的交通與市區生活節點。",
+      "checked_sources": ["https://www.klms.ntou.edu.tw/%E5%B7%A5%E4%BD%9C%E8%81%B7%E6%8E%8C/%E8%A8%BB%E5%86%8A%E7%B5%84/%E6%8B%9B%E7%94%9F%E8%B3%87%E8%A8%8A-%E6%95%99.html?start=1","https://www.klms.ntou.edu.tw/","https://www.klms.ntou.edu.tw/115%E5%AD%B8%E5%B9%B4%E5%BA%A6%E7%AC%AC1%E5%AD%B8%E6%9C%9F%E5%AE%BF%E8%88%8D%E7%94%B3%E8%AB%8B%E6%A0%B8%E5%87%86%E5%90%8D%E5%96%AE%E5%B7%B2%E9%A1%8D%E6%BB%BF%EF%BC%8C%E8%AB%8B%E5%8B%BF%E5%86%8D/","https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E6%B5%B7%E6%BF%B1%E9%87%8C%E7%A5%A5%E8%B1%90%E8%A1%97%E5%9C%8B%E7%AB%8B%E8%87%BA%E7%81%A3%E6%B5%B7%E6%B4%8B%E5%A4%A7%E5%AD%B8%E9%99%84%E5%B1%AC%E5%9F%BA%E9%9A%86%E6%B5%B7%E4%BA%8B%E9%AB%98%E7%B4%9A%E4%B8%AD%E7%AD%89%E5%AD%B8%E6%A0%A1/@24.144445,120.689087,14z/data=!4m5!3m4!1s0x345d4f074dc639f3:0xa3111e5a66d60f4!8m2!3d25.147706!4d121.771736?entry=ttu"],
+      "sources": [
+        {"type":"official","title":"海大附中｜學生到校交通資訊與 115 宿舍公告","url":"https://www.klms.ntou.edu.tw/%E5%B7%A5%E4%BD%9C%E8%81%B7%E6%8E%8C/%E8%A8%BB%E5%86%8A%E7%B5%84/%E6%8B%9B%E7%94%9F%E8%B3%87%E8%A8%8A-%E6%95%99.html?start=1","checked_at":"2026-09-01"},
+        {"type":"google_maps","title":"Google Maps｜國立臺灣海洋大學附屬基隆海事高級中等學校","url":"https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%B8%82%E4%B8%AD%E6%AD%A3%E5%8D%80%E6%B5%B7%E6%BF%B1%E9%87%8C%E7%A5%A5%E8%B1%90%E8%A1%97%E5%9C%8B%E7%AB%8B%E8%87%BA%E7%81%A3%E6%B5%B7%E6%B4%8B%E5%A4%A7%E5%AD%B8%E9%99%84%E5%B1%AC%E5%9F%BA%E9%9A%86%E6%B5%B7%E4%BA%8B%E9%AB%98%E7%B4%9A%E4%B8%AD%E7%AD%89%E5%AD%B8%E6%A0%A1/@24.144445,120.689087,14z/data=!4m5!3m4!1s0x345d4f074dc639f3:0xa3111e5a66d60f4!8m2!3d25.147706!4d121.771736?entry=ttu","checked_at":"2026-09-01"}
+      ]
+    },
+    {
+      "district":"tp","school_code":"173304","school_name":"基隆市立中山高級中學","address":"基隆市中山區文化路162號","status":"COMPLETE","academic_year":"115","checked_at":"2026-09-01",
+      "transport":"校方 113-1 家長聯絡信列出上學學生專車：大慶社區－喜市社區－中山高中（6:35、6:45），以及基隆市政府－海洋廣場－基隆火車站北站－中山區衛生所方向（7:10）。",
+      "commute_info":"校址在文化路162號；可由基隆市政府、海洋廣場及基隆火車站北站方向搭乘學生專車。上述時刻為 113-1 參考，實際班次需核對當學期校方／基隆公車公告。",
+      "public_transport":"基隆市公車 302 線設「中山高中」站，另有 305 線濱海大道方向；基隆火車站是市區轉乘節點。",
+      "school_bus":"有基隆市公車學生專車的前一學年度資料。113-1 校方家長聯絡信與基隆市公車學生專車路線表列有中山高中上學路線；115 學年度固定路線尚未於本次查詢找到，不能推定完全相同。",
+      "lodging":"D．查無目前公開學生宿舍資訊。截至 2026-09-01，已查閱學校首頁、高中部新生專區、交通位置與校方公開公告，未找到學生宿舍、住宿生或宿舍申請的公開資訊；此結果不等同於校方明確表示無宿舍。",
+      "life_info":"Google Maps 已確認校址為中山區文化里文化路162號；校門位於文化路公車走廊，地圖定位周邊為中山區住宅與學校設施。基隆站／海洋廣場為校方學生專車所列的市區轉乘與生活節點。",
+      "checked_sources":["https://csjh.kl.edu.tw/488","https://csjh.kl.edu.tw/index/file/387/113-1-1%E6%AE%B5%E8%80%83%E5%AE%B6%E9%95%B7%E8%81%AF%E7%B5%A1%E4%BF%A1%E5%87%BD.pdf","https://www.klcba.gov.tw/bus_route.aspx?busno=305&no=","https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%B8%82%E7%AB%8B%E4%B8%AD%E5%B1%B1%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@25.1538592,121.7283346,17z/data=!3m1!4b1!4m6!3m5!1s0x345d4e62d57a200b:0x7bd0fb21326f9d01!8m2!3d25.1538592!4d121.7309095!16s%2Fg%2F155rycrp?entry=ttu"],
+      "sources":[{"type":"official","title":"基隆市立中山高中｜高中部新生專區與 113-1 家長聯絡信","url":"https://csjh.kl.edu.tw/index/file/387/113-1-1%E6%AE%B5%E8%80%83%E5%AE%B6%E9%95%B7%E8%81%AF%E7%B5%A1%E4%BF%A1%E5%87%BD.pdf","checked_at":"2026-09-01"},{"type":"google_maps","title":"Google Maps｜基隆市立中山高級中學","url":"https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%B8%82%E7%AB%8B%E4%B8%AD%E5%B1%B1%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@25.1538592,121.7283346,17z/data=!3m1!4b1!4m6!3m5!1s0x345d4e62d57a200b:0x7bd0fb21326f9d01!8m2!3d25.1538592!4d121.7309095!16s%2Fg%2F155rycrp?entry=ttu","checked_at":"2026-09-01"}]
+    },
+    {"district":"tp","school_code":"173314","school_name":"基隆市立八斗高級中學","address":"基隆市中正區新豐街100號","status":"COMPLETE","academic_year":"115","checked_at":"2026-09-01","transport":"Google Maps 已確認校址在新豐街100號；基隆市公車 103 行經新豐街，1813G 公車動態顯示有「八斗高中」站。","commute_info":"八斗子／新豐街一帶以公車與家長接送為主要通學方式；班次與步行時間依當日動態為準。","public_transport":"可利用基隆市公車 103 等新豐街方向路線；1813G 的八斗高中站可作為客運接近站，應於乘車前查詢業者當日班表。","school_bus":"截至 2026-09-01，已查閱校方高中部新生專區、公開公告及 Google Maps，未找到公開的 115 學年度學生專車路線或申請資訊。","lodging":"D．查無目前公開學生宿舍資訊。截至 2026-09-01，已查閱校方高中部新生專區與公開公告，未找到學生宿舍、住宿生或宿舍申請資訊；此結果不等同於校方明確表示無宿舍。","life_info":"Google Maps 已確認校址在中正區新豐里新豐街100號，位於新豐街住宅與商店道路帶；日常採買與公車候車可沿新豐街安排。","checked_sources":["https://bdjh.kl.edu.tw/488","https://www.klcba.gov.tw/bus_route.aspx?busno=103&no=","https://pda5284.gov.taipei/MQS/stop.jsp?sid=166320","https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%B8%82%E7%AB%8B%E5%85%AB%E6%96%97%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@25.1403282,121.785759,17z/data=!3m1!4b1!4m6!3m5!1s0x345d4f9f820109b1:0xb2be83cf93eeeb5f!8m2!3d25.1403282!4d121.7883339!16s%2Fg%2F155r2k_5?entry=ttu"],"sources":[{"type":"official","title":"基隆市立八斗高中｜官方高中部資訊","url":"https://bdjh.kl.edu.tw/488","checked_at":"2026-09-01"},{"type":"google_maps","title":"Google Maps｜基隆市立八斗高級中學","url":"https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%B8%82%E7%AB%8B%E5%85%AB%E6%96%97%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@25.1403282,121.785759,17z/data=!3m1!4b1!4m6!3m5!1s0x345d4f9f820109b1:0xb2be83cf93eeeb5f!8m2!3d25.1403282!4d121.7883339!16s%2Fg%2F155r2k_5?entry=ttu","checked_at":"2026-09-01"}]}
+    ,{"district":"tp","school_code":"173306","school_name":"基隆市立安樂高級中學","address":"基隆市安樂區安一路360號","status":"COMPLETE","academic_year":"115","checked_at":"2026-09-01","transport":"校方網站列有高中部新生交通接駁車資訊；安一路為主要進校道路。","commute_info":"基隆車站方向可搭公車至安樂高中站，再依校門動線步行。","public_transport":"基隆市公車及客運往安一路；班次依基隆市公車處公告。","school_bus":"115學年度高中部新生交通接駁車公告已於校方首頁發布，路線與座位以附件為準。","lodging":"D．截至2026-09-01查閱校方首頁、學務處與新生資訊，未找到公開學生宿舍申請或住宿資料。","life_info":"Google Maps確認校址位於安樂區安一路360號；安一路公車站與基隆車站為主要交通生活節點。","checked_sources":["https://aljh.kl.edu.tw/","https://aljh.kl.edu.tw/%E8%A1%8C%E6%94%BF%E5%96%AE%E4%BD%8D/%E6%95%99%E5%8B%99%E8%99%95-2","https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%B8%82%E7%AB%8B%E5%AE%89%E6%A8%82%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@25.1351392,121.7274058,17z/data=!3m1!4b1!4m6!3m5!1s0x345d4e0d5054adbd:0x11dc07dd42f14765!8m2!3d25.1351392!4d121.7299807!16s%2Fg%2F155prknl?entry=ttu"],"sources":[{"type":"official","title":"安樂高中官方網站","url":"https://aljh.kl.edu.tw/","checked_at":"2026-09-01"},{"type":"google_maps","title":"Google Maps｜安樂高中","url":"https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%B8%82%E7%AB%8B%E5%AE%89%E6%A8%82%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@25.1351392,121.7274058,17z/data=!3m1!4b1!4m6!3m5!1s0x345d4e0d5054adbd:0x11dc07dd42f14765!8m2!3d25.1351392!4d121.7299807!16s%2Fg%2F155prknl?entry=ttu","checked_at":"2026-09-01"}]}
+    ,{"district":"tp","school_code":"173307","school_name":"市立暖暖高中","address":"基隆市暖暖區暖中路112號","status":"COMPLETE","academic_year":"115","checked_at":"2026-09-01","transport":"校方交通頁列明：暖暖高中站下車步行約5分鐘（602暖暖）；海會寺站步行約5分鐘（402、403、406、407、503、601、602、603、605、787、1011、1031、1032）；暖江橋頭站步行約10分鐘。","commute_info":"臺鐵八堵站步行約15分鐘、暖暖站步行約10分鐘；公車可在暖暖高中站或海會寺站下車。","public_transport":"臺鐵：八堵站、暖暖站。公車：602、402、403、406、407、503、601、603、605、787、1011、1031、1032 等。","school_bus":"有武建線專車，居住於武崙、建德區域者可申請；校方 114 新生指南列為新生申請項目，路線與資格依學年度公告。","lodging":"D．截至2026-09-01查閱校方首頁、高中部新生專區及學生手冊，未找到公開校內宿舍申請或住宿資訊。","life_info":"Google Maps確認校址位於暖暖區暖中路112號；暖暖高中站、暖暖火車站及海會寺站是主要交通節點，周邊為暖暖住宅與社區道路帶。","checked_sources":["https://oldnnjh.kl.edu.tw/444","https://nnjh.kl.edu.tw/index/file/436/114%E6%9A%96%E4%B8%AD%E6%96%B0%E7%94%9F%E5%85%A5%E5%AD%B8%E6%8C%87%E5%8D%97.pdf","https://www.klcba.gov.tw/bus_route.aspx?busno=602&no=0","https://www.google.com/maps/search/?api=1&query=%E5%B8%82%E7%AB%8B%E6%9A%96%E6%9A%96%E9%AB%98%E4%B8%AD"],"sources":[{"type":"official","title":"暖暖高中｜交通與新生指南","url":"https://oldnnjh.kl.edu.tw/444","checked_at":"2026-09-01"},{"type":"google_maps","title":"Google Maps｜市立暖暖高中","url":"https://www.google.com/maps/search/?api=1&query=%E5%B8%82%E7%AB%8B%E6%9A%96%E6%9A%96%E9%AB%98%E4%B8%AD","checked_at":"2026-09-01"}]}
+    ,{"district":"tp","school_code":"171306","school_name":"私立二信高中","address":"基隆市中正區立德路243號","status":"COMPLETE","academic_year":"115","checked_at":"2026-09-01","transport":"校方 115 學年度公告列有普、技高上放學交通車路線及各站時間；學校位於立德路243號，亦可由基隆市區公車轉乘。","commute_info":"交通車採登記搭乘；公開交通資料顯示放學在立德路口集合後至海關宿舍廣場搭乘校車，路線與站點依學期表公告。","public_transport":"可由基隆火車站／市區轉乘往中正區祥豐、立德路方向公車；實際站牌與班次依基隆市公車動態查詢。","school_bus":"有 115 學年度第一學期普、技高交通車路線及各站時間表，校方於 2026-08-28 公告；另有技高一年級上放學路線與車資公告，須依部別及學期表登記。","lodging":"D．截至2026-09-01查閱二信高中官方首頁、學生手冊及新生公告，未找到高中部學生宿舍公開申請或名額資料。","life_info":"Google Maps確認校址位於基隆市中正區立德路243號；校方交通路隊資料提到立德路口與海關宿舍廣場為放學集合／乘車節點，周邊屬基隆市區住宅與學校道路帶。","checked_sources":["https://www.essh.kl.edu.tw/","https://www.essh.kl.edu.tw/?page_id=94","https://www.essh.kl.edu.tw/?page_id=3323","https://www.essh.kl.edu.tw/?page_id=2975","https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%B8%82%E7%A7%81%E7%AB%8B%E4%BA%8C%E4%BF%A1%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@25.1439076,121.7689355,17z/data=!3m1!4b1!4m6!3m5!1s0x345d4fa979f91ba9:0x71f790a082624553!8m2!3d25.1439076!4d121.7715104!16s%2Fg%2F155pkl9f?entry=ttu"],"sources":[{"type":"official","title":"基隆私立二信高中｜官方網站與 115 交通車公告","url":"https://www.essh.kl.edu.tw/","checked_at":"2026-09-01"},{"type":"google_maps","title":"Google Maps｜私立二信高中","url":"https://www.google.com/maps/place/%E5%9F%BA%E9%9A%86%E5%B8%82%E7%A7%81%E7%AB%8B%E4%BA%8C%E4%BF%A1%E9%AB%98%E7%B4%9A%E4%B8%AD%E5%AD%B8/@25.1439076,121.7689355,17z/data=!3m1!4b1!4m6!3m5!1s0x345d4fa979f91ba9:0x71f790a082624553!8m2!3d25.1439076!4d121.7715104!16s%2Fg%2F155pkl9f?entry=ttu","checked_at":"2026-09-01"}]}
+  ]
+}

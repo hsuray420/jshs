@@ -1,6 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { toSchoolRecords } from "../lib/school-catalog.mjs";
+import { regionalCsvPath } from "./school-csv-source.mjs";
 
 const root = process.cwd();
 const csvFiles = {
@@ -35,7 +36,7 @@ const historyHeaders = [
 ];
 
 for (const [districtCode, relativePath] of Object.entries(csvFiles)) {
-  const csv = await readFile(resolve(root, `public/it_hs/${relativePath}`), "utf8");
+  const csv = await readFile(regionalCsvPath(districtCode), "utf8");
   const records = toSchoolRecords(csv)
     .filter((school) => school.referenceScore)
     .map((school) => [

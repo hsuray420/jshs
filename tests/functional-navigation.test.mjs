@@ -37,9 +37,8 @@ test("first-party actions publish progress for the homepage summary", async () =
     readSource("components/home-progress.tsx"),
   ]);
 
-  assert.match(schools, /markProgress\("district"/);
-  assert.match(schools, /markProgress\("schoolSearch"/);
-  assert.match(schools, /markProgress\("planner"/);
+  assert.match(schools, /schools\/compare/);
+  assert.doesNotMatch(schools, /markProgress\("planner"/); // Searching does not mean a plan was created.
   assert.match(calculator, /markProgress\("district"/);
   assert.match(calculator, /markProgress\("calculator"/);
   assert.match(progress, /jshs-progress/);
@@ -67,8 +66,8 @@ test("new school, calculator, and planner clients own the functional destination
     readSource("components/planner-mode-workspace.tsx"),
   ]);
 
-  assert.match(schools, /SchoolDirectoryRecord/);
-  assert.match(schools, /\/api\/planner/);
+  assert.match(schools, /School/);
+  assert.match(schools, /\/schools\//);
   assert.match(calculator, /\/api\/admission\/calculate/);
   assert.match(planner, /\/api\/planner/);
 });

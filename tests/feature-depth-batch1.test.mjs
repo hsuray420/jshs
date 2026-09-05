@@ -23,13 +23,13 @@ test("planner recommendation is discovery rather than an admission prediction", 
   assert.doesNotMatch(source, /Group title="穩定"/);
 });
 
-test("commute result exposes route mode and never derives minutes from geometry", async () => {
+test("commute keeps official transport information separate from a third-party route", async () => {
   const source = await read("components/commute-comparison.tsx");
-  assert.match(source, /osrm_route/);
-  assert.match(source, /geometric_estimate/);
-  assert.match(source, /unavailable/);
-  assert.match(source, /目前無法取得道路路線，因此不估算通勤時間/);
-  assert.doesNotMatch(source, /estimateMinutes\(/);
+  assert.match(source, /校方交通資訊/);
+  assert.match(source, /你的路線試算/);
+  assert.match(source, /Google 地圖路線試算/);
+  assert.match(source, /不顯示即時計算的距離與時間/);
+  assert.doesNotMatch(source, /estimateMinutes\(|geometric_estimate/);
 });
 
 test("history uses the auditable record contract and separates official from community", async () => {

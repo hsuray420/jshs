@@ -1,216 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { SchoolDirectoryRecord } from "@/lib/school-directory";
-import { readStoredDistrict } from "@/lib/district-context";
-import { markProgress } from "@/lib/progress";
-import { readLocalPlanner, saveLocalPlannerSnapshot, writeLocalPlanner } from "@/lib/planner-local";
-import { EmptyState, ErrorState, LoadingState } from "@/components/ui/status";
-import { PageContainer } from "@/components/ui/layout";
+import { useMemo, useRef, useState } from "react";
+import type { SchoolSummary } from "@/lib/school-repository";
+import "@/components/schools-v2.css";
 
-type SchoolExplorerRecord = Pick<SchoolDirectoryRecord, "districtCode" | "districtLabel" | "academicYear" | "dataStatus" | "sourceName" | "sourceType" | "code" | "name" | "ownership" | "program" | "city" | "area" | "website" | "departmentsRaw" | "groups" | "hasQuota" | "hasHistoricalData">;
+export type SchoolExplorerFilters = { query?: string; district?: string; city?: string; area?: string; ownership?: string; program?: string; gender?: string; department?: string; life?: string };
+const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
+const normalized = (value: string) => value.toLowerCase().replaceAll("台", "臺").replace(/\s/g, "");
+const statusLabels: Record<string, string> = { confirmed: "有住宿資訊", not_offered: "校方明確表示無宿舍", not_published: "官網未公布住宿", not_applicable: "住宿不適用", unclear: "住宿現況不清楚" };
 
-type SchoolDirectoryPayload = Readonly<{
-  version: string;
-  updatedAt: string;
-  schools: readonly SchoolExplorerRecord[];
-}>;
-
-type FilterValue = "all" | "yes" | "no";
-export type SchoolExplorerFilters = Readonly<{
-  district: string;
-  query: string;
-  program: string;
-  ownership: string;
-  city: string;
-  quota: FilterValue;
-  history: FilterValue;
-}>;
-
-const emptyFilters: SchoolExplorerFilters = { district: "all", query: "", program: "all", ownership: "all", city: "all", quota: "all", history: "all" };
-
-export function SchoolExplorer({
-  districtOptions,
-  initialFilters = emptyFilters,
-}: {
-  districtOptions: readonly { code: string; label: string }[];
-  initialFilters?: SchoolExplorerFilters;
-}) {
-  const [schools, setSchools] = useState<readonly SchoolExplorerRecord[]>([]);
-  const [loaded, setLoaded] = useState(false);
-  const [loadError, setLoadError] = useState(false);
+export function SchoolExplorer({ schools, initialFilters = {} }: { schools: readonly SchoolSummary[]; initialFilters?: SchoolExplorerFilters }) {
   const [filters, setFilters] = useState<SchoolExplorerFilters>(initialFilters);
-  const [savedCode, setSavedCode] = useState("");
-  const [saveMessage, setSaveMessage] = useState("");
-  const districtInitialized = useRef(initialFilters.district !== "all");
-
-  useEffect(() => {
-    if (initialFilters.district !== "all" && filters.district !== initialFilters.district) {
-      districtInitialized.current = true;
-      const timer = window.setTimeout(() => setFilters((current) => ({ ...current, district: initialFilters.district })), 0);
-      return () => window.clearTimeout(timer);
-    }
-    if (!districtInitialized.current) {
-      districtInitialized.current = true;
-      const storedDistrict = readStoredDistrict();
-      if (storedDistrict) {
-        const timer = window.setTimeout(() => setFilters((current) => ({ ...current, district: storedDistrict })), 0);
-        return () => window.clearTimeout(timer);
-      }
-    }
-    if (filters.district !== "all") markProgress("district", filters.district);
-    markProgress("schoolSearch");
-  }, [filters.district, initialFilters.district]);
-
-  useEffect(() => {
-    let active = true;
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 8000);
-
-    fetch("/it_hs/school-directory.json", { headers: { accept: "application/json" }, signal: controller.signal })
-      .then(async (response) => {
-        if (!response.ok) throw new Error(`school_directory_${response.status}`);
-        return response.json() as Promise<SchoolDirectoryPayload>;
-      })
-      .then((payload) => {
-        if (!active || !Array.isArray(payload.schools)) throw new Error("school_directory_invalid");
-        setSchools(payload.schools);
-        setLoaded(true);
-      })
-      .catch(() => {
-        if (!active) return;
-        setLoadError(true);
-        setLoaded(true);
-      });
-
-    return () => {
-      active = false;
-      window.clearTimeout(timeout);
-      controller.abort();
-    };
-  }, []);
-
-  const programs = useMemo(() => unique(schools.map((school) => school.program)), [schools]);
-  const cities = useMemo(() => unique(schools.map((school) => school.city)), [schools]);
-  const filteredSchools = useMemo(() => {
-    const needle = normalize(filters.query);
-    return schools.filter((school) => {
-      const haystack = normalize([
-        school.name, school.code, school.city, school.area, school.program,
-        school.departmentsRaw, ...school.groups,
-      ].join(" "));
-      return (!needle || haystack.includes(needle))
-        && (filters.district === "all" || school.districtCode === filters.district)
-        && (filters.program === "all" || school.program === filters.program)
-        && (filters.ownership === "all" || school.ownership === filters.ownership)
-        && (filters.city === "all" || school.city === filters.city)
-        && (filters.quota === "all" || String(school.hasQuota) === String(filters.quota === "yes"))
-        && (filters.history === "all" || String(school.hasHistoricalData) === String(filters.history === "yes"));
-    });
-  }, [filters, schools]);
-
-  function updateFilter<K extends keyof SchoolExplorerFilters>(key: K, value: SchoolExplorerFilters[K]) {
-    setFilters((current) => ({ ...current, [key]: value }));
-  }
-
-  function clearFilters() {
-    setFilters(emptyFilters);
-  }
-
-  async function saveSchool(school: SchoolExplorerRecord) {
-    setSavedCode("");
-    setSaveMessage("");
-    const response = await fetch("/api/planner", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ district: school.districtCode, schoolCode: school.code, schoolName: school.name, department: school.departmentsRaw, tier: "balanced" }),
-    }).catch(() => null);
-    if (response?.ok) {
-      setSavedCode(`${school.districtCode}:${school.code}`);
-      markProgress("planner");
-    } else if (response?.status === 401) {
-      const current = readLocalPlanner();
-      const exists = current.items.some((item) => item.district === school.districtCode && item.school_code === school.code);
-      const nextItems = exists ? current.items : [...current.items, { id: crypto.randomUUID(), district: school.districtCode, school_code: school.code, school_name: school.name, department: school.departmentsRaw, tier: "balanced", notes: "", created_at: new Date().toISOString() }];
-      const nextState = { ...current.state, order: exists ? [...(current.state.order || [])] : [...(current.state.order || []), nextItems[nextItems.length - 1].id] };
-      writeLocalPlanner(nextItems, nextState);
-      saveLocalPlannerSnapshot(nextItems, nextState);
-      setSavedCode(`${school.districtCode}:${school.code}`);
-      setSaveMessage(exists ? "這個校科已在你的志願清單中。" : "已保存於目前裝置；登入 LINE 後才能跨裝置同步。");
-      markProgress("planner");
-    } else {
-      setSaveMessage("暫時無法儲存，請稍後再試。");
-    }
-  }
-
-  return (
-    <PageContainer as="section" className="jshs-school-workspace">
-        <div className="grid gap-5 p-5 jshs-surface-card jshs-school-search-card md:p-7">
-          <label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">
-            搜尋學校名稱、科系、群科、縣市、學校代碼
-            <input value={filters.query} onChange={(event) => updateFilter("query", event.target.value)} placeholder="例如：資訊科、電機與電子群、臺中、060323" />
-          </label>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <FilterSelect label="就學區" value={filters.district} onChange={(value) => updateFilter("district", value)} options={[{ code: "all", label: "全部就學區" }, ...districtOptions]} />
-            <FilterSelect label="學制分類" value={filters.program} onChange={(value) => updateFilter("program", value)} options={[{ code: "all", label: "全部學制分類" }, ...programs.map((value) => ({ code: value, label: value }))]} />
-            <FilterSelect label="公私立" value={filters.ownership} onChange={(value) => updateFilter("ownership", value)} options={[{ code: "all", label: "公私立皆可" }, { code: "公立", label: "公立" }, { code: "私立", label: "私立" }]} />
-            <FilterSelect label="縣市" value={filters.city} onChange={(value) => updateFilter("city", value)} options={[{ code: "all", label: "全部縣市" }, ...cities.map((value) => ({ code: value, label: value }))]} />
-          </div>
-          <details className="jshs-advanced-filters"><summary>更多條件：招生名額、歷年資料</summary><div className="mt-4 grid gap-4 md:grid-cols-2"><FilterSelect label="招生名額" value={filters.quota} onChange={(value) => updateFilter("quota", value as FilterValue)} options={[{ code: "all", label: "名額皆可" }, { code: "yes", label: "有招生名額" }, { code: "no", label: "待公告" }]} /><FilterSelect label="歷年資料" value={filters.history} onChange={(value) => updateFilter("history", value as FilterValue)} options={[{ code: "all", label: "資料皆可" }, { code: "yes", label: "有歷年參考資料" }, { code: "no", label: "待整理" }]} /></div></details>
-        </div>
-
-        <div className="sticky top-0 z-10 mt-5 flex flex-wrap items-center gap-3 border-y border-[var(--jshs-border)] bg-[var(--jshs-page)] py-3" aria-label="搜尋結果工具列">
-          <strong className="text-sm text-slate-700"><span className="sr-only">已選條件：</span>{loaded && !loadError ? `找到 ${filteredSchools.length} 所學校／校科` : "搜尋條件"}</strong>
-          <ConditionChip label={filters.district === "all" ? "全部就學區" : districtOptions.find((item) => item.code === filters.district)?.label || filters.district} />
-          {filters.query ? <ConditionChip label={`關鍵字：${filters.query}`} /> : null}
-          {filters.program !== "all" ? <ConditionChip label={`學制分類：${filters.program}`} /> : null}
-          {filters.ownership !== "all" ? <ConditionChip label={filters.ownership} /> : null}
-          {filters.city !== "all" ? <ConditionChip label={filters.city} /> : null}
-          {filters.quota !== "all" ? <ConditionChip label={filters.quota === "yes" ? "有招生名額" : "招生名額待公告"} /> : null}
-          {filters.history !== "all" ? <ConditionChip label={filters.history === "yes" ? "有歷年參考" : "歷年資料待整理"} /> : null}
-          <button type="button" onClick={clearFilters} className="ml-auto px-3 py-2 text-sm jshs-button-secondary">清除條件</button>
-        </div>
-
-        <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
-          <div><p className="text-sm font-bold jshs-muted-copy">{loaded ? (loadError ? "學校資料暫時無法載入" : "資料年度、資料狀態與來源均在學校詳情中清楚標示。") : "學校資料準備載入中"}</p><p className="mt-1 text-xs leading-5 text-slate-500">正式招生權益仍以官方公告為準。</p></div>
-          <Link className="text-sm font-black text-[var(--jshs-primary)]" href="/planner">查看我的規劃 →</Link>
-        </div>
-        {saveMessage ? <p className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-900" role="status">{saveMessage} <a className="ml-1 underline" href="/api/line/login/start">使用 LINE 登入</a></p> : null}
-
-        {!loaded ? <div className="mt-6"><LoadingState label="正在載入學校資料…" /></div> : null}
-        {loadError ? <div className="mt-6"><ErrorState /></div> : null}
-        {loaded && !loadError && !filteredSchools.length ? <div className="mt-6"><EmptyState title="找不到符合條件的學校" description="試著清除一個條件，或換一個學校、科系與縣市關鍵字。" action={<button type="button" onClick={clearFilters} className="px-4 py-3 text-sm jshs-button-secondary">清除條件</button>} /></div> : null}
-        {loaded && !loadError ? <div className="mt-6 grid gap-4 lg:grid-cols-2">
-          {filteredSchools.slice(0, 120).map((school) => {
-            const key = `${school.districtCode}:${school.code}`;
-            return (
-              <article key={key} className="flex flex-col p-6 jshs-surface-card">
-                <div><p className="text-xs font-black tracking-[.12em] text-[var(--jshs-primary)]">{school.code}</p><h2 className="mt-2 text-2xl font-black leading-snug">{school.name}</h2></div>
-                <p className="mt-3 text-sm leading-6 jshs-muted-copy">{[school.city, school.area].filter(Boolean).join("／")} · {school.ownership || "公私立待確認"} · {school.program || "學制分類待確認"}</p>
-                <p className="mt-4 rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-7 text-slate-700">校科摘要：{school.groups.length ? school.groups.join("、") : school.departmentsRaw || "待以學校公告確認"}</p>
-                <div className="mt-auto flex flex-wrap gap-2 pt-5"><Link className="px-4 py-3 text-sm jshs-button-primary" href={`/schools/${school.districtCode}/${school.code}`}>查看詳情（查看學校詳情）</Link><button type="button" onClick={() => saveSchool(school)} className="px-4 py-3 text-sm jshs-button-secondary">{savedCode === key ? "已加入志願" : "加入志願（加入規劃）"}</button>{school.website ? <a className="px-4 py-3 text-sm jshs-button-secondary" href={school.website} target="_blank" rel="noreferrer">查看官方網站 ↗</a> : null}</div>
-              </article>
-            );
-          })}
-        </div> : null}
-        {loaded && !loadError && filteredSchools.length > 120 ? <p className="mt-6 text-center text-sm font-bold text-slate-500">目前先顯示前 120 筆；請用條件繼續縮小範圍。</p> : null}
-      </PageContainer>
-  );
-}
-
-function FilterSelect({ label, value, onChange, options }: { label: string; value: string; onChange: (value: string) => void; options: readonly { code: string; label: string }[] }) {
-  return <label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">{label}<select value={value} onChange={(event) => onChange(event.target.value)}>{options.map((option) => <option key={option.code} value={option.code}>{option.label}</option>)}</select></label>;
-}
-
-function ConditionChip({ label }: { label: string }) {
-  return <span className="jshs-chip">{label}</span>;
-}
-
-function unique(values: readonly string[]) {
-  return [...new Set(values.filter(Boolean))].sort((left, right) => left.localeCompare(right, "zh-TW"));
-}
-
-function normalize(value: string) {
-  return value.replace(/臺/g, "台").trim().toLocaleLowerCase("zh-TW");
+  const [sort, setSort] = useState("name");
+  const [limit, setLimit] = useState(24);
+  const drawer = useRef<HTMLDialogElement>(null);
+  const update = (key: keyof SchoolExplorerFilters, value: string) => { setFilters(current => ({ ...current, [key]: value, ...(key === "city" ? { area: "" } : {}) })); setLimit(24); };
+  const cities = unique(schools.map(s => s.city));
+  const districts = unique(schools.flatMap(s => s.admissionDistricts));
+  const result = useMemo(() => schools.filter(s => {
+    const tokens = (filters.query || "").split(/[\s、,;；]+/).map(normalized).filter(Boolean);
+    const text = normalized([s.name, s.name.replace(/^(國立|市立|縣立|私立)/, "").replaceAll("高級中學", "高中").replaceAll("高級工業職業學校", "高工"), s.code, s.city, s.area, s.departmentRaw, s.courseDirection, s.features, s.project].join(" "));
+    const queryMatch = tokens.every(token => text.includes(token) || (token === "ai" && text.includes("人工智慧")) || (token === "餐飲" && /餐旅|烘焙/.test(text)));
+    return queryMatch && (!filters.city || s.city === filters.city) && (!filters.area || s.area === filters.area) && (!filters.district || s.admissionDistricts.includes(filters.district)) && (!filters.ownership || s.ownership === filters.ownership) && (!filters.program || s.schoolType === filters.program) && (!filters.gender || s.gender === filters.gender) && (!filters.department || s.departments.some(d => d.name === filters.department)) && (!filters.life || (filters.life === "lodging" ? s.lodgingStatus === "confirmed" : filters.life === "bus" ? s.hasSchoolBus : s.hasPublicTransport));
+  }).sort((a, b) => sort === "quota" ? (Number(b.admissionQuota) || 0) - (Number(a.admissionQuota) || 0) : String(sort === "city" ? a.city : sort === "ownership" ? a.ownership : a.name).localeCompare(String(sort === "city" ? b.city : sort === "ownership" ? b.ownership : b.name), "zh-Hant")), [schools, filters, sort]);
+  const active = Object.entries(filters).filter(([key, value]) => key !== "query" && value).length;
+  const panel = (prefix: string) => <><h2>篩選學校</h2>{([
+    ["city", "縣市", cities], ["area", "行政區", unique(schools.filter(s => !filters.city || s.city === filters.city).map(s => s.area))], ["district", "招生區／免試就學區", districts], ["ownership", "公私立", unique(schools.map(s => s.ownership))], ["program", "學制", unique(schools.map(s => s.schoolType))], ["gender", "招生性別", unique(schools.map(s => s.gender))], ["department", "科別／方向", unique(schools.flatMap(s => s.departments.map(d => d.name)))]
+  ] as [keyof SchoolExplorerFilters, string, string[]][]).map(([key, label, values]) => <label key={key} htmlFor={`${prefix}-${key}`}>{label}<select id={`${prefix}-${key}`} value={filters[key] || ""} onChange={e => update(key, e.target.value)}><option value="">全部</option>{values.map(value => <option key={value}>{value}</option>)}</select></label>)}<label>生活條件<select value={filters.life || ""} onChange={e => update("life", e.target.value)}><option value="">全部</option><option value="lodging">有明確住宿資訊</option><option value="bus">有學生專車／校車資訊</option><option value="transit">有明確大眾運輸資訊</option></select></label><button className="sv-button" onClick={() => { setFilters({ query: filters.query }); setLimit(24); }}>清除篩選</button><p className="sv-note">官網未公布不代表沒有提供。生活條件以各招生單位公開資訊為準。</p></>;
+  return <div className="sv-root"><header className="sv-hero"><div className="sv-container"><p className="sv-eyebrow">JSHS · EXPLORE YOUR NEXT CHAPTER</p><h1>全國高中職查詢</h1><p>找到適合自己的高中、高職與學程。從想學的科別，到每天的通勤，逐步認識你的選擇。</p><label className="sv-search">搜尋學校、科別或課程方向<input type="search" value={filters.query || ""} onChange={e => update("query", e.target.value)} placeholder="學校名稱、代碼、餐飲、AI、特色班…" /></label><div className="sv-stats"><span><b>{schools.length}</b> 所學校</span><span><b>{cities.length}</b> 縣市</span><span><b>{districts.length}</b> 就學區</span><span>115 學年度招生 · 各欄年份依原文</span></div><a href="#school-sources">資料來源與使用說明 ↗</a></div></header><div className="sv-container"><nav className="sv-tools" aria-label="學校探索工具"><Link href="/schools/map">學校地圖 ↗</Link><Link href="/schools/compare">比較學校 ↗</Link><Link href="/schools/commute">通勤比較 ↗</Link></nav><div className="sv-layout"><aside className="sv-filter">{panel("desktop")}</aside><div className="sv-results"><div className="sv-toolbar"><p aria-live="polite"><strong>{result.length}</strong> 所符合條件</p><button className="sv-button sv-mobile-filter" onClick={() => drawer.current?.showModal()}>篩選 {active ? `(${active})` : ""}</button><label>排序<select value={sort} onChange={e => setSort(e.target.value)}><option value="name">學校名稱</option><option value="quota">招生名額</option><option value="city">縣市</option><option value="ownership">公私立</option></select></label></div>{!result.length && <div className="sv-empty"><h2>找不到符合條件的學校</h2><p>試試較短的關鍵字，或減少篩選條件。</p><button className="sv-button" onClick={() => setFilters({})}>重新搜尋</button></div>}<div className="sv-result-list">{result.slice(0, limit).map(s => <article className="sv-school" key={s.code}><div><div className="sv-tags"><span>{s.ownership}</span><span className={s.schoolType === "進修部" ? "sv-continuing" : ""}>{s.schoolType}</span><span>{s.gender}</span></div><h2><Link href={`/schools/${s.code}`}>{s.name} <span aria-hidden="true">↗</span></Link></h2><p className="sv-place">{s.city} {s.area} · {s.admissionDistricts.join("、")}</p><p className="sv-departments">{s.departments.slice(0, 4).map(d => d.name).join(" · ") || "目前沒有科別資料"}{s.departments.length > 4 ? ` 等 ${s.departments.length} 科` : ""}</p></div><div className="sv-school-facts"><p><span>115 招生名額</span><strong>{s.admissionQuota || "目前沒有資料"}</strong></p><span>{statusLabels[s.lodgingStatus]}</span><span>{s.transportStatus === "confirmed" ? "有交通資訊" : s.transportStatus === "not_published" ? "官網未公布交通" : s.transportStatus === "not_applicable" ? "交通資訊不適用" : s.transportStatus === "not_offered" ? "校方明確表示未提供交通" : "交通現況不清楚"}</span></div></article>)}</div>{result.length > limit && <button className="sv-button sv-more" onClick={() => setLimit(current => current + 24)}>顯示更多學校（已顯示 {Math.min(limit, result.length)} / {result.length}）</button>}</div></div><section className="sv-trust" id="school-sources"><h2>每個選擇，都有資料可查</h2><p>JSHS 優先使用學校官方網站、招生簡章與政府公開資料。若官方網站未公開某項資訊，本站會明確標示「網站未標示」，不自行推測。</p><p>招生資料以 115 學年度為主；課程、交通與住宿資料可能引用不同年度公告，各校詳細頁保留原文年份與來源。跨區招生名額分別列示，不能直接相加。</p><p>學校詳細頁提供各項資料的來源連結；實際招生資格與名額以當年度正式簡章為準。</p></section></div><dialog ref={drawer} className="sv-drawer"><div className="sv-drawer-head"><strong>調整搜尋條件</strong><button aria-label="關閉篩選" className="sv-button" onClick={() => drawer.current?.close()}>關閉 ×</button></div>{panel("mobile")}<button className="sv-button sv-primary" onClick={() => drawer.current?.close()}>查看 {result.length} 所學校</button></dialog></div>;
 }

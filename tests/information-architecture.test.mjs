@@ -77,7 +77,7 @@ test("visitor task surfaces hide implementation details from public copy", async
 test("visitor task surfaces use the shared education iOS design system without one-off chrome", async () => {
   for (const url of visitorSurfaceUrls) {
     const source = await readFile(url, "utf8");
-    assert.match(source, /jshs-hero-section|jshs-surface-card|jshs-button/);
+    assert.match(source, /jshs-hero-section|jshs-surface-card|jshs-button|sv-root/);
     assert.doesNotMatch(source, /jshs-organic|jshs-hero-band|jshs-pill-button|bg-blue-50|text-\[#2868d7\]|shadow-blue/);
   }
 });

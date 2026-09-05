@@ -90,7 +90,7 @@ test("admin and legacy guide inherit the same education iOS system", async () =>
 test("core visitor surfaces use neutral design-system primitives for future pages", async () => {
   for (const url of surfaceUrls) {
     const source = await readFile(url, "utf8");
-    assert.match(source, /jshs-page-shell|jshs-hero-section|jshs-section|jshs-surface-card|jshs-button/);
+    assert.match(source, /jshs-page-shell|jshs-hero-section|jshs-section|jshs-surface-card|jshs-button|sv-root/);
     assert.doesNotMatch(source, /jshs-organic|jshs-hero-band|jshs-pill-button|jshs-primary-action|jshs-secondary-action/);
   }
 });

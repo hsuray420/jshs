@@ -5,34 +5,34 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 
-test("national school directory turns every district CSV into addressable records", async () => {
-  const directory = await read("lib/school-directory.ts");
-  assert.match(directory, /Object\.entries\(csvByDistrict\)/);
-  assert.match(directory, /schoolDirectory/);
-  assert.match(directory, /hasQuota/);
-  assert.match(directory, /hasHistoricalData/);
+test("national school repository derives addressable entities from the canonical CSVs", async () => {
+  const [repository, generator] = await Promise.all([read("lib/school-repository.ts"), read("scripts/generate-schools.mjs")]);
+  assert.match(repository, /getSchoolByCode/);
+  assert.match(generator, /schools_master\.csv/);
+  assert.match(generator, /school_admission_records\.csv/);
+  assert.doesNotMatch(generator, /public\/it_hs/);
 });
 
-test("every school detail route has a static decision page contract", async () => {
-  const page = await read("app/schools/[district]/[code]/page.tsx");
+test("every school-code route resolves a canonical, source-backed detail page", async () => {
+  const [page, detail] = await Promise.all([read("app/schools/[district]/page.tsx"), read("components/school-detail.tsx")]);
   assert.match(page, /generateStaticParams/);
-  assert.match(page, /EducationalOrganization/);
-  assert.doesNotMatch(page, /Google Maps|maps\/search/);
-  assert.match(page, /SchoolDecisionActions/);
-  assert.doesNotMatch(page, /HISTORICAL REFERENCE|歷年參考|ALUMNI SHARING|學長姐分享/);
+  assert.match(page, /getSchoolByCode/);
+  assert.match(detail, /BreadcrumbList/);
+  assert.match(detail, /招生區與共同就學區紀錄/);
+  assert.match(detail, /查看資料來源/);
 });
 
-test("school search results link into every district detail route", async () => {
+test("school search results link by the canonical school code", async () => {
   const explorer = await read("components/school-explorer.tsx");
-  assert.match(explorer, /href={`\/schools\/\$\{school\.districtCode\}\/\$\{school\.code\}`}/);
-  assert.match(explorer, /查看官方網站/);
-  assert.doesNotMatch(explorer, /加入比較|比較工作區/);
+  assert.match(explorer, /href={`\/schools\/\$\{s\.code\}`}/);
+  assert.match(explorer, /招生區／免試就學區/);
+  assert.match(explorer, /有明確住宿資訊/);
 });
 
-test("sitemap generator includes all national school detail records", async () => {
+test("sitemap generator includes all canonical school-code records", async () => {
   const script = await read("scripts/generate-sitemap.mjs");
-  assert.match(script, /Object\.entries\(districtMetadata\.districts\)/);
-  assert.match(script, /\/schools\/\$\{districtCode\}\/\$\{school\.code\}/);
+  assert.match(script, /content\/schools\/generated\/schools\.json/);
+  assert.match(script, /\/schools\/\$\{school\.code\}/);
 });
 
 test("legacy guide routes school actions to the new center and has no old school page", async () => {

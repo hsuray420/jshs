@@ -3,7 +3,7 @@ import { SchoolAlumniExplorer } from "@/components/school-alumni-explorer";
 import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { schoolDistrictOptions } from "@/lib/school-directory";
+import { schoolDistrictOptions } from "@/lib/school-districts";
 import { FeatureHero } from "@/components/feature-hero";
 
 export const metadata: Metadata = {

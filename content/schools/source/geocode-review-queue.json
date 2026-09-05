@@ -1,0 +1,146 @@
+[
+  {
+    "schoolCode": "050314",
+    "schoolName": "國立卓蘭高級中等學校",
+    "address": "369002 苗栗縣卓蘭鎮老庄里161號",
+    "reason": "address_mismatch",
+    "candidates": [
+      {
+        "provider": "moe_tgos_school_layer",
+        "source": "https://gis.tgos.tw/TGQuery/TGQuery.ashx?op=att&res=SCHOOL.cfg&layer=dbo.SCHOOL_F&EXPR=%5BTOWN%5D%3D%27%E5%8D%93%E8%98%AD%E9%8E%AE%27+AND+%5BCOUNTY%5D%3D%27%E8%8B%97%E6%A0%97%E7%B8%A3%27&page=1&keystr=Lcq%2FFkX%2BiuVFat3SJ4GVHloiu9meTVNcU4inAmvF0bo%3D&jsonp=cb",
+        "code": "050314",
+        "matchedPlaceName": "國立卓蘭高中",
+        "city": "苗栗縣",
+        "town": "卓蘭鎮",
+        "matchedAddress": "[369]苗栗縣卓蘭鎮老庄161號",
+        "longitude": 120.832199,
+        "latitude": 24.312704
+      }
+    ]
+  },
+  {
+    "schoolCode": "050B14",
+    "schoolName": "國立卓蘭高級中等學校進修部",
+    "address": "369002 苗栗縣卓蘭鎮老庄里161號",
+    "reason": "no_address_or_code_match",
+    "candidates": [
+      {
+        "provider": "moe_tgos_school_layer",
+        "source": "https://gis.tgos.tw/TGQuery/TGQuery.ashx?op=att&res=SCHOOL.cfg&layer=dbo.SCHOOL_F&EXPR=%5BTOWN%5D%3D%27%E5%8D%93%E8%98%AD%E9%8E%AE%27+AND+%5BCOUNTY%5D%3D%27%E8%8B%97%E6%A0%97%E7%B8%A3%27&page=1&keystr=Lcq%2FFkX%2BiuVFat3SJ4GVHloiu9meTVNcU4inAmvF0bo%3D&jsonp=cb",
+        "code": "050314",
+        "matchedPlaceName": "國立卓蘭高中",
+        "city": "苗栗縣",
+        "town": "卓蘭鎮",
+        "matchedAddress": "[369]苗栗縣卓蘭鎮老庄161號",
+        "longitude": 120.832199,
+        "latitude": 24.312704
+      },
+      {
+        "provider": "moe_tgos_school_layer",
+        "source": "https://gis.tgos.tw/TGQuery/TGQuery.ashx?op=att&res=SCHOOL.cfg&layer=dbo.SCHOOL_F&EXPR=%5BTOWN%5D%3D%27%E5%8D%93%E8%98%AD%E9%8E%AE%27+AND+%5BCOUNTY%5D%3D%27%E8%8B%97%E6%A0%97%E7%B8%A3%27&page=1&keystr=Lcq%2FFkX%2BiuVFat3SJ4GVHloiu9meTVNcU4inAmvF0bo%3D&jsonp=cb",
+        "code": "051307",
+        "matchedPlaceName": "私立全人實驗高中",
+        "city": "苗栗縣",
+        "town": "卓蘭鎮",
+        "matchedAddress": "[369]苗栗縣卓蘭鎮內灣141之3號",
+        "longitude": 120.862623,
+        "latitude": 24.30507
+      }
+    ]
+  },
+  {
+    "schoolCode": "080307",
+    "schoolName": "國立竹山高級中學",
+    "address": "557002 南投縣竹山鎮枋坪巷1-3號",
+    "reason": "address_mismatch",
+    "candidates": [
+      {
+        "provider": "moe_tgos_school_layer",
+        "source": "https://gis.tgos.tw/TGQuery/TGQuery.ashx?op=att&res=SCHOOL.cfg&layer=dbo.SCHOOL_F&EXPR=%5BTOWN%5D%3D%27%E7%AB%B9%E5%B1%B1%E9%8E%AE%27+AND+%5BCOUNTY%5D%3D%27%E5%8D%97%E6%8A%95%E7%B8%A3%27&page=1&keystr=Lcq%2FFkX%2BiuVFat3SJ4GVHloiu9meTVNcU4inAmvF0bo%3D&jsonp=cb",
+        "code": "080307",
+        "matchedPlaceName": "國立竹山高中",
+        "city": "南投縣",
+        "town": "竹山鎮",
+        "matchedAddress": "[557]南投縣竹山鎮下橫街253號",
+        "longitude": 120.681553,
+        "latitude": 23.760241
+      }
+    ]
+  },
+  {
+    "schoolCode": "080B07",
+    "schoolName": "國立竹山高級中學進修部",
+    "address": "557002 南投縣竹山鎮枋坪巷1-3號",
+    "reason": "no_address_or_code_match",
+    "candidates": [
+      {
+        "provider": "moe_tgos_school_layer",
+        "source": "https://gis.tgos.tw/TGQuery/TGQuery.ashx?op=att&res=SCHOOL.cfg&layer=dbo.SCHOOL_F&EXPR=%5BTOWN%5D%3D%27%E7%AB%B9%E5%B1%B1%E9%8E%AE%27+AND+%5BCOUNTY%5D%3D%27%E5%8D%97%E6%8A%95%E7%B8%A3%27&page=1&keystr=Lcq%2FFkX%2BiuVFat3SJ4GVHloiu9meTVNcU4inAmvF0bo%3D&jsonp=cb",
+        "code": "080307",
+        "matchedPlaceName": "國立竹山高中",
+        "city": "南投縣",
+        "town": "竹山鎮",
+        "matchedAddress": "[557]南投縣竹山鎮下橫街253號",
+        "longitude": 120.681553,
+        "latitude": 23.760241
+      }
+    ]
+  },
+  {
+    "schoolCode": "094326",
+    "schoolName": "雲林縣立蔦松藝術高中",
+    "address": "652002 雲林縣水林鄉松北村一之一號",
+    "reason": "address_mismatch",
+    "candidates": [
+      {
+        "provider": "moe_tgos_school_layer",
+        "source": "https://gis.tgos.tw/TGQuery/TGQuery.ashx?op=att&res=SCHOOL.cfg&layer=dbo.SCHOOL_F&EXPR=%5BTOWN%5D%3D%27%E6%B0%B4%E6%9E%97%E9%84%89%27+AND+%5BCOUNTY%5D%3D%27%E9%9B%B2%E6%9E%97%E7%B8%A3%27&page=1&keystr=Lcq%2FFkX%2BiuVFat3SJ4GVHloiu9meTVNcU4inAmvF0bo%3D&jsonp=cb",
+        "code": "094326",
+        "matchedPlaceName": "縣立蔦松藝術高中",
+        "city": "雲林縣",
+        "town": "水林鄉",
+        "matchedAddress": "[652]雲林縣水林鄉松北村松北路1之1號",
+        "longitude": 120.230108,
+        "latitude": 23.521719
+      }
+    ]
+  },
+  {
+    "schoolCode": "100303",
+    "schoolName": "國立嘉科實驗高中",
+    "address": "600023 嘉義市西區新民路580號",
+    "reason": "no_address_or_code_match",
+    "candidates": [
+      {
+        "provider": "moe_tgos_school_layer",
+        "source": "https://gis.tgos.tw/TGQuery/TGQuery.ashx?op=att&res=SCHOOL.cfg&layer=dbo.SCHOOL_F&EXPR=%5BTOWN%5D%3D%27%E8%A5%BF%E5%8D%80%27+AND+%5BCOUNTY%5D%3D%27%E5%98%89%E7%BE%A9%E5%B8%82%27&page=1&keystr=Lcq%2FFkX%2BiuVFat3SJ4GVHloiu9meTVNcU4inAmvF0bo%3D&jsonp=cb",
+        "code": "200302",
+        "matchedPlaceName": "國立嘉義女中",
+        "city": "嘉義市",
+        "town": "西區",
+        "matchedAddress": "[600]嘉義市西區垂楊路243號",
+        "longitude": 120.451168,
+        "latitude": 23.473441
+      }
+    ]
+  },
+  {
+    "schoolCode": "593301",
+    "schoolName": "高雄市立前鎮高中",
+    "address": "高雄市前鎮區中路132號",
+    "reason": "address_mismatch",
+    "candidates": [
+      {
+        "provider": "moe_tgos_school_layer",
+        "source": "https://gis.tgos.tw/TGQuery/TGQuery.ashx?op=att&res=SCHOOL.cfg&layer=dbo.SCHOOL_F&EXPR=%5BTOWN%5D%3D%27%E5%89%8D%E9%8E%AE%E5%8D%80%27+AND+%5BCOUNTY%5D%3D%27%E9%AB%98%E9%9B%84%E5%B8%82%27&page=1&keystr=Lcq%2FFkX%2BiuVFat3SJ4GVHloiu9meTVNcU4inAmvF0bo%3D&jsonp=cb",
+        "code": "593301",
+        "matchedPlaceName": "市立前鎮高中",
+        "city": "高雄市",
+        "town": "前鎮區",
+        "matchedAddress": "[806]高雄市前鎮區鎮中路132號",
+        "longitude": 120.319544,
+        "latitude": 22.587193
+      }
+    ]
+  }
+]

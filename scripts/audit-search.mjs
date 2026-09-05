@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { regionalCsvPath } from "./school-csv-source.mjs";
 
 const root = process.cwd();
 const routeMetadata = await readJson("content/route-metadata.json");
 const newsCatalog = await readJson("content/news.json");
-const centralSchoolsCsv = await readFile(resolve(root, "public/it_hs/ct/schools.csv"), "utf8");
+const centralSchoolsCsv = await readFile(regionalCsvPath("ct"), "utf8");
 const searchSource = await readFile(resolve(root, "lib/search-index.ts"), "utf8");
 
 for (const required of ["normalizeSearchText", "tokenizeSearchQuery", "categoryWeights", "synonyms", "title.includes", "alias.includes"]) {

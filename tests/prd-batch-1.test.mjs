@@ -45,7 +45,8 @@ test("第一批補修不讓資料狀態互相矛盾", async () => {
     read("components/admission-calculator.tsx"),
   ]);
   assert.match(eligibility, /if \(!hydrated\) return <WelcomeView/);
-  assert.match(schools, /loaded \? \(loadError \?/);
+  assert.match(schools, /SchoolExplorerFilters/);
+  assert.match(schools, /招生區／免試就學區/);
   assert.match(history, /state === "loading"/);
   assert.match(history, /state === "error"/);
   assert.match(history, /state === "success"/);

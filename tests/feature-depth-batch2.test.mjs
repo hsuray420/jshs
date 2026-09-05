@@ -32,18 +32,17 @@ test("Batch 2 open-day records include full personal-record fields and no false 
   assert.match(page, /完成/);
 });
 
-test("Batch 2 school fields expose a traceable provenance contract", async () => {
-  const [page, provenance] = await Promise.all([source("app/schools/[district]/[code]/page.tsx"), source("lib/school-field-provenance.ts")]);
-  assert.match(page, /FieldProvenance/);
-  for (const key of ["sourceType", "sourceUrl", "sourceTitle", "schoolYear", "verifiedAt", "status"]) assert.match(provenance, new RegExp(key));
+test("school fields expose per-section source links from the canonical repository", async () => {
+  const [page, repository] = await Promise.all([source("components/school-detail.tsx"), source("lib/school-repository.ts")]);
+  for (const key of ["address", "transport", "lodging", "course", "project", "life"]) assert.match(repository, new RegExp(key));
   assert.match(page, /查看資料來源/);
+  assert.match(page, /資料來源/);
 });
 
-test("Batch 2 map coordinates expose deterministic confidence and retain no-coordinate schools", async () => {
+test("map coordinates use a provenance cache and retain schools without coordinates", async () => {
   const [api, map] = await Promise.all([source("app/api/school-geocode/route.ts"), source("components/school-map-explorer.tsx")]);
-  for (const key of ["schoolCode", "coordinateSource", "matchedName", "matchMethod", "confidence", "verifiedAt"]) assert.match(api, new RegExp(key));
-  assert.match(map, /自動比對，可能需要校正/);
-  assert.match(map, /尚未取得座標/);
+  for (const key of ["getSchoolCoordinate", "verifiedAt"]) assert.match(api + map, new RegExp(key));
+  assert.match(map, /尚無已核對座標/);
 });
 
 test("Batch 2 account and notification channels distinguish unavailable states", async () => {

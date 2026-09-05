@@ -23,7 +23,7 @@ test("planner data requires a verified LINE member session", async () => {
   assert.doesNotMatch(stateRoute, /plannerIdentity\(request\)/);
 });
 
-test("anonymous interfaces save locally while member writes remain LINE-gated", async () => {
+test("planning remains local while national search stays a read-only discovery surface", async () => {
   const [schoolExplorer, decisionActions, plannerWorkspace, localStore] = await Promise.all([
     readSource("components/school-explorer.tsx"),
     readSource("components/school-decision-actions.tsx"),
@@ -31,7 +31,8 @@ test("anonymous interfaces save locally while member writes remain LINE-gated", 
     readSource("lib/planner-local.ts"),
   ]);
 
-  assert.match(schoolExplorer, /\/api\/planner/);
+  assert.doesNotMatch(schoolExplorer, /\/api\/planner/);
+  assert.match(schoolExplorer, /\/schools\/compare/);
   assert.match(decisionActions, /writeLocalPlanner/);
   assert.match(plannerWorkspace, /writeLocalPlanner/);
   assert.match(plannerWorkspace, /if \(!isMember\)/);

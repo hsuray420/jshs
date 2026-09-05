@@ -25,13 +25,13 @@ test("查學校選單提供查詢、歷年、分享、地圖、費用與通勤�
   }
 });
 
-test("全國校科查詢不再顯示獨立比較與地圖功能", async () => {
+test("全國高中職查詢提供比較與地圖的獨立入口", async () => {
   const explorer = await read("components/school-explorer.tsx");
-  for (const label of ["學制分類", "公私立", "縣市", "招生名額", "歷年資料", "清除條件", "查看學校詳情"]) {
+  for (const label of ["學制", "公私立", "縣市", "招生名額", "清除篩選", "全國高中職查詢"]) {
     assert.match(explorer, new RegExp(label));
   }
-  assert.doesNotMatch(explorer, /jshs:school-compare/);
-  assert.doesNotMatch(explorer, /加入比較|比較工作區/);
+  assert.match(explorer, /schools\/compare/);
+  assert.match(explorer, /schools\/map/);
 });
 
 test("歷年錄取查詢使用可稽核資料契約並分開官方與社群資料", async () => {
@@ -48,19 +48,18 @@ test("歷年錄取查詢使用可稽核資料契約並分開官方與社群資�
   assert.match(history, /目前沒有找到這個年度的官方歷史資料/);
 });
 
-test("校科目錄與歷年資料各自有獨立資產", async () => {
+test("canonical school data and historical records remain separate", async () => {
   const [directory, history, generator] = await Promise.all([
-    read("public/it_hs/school-directory.json").then(JSON.parse),
+    read("content/schools/generated/metadata.json").then(JSON.parse),
     read("public/it_hs/admission-history.json").then(JSON.parse),
     read("scripts/generate-school-directory.mjs"),
   ]);
 
-  assert.ok(directory.schools.length >= 600);
-  assert.ok(directory.schools.every((school) => !("referenceScore" in school)));
+  assert.equal(directory.schoolCount, 545);
   assert.ok(history.schools.length > 0);
   assert.ok(history.schools.every((school) => school.sourceType === "community"));
-  assert.match(generator, /admission-history\.json/);
-  assert.match(generator, /hasHistoricalData/);
+  assert.match(generator, /generate-schools/);
+  assert.doesNotMatch(generator, /admission-history\.json/);
 });
 
 test("找學校工具各自有 canonical route 與可操作頁面", async () => {
@@ -76,19 +75,19 @@ test("找學校工具各自有 canonical route 與可操作頁面", async () => 
   ]);
   assert.match(alumni, /school-reviews/);
   assert.match(alumni, /學長姐分享/);
-  assert.match(map, /學校地圖/);
+  assert.match(map, /已核對學校位置地圖/);
   assert.match(map, /openstreetmap|OpenStreetMap/i);
   assert.match(map, /address/);
   assert.match(cost, /費用/);
   assert.match(cost, /三年/);
   assert.match(cost, /估算/);
-  assert.match(commute, /通勤比較/);
-  assert.match(commute, /分鐘/);
+  assert.match(commute, /校方交通資訊/);
+  assert.match(commute, /你的路線試算/);
   assert.match(commute, /加入學校/);
-  assert.match(comparison, /2～4|repeat\(/);
+  assert.match(comparison, /2 至 4/);
 });
 
-test("學校地圖使用免付款的 OpenStreetMap 與 Leaflet 顯示標記並支援聚焦", async () => {
+test("學校地圖使用 OpenStreetMap，並只顯示有來源的座標", async () => {
   const [map, route, globals, packageJson] = await Promise.all([
     read("components/school-map-explorer.tsx"),
     read("app/api/school-geocode/route.ts"),
@@ -97,27 +96,20 @@ test("學校地圖使用免付款的 OpenStreetMap 與 Leaflet 顯示標記並�
   ]);
   const manifest = JSON.parse(packageJson);
   assert.ok(manifest.dependencies.leaflet);
-  assert.match(map, /from "leaflet"/);
+  assert.match(map, /import\('leaflet'\)/);
   assert.match(map, /tile.openstreetmap.org/);
   assert.match(map, /fitBounds/);
   assert.match(map, /setView/);
-  assert.match(map, /jshs-school-marker/);
-  assert.match(map, /jshs-school-marker-pin/);
-  assert.match(map, /shortSchoolName/);
-  assert.match(map, /搜尋學校/);
-  assert.match(map, /中投區/);
-  assert.match(map, /住家位置/);
-  assert.match(map, /通勤時間/);
-  assert.match(map, /比較/);
-  assert.match(map, /selectedSchools/);
-  assert.match(map, /distance/);
-  assert.match(map, /\/api\/school-geocode/);
-  assert.match(route, /nominatim\.openstreetmap\.org/);
+  assert.match(map, /getSchoolCoordinate/);
+  assert.match(map, /尚無已核對座標/);
+  assert.match(map, /Google 地圖開啟/);
+  assert.match(map, /selected/);
+  assert.doesNotMatch(map, /通勤時間|distance/);
+  assert.doesNotMatch(route, /nominatim\.openstreetmap\.org/);
   assert.match(globals, /leaflet\/dist\/leaflet\.css/);
-  assert.match(route, /overpass-api\.de/);
+  assert.doesNotMatch(route, /overpass-api\.de/);
   assert.match(route, /district/);
   assert.match(route, /coordinates/);
-  assert.match(route, /user-agent/i);
   assert.match(route, /q/);
   assert.doesNotMatch(map, /maps.googleapis.com/);
 });

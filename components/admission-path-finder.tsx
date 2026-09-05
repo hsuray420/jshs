@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import type { School } from "@/lib/school-repository";
+import { schoolMatchesDistrict } from "@/lib/school-districts";
 import districtMetadata from "../public/it_hs/district-metadata.json" with { type: "json" };
 import eligibilityFinderContent from "@/content/features/eligibility-finder.json";
 import { readStoredDistrict } from "@/lib/district-context";
@@ -38,7 +40,7 @@ export function AdmissionPathFinder() {
   const [state, setState] = useState<FinderState>(defaultState);
   const [hydrated, setHydrated] = useState(false);
   const [result, setResult] = useState<AdmissionPathResult | null>(null);
-  const [schools, setSchools] = useState<readonly { code: string; name: string; districtCode: string }[]>([]);
+  const [schools, setSchools] = useState<readonly School[]>([]);
   const [schoolQuery, setSchoolQuery] = useState("");
   const [dataError, setDataError] = useState("");
 
@@ -52,7 +54,7 @@ export function AdmissionPathFinder() {
   const currentStep = Math.min(state.currentStep, steps.length - 1);
   const selectedZone = districtOptions.find((district) => district.code === state.zone);
   const inferredZones = districtOptions.filter((district) => district.areas.split("、").includes(state.schoolCounty));
-  const filteredSchools = schools.filter((school) => !state.zone || school.districtCode === state.zone).filter((school) => !schoolQuery || school.name.includes(schoolQuery)).slice(0, 80);
+  const filteredSchools = schools.filter((school) => !state.zone || schoolMatchesDistrict(school, state.zone)).filter((school) => !schoolQuery || school.name.includes(schoolQuery)).slice(0, 80);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -89,8 +91,8 @@ export function AdmissionPathFinder() {
 
   useEffect(() => {
     if (!hydrated || currentStep !== 1 || schools.length) return;
-    fetch("/it_hs/school-directory.json", { headers: { accept: "application/json" } })
-      .then((response) => { if (!response.ok) throw new Error("school_directory_unavailable"); return response.json() as Promise<{ schools?: { code: string; name: string; districtCode: string }[] }>; })
+    fetch("/data/schools.json", { headers: { accept: "application/json" } })
+      .then((response) => { if (!response.ok) throw new Error("school_directory_unavailable"); return response.json() as Promise<{ schools?: School[] }>; })
       .then((payload) => setSchools(payload.schools || []))
       .catch(() => setDataError("目前無法載入學校選單；你仍可先選擇縣市與就學區完成檢測。"));
   }, [currentStep, hydrated, schools.length]);
@@ -147,7 +149,7 @@ function WelcomeView({ onStart }: { onStart: () => void }) { return <section id=
 
 function WizardProgress({ steps, currentStep }: { steps: readonly string[]; currentStep: number }) { return <div className="mt-7" aria-label={`檢測進度，第${currentStep + 1}步，共${steps.length}步`}><div className="flex items-center gap-1">{steps.map((step, index) => <div key={`${step}-${index}`} className={`h-2 flex-1 rounded-full ${index <= currentStep ? "bg-[var(--jshs-primary)]" : "bg-[var(--jshs-muted-surface)]"}`} />)}</div><p className="mt-2 text-sm font-black text-[var(--jshs-primary)]">第 {currentStep + 1} 步／共 {steps.length} 步</p></div>; }
 
-function WizardStep({ kind, state, update, chooseCounty, toggleIdentity, toggleNeed, countyOptions, inferredZones, selectedZone, schoolQuery, setSchoolQuery, schools }: { kind: string; state: FinderState; update: (patch: Partial<FinderState>) => void; chooseCounty: (county: string) => void; toggleIdentity: (value: Identity) => void; toggleNeed: (value: SpecialNeed) => void; countyOptions: readonly string[]; inferredZones: readonly { code: string; label: string }[]; selectedZone?: string; schoolQuery: string; setSchoolQuery: (value: string) => void; schools: readonly { code: string; name: string; districtCode: string }[] }) {
+function WizardStep({ kind, state, update, chooseCounty, toggleIdentity, toggleNeed, countyOptions, inferredZones, selectedZone, schoolQuery, setSchoolQuery, schools }: { kind: string; state: FinderState; update: (patch: Partial<FinderState>) => void; chooseCounty: (county: string) => void; toggleIdentity: (value: Identity) => void; toggleNeed: (value: SpecialNeed) => void; countyOptions: readonly string[]; inferredZones: readonly { code: string; label: string }[]; selectedZone?: string; schoolQuery: string; setSchoolQuery: (value: string) => void; schools: readonly School[] }) {
   if (kind === "student") return <StepShell eyebrow="Step 1" title="你目前是哪一種學生？" help="先確認學籍狀態，系統才知道哪些規則可能適用。"><div className="grid gap-3 sm:grid-cols-2">{studentTypes.map((item) => <OptionCard key={item.value} selected={state.studentType === item.value} onClick={() => update({ studentType: item.value })} title={item.label} body={item.description} />)}</div></StepShell>;
   if (kind === "school") return <StepShell eyebrow="Step 2" title="你目前／原就讀學校在哪裡？" help="縣市可以協助系統先推測免試就學區；學校名稱只需從選單選取，不用自行輸入。"><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">縣市<select value={state.schoolCounty} onChange={(event) => chooseCounty(event.target.value)}><option value="">請選擇縣市</option>{countyOptions.map((county) => <option key={county} value={county}>{county}</option>)}</select></label><label className="mt-5 grid gap-2 text-sm font-black text-[var(--jshs-primary)]">搜尋學校（選填）<input value={schoolQuery} onChange={(event) => setSchoolQuery(event.target.value)} placeholder="輸入關鍵字篩選學校選單" aria-describedby="school-select-help" /><select className="mt-1" value={state.schoolCode} onChange={(event) => update({ schoolCode: event.target.value })}><option value="">先不選學校</option>{schools.map((school) => <option key={`${school.districtCode}-${school.code}`} value={school.code}>{school.name}</option>)}</select><span id="school-select-help" className="font-normal text-sm leading-6 text-[var(--jshs-muted)]">學校選單載入失敗時，可以先用縣市完成檢測，結果會保守標示。</span></label></StepShell>;
   if (kind === "zone") return <StepShell eyebrow="Step 3" title="你準備參加哪一個免試就學區？" help="系統會依學校所在地先帶入推測值；你可以更改，因為共同就學區與核准變更就學區仍要看正式對照。"><div className="rounded-2xl bg-[var(--jshs-brand-tint)] p-4"><strong>目前推測：{selectedZone || "尚未推測"}</strong><p className="mt-1 text-sm leading-6 jshs-muted-copy">{state.schoolCounty ? `依${state.schoolCounty}的學校所在地推測。` : "請先回到上一步選擇縣市。"}</p></div><label className="mt-5 grid gap-2 text-sm font-black text-[var(--jshs-primary)]">免試就學區<select value={state.zone} onChange={(event) => update({ zone: event.target.value })}><option value="">請選擇就學區</option>{districtOptions.map((district) => <option key={district.code} value={district.code}>{district.label}</option>)}</select></label>{inferredZones.length ? <p className="mt-3 text-sm leading-6 jshs-muted-copy">系統依所在地找到：{inferredZones.map((zone) => zone.label).join("、")}。若你要跨區，下一步可以勾選跨區就學。</p> : null}</StepShell>;

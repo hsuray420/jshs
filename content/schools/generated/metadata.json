@@ -1,0 +1,51 @@
+{
+  "academicYear": "115",
+  "sourceUpdatedAt": "2026-09-01",
+  "schoolCount": 545,
+  "admissionRecordCount": 604,
+  "districtCount": 15,
+  "admissionDistrictFilterCount": 24,
+  "cityCount": 22,
+  "schoolTypes": {
+    "綜高": 96,
+    "進修部": 58,
+    "高中": 256,
+    "高職": 135
+  },
+  "genders": {
+    "女校": 21,
+    "男女校": 517,
+    "男校": 7
+  },
+  "ownership": {
+    "公立": 349,
+    "私立": 196
+  },
+  "lodgingStatuses": {
+    "confirmed": 96,
+    "not_applicable": 1,
+    "not_offered": 2,
+    "not_published": 445,
+    "unclear": 1
+  },
+  "transportStatuses": {
+    "confirmed": 111,
+    "not_offered": 1,
+    "not_published": 402,
+    "unclear": 31
+  },
+  "sourceDirectory": "JSHS_CSV_各區資料_2026-09-01",
+  "sourceFiles": [
+    "schools_master.csv",
+    "school_admission_records.csv"
+  ],
+  "sourceHashes": {
+    "master": "87be159c73fd93b2b5489009ff4296838bdc22bb613c04e67a5b7bf26356b529",
+    "admissions": "90c5273e38825b837ba4f10fff587b2bd52f9c927ccc0ecf8ce050f56d293e34"
+  },
+  "validation": {
+    "errors": 0,
+    "warnings": 0,
+    "departmentWarnings": 0
+  }
+}

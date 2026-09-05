@@ -1,20 +1,6 @@
-import { redirect } from "next/navigation";
-
-const legacyTools = ["history", "alumni", "map", "cost", "commute"] as const;
-type LegacyTool = (typeof legacyTools)[number];
-
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return legacyTools.map((district) => ({ district }));
-}
-
-export default async function LegacySchoolToolRoute({ params, searchParams }: { params: Promise<{ district: string }>; searchParams: Promise<{ district?: string; schoolCode?: string }> }) {
-  const { district: tool } = await params;
-  const query = await searchParams;
-  if (!legacyTools.includes(tool as LegacyTool)) redirect("/schools");
-  const next = new URLSearchParams({ view: tool });
-  if (query.district) next.set("district", query.district);
-  if (query.schoolCode) next.set("schoolCode", query.schoolCode);
-  redirect(`/schools?${next.toString()}`);
-}
+import { notFound } from "next/navigation";
+import { getSchoolByCode, getSchools } from "@/lib/school-repository";
+import { SchoolDetail, schoolPageMetadata } from "@/components/school-detail";
+export function generateStaticParams() { return getSchools().map(s => ({ district: s.code })); }
+export async function generateMetadata({ params }: { params: Promise<{ district: string }> }) { const s = getSchoolByCode((await params).district); return s ? schoolPageMetadata(s) : {}; }
+export default async function SchoolCodePage({ params }: { params: Promise<{ district: string }> }) { const s = getSchoolByCode((await params).district); if (!s) notFound(); return <SchoolDetail school={s} />; }

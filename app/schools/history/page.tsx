@@ -3,7 +3,7 @@ import { AdmissionHistoryExplorer } from "@/components/admission-history-explore
 import { DistrictGate } from "@/components/district-gate";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
-import { schoolDistrictOptions } from "@/lib/school-directory";
+import { schoolDistrictOptions } from "@/lib/school-districts";
 import { FeatureHero } from "@/components/feature-hero";
 
 export const metadata: Metadata = { title: "歷年錄取參考｜找學校｜全國國中升學資訊網", description: "查看不同年度、學校與科別的錄取參考資料，並保留資料來源與樣本限制。", alternates: { canonical: "/schools/history" } };

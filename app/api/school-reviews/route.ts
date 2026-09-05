@@ -1,4 +1,5 @@
-import { getSchoolDirectoryRecord } from "../../../lib/school-directory";
+import { getSchoolByCode } from "../../../lib/school-repository";
+import { schoolMatchesDistrict } from "../../../lib/school-districts";
 import { consumeSchoolReviewRateLimit, createSchoolReview, listRecentSchoolReviews, listSchoolReviews, type SchoolReview } from "../../../db/school-review-store";
 
 export const dynamic = "force-dynamic";
@@ -34,8 +35,8 @@ export async function POST(request: Request) {
   if (graduationYear && !/^\d{2,4}$/.test(graduationYear)) return Response.json({ ok: false, error: "invalid_graduation_year" }, { status: 400 });
   if (body.consent !== true) return Response.json({ ok: false, error: "consent_required" }, { status: 400 });
 
-  const school = getSchoolDirectoryRecord(district, schoolCode);
-  if (!school) return Response.json({ ok: false, error: "school_not_found" }, { status: 404 });
+  const school = getSchoolByCode(schoolCode);
+  if (!school || !schoolMatchesDistrict(school, district)) return Response.json({ ok: false, error: "school_not_found" }, { status: 404 });
 
   let allowed = false;
   try {
