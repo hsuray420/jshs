@@ -43,6 +43,8 @@ function trustResponse(body: BodyInit, contentType: string): Response {
 
 const rootStaticAssets = new Set([
   "/favicon.svg",
+  "/sw.js",
+  "/offline.html",
   "/file.svg",
   "/globe.svg",
   "/window.svg",

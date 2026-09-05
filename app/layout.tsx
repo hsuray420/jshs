@@ -3,6 +3,7 @@ import "./globals.css";
 import { AiAssistant } from "@/components/ai-assistant";
 import { SiteIntroModal } from "@/components/site-intro-modal";
 import { getMemberSession } from "@/lib/member-auth";
+import { PwaRegister } from "@/components/pwa-register";
 
 const googleTagId = "G-Y9298RKYMZ";
 
@@ -45,6 +46,7 @@ export default async function RootLayout({
         <div id="main-content">{children}</div>
         <SiteIntroModal />
         <AiAssistant isMember={Boolean(member)} />
+        <PwaRegister />
       </body>
     </html>
   );
