@@ -3,7 +3,7 @@ import path from "node:path";
 
 const projectRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const defaultSourceDir = "/Users/ray/Desktop/hs/JSHS_CSV_各區資料_2026-09-01";
-const bundledSourceDir = path.join(projectRoot, "content", "schools", "source");
+const bundledSourceDir = path.join(projectRoot, "content", "schools", "regions");
 
 export function getSchoolCsvSourceDir() {
   const configured = process.env.JSHS_CSV_SOURCE_DIR || defaultSourceDir;
