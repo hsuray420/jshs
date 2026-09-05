@@ -46,6 +46,13 @@ test("desktop welcome cards do not disappear merely because the visitor is signe
   assert.doesNotMatch(intro, /if \(!open \|\| isMember\)/);
 });
 
+test("the公益維護 welcome card links to the donation page", async () => {
+  const intro = await source("components/site-intro-modal.tsx");
+  assert.match(intro, /贊助我們/);
+  assert.match(intro, /action: \{ label: "贊助我們", href: "\/support" \}/);
+  assert.match(intro, /<Link href=\{card\.action\.href\}/);
+});
+
 test("donation button sends a validated amount to the server-side ECPay checkout", async () => {
   const [form, header, admin, settings] = await Promise.all([
     source("components/support-donation-form.tsx"),
