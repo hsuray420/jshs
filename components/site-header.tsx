@@ -42,6 +42,16 @@ function MobileNavigationGroup({ item, group, onNavigate }: { item: NavigationIt
   </section>;
 }
 
+function DesktopNavigationGroup({ item, group, active }: { item: NavigationItem; group: MenuGroup; active: boolean }) {
+  return <details className={`jshs-desktop-more is-${item.tone || "trust"} ${active ? "is-active" : ""}`}>
+    <summary aria-label={`${item.label}，展開副選單`}><NavIcon item={item} /><span>{item.label}</span><SiteIcon name="chevron-down" size={14} /></summary>
+    <div>
+      <div className="jshs-desktop-menu-heading"><span>{group.description}</span><Link href={group.href} className="jshs-desktop-menu-all">查看全部<SiteIcon name="chevron-right" size={14} /></Link></div>
+      <GroupItems group={group} />
+    </div>
+  </details>;
+}
+
 export function SiteHeader({ activeHref }: { activeHref?: string }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -77,8 +87,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
         <nav aria-label="主要導覽" className="jshs-desktop-nav">{mobileNavigation.map((item) => {
           const group = navigationGroups.get(item.label);
           const active = activeHref === item.activeHref;
-          if (item.label === "其他" && group) return <details key={item.label} className={`jshs-desktop-more is-${item.tone || "trust"}`}><summary><NavIcon item={item} /><span>{item.label}</span><SiteIcon name="chevron-down" size={14} /></summary><div><GroupItems group={group} /></div></details>;
-          return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={`is-${item.tone || "trust"} ${active ? "is-active" : ""}`}><NavIcon item={item} /><span>{item.label}</span></Link>;
+          return group ? <DesktopNavigationGroup key={item.label} item={item} group={group} active={active} /> : null;
         })}</nav>
         <div className="ml-auto flex shrink-0 items-center gap-2"><DonationLink fallbackHref="/support" className="jshs-donation-link hidden md:inline-flex">小額捐款</DonationLink>{/* Unauthenticated fallback: >登入</ */}<Link href="/account" className="jshs-login-link">{memberName || "登入"}</Link><button type="button" onClick={openDrawer} aria-label="開啟全站導覽" aria-expanded={drawerOpen} className="jshs-header-action jshs-header-menu-button grid place-items-center xl:hidden"><SiteIcon name="menu" size={23} /></button></div>
       </div>
