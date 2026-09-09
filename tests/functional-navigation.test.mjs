@@ -5,19 +5,21 @@ import test from "node:test";
 const readSource = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 test("task hubs route users into the new first-party admission surfaces", async () => {
-  const [tools, schools, planner, home, quickActions] = await Promise.all([
-    readSource("app/tools/page.tsx"),
+  const [tools, schools, planner, home, quickActions, scoreRegistry] = await Promise.all([
+    readSource("app/scores/page.tsx"),
     readSource("app/schools/page.tsx"),
     readSource("app/planner/page.tsx"),
     readSource("app/page.tsx"),
     readSource("components/home-next-step.tsx"),
+    readSource("content/score-features.json"),
   ]);
 
-  assert.match(tools, /AdmissionCalculator/);
+  assert.match(tools, /ScoreFeatureEntry/);
   assert.match(schools, /SchoolExplorer/);
   assert.match(planner, /PlannerHub/);
-  assert.match(home, /HomeQuickActions/);
-  assert.match(quickActions, /href: "\/tools"/);
+  assert.match(home, /HomeScoreActions/);
+  assert.match(quickActions, /href: "\/scores"/);
+  assert.match(scoreRegistry, /"href": "\/scores\/mock"/);
   assert.match(quickActions, /href: "\/schools"/);
   assert.match(quickActions, /href: "\/planner"/);
   assert.doesNotMatch(home, /districts-title|HomeDistrictPicker/);

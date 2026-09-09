@@ -102,9 +102,10 @@ test("homepage uses a next-step guide and compact fixed four-colour actions", as
   ]);
 
   assert.match(home, /HomeNextStep/);
-  assert.match(home, /HomeQuickActions/);
+  assert.match(home, /HomeScoreActions/);
   assert.doesNotMatch(home, /jshs-home-task-(?:grid|card)/);
-  for (const tone of ["school", "score", "planner", "guide"]) assert.match(nextStep, new RegExp(`tone: "${tone}"`));
+  assert.match(nextStep, /ScoreFeatureEntry/);
+  assert.match(nextStep, /tone: "score"/);
   assert.match(nextStep, /SiteIcon/);
   assert.doesNotMatch(nextStep, /[▤⌂∑☷]/);
   assert.match(home, /jshs-home-hero/);

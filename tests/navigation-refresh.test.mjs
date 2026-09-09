@@ -4,7 +4,7 @@ import test from "node:test";
 
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-const primaryLabels = ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"];
+const primaryLabels = ["找學校", "成績分析", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"];
 
 test("one content catalog defines all eight primary destinations including schedule and other", async () => {
   const catalog = JSON.parse(await source("content/site-map.json"));
@@ -24,17 +24,17 @@ test("header uses the common navigation config and one full brand component", as
 });
 
 test("homepage offers a next-step guide and compact colour-coded quick actions", async () => {
-  const [home, guide] = await Promise.all([source("app/page.tsx"), source("components/home-next-step.tsx")]);
+  const [home, guide, scoreEntry] = await Promise.all([source("app/page.tsx"), source("components/home-next-step.tsx"), source("components/score-feature-entry.tsx")]);
   assert.match(home, /HomeNextStep/);
-  assert.match(home, /HomeQuickActions/);
+  assert.match(home, /HomeScoreActions/);
   assert.doesNotMatch(home, /jshs-home-task-grid/);
   assert.match(guide, /第一次來？不知道從哪裡開始/);
   assert.match(guide, /幫我確認下一步/);
   assert.match(guide, /學生目前階段/);
   assert.match(guide, /就學區是否已知/);
   assert.match(guide, /現在最想處理的問題/);
-  assert.match(guide, /我知道我要做什麼/);
-  assert.match(guide, /jshs-home-quick-action/);
+  assert.match(scoreEntry, /現在想先處理哪件事/);
+  assert.match(guide, /ScoreFeatureEntry/);
 });
 
 test("guide has six canonical sections and directs detailed score rules to the calculator", async () => {

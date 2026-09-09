@@ -5,7 +5,7 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 
-const finalGroups = ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"];
+const finalGroups = ["找學校", "成績分析", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"];
 
 test("final sitemap defines the eight user-facing navigation groups", async () => {
   const catalog = JSON.parse(await read("content/site-map.json"));
@@ -18,19 +18,19 @@ test("final sitemap defines the eight user-facing navigation groups", async () =
 });
 
 test("final sitemap exposes real canonical hubs and compatibility routes stay out of navigation", async () => {
-  for (const route of ["app/schools/page.tsx", "app/tools/page.tsx", "app/planner/page.tsx", "app/schedule/page.tsx", "app/admission-guides/page.tsx", "app/knowledge/page.tsx", "app/trust/page.tsx"]) {
+  for (const route of ["app/schools/page.tsx", "app/scores/page.tsx", "app/tools/page.tsx", "app/planner/page.tsx", "app/schedule/page.tsx", "app/admission-guides/page.tsx", "app/knowledge/page.tsx", "app/trust/page.tsx"]) {
     await access(new URL(route, root));
   }
 
   const [schools, tools, planner, schedule, guides, knowledge, trust, gate, header] = await Promise.all([
-    read("app/schools/page.tsx"), read("app/tools/page.tsx"), read("app/planner/page.tsx"),
+    read("app/schools/page.tsx"), read("app/scores/page.tsx"), read("app/planner/page.tsx"),
     read("app/schedule/page.tsx"), read("app/admission-guides/page.tsx"), read("app/knowledge/page.tsx"), read("app/trust/page.tsx"),
     read("components/district-gate.tsx"),
     read("components/site-header.tsx"),
   ]);
 
   assert.match(schools, /SchoolExplorer/);
-  assert.match(tools, /AdmissionCalculator/);
+  assert.match(tools, /ScoreFeatureEntry/);
   assert.match(planner, /PlannerHub/);
   assert.match(schedule, /ScheduleWorkspace/);
   assert.match(guides, /AdmissionGuideLibrary/);

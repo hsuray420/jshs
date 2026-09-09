@@ -23,6 +23,8 @@ export type MenuGroup = Readonly<{
   activeHref: string;
   eyebrow: string;
   description: string;
+  secondaryDescription?: string;
+  layout?: "default" | "score";
   items: readonly MenuItem[];
 }>;
 

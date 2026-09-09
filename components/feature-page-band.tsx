@@ -2,7 +2,7 @@ type FeatureTone = "school" | "score" | "planner" | "guide";
 
 const featureLabels: Record<FeatureTone, string> = {
   school: "找學校",
-  score: "算成績",
+  score: "成績分析",
   planner: "我的志願",
   guide: "升學指南",
 };

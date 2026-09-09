@@ -25,9 +25,11 @@ test("LINE 會員登入完成前必須驗證官方帳號好友狀態", async () 
   assert.match(account, /重新確認好友資格/);
 });
 
-test("算成績的每個功能都有自己的 canonical route", async () => {
-  const [siteMap, tools, summary, history, placement, rules, calculator] = await Promise.all([
+test("成績分析的每個功能都有自己的 canonical route", async () => {
+  const [siteMap, scores, mock, tools, summary, history, placement, rules, calculator] = await Promise.all([
     read("content/site-map.json"),
+    read("app/scores/page.tsx"),
+    read("app/scores/mock/page.tsx"),
     read("app/tools/page.tsx"),
     read("app/tools/summary/page.tsx"),
     read("app/tools/history/page.tsx"),
@@ -36,10 +38,12 @@ test("算成績的每個功能都有自己的 canonical route", async () => {
     read("components/admission-calculator.tsx"),
   ]);
 
-  for (const path of ["/tools", "/tools/rules", "/tools/summary", "/tools/history", "/tools/placement"]) {
+  for (const path of ["/scores", "/scores/mock", "/scores/admission", "/scores/rules", "/scores/summary", "/scores/history", "/scores/trends", "/scores/placement"]) {
     assert.match(siteMap, new RegExp(path.replaceAll("/", "\\/")));
   }
-  for (const source of [tools, summary, history, placement, rules]) assert.match(source, /SiteHeader/);
+  for (const source of [scores, mock, tools, summary, history, placement, rules]) assert.match(source, /SiteHeader/);
+  assert.match(scores, /ScoreFeatureEntry/);
+  assert.match(mock, /MockScoreEmptyState/);
   assert.match(calculator, /jshs_score_history/);
   assert.match(calculator, /jshs_score_latest/);
 });

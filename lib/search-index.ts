@@ -35,6 +35,7 @@ const categoryWeights: Record<SearchResultCategory, number> = {
   學校: 7,
   科別: 7,
   升學指南: 9,
+  成績分析: 10,
   積分規則: 10,
   官方資訊: 8,
   日程: 8,
@@ -131,7 +132,7 @@ export const searchDocuments: readonly SearchDocument[] = Object.freeze([
 
 export const searchSuggestions = ["中投志願序", "超額比序", "資訊科", "官方簡章", "會考日期", "五專", "學校比較", "AI 隱私"] as const;
 export const commonSearchEntrypoints = routeMetadata
-  .filter((route) => ["/schools", "/tools/rules", "/admission-guides", "/schedule", "/knowledge", "/trust"].includes(route.pathname))
+  .filter((route) => ["/schools", "/scores", "/scores/mock", "/scores/rules", "/tools/rules", "/admission-guides", "/schedule", "/knowledge", "/trust"].includes(route.pathname))
   .map((route) => ({ title: route.title, href: route.pathname, category: route.category }));
 
 export function normalizeSearchText(value: string) {

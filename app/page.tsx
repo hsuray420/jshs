@@ -6,11 +6,11 @@ import { SourceBadge } from "@/components/source-badge";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 import { PageContainer } from "@/components/ui/layout";
 import { HomeProgress } from "@/components/home-progress";
-import { HomeNextStep, HomeQuickActions } from "@/components/home-next-step";
+import { HomeNextStep, HomeScoreActions } from "@/components/home-next-step";
 import { SERVICE_YEAR, SOURCE_ACADEMIC_YEAR, VERIFICATION_STATUS } from "@/lib/trust";
 
 const homeTitle = "全國國中升學資訊網｜JSHS";
-const homeDescription = "找學校、算成績、規劃志願與掌握升學資訊，讓每一步都更清楚。";
+const homeDescription = "找學校、成績分析、規劃志願與掌握升學資訊，讓每一步都更清楚。";
 
 export const metadata: Metadata = {
   title: homeTitle,
@@ -31,7 +31,7 @@ const brandPrinciples = [
 export default function HomePage() {
   return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/" />
     <section className="jshs-home-hero"><div className="jshs-home-hero-background" aria-hidden="true"><img src="/images/jshs-home-hero-v2.png" alt="" /></div><PageContainer className="jshs-home-hero-inner"><div className="jshs-home-hero-copy"><p className="jshs-home-hero-eyebrow"><span aria-hidden="true">●</span>{SERVICE_YEAR} 學年度 <i aria-hidden="true">·</i> 升學規劃</p><span className="jshs-home-hero-rule" aria-hidden="true" /><h1>先確認下一步，<br />升學規劃會<span>更清楚。</span></h1><p className="jshs-muted-copy">第一次來？用幾個問題找到升學起點。<br />已經知道目標？直接前往需要的工具。</p></div></PageContainer></section>
-    <PageContainer as="section" className="jshs-home-action-layout"><HomeQuickActions /></PageContainer>
+    <PageContainer as="section" className="jshs-home-action-layout"><HomeScoreActions /></PageContainer>
     <PageContainer as="section" className="jshs-home-guidance"><HomeNextStep /></PageContainer>
     <HomeProgress />
     <PageContainer as="section" aria-labelledby="principles-title" className="py-10"><SectionHeading eyebrow="JSHS 的原則" id="principles-title" title="讓每一個升學選擇，都有資料可以理解、有來源可以確認。" body="我們整理資訊，也把限制說清楚；最後的選擇留給學生、家長與老師一起討論。" /><div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{brandPrinciples.map(([title, body]) => <article key={title} className="p-5 jshs-surface-card"><h3 className="text-lg">{title}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{body}</p></article>)}</div><Link href="/trust/credibility" className="mt-5 inline-block text-sm font-bold text-[var(--jshs-primary)]">查看資料與信任原則 →</Link></PageContainer>

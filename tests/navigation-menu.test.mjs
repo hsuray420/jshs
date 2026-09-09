@@ -5,10 +5,11 @@ import test from "node:test";
 const siteMapUrl = new URL("../content/site-map.json", import.meta.url);
 const headerUrl = new URL("../components/site-header.tsx", import.meta.url);
 const footerUrl = new URL("../components/site-footer.tsx", import.meta.url);
-const expectedGroups = ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"];
+const expectedGroups = ["找學校", "成績分析", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"];
 const requiredLabels = [
   "全國校科查詢", "歷年錄取", "學長姐分享", "學校地圖", "費用試算", "通勤比較", "群科介紹",
-  "成績積分試算", "積分規則", "成績歷史", "模擬考落點", "升學總覽", "重要時程",
+  "模擬考", "模擬考中心", "對答案", "我的模考", "成績趨勢", "模考落點",
+  "會考與免試", "成績積分試算", "積分規則", "個人積分摘要", "升學總覽", "重要時程",
   "現在該做什麼", "我的待辦", "自己排", "志願探索", "版本紀錄", "列印／下載", "官方選填平台",
   "特殊入學與資格", "升學入門", "志願與積分", "升學百科", "生涯探索", "升學動態", "資料來源", "資料更新狀態",
   "15 區建置進度", "試算與分析方法", "資料版本紀錄", "錯誤回報", "平台可信度說明",
@@ -43,7 +44,12 @@ test("desktop and mobile navigation render the same complete submenu model", asy
   assert.match(header, /查看全部/);
   assert.match(header, /jshs-desktop-more/);
   assert.match(header, /DesktopNavigationGroup/);
+  assert.match(header, /<details name="jshs-desktop-nav"/);
   assert.match(header, /<summary aria-label=/);
+  assert.match(header, /keepSingleDesktopMenu/);
+  assert.match(header, /querySelectorAll<HTMLDetailsElement>\("\.jshs-desktop-more\[open\]"\)/);
+  assert.match(header, /onNavigate=\{closeDesktopMenus\}/);
+  assert.match(header, /is-layout-\$\{group\.layout/);
   assert.doesNotMatch(header, /return <Link key=\{item\.href\}/);
   assert.doesNotMatch(header, /<details key=\{item\.label\} className=\{`jshs-mobile-group/);
   assert.doesNotMatch(header, /[♧♙⌕☰↗]/);

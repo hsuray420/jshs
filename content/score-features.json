@@ -1,0 +1,30 @@
+{
+  "areas": [
+    {
+      "key": "mock",
+      "label": "模擬考",
+      "title": "剛考完？從這裡開始。",
+      "description": "對答案、保存成績，看看這次與之前有什麼不同。",
+      "primaryHref": "/scores/mock",
+      "primaryLabel": "進入模考中心"
+    },
+    {
+      "key": "admission",
+      "label": "會考與免試",
+      "title": "想知道目前的升學積分？",
+      "description": "依所在就學區試算積分並查看完整規則。",
+      "primaryHref": "/scores/admission",
+      "primaryLabel": "開始積分試算"
+    }
+  ],
+  "features": [
+    { "key": "mock-center", "area": "mock", "label": "模擬考中心", "href": "/scores/mock", "description": "集中查看模考入口、資料狀態與下一步", "status": "entry" },
+    { "key": "mock-answers", "area": "mock", "label": "對答案", "href": "/scores/mock", "description": "等可驗證答案來源載入後再開放作答", "status": "pending-data" },
+    { "key": "mock-history", "area": "mock", "label": "我的模考", "href": "/scores/history", "description": "查看已保存的模考紀錄；目前不假造紀錄", "status": "entry" },
+    { "key": "mock-trends", "area": "mock", "label": "成績趨勢", "href": "/scores/trends", "description": "用已保存成績產生趨勢，不以空資料推估", "status": "entry" },
+    { "key": "mock-placement", "area": "mock", "label": "模考落點", "href": "/scores/placement", "description": "查看資料條件與歷史參考，不提供無依據預測", "status": "entry" },
+    { "key": "admission-calculator", "area": "admission", "label": "成績積分試算", "href": "/scores/admission", "description": "依 15 就學區官方規則完成積分試算", "status": "available" },
+    { "key": "admission-rules", "area": "admission", "label": "積分規則", "href": "/scores/rules", "description": "互動查看項目、公式、上限與官方來源", "status": "available" },
+    { "key": "admission-summary", "area": "admission", "label": "個人積分摘要", "href": "/scores/summary", "description": "查看最近一次試算與同分比序資料", "status": "available" }
+  ]
+}

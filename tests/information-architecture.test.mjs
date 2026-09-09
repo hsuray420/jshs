@@ -16,7 +16,7 @@ const visitorSurfaceUrls = [
 
 const expectedNavigation = [
   ["找學校", "/schools"],
-  ["算成績", "/tools"],
+  ["成績分析", "/scores"],
   ["我的志願", "/planner"],
   ["升學日程", "/schedule"],
   ["官方資訊", "/admission-guides"],
@@ -37,7 +37,7 @@ test("the information architecture follows the final eight-group product sitemap
   assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 8);
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ activeHref }) => activeHref),
-    ["/schools", "/tools", "/planner", "/schedule", "/admission-guides", "/knowledge", "/trust", "/trust/credibility"],
+    ["/schools", "/scores", "/planner", "/schedule", "/admission-guides", "/knowledge", "/trust", "/trust/credibility"],
   );
   assert.equal(siteMap.primaryNavigation.some(({ label }) => label === "就學區"), false);
 });
@@ -93,8 +93,8 @@ test("legacy news category routes redirect into the canonical IA", async () => {
   }
 });
 
-test("tools, schools, districts, and private planner each have a real landing page", async () => {
-  for (const slug of ["tools", "schools", "districts", "planner"]) {
+test("scores, tools, schools, districts, and private planner each have a real landing page", async () => {
+  for (const slug of ["scores", "tools", "schools", "districts", "planner"]) {
     const route = new URL(`../app/${slug}/page.tsx`, import.meta.url);
     await access(route);
   }
@@ -107,6 +107,7 @@ test("tools, schools, districts, and private planner each have a real landing pa
 test("primary navigation lands on an interactive surface instead of an introductory hero", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
   const schools = await readFile(new URL("../app/schools/page.tsx", import.meta.url), "utf8");
+  const scores = await readFile(new URL("../app/scores/page.tsx", import.meta.url), "utf8");
   const tools = await readFile(new URL("../app/tools/page.tsx", import.meta.url), "utf8");
   const planner = await readFile(new URL("../app/planner/page.tsx", import.meta.url), "utf8");
   const schedule = await readFile(new URL("../app/schedule/page.tsx", import.meta.url), "utf8");
@@ -118,7 +119,8 @@ test("primary navigation lands on an interactive surface instead of an introduct
       assert.match(schools, /<SchoolExplorer/);
       continue;
     }
-    if (url.pathname === "/tools") assert.match(tools, /AdmissionCalculator/);
+    if (url.pathname === "/scores") assert.match(scores, /ScoreFeatureEntry/);
+    else if (url.pathname === "/tools") assert.match(tools, /AdmissionCalculator/);
     else if (url.pathname === "/planner") assert.match(planner, /PlannerHub/);
     else if (url.pathname === "/schedule") assert.match(schedule, /ScheduleWorkspace/);
     else if (url.pathname === "/admission-guides") assert.match(await readFile(new URL("../app/admission-guides/page.tsx", import.meta.url), "utf8"), /AdmissionGuideLibrary/);
@@ -134,6 +136,7 @@ test("sitemap exposes canonical hubs and excludes redirect-only legacy homepage"
     "/",
     "/news",
     "/admission-guides/schedule",
+    "/scores",
     "/tools",
     "/schools",
     "/schools/groups",

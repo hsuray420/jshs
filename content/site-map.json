@@ -2,7 +2,7 @@
   "updatedAt": "2026-08-28",
   "primaryNavigation": [
     { "label": "找學校", "href": "/schools", "activeHref": "/schools", "icon": "school", "tone": "school" },
-    { "label": "算成績", "href": "/tools", "activeHref": "/tools", "icon": "calculator", "tone": "score" },
+    { "label": "成績分析", "href": "/scores", "activeHref": "/scores", "icon": "calculator", "tone": "score" },
     { "label": "我的志願", "href": "/planner", "activeHref": "/planner", "icon": "planner", "tone": "planner" },
     { "label": "升學日程", "href": "/schedule", "activeHref": "/schedule", "icon": "calendar", "tone": "guide" },
     { "label": "官方資訊", "href": "/admission-guides", "activeHref": "/admission-guides", "icon": "knowledge", "tone": "school" },
@@ -26,13 +26,20 @@
       ]
     },
     {
-      "label": "算成績", "href": "/tools", "activeHref": "/tools", "eyebrow": "先理解規則，再完成試算", "description": "15 個就學區皆可試算與填志願；每個結果都保留規則年度與資料來源。",
+      "label": "成績分析", "href": "/scores", "activeHref": "/scores", "eyebrow": "成績分析", "description": "從模擬考到會考積分，集中查看你的成績與升學位置。", "secondaryDescription": "模考紀錄、成績趨勢、落點參考與 15 就學區免試積分。", "layout": "score",
       "items": [
-        { "label": "成績積分試算", "href": "/tools", "description": "輸入資料並取得依官方規則計算的結果" },
-        { "label": "積分規則", "href": "/tools/rules", "description": "互動查看項目、公式、上限與官方來源" },
-        { "label": "模擬考落點", "href": "/tools/placement", "description": "查看資料條件與歷史參考；資料不足時不提供錄取預測" },
-        { "label": "個人積分摘要", "href": "/tools/summary", "description": "查看最近一次試算與同分比序資料" },
-        { "label": "成績歷史", "href": "/tools/history", "description": "查看保存在裝置或帳號的試算紀錄" }
+        { "label": "模擬考", "href": "/scores/mock", "description": "剛考完？從這裡開始。", "children": [
+          { "label": "模擬考中心", "href": "/scores/mock", "description": "集中查看模考入口、資料狀態與下一步" },
+          { "label": "對答案", "href": "/scores/mock", "description": "等可驗證答案來源載入後再開放作答" },
+          { "label": "我的模考", "href": "/scores/history", "description": "查看已保存的模考紀錄；目前不假造紀錄" },
+          { "label": "成績趨勢", "href": "/scores/trends", "description": "用已保存成績產生趨勢，不以空資料推估" },
+          { "label": "模考落點", "href": "/scores/placement", "description": "查看資料條件與歷史參考，不提供無依據預測" }
+        ] },
+        { "label": "會考與免試", "href": "/scores/admission", "description": "想知道目前的升學積分？", "children": [
+          { "label": "成績積分試算", "href": "/scores/admission", "description": "依 15 就學區官方規則完成積分試算" },
+          { "label": "積分規則", "href": "/scores/rules", "description": "互動查看項目、公式、上限與官方來源" },
+          { "label": "個人積分摘要", "href": "/scores/summary", "description": "查看最近一次試算與同分比序資料" }
+        ] }
       ]
     },
     {
@@ -67,7 +74,7 @@
       "label": "升學指南", "href": "/knowledge", "activeHref": "/knowledge", "eyebrow": "把制度講成人話", "description": "先建立全貌，再回到精確規則與工具完成決策。",
       "items": [
         { "label": "升學入門", "href": "/knowledge/admission-basics", "description": "理解會考、積分、序位、志願到放榜" },
-        { "label": "志願與積分", "href": "/knowledge/rules", "description": "只用白話理解志願序、積分與同分比序；精確規則請前往算成績" },
+        { "label": "志願與積分", "href": "/knowledge/rules", "description": "只用白話理解志願序、積分與同分比序；精確規則請前往成績分析" },
         { "label": "特殊入學與資格", "href": "/eligibility", "description": "查看特殊管道與資格初步檢測" },
         { "label": "升學百科", "href": "/knowledge/glossary", "description": "查詢名詞、迷思與制度說明" },
         { "label": "生涯探索", "href": "/knowledge/fit-quiz", "description": "探索高中、技高、五專與未來方向" },

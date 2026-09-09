@@ -50,7 +50,7 @@ function isAdmissionDistrict(value: string): value is AdmissionDistrict {
 
 
 function ScoreShell({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) {
-  return <><section className="jshs-hero-section"><div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-14"><p className="jshs-eyebrow">算成績</p><h1 className="mt-3 max-w-4xl">{title}</h1><p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">{eyebrow}會保留年度、就學區與資料來源，方便下一步核對。</p></div></section><div className="mx-auto w-[min(1120px,calc(100%-32px))] py-8"><p className="jshs-eyebrow">{eyebrow}</p>{children}</div></>;
+  return <><section className="jshs-hero-section"><div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-14"><p className="jshs-eyebrow">成績分析</p><h1 className="mt-3 max-w-4xl">{title}</h1><p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">{eyebrow}會保留年度、就學區與資料來源，方便下一步核對。</p></div></section><div className="mx-auto w-[min(1120px,calc(100%-32px))] py-8"><p className="jshs-eyebrow">{eyebrow}</p>{children}</div></>;
 }
 
 function ScoreState({ latest, empty }: { latest: SavedScore | null; empty: string }) {

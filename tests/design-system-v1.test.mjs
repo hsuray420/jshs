@@ -21,19 +21,20 @@ test("the desktop header uses the shared eight-item navigation and full brand", 
   assert.match(header, /mobileNavigation\.map/);
   assert.match(header, /全國國中升學資訊網/);
   assert.match(header, /<SiteIcon name="school"/);
-  assert.deepEqual(JSON.parse(catalog).primaryNavigation.map(({ label }) => label), ["找學校", "算成績", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"]);
+  assert.deepEqual(JSON.parse(catalog).primaryNavigation.map(({ label }) => label), ["找學校", "成績分析", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"]);
   assert.match(header, />登入</);
 });
 
 test("the homepage starts with a full-bleed hero and compact fixed-colour actions", async () => {
-  const [home, nextStep, css] = await Promise.all([source("app/page.tsx"), source("components/home-next-step.tsx"), source("app/globals.css")]);
+  const [home, nextStep, scoreEntry, css] = await Promise.all([source("app/page.tsx"), source("components/home-next-step.tsx"), source("components/score-feature-entry.tsx"), source("app/globals.css")]);
   assert.match(home, /jshs-home-hero/);
   assert.match(home, /先確認下一步/);
   assert.match(home, /HomeNextStep/);
-  assert.match(home, /HomeQuickActions/);
+  assert.match(home, /HomeScoreActions/);
+  assert.match(nextStep, /ScoreFeatureEntry/);
   assert.match(nextStep, /第一次來？不知道從哪裡開始/);
-  assert.match(nextStep, /我知道我要做什麼/);
-  assert.match(nextStep, /jshs-home-quick-action/);
+  assert.match(scoreEntry, /現在想先處理哪件事/);
+  assert.match(css, /jshs-score-entry/);
   assert.doesNotMatch(home, /jshs-home-task-card/);
   assert.match(home, /jshs-home-hero-v2\.png/);
   assert.match(css, /jshs-home-hero-background/);

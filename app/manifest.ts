@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "全國國中升學資訊網｜JSHS",
     short_name: "JSHS",
-    description: "找學校、算成績、規劃志願與掌握升學資訊。",
+    description: "找學校、成績分析、規劃志願與掌握升學資訊。",
     start_url: "/",
     display: "standalone",
     orientation: "portrait-primary",
@@ -18,7 +18,7 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     shortcuts: [
       { name: "全國學校查詢", short_name: "學校查詢", url: "/schools", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
-      { name: "積分試算", short_name: "積分試算", url: "/tools", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
+      { name: "成績分析", short_name: "成績分析", url: "/scores", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
     ],
   };
 }

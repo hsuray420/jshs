@@ -4,7 +4,7 @@ import { SiteHeader } from "@/components/site-header";
 import districtMetadata from "../../public/it_hs/district-metadata.json";
 
 const title = "選擇就學區｜15 區學校資料與升學工具";
-const description = "選擇適用就學區後，回到找學校、算成績或我的志願使用對應資料。";
+const description = "選擇適用就學區後，回到找學校、成績分析或我的志願使用對應資料。";
 
 export const metadata: Metadata = {
   title,
@@ -58,7 +58,7 @@ export default async function DistrictsPage({
 }) {
   const params = await searchParams;
   const target = normalizeTarget(params.target);
-  const activeHref = target === "schools" ? "/schools" : target === "calculator" ? "/tools" : target === "analysis" ? "/planner" : "/districts";
+  const activeHref = target === "schools" ? "/schools" : target === "calculator" ? "/scores" : target === "analysis" ? "/planner" : "/districts";
   const requestedLabel = target ? targetLabels[target] : "就學區功能";
 
   return (

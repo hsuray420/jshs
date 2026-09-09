@@ -42,12 +42,12 @@ function MobileNavigationGroup({ item, group, onNavigate }: { item: NavigationIt
   </section>;
 }
 
-function DesktopNavigationGroup({ item, group, active }: { item: NavigationItem; group: MenuGroup; active: boolean }) {
-  return <details className={`jshs-desktop-more is-${item.tone || "trust"} ${active ? "is-active" : ""}`}>
+function DesktopNavigationGroup({ item, group, active, onToggle, onNavigate }: { item: NavigationItem; group: MenuGroup; active: boolean; onToggle: (menu: HTMLDetailsElement) => void; onNavigate: () => void }) {
+  return <details name="jshs-desktop-nav" onToggle={(event) => onToggle(event.currentTarget)} className={`jshs-desktop-more is-${item.tone || "trust"} is-layout-${group.layout || "default"} ${active ? "is-active" : ""}`}>
     <summary aria-label={`${item.label}，展開副選單`}><NavIcon item={item} /><span>{item.label}</span><SiteIcon name="chevron-down" size={14} /></summary>
     <div>
-      <div className="jshs-desktop-menu-heading"><span>{group.description}</span><Link href={group.href} className="jshs-desktop-menu-all">查看全部<SiteIcon name="chevron-right" size={14} /></Link></div>
-      <GroupItems group={group} />
+      <div className="jshs-desktop-menu-heading"><span><b>{group.eyebrow}</b><small>{group.description}{group.secondaryDescription ? <><br />{group.secondaryDescription}</> : null}</small></span><Link href={group.href} onClick={onNavigate} className="jshs-desktop-menu-all">查看全部<SiteIcon name="chevron-right" size={14} /></Link></div>
+      <GroupItems group={group} onNavigate={onNavigate} />
     </div>
   </details>;
 }
@@ -56,6 +56,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [memberName, setMemberName] = useState<string | null>(null);
+  const desktopNavRef = useRef<HTMLElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const lastFocusRef = useRef<HTMLElement | null>(null);
   const districtLabel = useSyncExternalStore(subscribeToDistrict, districtSnapshot, () => "選擇就學區");
@@ -77,17 +78,40 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
     return () => { cancelled = true; };
   }, []);
 
+  useEffect(() => {
+    function closeOnOutsidePointer(event: PointerEvent) {
+      if (desktopNavRef.current?.contains(event.target as Node)) return;
+      closeDesktopMenus();
+    }
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") closeDesktopMenus();
+    }
+    document.addEventListener("pointerdown", closeOnOutsidePointer);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOnOutsidePointer);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
+
   function openDrawer() { lastFocusRef.current = document.activeElement as HTMLElement | null; setDrawerOpen(true); }
   function closeDrawer() { setDrawerOpen(false); setQuery(""); window.setTimeout(() => lastFocusRef.current?.focus(), 0); }
+  function closeDesktopMenus() { desktopNavRef.current?.querySelectorAll<HTMLDetailsElement>(".jshs-desktop-more[open]").forEach((menu) => { menu.open = false; }); }
+  function keepSingleDesktopMenu(openMenu: HTMLDetailsElement) {
+    if (!openMenu.open) return;
+    desktopNavRef.current?.querySelectorAll<HTMLDetailsElement>(".jshs-desktop-more[open]").forEach((menu) => {
+      if (menu !== openMenu) menu.open = false;
+    });
+  }
 
   return <>
     <header className="sticky top-0 z-40 w-full border-b border-[var(--jshs-border)] bg-white jshs-site-header">
       <div className="jshs-header-inner">
         <Brand />
-        <nav aria-label="主要導覽" className="jshs-desktop-nav">{mobileNavigation.map((item) => {
+        <nav ref={desktopNavRef} aria-label="主要導覽" className="jshs-desktop-nav">{mobileNavigation.map((item) => {
           const group = navigationGroups.get(item.label);
           const active = activeHref === item.activeHref;
-          return group ? <DesktopNavigationGroup key={item.label} item={item} group={group} active={active} /> : null;
+          return group ? <DesktopNavigationGroup key={item.label} item={item} group={group} active={active} onToggle={keepSingleDesktopMenu} onNavigate={closeDesktopMenus} /> : null;
         })}</nav>
         <div className="ml-auto flex shrink-0 items-center gap-2"><DonationLink fallbackHref="/support" className="jshs-donation-link hidden md:inline-flex">小額捐款</DonationLink>{/* Unauthenticated fallback: >登入</ */}<Link href="/account" className="jshs-login-link">{memberName || "登入"}</Link><button type="button" onClick={openDrawer} aria-label="開啟全站導覽" aria-expanded={drawerOpen} className="jshs-header-action jshs-header-menu-button grid place-items-center xl:hidden"><SiteIcon name="menu" size={23} /></button></div>
       </div>

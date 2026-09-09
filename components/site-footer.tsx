@@ -5,7 +5,7 @@ import districtMetadata from "../public/it_hs/district-metadata.json";
 import { SERVICE_YEAR } from "@/lib/trust";
 
 const footerGroups = [
-  { title: "快速入口", links: [["找學校", "/schools"], ["算成績", "/tools"], ["我的志願", "/planner"], ["升學日程", "/schedule"], ["官方資訊", "/admission-guides"]] },
+  { title: "快速入口", links: [["找學校", "/schools"], ["成績分析", "/scores"], ["我的志願", "/planner"], ["升學日程", "/schedule"], ["官方資訊", "/admission-guides"]] },
   { title: "資料與信任", links: [["資料來源", "/trust/sources"], ["資料更新狀態", "/trust/status"], ["15 區建置進度", "/trust/progress"], ["錯誤回報", "/trust/report"], ["平台可信度說明", "/trust/credibility"]] },
   { title: "平台", links: [["關於 JSHS", "/trust/about"], ["資料更新紀錄", "/trust/updates"], ["小額捐款", "/support"], ["聯絡我們", "mailto:jshs.contact@gmail.com"], ["服務狀態", "/trust/status"]] },
   { title: "法律", links: [["隱私權政策", "/trust/privacy"], ["服務條款", "/trust/terms"], ["Cookie／資料使用說明", "/trust/credibility"]] },
