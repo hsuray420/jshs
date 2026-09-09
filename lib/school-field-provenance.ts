@@ -5,5 +5,5 @@ export type SchoolFieldProvenance = Readonly<{ value: string; sourceType: "offic
 
 export function schoolFieldProvenance(school: School, value: string | null | undefined): SchoolFieldProvenance {
   const exists = Boolean(value?.trim());
-  return { value: value?.trim() || "待確認", sourceType: school.website ? "official" : "jshs_curated", sourceUrl: school.website || "", sourceTitle: "schools_master.csv", schoolYear: school.academicYear, verifiedAt: schoolMetadata.sourceUpdatedAt, status: exists ? "available" : "pending" };
+  return { value: value?.trim() || "待確認", sourceType: school.website ? "official" : "jshs_curated", sourceUrl: school.website || "", sourceTitle: "enabled regional school CSV", schoolYear: school.academicYear, verifiedAt: schoolMetadata.sourceUpdatedAt, status: exists ? "available" : "pending" };
 }

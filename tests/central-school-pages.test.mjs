@@ -8,8 +8,9 @@ const read = (path) => readFile(new URL(path, root), "utf8");
 test("national school repository derives addressable entities from the canonical CSVs", async () => {
   const [repository, generator] = await Promise.all([read("lib/school-repository.ts"), read("scripts/generate-schools.mjs")]);
   assert.match(repository, /getSchoolByCode/);
-  assert.match(generator, /schools_master\.csv/);
-  assert.match(generator, /school_admission_records\.csv/);
+  assert.match(generator, /loadEnabledRegionalSchools/);
+  assert.match(generator, /regional_csv/);
+  assert.doesNotMatch(generator, /schools_master\.csv/);
   assert.doesNotMatch(generator, /public\/it_hs/);
 });
 
@@ -18,7 +19,7 @@ test("every school-code route resolves a canonical, source-backed detail page", 
   assert.match(page, /generateStaticParams/);
   assert.match(page, /getSchoolByCode/);
   assert.match(detail, /BreadcrumbList/);
-  assert.match(detail, /招生區與共同就學區紀錄/);
+  assert.match(detail, /科系與名額/);
   assert.match(detail, /查看資料來源/);
 });
 
@@ -26,7 +27,7 @@ test("school search results link by the canonical school code", async () => {
   const explorer = await read("components/school-explorer.tsx");
   assert.match(explorer, /href={`\/schools\/\$\{s\.code\}`}/);
   assert.match(explorer, /招生區／免試就學區/);
-  assert.match(explorer, /有明確住宿資訊/);
+  assert.match(explorer, /住宿資訊依 CSV 原文/);
 });
 
 test("sitemap generator includes all canonical school-code records", async () => {

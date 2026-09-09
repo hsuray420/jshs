@@ -27,7 +27,7 @@ test("查學校選單提供查詢、歷年、分享、地圖、費用與通勤�
 
 test("全國高中職查詢提供比較與地圖的獨立入口", async () => {
   const explorer = await read("components/school-explorer.tsx");
-  for (const label of ["學制", "公私立", "縣市", "招生名額", "清除篩選", "全國高中職查詢"]) {
+  for (const label of ["學制", "公私立", "縣市", "招生名額", "清除篩選", "高中職查詢"]) {
     assert.match(explorer, new RegExp(label));
   }
   assert.match(explorer, /schools\/compare/);
@@ -55,7 +55,8 @@ test("canonical school data and historical records remain separate", async () =>
     read("scripts/generate-school-directory.mjs"),
   ]);
 
-  assert.equal(directory.schoolCount, 545);
+  assert.equal(directory.schoolCount, 448);
+  assert.equal(directory.admissionRecordCount, 495);
   assert.ok(history.schools.length > 0);
   assert.ok(history.schools.every((school) => school.sourceType === "community"));
   assert.match(generator, /generate-schools/);
@@ -81,7 +82,7 @@ test("找學校工具各自有 canonical route 與可操作頁面", async () => 
   assert.match(cost, /費用/);
   assert.match(cost, /三年/);
   assert.match(cost, /估算/);
-  assert.match(commute, /校方交通資訊/);
+  assert.match(commute, /校車／專車資訊/);
   assert.match(commute, /你的路線試算/);
   assert.match(commute, /加入學校/);
   assert.match(comparison, /2 至 4/);

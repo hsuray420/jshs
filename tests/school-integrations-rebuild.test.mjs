@@ -8,7 +8,7 @@ test('map compare commute share repository and never fetch the retired directory
 });
 test('comparison includes complete source-supported learning and life fields', () => {
   const source = read('components/school-comparison-explorer.tsx');
-  for (const label of ['公私立', '學制', '男女校', '地區', '招生名額', '科別', '特色班', '課程方向', '實習／專題', '交通', '住宿']) assert.ok(source.includes(label), label);
+  for (const label of ['公私立', '學制', '男女校', '地區', '招生名額', '科別', '資優班/特色班', '課程方向', '實習／專題', '校車／專車資訊', '通勤資訊', '住宿資訊']) assert.ok(source.includes(label), label);
 });
 test('school geocoding uses a provenance cache instead of runtime fuzzy school matching', () => {
   const source = read('app/api/school-geocode/route.ts');

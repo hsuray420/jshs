@@ -62,8 +62,9 @@ test("school and planner data are served by Cloudflare Assets and D1", async () 
     readSource("wrangler.jsonc"),
   ]);
 
-  assert.match(schoolRoute, /schoolsMasterCsv/);
-  assert.match(schoolRoute, /schools_master\.csv/);
+  assert.match(schoolRoute, /schools\.csv\?raw/);
+  assert.match(schoolRoute, /regional_csv/);
+  assert.doesNotMatch(schoolRoute, /schools_master\.csv/);
   assert.match(plannerStore, /CREATE TABLE IF NOT EXISTS planner_items/);
   assert.match(plannerStore, /CREATE TABLE IF NOT EXISTS planner_states/);
   assert.match(plannerStore, /\.prepare\(/);
@@ -99,6 +100,8 @@ test("local source changes are gated through GitHub Actions before Cloudflare de
   ]);
 
   assert.match(pkg, /"test":\s*"pnpm run validate:content && pnpm run typecheck && pnpm run build && node --experimental-strip-types --test tests\/\*\.test\.mjs"/);
+  assert.match(pkg, /"schools:prepare":\s*"pnpm run schools:generate && pnpm run schools:validate"/);
+  assert.match(pkg, /"build":\s*"pnpm run schools:prepare &&/);
   assert.match(workflow, /on:\s*\n\s*push:\s*\n\s*branches:\s*\n\s*-\s*main/);
   assert.match(workflow, /pnpm install --frozen-lockfile/);
   assert.match(workflow, /pnpm test/);

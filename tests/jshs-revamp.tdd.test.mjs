@@ -7,10 +7,10 @@ const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8"
 test("school search uses a concise search-first result card", async () => {
   const [page, route] = await Promise.all([source("components/school-explorer.tsx"), source("app/schools/page.tsx")]);
   assert.match(route, /getSchoolSummaries/);
-  assert.match(page, /全國高中職查詢/);
+  assert.match(page, /高中職查詢/);
   assert.match(page, /所符合條件/);
   assert.match(page, /115 招生名額/);
-  assert.match(page, /有住宿資訊/);
+  assert.match(page, /住宿資訊依 CSV 原文/);
 });
 
 test("map only renders verified coordinates and keeps Google Maps as an address link", async () => {

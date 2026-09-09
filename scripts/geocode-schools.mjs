@@ -3,13 +3,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseCsv } from "../lib/school-data/pipeline.mjs";
-import { schoolCsvSourceDir, projectPath } from "./school-csv-source.mjs";
+import { loadEnabledRegionalSchools } from "../lib/school-data/regional-loader.mjs";
+import { projectPath } from "./school-csv-source.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const sourceDir = schoolCsvSourceDir;
 const runtimeDir = projectPath("content", "schools");
-const masterPath = path.join(sourceDir, "schools_master.csv");
 const cachePath = path.join(runtimeDir, "school-geocode-cache.json");
 const reviewPath = path.join(runtimeDir, "geocode-review-queue.json");
 const retryPath = path.join(runtimeDir, "geocode-retry-queue.json");
@@ -113,17 +111,6 @@ function validateCandidate(school, candidate) {
   const nameMatch = !candidateName || expectedName.includes(candidateName) || candidateName.includes(expectedName) || candidate.code === school.code || (school.name.includes("進修部") && addressMatch);
   const coordinateMatch = hasTaiwanCoordinate(candidate);
   return { cityMatch, districtMatch, addressMatch, nameMatch, coordinateMatch, verified: cityMatch && districtMatch && addressMatch && nameMatch && coordinateMatch };
-}
-
-function toSchool(row) {
-  return {
-    code: row["學校代碼"],
-    name: row["學校名稱"],
-    city: row["縣市"],
-    area: row["區"],
-    address: row["地址"],
-    mapUrl: row["Google地圖"],
-  };
 }
 
 function parseTgosJsonp(text) {
@@ -300,7 +287,7 @@ function counters(entries) {
   return entries.reduce((acc, entry) => ({ ...acc, [entry.reason]: (acc[entry.reason] || 0) + 1 }), {});
 }
 
-const master = parseCsv(fs.readFileSync(masterPath, "utf8")).rows.map(toSchool);
+const master = loadEnabledRegionalSchools(root).schools;
 const cache = readJson(cachePath, {});
 const providerCache = readJson(providerCachePath, {});
 const verified = {};

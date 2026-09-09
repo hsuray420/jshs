@@ -25,7 +25,7 @@ test("planner recommendation is discovery rather than an admission prediction", 
 
 test("commute keeps official transport information separate from a third-party route", async () => {
   const source = await read("components/commute-comparison.tsx");
-  assert.match(source, /校方交通資訊/);
+  assert.match(source, /校車／專車資訊/);
   assert.match(source, /你的路線試算/);
   assert.match(source, /Google 地圖路線試算/);
   assert.match(source, /不顯示即時計算的距離與時間/);

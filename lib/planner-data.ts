@@ -11,7 +11,7 @@ export function getPlannerSchools() {
       city: school.city, program: school.schoolType, ownership: school.ownership, groups: [] as string[], area: school.area,
       academicYear: school.academicYear, dataStatus: 'available',
       hasQuota: Boolean(record.admissionQuota || record.brochureQuota), hasHistoricalData: Boolean(history),
-      sourceName: 'schools_master.csv / school_admission_records.csv', updatedAt: schoolMetadata.sourceUpdatedAt,
+      sourceName: 'enabled regional school CSV', updatedAt: schoolMetadata.sourceUpdatedAt,
       referenceScore: history?.referenceScore || '',
     };
   }));

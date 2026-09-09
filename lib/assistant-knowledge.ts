@@ -27,7 +27,7 @@ const articleEntries = newsArticles.map((article) => ({
 const schoolEntries = getSchools().map((school) => ({
   title: `${school.name}｜${school.schoolType}`,
   url: `https://jshs.cc/schools/${school.code}`,
-  snippet: `${school.admissionDistricts.join("、")} ${school.city}${school.area}；${school.schoolType}；科別：${school.departmentRaw || "未標示"}；通勤：${school.commute || "未標示"}；資料年度：${school.academicYear}；來源：${"schools_master.csv"} ${school.website}`,
+  snippet: `${school.admissionDistricts.join("、")} ${school.city}${school.area}；${school.schoolType}；科別：${school.departmentRaw || "未標示"}；通勤：${school.commute || "未標示"}；資料年度：${school.academicYear}；來源：regional CSV ${school.website}`,
   searchable: `${school.name} ${school.schoolType} ${school.departmentRaw} ${school.city} ${school.area} ${school.admissionDistricts.join("、")}`,
 }));
 const entries: readonly KnowledgeEntry[] = Object.freeze([

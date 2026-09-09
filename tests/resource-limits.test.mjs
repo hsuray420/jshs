@@ -12,7 +12,8 @@ test("school discovery excludes raw relation ledgers from its server-to-client p
   ]);
   const payload = JSON.parse(dataset);
 
-  assert.equal(payload.schoolCount, 545);
+  assert.equal(payload.schoolCount, 448);
+  assert.equal(payload.admissionRecordCount, 495);
   assert.match(page, /getSchoolSummaries/);
   assert.match(explorer, /SchoolSummary/);
   assert.doesNotMatch(explorer, /\.raw|\.admissionRecords/);

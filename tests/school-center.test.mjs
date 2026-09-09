@@ -7,15 +7,14 @@ const read = (path) => readFile(new URL(path, root), "utf8");
 
 test("school repository exposes the canonical entity and admission relation sources", async () => {
   const [repository, schoolsPage] = await Promise.all([read("lib/school-repository.ts"), read("app/schools/page.tsx")]);
-  for (const field of ["getSchoolByCode", "getSchoolSummaries", "admissionRecords", "admissionDistricts", "lodgingStatus", "transportStatus"]) assert.match(repository, new RegExp(field));
-  assert.match(schoolsPage, /getSchoolSummaries/);
+  for (const field of ["getRegions", "getSchoolsByRegion", "getSchoolByCode", "getSchoolSummaries", "admissionRecords", "admissionDistricts"]) assert.match(repository, new RegExp(field));
   assert.match(schoolsPage, /SchoolExplorer/);
 });
 
 test("national school center supports full-text search and source-derived filters", async () => {
   const explorer = await read("components/school-explorer.tsx");
 
-  for (const label of ["搜尋學校、科別或課程方向", "招生區／免試就學區", "學制", "公私立", "縣市", "有明確住宿資訊", "清除篩選", "有學生專車／校車資訊"]) {
+  for (const label of ["搜尋學校、科別或課程方向", "招生區／免試就學區", "學制", "公私立", "縣市", "清除篩選"]) {
     assert.match(explorer, new RegExp(label));
   }
   assert.match(explorer, /courseDirection/);
@@ -34,7 +33,7 @@ test("all school surfaces use the CSV field naming standard", async () => {
   ]);
 
   for (const [source, labels] of [
-    [detail, ["招生資訊", "招生名額", "招生區", "到校方式", "通勤說明", "住宿", "資料來源"]],
+    [detail, ["基本資料", "招生資訊", "招生名額", "招生區", "校車／專車資訊", "通勤資訊", "住宿資訊", "資料來源"]],
     [explorer, ["學校", "科別", "學制", "縣市"]],
     [search, ["學校", "科系"]],
     [history, ["科別"]],
@@ -50,7 +49,7 @@ test("all school surfaces use the CSV field naming standard", async () => {
 test("school details separate source-backed facts from historical and alumni tools", async () => {
   const page = await read("components/school-detail.tsx");
 
-  for (const label of ["招生資訊", "課程與學習", "交通與通勤", "住宿", "資料來源"]) {
+  for (const label of ["基本資料", "招生資訊", "學習內容", "交通", "校園生活", "資料來源"]) {
     assert.match(page, new RegExp(label));
   }
   assert.doesNotMatch(page, /HISTORICAL REFERENCE|歷年參考|ALUMNI SHARING|學長姐分享/);
