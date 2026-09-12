@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { SchoolDetail, SourceLink } from "@/components/school-static-data";
+import "@/components/schools-v2.css";
 
 const field = (value: string) => value.trim() || "目前沒有資料";
 const external = (value: string) => /^https?:\/\//.test(value.trim()) && !value.includes("：") ? value.trim() : "";
