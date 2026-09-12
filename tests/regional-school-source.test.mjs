@@ -136,3 +136,12 @@ test("generated public CSV is an exact 373-row aggregate of available regional C
     }
   }
 });
+
+test("generated search index is lightweight and build-time normalized", async () => {
+  const index = JSON.parse(await read("content/schools/generated/school-search-index.json"));
+  assert.equal(index.length, 347);
+  assert.ok(index.every((school) => typeof school.normalizedSearchText === "string" && school.normalizedSearchText.length > 0));
+  assert.ok(index.every((school) => Array.isArray(school.departmentNames)));
+  assert.ok(index.every((school) => !("raw" in school) && !("admissionRecords" in school) && !("sources" in school)));
+  assert.ok(index.some((school) => school.normalizedSearchText.includes("臺中")));
+});

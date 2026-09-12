@@ -36,7 +36,9 @@ test("志願清單按招生區關聯篩選學校", async () => {
   const source = await (await import("node:fs/promises")).readFile(new URL("../components/admission-calculator.tsx", import.meta.url), "utf8");
   assert.match(source, /AdmissionField key=\{field\.field_id\} district=\{rule\.code\}/);
   assert.match(source, /PreferenceList district=\{district\}/);
-  assert.match(source, /schoolMatchesDistrict\(school, district\)/);
+  assert.match(source, /getSchoolSearchIndex\(\)\.filter/);
+  assert.match(source, /schoolDistrictCode\(label\) === schoolDistrictCode\(district\)/);
+  assert.doesNotMatch(source, /schoolMatchesDistrict|getSchools\(/);
 });
 
 test("desktop IA exposes exactly eight primary groups", () => {

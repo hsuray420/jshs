@@ -33,15 +33,44 @@ if (fs.existsSync(generatedMetadataPath)) {
   if (metadata.unavailableRegionCount !== 10) errors.push(`generated metadata unavailableRegionCount expected 10, got ${metadata.unavailableRegionCount}`);
 }
 
+const searchIndexPath = path.join(root, "content", "schools", "generated", "school-search-index.json");
+const publicSearchIndexPath = path.join(root, "public", "data", "school-search-index.json");
+if (!fs.existsSync(searchIndexPath)) errors.push("missing generated school-search-index.json");
+if (!fs.existsSync(publicSearchIndexPath)) errors.push("missing public school-search-index.json");
+if (fs.existsSync(searchIndexPath)) {
+  const index = JSON.parse(fs.readFileSync(searchIndexPath, "utf8"));
+  if (!Array.isArray(index) || index.length !== loaded.schools.length) errors.push("school search index does not match generated school count");
+  for (const school of Array.isArray(index) ? index : []) {
+    if (!school.code || !school.name || !school.normalizedSearchText) errors.push(`school search index missing required field: ${school.code || school.name || "unknown"}`);
+    for (const forbiddenKey of ["raw", "admissionRecords", "sources", "sourceMetadata"]) if (forbiddenKey in school) errors.push(`school search index contains heavyweight field ${forbiddenKey}: ${school.code}`);
+    const detailPath = path.join(root, "public", "data", "schools", "by-code", `${school.code}.json`);
+    if (!fs.existsSync(detailPath)) errors.push(`missing static school detail JSON: ${school.code}`);
+  }
+}
+
 const scanFiles = [
   "lib/school-data/regional-loader.mjs",
   "scripts/school-csv-source.mjs",
   "scripts/generate-schools.mjs",
   "components/school-explorer.tsx",
+  "components/school-selection.tsx",
+  "components/school-comparison-explorer.tsx",
+  "components/commute-comparison.tsx",
+  "components/school-map-explorer.tsx",
+  "components/admission-path-finder.tsx",
+  "components/admission-calculator.tsx",
+  "components/school-alumni-explorer.tsx",
   "app/districts/page.tsx",
   "app/schools/page.tsx",
+  "app/schools/compare/page.tsx",
+  "app/schools/commute/page.tsx",
+  "app/schools/map/page.tsx",
+  "app/schools/[district]/page.tsx",
+  "app/api/school-geocode/route.ts",
+  "app/api/school-reviews/route.ts",
+  "worker/index.ts",
 ];
-const forbidden = [/schools_master\.csv/, /school_admission_records\.csv/, /csv\s*\?\?\s*legacy/i, /catch\s*\([^)]*\)\s*{[^}]*old/i, /fallback.*schools\.csv/i];
+const forbidden = [/schools_master\.csv/, /school_admission_records\.csv/, /csv\s*\?\?\s*legacy/i, /catch\s*\([^)]*\)\s*{[^}]*old/i, /fallback.*schools\.csv/i, /getSchools\(\)/];
 for (const relative of scanFiles) {
   const source = fs.readFileSync(path.join(root, relative), "utf8");
   for (const pattern of forbidden) if (pattern.test(source)) errors.push(`${relative}: forbidden legacy/fallback reference ${pattern}`);

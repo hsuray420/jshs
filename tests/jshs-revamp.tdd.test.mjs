@@ -6,7 +6,8 @@ const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8"
 
 test("school search uses a concise search-first result card", async () => {
   const [page, route] = await Promise.all([source("components/school-explorer.tsx"), source("app/schools/page.tsx")]);
-  assert.match(route, /getSchoolSummaries/);
+  assert.doesNotMatch(route, /getSchoolSummaries|getSchools\(/);
+  assert.match(page, /school-search-index\.json/);
   assert.match(page, /高中職查詢/);
   assert.match(page, /所符合條件/);
   assert.match(page, /115 招生名額/);

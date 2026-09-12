@@ -1,7 +1,7 @@
 import { newsArticles } from "./news";
 import { getOfficialInformationRecords } from "./official-information";
 import { routeMetadata, searchableRoutes, type RouteCategory } from "./route-metadata";
-import { getSchools } from "./school-repository";
+import { getSchoolSearchIndex } from "./school-search-index";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 
 export type SearchResultCategory = RouteCategory;
@@ -70,18 +70,16 @@ const staticDocuments = searchableRoutes.map((route) => ({
   categoryWeight: categoryWeights[route.category],
 })) satisfies readonly SearchDocument[];
 
-const schoolDocuments = getSchools().map((school): SearchDocument => ({
+const schoolDocuments = getSchoolSearchIndex().map((school): SearchDocument => ({
   id: `school:${school.code}`,
   title: school.name,
-  body: [school.city, school.area, ...school.admissionDistricts, school.schoolType,
-    school.departmentRaw, school.features, school.courseDirection, school.project,
-    school.transport, school.commute, school.lodging].filter(Boolean).join(" · "),
-  summary: `${school.city} ${school.area} · ${school.schoolType} · ${school.departments.map((department) => department.name).slice(0, 4).join("、")} · ${school.admissionDistricts.join("、")}`,
+  body: [school.city, school.area, ...school.admissionDistricts, school.schoolType, ...school.departmentNames].filter(Boolean).join(" · "),
+  summary: `${school.city} ${school.area} · ${school.schoolType} · ${school.departmentNames.slice(0, 4).join("、")} · ${school.admissionDistricts.join("、")}`,
   href: `/schools/${school.code}`,
   category: "學校",
   meta: "115 學年度 · 學校與分區招生資料",
   aliases: [school.code, school.city, school.area, ...school.admissionDistricts],
-  keywords: [school.schoolType, school.ownership, school.gender, ...school.departments.map((department) => department.name)],
+  keywords: [school.normalizedSearchText, school.schoolType, school.ownership, school.gender, ...school.departmentNames],
   categoryWeight: categoryWeights.學校,
 }));
 

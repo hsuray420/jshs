@@ -15,9 +15,11 @@ test("national school repository derives addressable entities from the canonical
 });
 
 test("every school-code route resolves a canonical, source-backed detail page", async () => {
-  const [page, detail] = await Promise.all([read("app/schools/[district]/page.tsx"), read("components/school-detail.tsx")]);
+  const [page, detail] = await Promise.all([read("app/schools/[district]/page.tsx"), read("components/school-detail-client.tsx")]);
   assert.match(page, /generateStaticParams/);
-  assert.match(page, /getSchoolByCode/);
+  assert.match(page, /getSchoolSearchEntryByCode/);
+  assert.doesNotMatch(page, /getSchoolByCode|getSchools\(/);
+  assert.match(detail, /\/data\/schools\/by-code\/\$\{encodeURIComponent\(code\)\}\.json/);
   assert.match(detail, /BreadcrumbList/);
   assert.match(detail, /科系與名額/);
   assert.match(detail, /查看資料來源/);

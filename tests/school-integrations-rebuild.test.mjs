@@ -3,7 +3,11 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 test('map compare commute share repository and never fetch the retired directory', () => {
-  for (const page of ['map', 'compare', 'commute']) assert.match(read(`app/schools/${page}/page.tsx`), /school-repository/);
+  for (const page of ['map', 'compare', 'commute']) {
+    const source = read(`app/schools/${page}/page.tsx`);
+    assert.doesNotMatch(source, /school-repository|getSchools\(/, page);
+    assert.match(source, /initialDistrict/, page);
+  }
   for (const component of ['school-map-explorer', 'school-comparison-explorer', 'commute-comparison']) assert.doesNotMatch(read(`components/${component}.tsx`), /school-directory\.json|districtCode:\s*string|geometric_estimate|scooter/);
 });
 test('comparison includes complete source-supported learning and life fields', () => {

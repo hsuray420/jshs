@@ -1,7 +1,7 @@
 import districtMetadata from "../public/it_hs/district-metadata.json";
 import { newsArticles } from "./news";
 import { menuGroups } from "./site-map";
-import { getSchools } from "./school-repository";
+import { getSchoolSearchIndex } from "./school-search-index";
 
 export type AssistantSource = Readonly<{
   title: string;
@@ -24,11 +24,11 @@ const articleEntries = newsArticles.map((article) => ({
   snippet: `${article.description} ${article.oneLineConclusion} ${article.content} 來源：${article.sources.map((source) => `${source.label} ${source.url}`).join("；")}`,
   searchable: `${article.title} ${article.description} ${article.keywords.join(" ")} ${article.summary.join(" ")}`,
 }));
-const schoolEntries = getSchools().map((school) => ({
+const schoolEntries = getSchoolSearchIndex().map((school) => ({
   title: `${school.name}｜${school.schoolType}`,
   url: `https://jshs.cc/schools/${school.code}`,
-  snippet: `${school.admissionDistricts.join("、")} ${school.city}${school.area}；${school.schoolType}；科別：${school.departmentRaw || "未標示"}；通勤：${school.commute || "未標示"}；資料年度：${school.academicYear}；來源：regional CSV ${school.website}`,
-  searchable: `${school.name} ${school.schoolType} ${school.departmentRaw} ${school.city} ${school.area} ${school.admissionDistricts.join("、")}`,
+  snippet: `${school.admissionDistricts.join("、")} ${school.city}${school.area}；${school.schoolType}；科別：${school.departmentNames.slice(0, 8).join("、") || "未標示"}；資料年度：115；來源：regional CSV`,
+  searchable: school.normalizedSearchText,
 }));
 const entries: readonly KnowledgeEntry[] = Object.freeze([
   ...menuEntries,

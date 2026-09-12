@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
-import {SOURCE_COLUMNS, SCHOOL_COLUMNS, getAllSchoolsCsv} from '../lib/school-data/pipeline.mjs';
+import {SOURCE_COLUMNS, SCHOOL_COLUMNS, getAllSchoolsCsv, normalizeSearch} from '../lib/school-data/pipeline.mjs';
 import {ENABLED_SCHOOL_REGIONS, UNAVAILABLE_SCHOOL_REGIONS, loadEnabledRegionalSchools} from '../lib/school-data/regional-loader.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -30,10 +30,12 @@ const geocodeRetry=fs.existsSync(path.join(runtimeSource,'geocode-retry-queue.js
 const geocodeAudit={schoolCount:schools.length,verifiedCount:verifiedGeocodes.length,reviewRequiredCount:geocodeQueue.length,retryCount:geocodeRetry.length,failedCount:0,coverage:verifiedGeocodes.length/schools.length};
 const write=(name,value)=>fs.writeFileSync(path.join(output,name+'.json'),JSON.stringify(value,null,2)+'\n');
 const summaries=schools.map(toSummary);
+const searchIndex=schools.map(toSearchIndex);
 fs.mkdirSync(output,{recursive:true});
 write('metadata',metadata);
 write('validation',{generatedNotice,...audit,fileAudits,requiredColumns:SCHOOL_COLUMNS,sourceColumns:SOURCE_COLUMNS,rowConservation});
 write('school-summaries',summaries);
+write('school-search-index',searchIndex);
 write('geocode-metadata',geocodeAudit);
 fs.mkdirSync(path.join(root,'public/data'),{recursive:true});
 fs.writeFileSync(path.join(root,'public/data/schools.csv'),getAllSchoolsCsv(rows));
@@ -41,6 +43,11 @@ if(audit.errors.length){
   console.error(audit.errors.join('\n'));
   process.exitCode=1;
 }else if(!process.argv.includes('--validate')){
+  const detailDir=path.join(root,'public/data/schools/by-code');
+  fs.rmSync(detailDir,{recursive:true,force:true});
+  fs.mkdirSync(detailDir,{recursive:true});
+  for(const school of schools) fs.writeFileSync(path.join(detailDir,`${school.code}.json`),JSON.stringify({generatedNotice,sourceModel:metadata.sourceModel,school})+'\n');
+  fs.writeFileSync(path.join(root,'public/data/school-search-index.json'),JSON.stringify({generatedNotice,sourceModel:metadata.sourceModel,schools:searchIndex,metadata:{enabledRegions:metadata.enabledRegions,unavailableRegions:metadata.unavailableRegions,schoolCount:schools.length,admissionRecordCount:rows.length}})+'\n');
   fs.writeFileSync(path.join(root,'public/data/schools.json'),JSON.stringify({schools:summaries,metadata:{generatedNotice,sourceModel:'regional_csv',enabledRegions:metadata.enabledRegions}})+'\n');
   write('schools',schools);
   write('schools-by-code',Object.fromEntries(schools.map(s=>[s.code,s])));
@@ -149,5 +156,44 @@ function toSummary(school){
     transportStatus:school.transportStatus,
     hasSchoolBus:school.hasSchoolBus,
     hasPublicTransport:school.hasPublicTransport,
+  };
+}
+
+function toSearchIndex(school){
+  const departmentNames=[...new Set(school.departments.map(department=>department.name).filter(Boolean))];
+  const schoolTypes=[...new Set(school.admissionRecords.map(record=>record.raw['學制分類']).filter(Boolean))];
+  const genders=[...new Set(school.admissionRecords.map(record=>record.raw['男女校']).filter(Boolean))];
+  const searchableAliases=[
+    school.code,
+    school.name,
+    school.name.replace(/^(國立|市立|縣立|私立)/,'').replaceAll('高級中學','高中').replaceAll('高級中等學校','高中').replaceAll('高級工業職業學校','高工'),
+    school.city,
+    school.area,
+    school.ownership,
+    school.schoolType,
+    school.gender,
+    ...school.admissionDistricts,
+    ...departmentNames,
+    school.departmentRaw,
+  ];
+  return {
+    code:school.code,
+    name:school.name,
+    ownership:school.ownership,
+    admissionDistricts:school.admissionDistricts,
+    schoolType:school.schoolType,
+    gender:school.gender,
+    city:school.city,
+    area:school.area,
+    address:school.address,
+    admissionQuota:school.admissionQuota,
+    departmentNames,
+    schoolTypes,
+    genders,
+    lodgingStatus:school.lodgingStatus,
+    transportStatus:school.transportStatus,
+    hasSchoolBus:school.hasSchoolBus,
+    hasPublicTransport:school.hasPublicTransport,
+    normalizedSearchText:normalizeSearch(searchableAliases.join(' ')),
   };
 }

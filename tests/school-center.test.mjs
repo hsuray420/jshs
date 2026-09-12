@@ -17,9 +17,9 @@ test("national school center supports full-text search and source-derived filter
   for (const label of ["搜尋學校、科別或課程方向", "招生區／免試就學區", "學制", "公私立", "縣市", "清除篩選"]) {
     assert.match(explorer, new RegExp(label));
   }
-  assert.match(explorer, /courseDirection/);
-  assert.match(explorer, /features/);
-  assert.match(explorer, /project/);
+  assert.match(explorer, /normalizedSearchText/);
+  assert.match(explorer, /school-search-index\.json/);
+  assert.doesNotMatch(explorer, /courseDirection|features|project/);
 });
 
 test("all school surfaces use the CSV field naming standard", async () => {

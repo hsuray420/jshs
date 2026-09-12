@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import type { School } from "@/lib/school-repository";
-import { districtCode, schoolMatchesDistrict } from "@/lib/school-districts";
+import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
+import { districtCode } from "@/lib/school-districts";
 import { useEffect, useMemo, useState } from "react";
 import { AlumniSharing } from "@/components/alumni-sharing";
 
@@ -11,7 +11,7 @@ type History = Readonly<{ districtCode: string; code: string; referenceScore: st
 
 export function SchoolAlumniExplorer({ districtOptions, initialDistrict = "all", initialSchoolCode = "" }: { districtOptions: readonly { code: string; label: string }[]; initialDistrict?: string; initialSchoolCode?: string }) {
   const [reviews, setReviews] = useState<readonly Review[]>([]);
-  const [schools, setSchools] = useState<readonly School[]>([]);
+  const [schools, setSchools] = useState<readonly SchoolSearchIndexEntry[]>([]);
   const [history, setHistory] = useState<readonly History[]>([]);
   const [query, setQuery] = useState("");
   const [district, setDistrict] = useState(initialDistrict || "all");
@@ -23,7 +23,7 @@ export function SchoolAlumniExplorer({ districtOptions, initialDistrict = "all",
     let active = true;
     Promise.all([
       fetch("/api/school-reviews", { headers: { accept: "application/json" } }).then(async (response) => response.ok ? response.json() as Promise<{ reviews?: Review[] }> : { reviews: [] }),
-      fetch("/data/schools.json", { headers: { accept: "application/json" } }).then(async (response) => response.ok ? response.json() as Promise<{ schools?: School[] }> : { schools: [] }),
+      fetch("/data/school-search-index.json", { headers: { accept: "application/json" } }).then(async (response) => response.ok ? response.json() as Promise<{ schools?: SchoolSearchIndexEntry[] }> : { schools: [] }),
       fetch("/it_hs/admission-history.json", { headers: { accept: "application/json" } }).then(async (response) => response.ok ? response.json() as Promise<{ schools?: History[] }> : { schools: [] }),
     ]).then(([reviewPayload, schoolPayload, historyPayload]) => {
       if (!active) return;
@@ -41,8 +41,8 @@ export function SchoolAlumniExplorer({ districtOptions, initialDistrict = "all",
       return (!needle || haystack.includes(needle)) && (district === "all" || review.district === district);
     });
   }, [district, query, reviews]);
-  const selectableSchools = useMemo(() => schools.filter((school) => district === "all" || schoolMatchesDistrict(school, district)).sort((a, b) => a.name.localeCompare(b.name, "zh-TW")), [district, schools]);
-  const selectedSchool = schools.find((school) => school.code === selectedSchoolCode && (district === "all" || schoolMatchesDistrict(school, district)));
+  const selectableSchools = useMemo(() => schools.filter((school) => district === "all" || school.admissionDistricts.some((label) => districtCode(label) === districtCode(district))).sort((a, b) => a.name.localeCompare(b.name, "zh-TW")), [district, schools]);
+  const selectedSchool = schools.find((school) => school.code === selectedSchoolCode && (district === "all" || school.admissionDistricts.some((label) => districtCode(label) === districtCode(district))));
   const selectedHistory = history.find((item) => item.code === selectedSchoolCode && item.districtCode === districtCode(selectedSchool?.admissionDistricts[0] || ""));
   const districtLabels = useMemo(() => new Map(districtOptions.map((option) => [option.code, option.label])), [districtOptions]);
 

@@ -1,6 +1,6 @@
-import { getSchools } from "@/lib/school-repository";
 import { getSchoolCoordinate } from "@/lib/school-geocode";
 import { getRegionRegistry } from "@/lib/region-registry";
+import { getSchoolSearchIndex } from "@/lib/school-search-index";
 
 /** School coordinates are pre-verified against the authoritative entity address. */
 export async function GET(request: Request) {
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       message: "此區目前尚未開放。我們正在依正式簡章整理此區資料，完成並通過資料驗證後才會開放找學校資料。",
     }, { status: 409 });
   }
-  const schools = getSchools().filter(s => (!district || s.admissionDistricts.includes(district)) && (!code || s.code === code));
+  const schools = getSchoolSearchIndex().filter(s => (!district || s.admissionDistricts.includes(district)) && (!code || s.code === code));
   if ((district || code) && !schools.length) return Response.json({ ok: false, error: 'school_or_district_not_found' }, { status: 404 });
   const coordinates = Object.fromEntries(schools.flatMap(s => {
     const coordinate = getSchoolCoordinate(s.code, s.address);

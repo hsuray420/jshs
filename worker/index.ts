@@ -79,6 +79,16 @@ function publicDocumentResponse(response: Response): Response {
   return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 }
 
+async function schoolDataAssetResponse(request: Request, env: Env): Promise<Response> {
+  const response = await env.ASSETS.fetch(request);
+  if (response.status !== 200) return response;
+  const headers = new Headers(response.headers);
+  headers.set("cache-control", "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400");
+  headers.set("x-jshs-cache-policy", "school-data-static-asset");
+  headers.set("x-jshs-school-source", "regional_csv_generated");
+  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+}
+
 function redirectToCanonicalHome(request: Request): Response {
   return Response.redirect(new URL("/", request.url), 301);
 }
@@ -137,6 +147,10 @@ const worker = {
 
     if (canonicalHomePaths.has(url.pathname)) return redirectToCanonicalHome(request);
     if (legacyGuidePaths.has(url.pathname)) return redirectToGuide(request);
+
+    if (url.pathname === "/data/school-search-index.json" || url.pathname === "/data/schools.json" || url.pathname === "/data/schools.csv" || url.pathname.startsWith("/data/schools/by-code/")) {
+      return schoolDataAssetResponse(request, env);
+    }
 
     const isStaticAsset =
       url.pathname.startsWith("/assets/") ||
