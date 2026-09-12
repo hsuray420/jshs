@@ -6,28 +6,48 @@ import {
   loadEnabledRegionalSchools,
   validateRegionalSchools,
   ENABLED_SCHOOL_REGIONS,
+  UNAVAILABLE_SCHOOL_REGIONS,
+  REGION_REGISTRY,
   SCHOOL_FIELD_CLASSIFICATION,
 } from "../lib/school-data/regional-loader.mjs";
 
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 
-test("enabled school regions are the seven public CSV sources", async () => {
+test("enabled school regions are the five available school-data CSV sources", async () => {
   assert.deepEqual(ENABLED_SCHOOL_REGIONS.map((region) => region.code), [
-    "ct",
-    "hsinchu-miaoli",
-    "taoyuan-lienchiang",
-    "kaohsiung",
     "tp",
+    "taoyuan-lienchiang",
+    "hsinchu-miaoli",
+    "ct",
+    "kaohsiung",
+  ]);
+  assert.deepEqual(UNAVAILABLE_SCHOOL_REGIONS.map((region) => region.code), [
     "changhua",
+    "yunlin",
+    "chiayi",
     "tainan",
+    "pingtung",
+    "ilan",
+    "hualien",
+    "taitung",
+    "penghu",
+    "kinmen",
   ]);
   const loaded = loadEnabledRegionalSchools();
-  assert.equal(loaded.regions.length, 7);
-  assert.equal(loaded.rows.length, 495);
-  assert.equal(loaded.schools.length, 448);
-  assert.equal(new Set(loaded.schools.map((school) => school.code)).size, 448);
+  assert.equal(loaded.regions.length, 5);
+  assert.equal(loaded.rows.length, 373);
+  assert.equal(loaded.schools.length, 347);
+  assert.equal(new Set(loaded.schools.map((school) => school.code)).size, 347);
   assert.equal(loaded.audit.errors.length, 0);
+});
+
+test("region registry keeps school-data availability separate from all-region calculators", () => {
+  assert.equal(REGION_REGISTRY.length, 15);
+  assert.equal(REGION_REGISTRY.filter((region) => region.schoolDataStatus === "available").length, 5);
+  assert.equal(REGION_REGISTRY.filter((region) => region.schoolDataStatus === "unavailable").length, 10);
+  assert.equal(REGION_REGISTRY.every((region) => region.calculatorStatus === "available"), true);
+  assert.equal(REGION_REGISTRY.filter((region) => region.schoolDataStatus === "unavailable").every((region) => !region.csvPath), true);
 });
 
 test("field classification separates school identity, regional records, and source metadata", () => {
@@ -54,14 +74,14 @@ test("regional school loader keeps every CSV value exact through generated runti
       }
     }
   }
-  assert.equal(runtimeAdmissionRecords, 495, "ROW_CONSERVATION");
+  assert.equal(runtimeAdmissionRecords, 373, "ROW_CONSERVATION");
 });
 
-test("high school CSV duplicate lodging header is normalized without dropping source text", () => {
+test("duplicate headers fail validation instead of being normalized", () => {
   const csv = "學校代碼,學校名稱,住宿資訊,通勤資訊,住宿資訊\n001,A,宿舍文字,通勤文字,宿舍文字\n";
   const parsed = parseCsv(csv);
-  assert.deepEqual(parsed.headers, ["學校代碼", "學校名稱", "住宿資訊", "通勤資訊"]);
-  assert.equal(parsed.rows[0]["住宿資訊"], "宿舍文字");
+  const audit = validateRegionalSchools([{ label: "測試區", code: "test", headers: parsed.headers, rawHeaders: parsed.rawHeaders, rows: parsed.rows }]);
+  assert.ok(audit.errors.some((error) => error.includes("duplicate header: 住宿資訊")));
 });
 
 test("school generation and public CSV route no longer depend on manual master CSV", async () => {
@@ -83,14 +103,14 @@ test("school generation and public CSV route no longer depend on manual master C
   assert.match(csvRoute, /schools\.csv\?raw/);
 });
 
-test("duplicate school audit explains the 495 to 448 aggregation and has no school-level conflicts", async () => {
+test("duplicate school audit explains the 373 to 347 aggregation and has no school-level conflicts", async () => {
   const validation = JSON.parse(await read("content/schools/generated/validation.json"));
-  assert.equal(validation.duplicateSchoolAudit.affectedSchools, 47);
-  assert.equal(validation.duplicateSchoolAudit.extraRows, 47);
-  assert.equal(validation.duplicateSchoolAudit.duplicateSchoolCodes.length, 47);
+  assert.equal(validation.duplicateSchoolAudit.affectedSchools, 26);
+  assert.equal(validation.duplicateSchoolAudit.extraRows, 26);
+  assert.equal(validation.duplicateSchoolAudit.duplicateSchoolCodes.length, 26);
   assert.equal(validation.duplicateSchoolAudit.conflictFields.length, 0);
-  assert.equal(validation.rowConservation.sourceCsvRows, 495);
-  assert.equal(validation.rowConservation.runtimeAdmissionRecords, 495);
+  assert.equal(validation.rowConservation.sourceCsvRows, 373);
+  assert.equal(validation.rowConservation.runtimeAdmissionRecords, 373);
   assert.equal(validation.rowConservation.status, "PASS");
 });
 
@@ -106,7 +126,7 @@ test("school-level field conflicts fail validation instead of silently selecting
   assert.ok(audit.errors.some((error) => error.includes("school-level conflict") && error.includes("公私立")));
 });
 
-test("generated public CSV is an exact 495-row aggregate of enabled regional CSV rows", async () => {
+test("generated public CSV is an exact 373-row aggregate of available regional CSV rows", async () => {
   const publicCsv = parseCsv(await read("public/data/schools.csv"));
   const loaded = loadEnabledRegionalSchools();
   assert.equal(publicCsv.rows.length, loaded.rows.length);

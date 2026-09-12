@@ -141,80 +141,8 @@
       "progression": null
     },
     {
-      "id": "school-directory-化工科(夜間班)",
-      "name": "化工科(夜間班)",
-      "groupId": "chemical",
-      "groupName": "化工群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-水產食品科",
-      "name": "水產食品科",
-      "groupId": "food",
-      "groupName": "食品群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-水產食品科(日)",
-      "name": "水產食品科(日)",
-      "groupId": "food",
-      "groupName": "食品群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-水產食品科(產特)",
-      "name": "水產食品科(產特)",
-      "groupId": "food",
-      "groupName": "食品群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
       "id": "school-directory-水產養殖科",
       "name": "水產養殖科",
-      "groupId": "maritime",
-      "groupName": "海事群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-水產養殖科(日)",
-      "name": "水產養殖科(日)",
-      "groupId": "maritime",
-      "groupName": "海事群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-水產養殖科(產特)",
-      "name": "水產養殖科(產特)",
       "groupId": "maritime",
       "groupName": "海事群",
       "sourceId": "vocational-programs-115",
@@ -537,18 +465,6 @@
       "progression": null
     },
     {
-      "id": "school-directory-室內空間設計科(夜間班)",
-      "name": "室內空間設計科(夜間班)",
-      "groupId": "design",
-      "groupName": "設計群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
       "id": "school-directory-室內設計科",
       "name": "室內設計科",
       "groupId": "design",
@@ -587,18 +503,6 @@
     {
       "id": "school-directory-建築科(日)",
       "name": "建築科(日)",
-      "groupId": "civil-architecture",
-      "groupName": "土木與建築群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-建築科(夜)",
-      "name": "建築科(夜)",
       "groupId": "civil-architecture",
       "groupName": "土木與建築群",
       "sourceId": "vocational-programs-115",
@@ -695,18 +599,6 @@
     {
       "id": "school-directory-美容科(夜間班)",
       "name": "美容科(夜間班)",
-      "groupId": "home-economics",
-      "groupName": "家事群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-美容造型科(日)",
-      "name": "美容造型科(日)",
       "groupId": "home-economics",
       "groupName": "家事群",
       "sourceId": "vocational-programs-115",
@@ -825,18 +717,6 @@
       "progression": null
     },
     {
-      "id": "school-directory-食品科(夜間班)",
-      "name": "食品科(夜間班)",
-      "groupId": "food",
-      "groupName": "食品群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
       "id": "school-directory-家具設計科",
       "name": "家具設計科",
       "groupId": "design",
@@ -887,30 +767,6 @@
     {
       "id": "school-directory-家政科(夜)",
       "name": "家政科(夜)",
-      "groupId": "home-economics",
-      "groupName": "家事群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-家政科(夜間班)",
-      "name": "家政科(夜間班)",
-      "groupId": "home-economics",
-      "groupName": "家事群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-家政群不分科",
-      "name": "家政群不分科",
       "groupId": "home-economics",
       "groupName": "家事群",
       "sourceId": "vocational-programs-115",
@@ -997,30 +853,6 @@
       "name": "商用資訊科(日)",
       "groupId": "electrical-electronic",
       "groupName": "電機與電子群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-商用資訊科(夜)",
-      "name": "商用資訊科(夜)",
-      "groupId": "electrical-electronic",
-      "groupName": "電機與電子群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-商業事務科(日)",
-      "name": "商業事務科(日)",
-      "groupId": "business-management",
-      "groupName": "商業與管理群",
       "sourceId": "vocational-programs-115",
       "sourceType": "jshs_curated",
       "status": "pending_verification",
@@ -1149,18 +981,6 @@
       "progression": null
     },
     {
-      "id": "school-directory-森林科",
-      "name": "森林科",
-      "groupId": "agriculture",
-      "groupName": "農業群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
       "id": "school-directory-森林科(日)",
       "name": "森林科(日)",
       "groupId": "agriculture",
@@ -1189,18 +1009,6 @@
       "name": "進修部：機械科",
       "groupId": "mechanical",
       "groupName": "機械群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-進修部水產食品科",
-      "name": "進修部水產食品科",
-      "groupId": "food",
-      "groupName": "食品群",
       "sourceId": "vocational-programs-115",
       "sourceType": "jshs_curated",
       "status": "pending_verification",
@@ -1437,66 +1245,6 @@
       "progression": null
     },
     {
-      "id": "school-directory-農園藝整理服務科(日)",
-      "name": "農園藝整理服務科(日)",
-      "groupId": "agriculture",
-      "groupName": "農業群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-農業技術科(日)",
-      "name": "農業技術科(日)",
-      "groupId": "agriculture",
-      "groupName": "農業群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-農業機械科",
-      "name": "農業機械科",
-      "groupId": "mechanical",
-      "groupName": "機械群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-農業機械科(日)",
-      "name": "農業機械科(日)",
-      "groupId": "mechanical",
-      "groupName": "機械群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-農業機械科(產特)",
-      "name": "農業機械科(產特)",
-      "groupId": "mechanical",
-      "groupName": "機械群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
       "id": "school-directory-電子科",
       "name": "電子科",
       "groupId": "electrical-electronic",
@@ -1557,18 +1305,6 @@
       "progression": null
     },
     {
-      "id": "school-directory-電子商務科(夜間班)",
-      "name": "電子商務科(夜間班)",
-      "groupId": "electrical-electronic",
-      "groupName": "電機與電子群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
       "id": "school-directory-電腦機械製圖科",
       "name": "電腦機械製圖科",
       "groupId": "mechanical",
@@ -1585,42 +1321,6 @@
       "name": "電腦機械製圖科(日)",
       "groupId": "mechanical",
       "groupName": "機械群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-電腦機械製圖科(夜)",
-      "name": "電腦機械製圖科(夜)",
-      "groupId": "mechanical",
-      "groupName": "機械群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-電腦機械製圖科(夜間班)",
-      "name": "電腦機械製圖科(夜間班)",
-      "groupId": "mechanical",
-      "groupName": "機械群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-電機空調科",
-      "name": "電機空調科",
-      "groupId": "electrical-electronic",
-      "groupName": "電機與電子群",
       "sourceId": "vocational-programs-115",
       "sourceType": "jshs_curated",
       "status": "pending_verification",
@@ -1701,44 +1401,8 @@
       "progression": null
     },
     {
-      "id": "school-directory-電機與電子群(資訊科、電子科)",
-      "name": "電機與電子群(資訊科、電子科)",
-      "groupId": "electrical-electronic",
-      "groupName": "電機與電子群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-電機與電子群不分科",
-      "name": "電機與電子群不分科",
-      "groupId": "electrical-electronic",
-      "groupName": "電機與電子群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
       "id": "school-directory-漁業科",
       "name": "漁業科",
-      "groupId": "maritime",
-      "groupName": "海事群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-漁業科(日)",
-      "name": "漁業科(日)",
       "groupId": "maritime",
       "groupName": "海事群",
       "sourceId": "vocational-programs-115",
@@ -1799,18 +1463,6 @@
     {
       "id": "school-directory-模具科",
       "name": "模具科",
-      "groupId": "mechanical",
-      "groupName": "機械群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-機械木模科(產特)",
-      "name": "機械木模科(產特)",
       "groupId": "mechanical",
       "groupName": "機械群",
       "sourceId": "vocational-programs-115",
@@ -2061,32 +1713,8 @@
       "progression": null
     },
     {
-      "id": "school-directory-營造技術科(日)",
-      "name": "營造技術科(日)",
-      "groupId": "civil-architecture",
-      "groupName": "土木與建築群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
       "id": "school-directory-鑄造科",
       "name": "鑄造科",
-      "groupId": "mechanical",
-      "groupName": "機械群",
-      "sourceId": "vocational-programs-115",
-      "sourceType": "jshs_curated",
-      "status": "pending_verification",
-      "learningContent": null,
-      "commonCourses": null,
-      "progression": null
-    },
-    {
-      "id": "school-directory-鑄造科(產特)",
-      "name": "鑄造科(產特)",
       "groupId": "mechanical",
       "groupName": "機械群",
       "sourceId": "vocational-programs-115",

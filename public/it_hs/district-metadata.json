@@ -8,32 +8,297 @@
   "version": "2026.08.14",
   "updatedAt": "2026-08-14",
   "disclaimer": "招生名額、錄取門檻、計分方式與時程均可能調整，請以各就學區免試入學委員會及學校最新公告為準。",
-  "officialDirectory": { "name": "教育部國中畢業生適性入學宣導網站", "url": "https://shs.k12ea.gov.tw/site/adapt-k12ea" },
+  "officialDirectory": {
+    "name": "教育部國中畢業生適性入學宣導網站",
+    "url": "https://shs.k12ea.gov.tw/site/adapt-k12ea"
+  },
   "timelineDefaults": {
     "ready": [
-      { "date": "115 學年度", "title": "目前資料版本", "detail": "本區已整理學校資料與可用功能；送出前請重新核對官方公告。", "status": "資料已更新" },
-      { "date": "下一學年度", "title": "重要時程", "detail": "正式選填、報名與放榜日期待各區委員會公告。", "status": "待公告" }
+      {
+        "date": "115 學年度",
+        "title": "目前資料版本",
+        "detail": "本區已整理學校資料與可用功能；送出前請重新核對官方公告。",
+        "status": "資料已更新"
+      },
+      {
+        "date": "下一學年度",
+        "title": "重要時程",
+        "detail": "正式選填、報名與放榜日期待各區委員會公告。",
+        "status": "待公告"
+      }
     ],
     "building": [
-      { "date": "115 學年度", "title": "學校資料查詢", "detail": "可先比較校科、學制與通勤；積分規則尚未開放。", "status": "可使用" },
-      { "date": "下一學年度", "title": "重要時程與規則", "detail": "請以各區免試入學委員會公布的簡章與時程為準。", "status": "待公告" }
+      {
+        "date": "115 學年度",
+        "title": "學校資料查詢",
+        "detail": "積分試算可使用；學校資料查詢需等正式 CSV 完成並通過驗證後開放。",
+        "status": "可使用"
+      },
+      {
+        "date": "下一學年度",
+        "title": "重要時程與規則",
+        "detail": "請以各區免試入學委員會公布的簡章與時程為準。",
+        "status": "待公告"
+      }
     ]
   },
   "districts": {
-    "tp": { "label": "基北區", "areas": "臺北市、新北市、基隆市", "schools": true, "calculator": true, "analysis": true, "academicYear": "115", "dataStatus": "ready", "updatedAt": "2026-08-14", "timelineKey": "ready", "sourceName": "基北區免試入學相關公告", "sourceUrl": "https://ttk.entry.edu.tw/", "tasks": ["核對個人序位與比序資料", "依志願結構安排挑戰、適中與穩定學校", "送出前再次確認官方時程與志願序"] },
-    "ct": { "label": "中投區", "areas": "臺中市、南投縣", "schools": true, "calculator": true, "analysis": true, "academicYear": "115", "dataStatus": "ready", "updatedAt": "2026-08-14", "timelineKey": "ready", "sourceName": "中投區免試入學委員會", "sourceUrl": "https://ct.entry.edu.tw/", "tasks": ["核對免試入學積分與會考成績", "比較校科、名額與志願結構", "送出前再次確認官方時程與志願序"] },
-    "ilan": { "label": "宜蘭區", "areas": "宜蘭縣", "schools": true, "calculator": true, "analysis": true, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-14", "sourceName": "教育部國中畢業生適性入學宣導網站", "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea", "tasks": ["查詢目標學校與科別", "留意正式簡章與計分規則公告", "確認報名與選填時程"] },
-    "taoyuan-lienchiang": { "label": "桃連區", "areas": "桃園市、連江縣", "schools": true, "calculator": true, "analysis": true, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-23", "sourceName": "桃連區高級中等學校免試入學委員會", "sourceUrl": "https://tyc.entry.edu.tw/noexamimitate_tl/noexamimitate/apps/page/public/News.aspx", "tasks": ["依桃連區規則試算適性輔導與多元學習", "比較校科、名額與志願結構", "送出前再次確認官方時程與志願序"] },
-    "hsinchu-miaoli": { "label": "竹苗區", "areas": "新竹市、新竹縣、苗栗縣", "schools": true, "calculator": true, "analysis": true, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-14", "sourceName": "教育部國中畢業生適性入學宣導網站", "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea", "tasks": ["查詢目標學校與科別", "留意正式簡章與計分規則公告", "確認報名與選填時程"] },
-    "changhua": { "label": "彰化區", "areas": "彰化縣", "schools": true, "calculator": true, "analysis": true, "academicYear": "115", "dataStatus": "ready", "updatedAt": "2026-08-27", "sourceName": "彰化區高級中等學校免試入學委員會", "sourceUrl": "https://chc.entry.edu.tw/", "tasks": ["查詢目標學校與科別", "留意正式簡章與計分規則公告", "確認報名與選填時程"] },
-    "yunlin": { "label": "雲林區", "areas": "雲林縣", "schools": true, "calculator": true, "analysis": true, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-14", "sourceName": "教育部國中畢業生適性入學宣導網站", "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea", "tasks": ["查詢目標學校與科別", "留意正式簡章與計分規則公告", "確認報名與選填時程"] },
-    "chiayi": { "label": "嘉義區", "areas": "嘉義市、嘉義縣", "schools": true, "calculator": false, "analysis": false, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-14", "sourceName": "教育部國中畢業生適性入學宣導網站", "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea", "tasks": ["查詢目標學校與科別", "留意正式簡章與計分規則公告", "確認報名與選填時程"] },
-    "tainan": { "label": "臺南區", "areas": "臺南市", "schools": true, "calculator": false, "analysis": false, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-23", "sourceName": "臺南區高級中等學校免試入學委員會", "sourceUrl": "https://tn.entry.edu.tw/NoExamImitate_TN/NoExamImitate/Apps/Page/Public/News.aspx", "tasks": ["查詢目標學校與科別", "留意正式簡章與計分規則公告", "確認報名與選填時程"] },
-    "kaohsiung": { "label": "高雄區", "areas": "高雄市", "schools": true, "calculator": true, "analysis": true, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-23", "sourceName": "高雄區高級中等學校免試入學委員會", "sourceUrl": "https://kh.entry.edu.tw/news/news-show.php?id=200&page=1", "tasks": ["依高雄區規則試算多元發展與會考", "比較校科、名額與志願結構", "送出前再次確認官方時程與志願序"] },
-    "pingtung": { "label": "屏東區", "areas": "屏東縣", "schools": true, "calculator": false, "analysis": false, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-14", "sourceName": "教育部國中畢業生適性入學宣導網站", "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea", "tasks": ["查詢目標學校與科別", "留意正式簡章與計分規則公告", "確認報名與選填時程"] },
-    "hualien": { "label": "花蓮區", "areas": "花蓮縣", "schools": true, "calculator": false, "analysis": false, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-14", "sourceName": "教育部國中畢業生適性入學宣導網站", "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea", "tasks": ["查詢目標學校與科別", "留意正式簡章與計分規則公告", "確認報名與選填時程"] },
-    "taitung": { "label": "臺東區", "areas": "臺東縣", "schools": true, "calculator": false, "analysis": false, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-14", "sourceName": "教育部國中畢業生適性入學宣導網站", "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea", "tasks": ["查詢目標學校與科別", "留意正式簡章與計分規則公告", "確認報名與選填時程"] },
-    "penghu": { "label": "澎湖區", "areas": "澎湖縣", "schools": true, "calculator": false, "analysis": false, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-14", "sourceName": "教育部國中畢業生適性入學宣導網站", "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea", "tasks": ["查詢目標學校與科別", "留意正式簡章與計分規則公告", "確認報名與選填時程"] },
-    "kinmen": { "label": "金門區", "areas": "金門縣", "schools": true, "calculator": false, "analysis": false, "academicYear": "115", "dataStatus": "reference", "updatedAt": "2026-08-14", "sourceName": "教育部國中畢業生適性入學宣導網站", "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea", "tasks": ["查詢目標學校與科別", "留意正式簡章與計分規則公告", "確認報名與選填時程"] }
+    "tp": {
+      "label": "基北區",
+      "areas": "臺北市、新北市、基隆市",
+      "schools": true,
+      "calculator": true,
+      "analysis": true,
+      "academicYear": "115",
+      "dataStatus": "ready",
+      "updatedAt": "2026-08-14",
+      "timelineKey": "ready",
+      "sourceName": "基北區免試入學相關公告",
+      "sourceUrl": "https://ttk.entry.edu.tw/",
+      "tasks": [
+        "核對個人序位與比序資料",
+        "依志願結構安排挑戰、適中與穩定學校",
+        "送出前再次確認官方時程與志願序"
+      ]
+    },
+    "ct": {
+      "label": "中投區",
+      "areas": "臺中市、南投縣",
+      "schools": true,
+      "calculator": true,
+      "analysis": true,
+      "academicYear": "115",
+      "dataStatus": "ready",
+      "updatedAt": "2026-08-14",
+      "timelineKey": "ready",
+      "sourceName": "中投區免試入學委員會",
+      "sourceUrl": "https://ct.entry.edu.tw/",
+      "tasks": [
+        "核對免試入學積分與會考成績",
+        "比較校科、名額與志願結構",
+        "送出前再次確認官方時程與志願序"
+      ]
+    },
+    "ilan": {
+      "label": "宜蘭區",
+      "areas": "宜蘭縣",
+      "schools": false,
+      "calculator": true,
+      "analysis": true,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-14",
+      "sourceName": "教育部國中畢業生適性入學宣導網站",
+      "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea",
+      "tasks": [
+        "查詢目標學校與科別",
+        "留意正式簡章與計分規則公告",
+        "確認報名與選填時程"
+      ]
+    },
+    "taoyuan-lienchiang": {
+      "label": "桃連區",
+      "areas": "桃園市、連江縣",
+      "schools": true,
+      "calculator": true,
+      "analysis": true,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-23",
+      "sourceName": "桃連區高級中等學校免試入學委員會",
+      "sourceUrl": "https://tyc.entry.edu.tw/noexamimitate_tl/noexamimitate/apps/page/public/News.aspx",
+      "tasks": [
+        "依桃連區規則試算適性輔導與多元學習",
+        "比較校科、名額與志願結構",
+        "送出前再次確認官方時程與志願序"
+      ]
+    },
+    "hsinchu-miaoli": {
+      "label": "竹苗區",
+      "areas": "新竹市、新竹縣、苗栗縣",
+      "schools": true,
+      "calculator": true,
+      "analysis": true,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-14",
+      "sourceName": "教育部國中畢業生適性入學宣導網站",
+      "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea",
+      "tasks": [
+        "查詢目標學校與科別",
+        "留意正式簡章與計分規則公告",
+        "確認報名與選填時程"
+      ]
+    },
+    "changhua": {
+      "label": "彰化區",
+      "areas": "彰化縣",
+      "schools": false,
+      "calculator": true,
+      "analysis": true,
+      "academicYear": "115",
+      "dataStatus": "ready",
+      "updatedAt": "2026-08-27",
+      "sourceName": "彰化區高級中等學校免試入學委員會",
+      "sourceUrl": "https://chc.entry.edu.tw/",
+      "tasks": [
+        "查詢目標學校與科別",
+        "留意正式簡章與計分規則公告",
+        "確認報名與選填時程"
+      ]
+    },
+    "yunlin": {
+      "label": "雲林區",
+      "areas": "雲林縣",
+      "schools": false,
+      "calculator": true,
+      "analysis": true,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-14",
+      "sourceName": "教育部國中畢業生適性入學宣導網站",
+      "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea",
+      "tasks": [
+        "查詢目標學校與科別",
+        "留意正式簡章與計分規則公告",
+        "確認報名與選填時程"
+      ]
+    },
+    "chiayi": {
+      "label": "嘉義區",
+      "areas": "嘉義市、嘉義縣",
+      "schools": false,
+      "calculator": true,
+      "analysis": false,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-14",
+      "sourceName": "教育部國中畢業生適性入學宣導網站",
+      "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea",
+      "tasks": [
+        "查詢目標學校與科別",
+        "留意正式簡章與計分規則公告",
+        "確認報名與選填時程"
+      ]
+    },
+    "tainan": {
+      "label": "臺南區",
+      "areas": "臺南市",
+      "schools": false,
+      "calculator": true,
+      "analysis": false,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-23",
+      "sourceName": "臺南區高級中等學校免試入學委員會",
+      "sourceUrl": "https://tn.entry.edu.tw/NoExamImitate_TN/NoExamImitate/Apps/Page/Public/News.aspx",
+      "tasks": [
+        "查詢目標學校與科別",
+        "留意正式簡章與計分規則公告",
+        "確認報名與選填時程"
+      ]
+    },
+    "kaohsiung": {
+      "label": "高雄區",
+      "areas": "高雄市",
+      "schools": true,
+      "calculator": true,
+      "analysis": true,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-23",
+      "sourceName": "高雄區高級中等學校免試入學委員會",
+      "sourceUrl": "https://kh.entry.edu.tw/news/news-show.php?id=200&page=1",
+      "tasks": [
+        "依高雄區規則試算多元發展與會考",
+        "比較校科、名額與志願結構",
+        "送出前再次確認官方時程與志願序"
+      ]
+    },
+    "pingtung": {
+      "label": "屏東區",
+      "areas": "屏東縣",
+      "schools": false,
+      "calculator": true,
+      "analysis": false,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-14",
+      "sourceName": "教育部國中畢業生適性入學宣導網站",
+      "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea",
+      "tasks": [
+        "查詢目標學校與科別",
+        "留意正式簡章與計分規則公告",
+        "確認報名與選填時程"
+      ]
+    },
+    "hualien": {
+      "label": "花蓮區",
+      "areas": "花蓮縣",
+      "schools": false,
+      "calculator": true,
+      "analysis": false,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-14",
+      "sourceName": "教育部國中畢業生適性入學宣導網站",
+      "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea",
+      "tasks": [
+        "查詢目標學校與科別",
+        "留意正式簡章與計分規則公告",
+        "確認報名與選填時程"
+      ]
+    },
+    "taitung": {
+      "label": "臺東區",
+      "areas": "臺東縣",
+      "schools": false,
+      "calculator": true,
+      "analysis": false,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-14",
+      "sourceName": "教育部國中畢業生適性入學宣導網站",
+      "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea",
+      "tasks": [
+        "查詢目標學校與科別",
+        "留意正式簡章與計分規則公告",
+        "確認報名與選填時程"
+      ]
+    },
+    "penghu": {
+      "label": "澎湖區",
+      "areas": "澎湖縣",
+      "schools": false,
+      "calculator": true,
+      "analysis": false,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-14",
+      "sourceName": "教育部國中畢業生適性入學宣導網站",
+      "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea",
+      "tasks": [
+        "查詢目標學校與科別",
+        "留意正式簡章與計分規則公告",
+        "確認報名與選填時程"
+      ]
+    },
+    "kinmen": {
+      "label": "金門區",
+      "areas": "金門縣",
+      "schools": false,
+      "calculator": true,
+      "analysis": false,
+      "academicYear": "115",
+      "dataStatus": "reference",
+      "updatedAt": "2026-08-14",
+      "sourceName": "教育部國中畢業生適性入學宣導網站",
+      "sourceUrl": "https://shs.k12ea.gov.tw/site/adapt-k12ea",
+      "tasks": [
+        "查詢目標學校與科別",
+        "留意正式簡章與計分規則公告",
+        "確認報名與選填時程"
+      ]
+    }
   }
 }

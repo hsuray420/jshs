@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { parseCsvRows } from "../lib/school-catalog.mjs";
-import { regionalCsvPath } from "./school-csv-source.mjs";
+import { enabledRegions, regionalCsvPath } from "./school-csv-source.mjs";
 import { validateAdmissionHistoryRecords, validateOfficialInformationRecords, validateSourceRegistry, validateVocationalGroupRecords } from "./data-foundation.mjs";
 
 const root = process.cwd();
@@ -12,11 +12,12 @@ const registry = await readJson("data/source-registry.json");
 const history = await readJson("public/it_hs/historical-records.json");
 const groups = await readJson("data/vocational-groups.json");
 const districtCodes = Object.keys(metadata.districts);
+const schoolDataDistrictCodes = enabledRegions.map((region) => region.code);
 const schoolKeys = new Set();
 const knownPrograms = new Set();
 const canonicalSchools = await readJson("content/schools/generated/schools.json");
 for (const school of canonicalSchools) for (const department of school.departments || []) if (department.name) knownPrograms.add(department.name);
-for (const district of districtCodes) {
+for (const district of schoolDataDistrictCodes) {
   const csv = await readFile(regionalCsvPath(district), "utf8");
   const rows = parseCsvRows(csv); const headers = rows[0].map((item) => item.replace(/^\uFEFF/, "").trim());
   const codeIndex = headers.indexOf("學校代碼"); const departmentsIndex = headers.indexOf("科系與名額");

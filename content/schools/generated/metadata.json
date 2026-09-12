@@ -2,84 +2,127 @@
   "generatedNotice": "DO NOT EDIT: generated from enabled regional CSV files by scripts/generate-schools.mjs",
   "academicYear": "115",
   "sourceUpdatedAt": "2026-09-08",
-  "schoolCount": 448,
-  "admissionRecordCount": 495,
-  "enabledRegionCount": 7,
+  "schoolCount": 347,
+  "admissionRecordCount": 373,
+  "enabledRegionCount": 5,
+  "unavailableRegionCount": 10,
   "enabledRegions": [
     {
-      "code": "ct",
-      "label": "中投區",
-      "folder": "中投區_ct",
-      "file": "JSHS_中投區_96校_最終版_2026-09-07.csv"
-    },
-    {
-      "code": "hsinchu-miaoli",
-      "label": "竹苗區",
-      "folder": "竹苗區_hsinchu-miaoli",
-      "file": "JSHS_竹苗區_39校_最終完成版_2026-09-08.csv"
+      "code": "tp",
+      "label": "基北區",
+      "folder": "基北區_tp",
+      "file": "JSHS_基北區_135校_完成版_無排序分數_2026-09-07.csv",
+      "status": "available"
     },
     {
       "code": "taoyuan-lienchiang",
       "label": "桃連區",
       "folder": "桃連區_taoyuan-lienchiang",
-      "file": "JSHS_桃連區_50校_最終完成版_2026-09-08.csv"
+      "file": "JSHS_桃連區_50校_最終完成版_2026-09-08.csv",
+      "status": "available"
+    },
+    {
+      "code": "hsinchu-miaoli",
+      "label": "竹苗區",
+      "folder": "竹苗區_hsinchu-miaoli",
+      "file": "JSHS_竹苗區_39校_最終完成版_2026-09-08.csv",
+      "status": "available"
+    },
+    {
+      "code": "ct",
+      "label": "中投區",
+      "folder": "中投區_ct",
+      "file": "JSHS_中投區_96校_最終版_2026-09-07.csv",
+      "status": "available"
     },
     {
       "code": "kaohsiung",
       "label": "高雄區",
       "folder": "高雄區_kaohsiung",
-      "file": "JSHS_高雄區_53校_最終完成版_2026-09-07.csv"
-    },
-    {
-      "code": "tp",
-      "label": "基北區",
-      "folder": "基北區_tp",
-      "file": "JSHS_基北區_135校_完成版_無排序分數_2026-09-07.csv"
-    },
+      "file": "JSHS_高雄區_53校_最終完成版_2026-09-07.csv",
+      "status": "available"
+    }
+  ],
+  "unavailableRegions": [
     {
       "code": "changhua",
       "label": "彰化區",
-      "folder": "彰化區_changhua",
-      "file": "JSHS_彰化區_49校_最終完成版_2026-09-08.csv"
+      "status": "unavailable"
+    },
+    {
+      "code": "yunlin",
+      "label": "雲林區",
+      "status": "unavailable"
+    },
+    {
+      "code": "chiayi",
+      "label": "嘉義區",
+      "status": "unavailable"
     },
     {
       "code": "tainan",
       "label": "臺南區",
-      "folder": "臺南區_tainan",
-      "file": "JSHS_臺南區_73校_最終完成版_2026-09-08.csv"
+      "status": "unavailable"
+    },
+    {
+      "code": "pingtung",
+      "label": "屏東區",
+      "status": "unavailable"
+    },
+    {
+      "code": "ilan",
+      "label": "宜蘭區",
+      "status": "unavailable"
+    },
+    {
+      "code": "hualien",
+      "label": "花蓮區",
+      "status": "unavailable"
+    },
+    {
+      "code": "taitung",
+      "label": "臺東區",
+      "status": "unavailable"
+    },
+    {
+      "code": "penghu",
+      "label": "澎湖區",
+      "status": "unavailable"
+    },
+    {
+      "code": "kinmen",
+      "label": "金門區",
+      "status": "unavailable"
     }
   ],
-  "districtCount": 13,
-  "cityCount": 17,
+  "districtCount": 9,
+  "cityCount": 14,
   "schoolTypes": {
-    "綜高": 109,
-    "進修部": 53,
-    "高中": 200,
-    "高職": 133
+    "綜高": 87,
+    "進修部": 26,
+    "高中": 160,
+    "高職": 100
   },
   "genders": {
-    "不限": 140,
-    "女校": 13,
-    "女生": 2,
+    "不限": 93,
+    "女校": 10,
+    "女生": 1,
     "男女兼收": 127,
-    "男女校": 170,
-    "男校": 2,
-    "男生": 2
+    "男女校": 102,
+    "男生": 1
   },
   "ownership": {
-    "公立": 280,
-    "私立": 168
+    "公立": 209,
+    "私立": 138
   },
-  "sourceModel": "regional_csv",
+  "sourceModel": "regional_csv_registry_available_only",
   "sourceDirectory": "content/schools/regions",
   "sourceFiles": [
-    "content/schools/regions/中投區_ct/JSHS_中投區_96校_最終版_2026-09-07.csv",
-    "content/schools/regions/竹苗區_hsinchu-miaoli/JSHS_竹苗區_39校_最終完成版_2026-09-08.csv",
-    "content/schools/regions/桃連區_taoyuan-lienchiang/JSHS_桃連區_50校_最終完成版_2026-09-08.csv",
-    "content/schools/regions/高雄區_kaohsiung/JSHS_高雄區_53校_最終完成版_2026-09-07.csv",
     "content/schools/regions/基北區_tp/JSHS_基北區_135校_完成版_無排序分數_2026-09-07.csv",
-    "content/schools/regions/彰化區_changhua/JSHS_彰化區_49校_最終完成版_2026-09-08.csv",
-    "content/schools/regions/臺南區_tainan/JSHS_臺南區_73校_最終完成版_2026-09-08.csv"
+    "content/schools/regions/桃連區_taoyuan-lienchiang/JSHS_桃連區_50校_最終完成版_2026-09-08.csv",
+    "content/schools/regions/竹苗區_hsinchu-miaoli/JSHS_竹苗區_39校_最終完成版_2026-09-08.csv",
+    "content/schools/regions/中投區_ct/JSHS_中投區_96校_最終版_2026-09-07.csv",
+    "content/schools/regions/高雄區_kaohsiung/JSHS_高雄區_53校_最終完成版_2026-09-07.csv"
   ],
   "fieldClassification": {
     "schoolLevel": [
@@ -146,46 +189,21 @@
       "051307",
       "051413",
       "054308",
-      "054309",
-      "061306",
-      "063408",
-      "063C08",
-      "071414",
-      "080302",
-      "080305",
-      "080307",
-      "080404",
-      "080406",
-      "080C06",
-      "081311",
-      "081313",
-      "081409",
-      "084309",
-      "091318",
-      "120304",
-      "120311",
-      "120401",
-      "120402",
-      "121415",
-      "124322"
+      "054309"
     ],
-    "affectedSchools": 47,
-    "extraRows": 47,
+    "affectedSchools": 26,
+    "extraRows": 26,
     "identicalFields": [
       "排名",
       "學校代碼",
       "學校名稱",
       "公私立",
       "學制分類",
-      "男女校",
       "縣市",
       "區",
       "地址",
       "官網",
       "電話",
-      "簡章招生名額",
-      "招生名額",
-      "資優班/特色班",
       "課程方向",
       "實習／專題",
       "校車／專車資訊",
@@ -234,8 +252,8 @@
         "schoolCode": "011310",
         "schoolName": "財團法人恆毅高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -278,8 +296,8 @@
         "schoolCode": "011317",
         "schoolName": "私立醒吾高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -322,8 +340,8 @@
         "schoolCode": "011330",
         "schoolName": "新北市林口康橋國際高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -366,8 +384,8 @@
         "schoolCode": "011405",
         "schoolName": "私立樹人家商",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -410,8 +428,8 @@
         "schoolCode": "013303",
         "schoolName": "市立泰山高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -454,8 +472,8 @@
         "schoolCode": "013337",
         "schoolName": "市立新莊高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -498,8 +516,8 @@
         "schoolCode": "013339",
         "schoolName": "市立林口高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -542,8 +560,8 @@
         "schoolCode": "014322",
         "schoolName": "市立樹林高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -586,8 +604,8 @@
         "schoolCode": "014353",
         "schoolName": "市立丹鳳高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -630,8 +648,8 @@
         "schoolCode": "014439",
         "schoolName": "市立鶯歌工商",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -674,8 +692,8 @@
         "schoolCode": "031317",
         "schoolName": "私立光啟高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -718,8 +736,8 @@
         "schoolCode": "031414",
         "schoolName": "桃園市世紀綠能工商",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -762,8 +780,8 @@
         "schoolCode": "034306",
         "schoolName": "市立南崁高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -806,8 +824,8 @@
         "schoolCode": "034314",
         "schoolName": "市立壽山高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -850,8 +868,8 @@
         "schoolCode": "034347",
         "schoolName": "市立永豐高中",
         "regions": [
-          "桃連區",
-          "基北區"
+          "基北區",
+          "桃連區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -894,8 +912,8 @@
         "schoolCode": "040304",
         "schoolName": "國立關西高中",
         "regions": [
-          "竹苗區",
-          "桃連區"
+          "桃連區",
+          "竹苗區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -938,8 +956,8 @@
         "schoolCode": "041307",
         "schoolName": "私立仰德高中",
         "regions": [
-          "竹苗區",
-          "桃連區"
+          "桃連區",
+          "竹苗區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -982,8 +1000,8 @@
         "schoolCode": "041401",
         "schoolName": "私立內思高工",
         "regions": [
-          "竹苗區",
-          "桃連區"
+          "桃連區",
+          "竹苗區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -1026,8 +1044,8 @@
         "schoolCode": "044320",
         "schoolName": "新竹縣立湖口高中",
         "regions": [
-          "竹苗區",
-          "桃連區"
+          "桃連區",
+          "竹苗區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -1070,8 +1088,8 @@
         "schoolCode": "050314",
         "schoolName": "國立卓蘭高級中等學校",
         "regions": [
-          "中投區",
-          "竹苗區"
+          "竹苗區",
+          "中投區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -1114,8 +1132,8 @@
         "schoolCode": "050315",
         "schoolName": "國立苑裡高級中學",
         "regions": [
-          "中投區",
-          "竹苗區"
+          "竹苗區",
+          "中投區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -1158,8 +1176,8 @@
         "schoolCode": "050401",
         "schoolName": "國立大湖高級農工職業學校",
         "regions": [
-          "中投區",
-          "竹苗區"
+          "竹苗區",
+          "中投區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -1202,8 +1220,8 @@
         "schoolCode": "051307",
         "schoolName": "全人學校財團法人苗栗縣全人實驗高級中等學校",
         "regions": [
-          "中投區",
-          "竹苗區"
+          "竹苗區",
+          "中投區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -1246,8 +1264,8 @@
         "schoolCode": "051413",
         "schoolName": "苗栗縣私立龍德家事商業職業學校",
         "regions": [
-          "中投區",
-          "竹苗區"
+          "竹苗區",
+          "中投區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -1290,8 +1308,8 @@
         "schoolCode": "054308",
         "schoolName": "苗栗縣立三義高級中學",
         "regions": [
-          "中投區",
-          "竹苗區"
+          "竹苗區",
+          "中投區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -1334,8 +1352,8 @@
         "schoolCode": "054309",
         "schoolName": "苗栗縣立苑裡高級中學",
         "regions": [
-          "中投區",
-          "竹苗區"
+          "竹苗區",
+          "中投區"
         ],
         "rowCount": 2,
         "identicalFields": [
@@ -1373,940 +1391,16 @@
           "資料更新日期"
         ],
         "conflictFields": []
-      },
-      {
-        "schoolCode": "061306",
-        "schoolName": "臺中市私立明台高級中學",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "063408",
-        "schoolName": "臺中市立霧峰農業工業高級中等學校",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "通勤資訊",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "063C08",
-        "schoolName": "臺中市立霧峰農業工業高級中等學校進修部",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "通勤資訊",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "071414",
-        "schoolName": "彰化縣私立達德高級商工職業學校",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程方向",
-          "實習／專題",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "校車／專車資訊",
-          "通勤資訊",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "080302",
-        "schoolName": "國立南投高級中學",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "學制分類",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "通勤資訊",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "080305",
-        "schoolName": "國立中興高級中學",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "通勤資訊",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "080307",
-        "schoolName": "國立竹山高級中學",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "住宿資訊",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "地址",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "通勤資訊",
-          "Google地圖",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "080404",
-        "schoolName": "國立南投高級商業職業學校",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程方向",
-          "實習／專題",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "080406",
-        "schoolName": "國立草屯高級商工職業學校",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程方向",
-          "實習／專題",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "080C06",
-        "schoolName": "國立草屯高級商工職業學校進修部",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "通勤資訊",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "081311",
-        "schoolName": "南投縣私立五育高級中學",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "081313",
-        "schoolName": "南投縣私立弘明實驗高級中等學校",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "081409",
-        "schoolName": "同德學校財團法人南投縣同德高級中等學校",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "通勤資訊",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "084309",
-        "schoolName": "南投縣立旭光高級中學",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "通勤資訊",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "091318",
-        "schoolName": "義峰學校財團法人雲林縣義峰高級中學",
-        "regions": [
-          "中投區",
-          "彰化區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "簡章招生名額",
-          "招生名額",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "官網",
-          "電話",
-          "科系與名額",
-          "資優班/特色班",
-          "通勤資訊",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "120304",
-        "schoolName": "國立岡山高級中學",
-        "regions": [
-          "高雄區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "Google地圖",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "120311",
-        "schoolName": "國立旗美高級中學",
-        "regions": [
-          "高雄區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "Google地圖",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "120401",
-        "schoolName": "國立旗山高級農工職業學校",
-        "regions": [
-          "高雄區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "Google地圖",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "120402",
-        "schoolName": "國立岡山高級農工職業學校",
-        "regions": [
-          "高雄區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "Google地圖",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "121415",
-        "schoolName": "華德學校財團法人高雄市華德高級工業家事職業學校",
-        "regions": [
-          "高雄區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "Google地圖",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "124322",
-        "schoolName": "高雄市立路竹高級中學",
-        "regions": [
-          "高雄區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "地址資料來源",
-          "生活資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "Google地圖",
-          "資料更新日期"
-        ],
-        "conflictFields": []
       }
     ]
   },
   "rowConservation": {
-    "sourceCsvRows": 495,
-    "runtimeAdmissionRecords": 495,
+    "sourceCsvRows": 373,
+    "runtimeAdmissionRecords": 373,
     "status": "PASS"
   },
   "validation": {
     "errors": 0,
-    "warnings": 48
+    "warnings": 26
   }
 }

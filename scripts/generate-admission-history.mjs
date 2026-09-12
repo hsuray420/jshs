@@ -1,11 +1,11 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { parseCsvRows } from "../lib/school-catalog.mjs";
-import { regionalAdmissionHistoryPath } from "./school-csv-source.mjs";
+import { enabledRegions, regionalAdmissionHistoryPath } from "./school-csv-source.mjs";
 
 const root = process.cwd();
 const metadata = JSON.parse(await readFile(resolve(root, "public/it_hs/district-metadata.json"), "utf8"));
-const districtCodes = Object.keys(metadata.districts);
+const districtCodes = enabledRegions.map((region) => region.code);
 
 const districtEntries = await Promise.all(districtCodes.map(async (districtCode) => {
   const district = metadata.districts[districtCode];

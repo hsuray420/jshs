@@ -3,7 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {SOURCE_COLUMNS, SCHOOL_COLUMNS, getAllSchoolsCsv} from '../lib/school-data/pipeline.mjs';
-import {ENABLED_SCHOOL_REGIONS, loadEnabledRegionalSchools} from '../lib/school-data/regional-loader.mjs';
+import {ENABLED_SCHOOL_REGIONS, UNAVAILABLE_SCHOOL_REGIONS, loadEnabledRegionalSchools} from '../lib/school-data/regional-loader.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const output=path.join(root,'content/schools/generated');
@@ -21,7 +21,7 @@ const runtimeAdmissionRecordCount=schools.reduce((sum,school)=>sum+school.admiss
 const rowConservation={sourceCsvRows:rows.length,runtimeAdmissionRecords:runtimeAdmissionRecordCount,status:rows.length===runtimeAdmissionRecordCount?'PASS':'FAIL'};
 if(rowConservation.status!=='PASS') audit.errors.push(`row conservation failed: source=${rows.length} runtime=${runtimeAdmissionRecordCount}`);
 const generatedNotice='DO NOT EDIT: generated from enabled regional CSV files by scripts/generate-schools.mjs';
-const metadata={generatedNotice,academicYear:'115',sourceUpdatedAt:'2026-09-08',schoolCount:schools.length,admissionRecordCount:rows.length,enabledRegionCount:ENABLED_SCHOOL_REGIONS.length,enabledRegions:ENABLED_SCHOOL_REGIONS.map(({code,label,folder,file})=>({code,label,folder,file})),districtCount:Object.keys(districts).length,cityCount:Object.keys(cities).length,schoolTypes:count(rows.map(row=>row['學制分類'])),genders:count(rows.map(row=>row['男女校'])),ownership:count(schools.map(s=>s.ownership)),sourceModel:'regional_csv',sourceDirectory:'content/schools/regions',sourceFiles:fileAudits.map(item=>item.path),fieldClassification:audit.fieldClassification,duplicateSchoolAudit:audit.duplicateSchoolAudit,rowConservation,validation:{errors:audit.errors.length,warnings:audit.warnings.length}};
+const metadata={generatedNotice,academicYear:'115',sourceUpdatedAt:'2026-09-08',schoolCount:schools.length,admissionRecordCount:rows.length,enabledRegionCount:ENABLED_SCHOOL_REGIONS.length,unavailableRegionCount:UNAVAILABLE_SCHOOL_REGIONS.length,enabledRegions:ENABLED_SCHOOL_REGIONS.map(({code,label,folder,file,status})=>({code,label,folder,file,status})),unavailableRegions:UNAVAILABLE_SCHOOL_REGIONS.map(({code,label,status})=>({code,label,status})),districtCount:Object.keys(districts).length,cityCount:Object.keys(cities).length,schoolTypes:count(rows.map(row=>row['學制分類'])),genders:count(rows.map(row=>row['男女校'])),ownership:count(schools.map(s=>s.ownership)),sourceModel:'regional_csv_registry_available_only',sourceDirectory:'content/schools/regions',sourceFiles:fileAudits.map(item=>item.path),fieldClassification:audit.fieldClassification,duplicateSchoolAudit:audit.duplicateSchoolAudit,rowConservation,validation:{errors:audit.errors.length,warnings:audit.warnings.length}};
 const normalizeAddress=value=>String(value||'').normalize('NFKC').replace(/^\[?\d{3,6}\]?\s*/,'').replace(/\s+/g,'').replaceAll('台','臺').replaceAll('恒','恆').replace(/[一壹]段/g,'1段').replace(/[二貳]段/g,'2段').replace(/[三參]段/g,'3段').replace(/[四肆]段/g,'4段').replace(/[五伍]段/g,'5段').replace(/[六陸]段/g,'6段').replace(/[七柒]段/g,'7段').replace(/[八捌]段/g,'8段').replace(/[九玖]段/g,'9段').replace(/[十拾]段/g,'10段').replace(/(\d+)之(\d+)/g,'$1-$2').replace(/(\d+)號之(\d+)/g,'$1-$2號').replace(/(\d+)樓/g,'$1F').replace(/\d+鄰/g,'').replace(/[号]/g,'號');
 const geocodeCache=JSON.parse(fs.readFileSync(path.join(runtimeSource,'school-geocode-cache.json'),'utf8'));
 const verifiedGeocodes=schools.filter(s=>{const r=geocodeCache[s.code];return r&&r.schoolCode===s.code&&r.verificationStatus==='verified'&&normalizeAddress(r.normalizedAddress)===normalizeAddress(s.address)&&Number.isFinite(r.latitude)&&Number.isFinite(r.longitude)&&(r.provider||r.sourceType)&&r.source&&r.verifiedAt;});
@@ -54,7 +54,7 @@ fs.writeFileSync(path.join(root,'SCHOOL_DATA_AUDIT.md'),`# School Data Audit
 
 資料年度：115；來源更新日：2026-09-08。
 
-本次 runtime source of truth 為 7 個 enabled 招生區 CSV。generated JSON 與 public CSV 皆由這 7 份 CSV 自動產生；不再需要人工維護 national master CSV。
+本次找學校 runtime source of truth 為 registry 標示 available 的 5 個招生區 CSV。generated JSON 與 public CSV 皆由這 5 份 CSV 自動產生；未開放區域不建立假 CSV、不讀舊版備援資料。
 
 | Region | CSV | Rows | Columns | Status |
 |---|---|---:|---:|---|
@@ -70,7 +70,7 @@ ${regionRows}
 
 學校筆數：${schools.length}
 
-${table({REGIONS:`${regions.length}/7`,SOURCE_ROWS:rows.length,UNIQUE_SCHOOL_ENTITIES:schools.length,RUNTIME_ADMISSION_RECORDS:runtimeAdmissionRecordCount,ROW_CONSERVATION:rowConservation.status,SCHOOL_LEVEL_CONFLICTS:audit.duplicateSchoolAudit.conflictFields.length,REGION_SPECIFIC_RECORDS:'PASS',CSV_PARSE:audit.errors.length?'FAIL':'PASS',SCHOOL_CODE_DUPLICATES:audit.errors.some(error=>error.includes('duplicate school code'))?'FAIL':'0',SCHEMA:audit.errors.some(error=>error.includes('schema'))?'FAIL':'PASS',CSV_RUNTIME_MATCH:'PASS',BUILD_AUTO_GENERATE:'PASS',STALE_GENERATED_DATA_POSSIBLE:'NO'})}
+${table({SCHOOL_DATA_AVAILABLE_REGIONS:`${regions.length}/5`,SCHOOL_DATA_UNAVAILABLE_REGIONS:UNAVAILABLE_SCHOOL_REGIONS.length,SOURCE_ROWS:rows.length,UNIQUE_SCHOOL_ENTITIES:schools.length,RUNTIME_ADMISSION_RECORDS:runtimeAdmissionRecordCount,ROW_CONSERVATION:rowConservation.status,SCHOOL_LEVEL_CONFLICTS:audit.duplicateSchoolAudit.conflictFields.length,REGION_SPECIFIC_RECORDS:'PASS',CSV_PARSE:audit.errors.length?'FAIL':'PASS',SCHOOL_CODE_DUPLICATES:audit.errors.some(error=>error.includes('duplicate school code'))?'FAIL':'0',SCHEMA:audit.errors.some(error=>error.includes('schema')||error.includes('header'))?'FAIL':'PASS',CSV_RUNTIME_MATCH:'PASS',BUILD_AUTO_GENERATE:'PASS',STALE_GENERATED_DATA_POSSIBLE:'NO'})}
 
 ## 欄位分類
 

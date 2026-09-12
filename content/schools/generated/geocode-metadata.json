@@ -1,8 +1,8 @@
 {
-  "schoolCount": 448,
-  "verifiedCount": 441,
+  "schoolCount": 347,
+  "verifiedCount": 340,
   "reviewRequiredCount": 7,
   "retryCount": 0,
   "failedCount": 0,
-  "coverage": 0.984375
+  "coverage": 0.9798270893371758
 }

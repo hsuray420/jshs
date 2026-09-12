@@ -85,7 +85,8 @@ test("district metadata exposes feature availability and authoritative context",
   assert.equal(metadata.districts.ct.calculator, true);
   assert.equal(metadata.districts.tp.analysis, true);
   assert.equal(metadata.districts.ilan.calculator, true);
-  for (const district of ["chiayi", "tainan", "pingtung", "hualien", "taitung", "penghu", "kinmen"]) assert.equal(metadata.districts[district].calculator, false);
+  for (const district of Object.keys(metadata.districts)) assert.equal(metadata.districts[district].calculator, true);
+  for (const district of ["changhua", "yunlin", "chiayi", "tainan", "pingtung", "ilan", "hualien", "taitung", "penghu", "kinmen"]) assert.equal(metadata.districts[district].schools, false);
   assert.match(metadata.officialDirectory.url, /^https:\/\//);
   assert.ok(metadata.timelineDefaults.ready.every((item) => item.date && item.status));
   assert.match(metadata.disclaimer, /最新公告/);

@@ -515,6 +515,9 @@
   .w-\[min\(860px\,100\%\)\] {
     width: min(860px, 100%);
   }
+  .w-\[min\(880px\,calc\(100\%-32px\)\)\] {
+    width: min(880px, calc(100% - 32px));
+  }
   .w-\[min\(900px\,calc\(100\%-32px\)\)\] {
     width: min(900px, calc(100% - 32px));
   }
@@ -1269,6 +1272,9 @@
   }
   .opacity-70 {
     opacity: 70%;
+  }
+  .opacity-75 {
+    opacity: 75%;
   }
   .shadow {
     --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));

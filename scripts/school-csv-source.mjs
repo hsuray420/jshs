@@ -16,17 +16,7 @@ export function getSchoolCsvSourceDir() {
 
 export function projectPath(...parts) { return path.join(projectRoot, ...parts); }
 export const enabledRegions = ENABLED_SCHOOL_REGIONS;
-export const regionalCsvFiles = {
-  ...Object.fromEntries(ENABLED_SCHOOL_REGIONS.map((region) => [region.code, `${region.folder}/${region.file}`])),
-  yunlin: "雲林區_yunlin/schools.csv",
-  chiayi: "嘉義區_chiayi/schools.csv",
-  pingtung: "屏東區_pingtung/schools.csv",
-  ilan: "宜蘭區_ilan/schools.csv",
-  hualien: "花蓮區_hualien/schools.csv",
-  taitung: "臺東區_taitung/schools.csv",
-  penghu: "澎湖區_penghu/schools.csv",
-  kinmen: "金門區_kinmen/schools.csv",
-};
+export const regionalCsvFiles = Object.fromEntries(ENABLED_SCHOOL_REGIONS.map((region) => [region.code, `${region.folder}/${region.file}`]));
 
 export function regionalCsvPath(code) {
   const relative = regionalCsvFiles[code];

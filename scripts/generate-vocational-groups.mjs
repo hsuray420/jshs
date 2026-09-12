@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { parseCsvRows } from "../lib/school-catalog.mjs";
-import { regionalCsvPath } from "./school-csv-source.mjs";
+import { enabledRegions, regionalCsvPath } from "./school-csv-source.mjs";
 
 const root = process.cwd();
 const metadata = JSON.parse(await readFile(resolve(root, "public/it_hs/district-metadata.json"), "utf8"));
@@ -10,7 +10,7 @@ const groups = [
 ];
 const schools = JSON.parse(await readFile(resolve(root, "content/schools/generated/schools.json"), "utf8"));
 const names = new Set(schools.flatMap((school) => school.departments.map((department) => department.name)));
-for (const districtCode of Object.keys({ tp: 1, "taoyuan-lienchiang": 1, "hsinchu-miaoli": 1, ct: 1, changhua: 1, yunlin: 1, chiayi: 1, tainan: 1, kaohsiung: 1, pingtung: 1, ilan: 1, hualien: 1, taitung: 1, penghu: 1, kinmen: 1 })) {
+for (const districtCode of enabledRegions.map((region) => region.code)) {
   const rows = parseCsvRows(await readFile(regionalCsvPath(districtCode), "utf8"));
   const headers = (rows[0] || []).map((header) => header.replace(/^\uFEFF/, "").trim());
   const departmentsIndex = headers.indexOf("科系與名額");

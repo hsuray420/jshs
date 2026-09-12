@@ -15,6 +15,7 @@
     "validate:content": "node scripts/validate-content-trust.mjs",
     "audit:content": "node scripts/content-architecture-audit.mjs",
     "validate:data-foundation": "node scripts/validate-data-foundation.mjs",
+    "validate:data": "node scripts/validate-data.mjs",
     "generate:data-foundation": "node scripts/generate-data-foundation.mjs",
     "generate:vocational-groups": "node scripts/generate-vocational-groups.mjs",
     "validate:production": "node scripts/check-production-placeholders.mjs",
