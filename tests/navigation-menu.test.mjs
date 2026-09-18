@@ -60,3 +60,17 @@ test("desktop and mobile navigation render the same complete submenu model", asy
   assert.match(footer, /資料與信任/);
   assert.match(footer, /法律/);
 });
+
+test("navigation menus use a shared data-driven panel system", async () => {
+  const [header, siteMap] = await Promise.all([readFile(headerUrl, "utf8"), readFile(siteMapUrl, "utf8")]);
+  const catalog = JSON.parse(siteMap);
+  assert.match(header, /function groupSections\(group: MenuGroup\)/);
+  assert.match(header, /function NavigationSection/);
+  assert.match(header, /jshs-navigation-panel/);
+  assert.match(header, /jshs-menu-item-copy/);
+  assert.match(header, /jshs-mobile-group-body/);
+  assert.match(header, /aria-expanded=\{drawerOpen\}/);
+  assert.ok(catalog.menuGroups.some(({ layout }) => layout === "compact"));
+  assert.ok(catalog.menuGroups.some(({ items }) => items.some(({ section }) => section)));
+  assert.ok(catalog.menuGroups.some(({ items }) => items.some(({ icon }) => icon)));
+});

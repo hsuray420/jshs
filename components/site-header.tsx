@@ -22,32 +22,67 @@ function Brand() {
 
 function NavIcon({ item }: { item: NavigationItem }) { return <SiteIcon name={item.icon || "more"} size={17} />; }
 
+type MenuSection = Readonly<{ label?: string; items: readonly MenuItem[] }>;
+
+function groupSections(group: MenuGroup): readonly MenuSection[] {
+  const sections: MenuSection[] = [];
+  for (const item of group.items) {
+    if (item.children?.length) {
+      sections.push({ label: item.label, items: item.children });
+      continue;
+    }
+    const label = item.section || undefined;
+    const previous = sections.at(-1);
+    if (previous && previous.label === label) {
+      sections[sections.length - 1] = { ...previous, items: [...previous.items, item] };
+    } else {
+      sections.push({ label, items: [item] });
+    }
+  }
+  return sections;
+}
+
 function MenuDestination({ item, onNavigate, compact = false }: { item: MenuItem; onNavigate?: () => void; compact?: boolean }) {
-  const className = compact ? "jshs-menu-destination rounded-xl px-3 py-2.5 text-sm" : "jshs-menu-destination rounded-2xl p-4";
-  return <Link onClick={onNavigate} href={item.href} className={`${className} block`}><b className="block text-sm">{item.label}</b><span className="mt-1 block text-xs leading-5 jshs-muted-copy">{item.description}</span></Link>;
+  return <Link onClick={onNavigate} href={item.href} className={`jshs-menu-destination ${compact ? "is-compact" : ""}`}>
+    {item.icon ? <span className="jshs-menu-item-icon" aria-hidden="true"><SiteIcon name={item.icon as SiteIconName} size={18} /></span> : null}
+    <span className="jshs-menu-item-copy"><b>{item.label}</b><span>{item.description}</span></span>
+    <SiteIcon name="chevron-right" size={15} className="jshs-menu-item-arrow" />
+  </Link>;
 }
 
-function GroupItems({ group, onNavigate, mobile = false }: { group: MenuGroup; onNavigate?: () => void; mobile?: boolean }) {
-  return <div className={`jshs-group-items ${mobile ? "jshs-mobile-group-items" : ""}`}>{group.items.map((item) => item.children?.length ? <section key={item.label} className="jshs-group-subsection"><h3>{item.label}</h3><div>{item.children.map((child) => <MenuDestination key={child.label} item={child} onNavigate={onNavigate} compact />)}</div></section> : <MenuDestination key={item.label} item={item} onNavigate={onNavigate} compact />)}</div>;
-}
-
-function MobileNavigationGroup({ item, group, onNavigate }: { item: NavigationItem; group: MenuGroup; onNavigate: () => void }) {
-  return <section className={`jshs-mobile-group is-${item.tone || "trust"}`}>
-    <div className="jshs-mobile-group-heading">
-      <span className="jshs-icon-tile" aria-hidden="true"><NavIcon item={item} /></span>
-      <span className="min-w-0"><b>{item.label}</b><small>{group.description}</small></span>
-      <Link href={item.href} onClick={onNavigate} className="jshs-mobile-group-all">查看全部<SiteIcon name="chevron-right" size={15} /></Link>
-    </div>
-    <GroupItems group={group} onNavigate={onNavigate} mobile />
+function NavigationSection({ section, onNavigate, mobile = false }: { section: MenuSection; onNavigate?: () => void; mobile?: boolean }) {
+  return <section className={`jshs-navigation-section ${section.label ? "has-label" : ""}`}>
+    {section.label ? <h3>{section.label}</h3> : null}
+    <div className="jshs-group-items">{section.items.map((item) => <MenuDestination key={item.label} item={item} onNavigate={onNavigate} compact={mobile} />)}</div>
   </section>;
 }
 
+function GroupItems({ group, onNavigate, mobile = false }: { group: MenuGroup; onNavigate?: () => void; mobile?: boolean }) {
+  return <div className={`jshs-navigation-sections ${mobile ? "is-mobile jshs-mobile-group-items" : ""}`}>{groupSections(group).map((section, index) => <NavigationSection key={`${section.label || "items"}-${index}`} section={section} onNavigate={onNavigate} mobile={mobile} />)}</div>;
+}
+
+function MobileNavigationGroup({ item, group, onNavigate }: { item: NavigationItem; group: MenuGroup; onNavigate: () => void }) {
+  return <details className={`jshs-mobile-group is-${item.tone || "trust"}`} open={item.label === "找學校"}>
+    <summary className="jshs-mobile-group-heading">
+      <span className="jshs-icon-tile" aria-hidden="true"><NavIcon item={item} /></span>
+      <span className="min-w-0"><b>{item.label}</b><small>{group.description}</small></span>
+      <SiteIcon name="chevron-down" size={17} />
+    </summary>
+    <div className="jshs-mobile-group-body">
+      <Link href={group.href} onClick={onNavigate} className="jshs-mobile-group-all">查看全部<SiteIcon name="chevron-right" size={15} /></Link>
+    <GroupItems group={group} onNavigate={onNavigate} mobile />
+    </div>
+  </details>;
+}
+
 function DesktopNavigationGroup({ item, group, active, onToggle, onNavigate }: { item: NavigationItem; group: MenuGroup; active: boolean; onToggle: (menu: HTMLDetailsElement) => void; onNavigate: () => void }) {
-  return <details name="jshs-desktop-nav" onToggle={(event) => onToggle(event.currentTarget)} className={`jshs-desktop-more is-${item.tone || "trust"} is-layout-${group.layout || "default"} ${active ? "is-active" : ""}`}>
-    <summary aria-label={`${item.label}，展開副選單`}><NavIcon item={item} /><span>{item.label}</span><SiteIcon name="chevron-down" size={14} /></summary>
-    <div>
-      <div className="jshs-desktop-menu-heading"><span><b>{group.eyebrow}</b><small>{group.description}{group.secondaryDescription ? <><br />{group.secondaryDescription}</> : null}</small></span><Link href={group.href} onClick={onNavigate} className="jshs-desktop-menu-all">查看全部<SiteIcon name="chevron-right" size={14} /></Link></div>
+  const panelId = `jshs-navigation-${item.label}`;
+  return <details name="jshs-desktop-nav" onToggle={(event) => onToggle(event.currentTarget)} className={`jshs-desktop-more is-${item.tone || "trust"} is-layout-${group.layout || "default"} is-sections-${groupSections(group).length} ${active ? "is-active" : ""}`}>
+    <summary aria-label={`${item.label}，展開副選單`} aria-haspopup="menu" aria-controls={panelId}><NavIcon item={item} /><span>{item.label}</span><SiteIcon name="chevron-down" size={14} /></summary>
+    <div id={panelId} role="menu" className="jshs-navigation-panel">
+      <div className="jshs-desktop-menu-heading"><span><b>{group.eyebrow}</b><small>{group.description}</small></span></div>
       <GroupItems group={group} onNavigate={onNavigate} />
+      <Link href={group.href} onClick={onNavigate} className="jshs-desktop-menu-all">查看全部{item.label}<SiteIcon name="chevron-right" size={14} /></Link>
     </div>
   </details>;
 }

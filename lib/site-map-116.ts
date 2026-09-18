@@ -13,6 +13,7 @@ export const menuGroups116 = Object.freeze(siteMapCatalog.menuGroups.map((group)
       label: area.label,
       href: area.primaryHref,
       description: area.title,
+      section: area.label,
       children: scoreFeatureCatalog.features
         .filter((feature) => feature.area === area.key)
         .map(({ label, href, description }) => ({ label, href, description })),

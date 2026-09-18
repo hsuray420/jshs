@@ -13,6 +13,8 @@ export type MenuItem = Readonly<{
   label: string;
   href: string;
   description: string;
+  section?: string;
+  icon?: string;
   available?: boolean;
   children?: readonly MenuItem[];
 }>;
@@ -24,7 +26,7 @@ export type MenuGroup = Readonly<{
   eyebrow: string;
   description: string;
   secondaryDescription?: string;
-  layout?: "default" | "score";
+  layout?: "default" | "score" | "compact" | "columns" | "wide";
   items: readonly MenuItem[];
 }>;
 
