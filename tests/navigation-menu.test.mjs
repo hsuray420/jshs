@@ -4,6 +4,7 @@ import test from "node:test";
 
 const siteMapUrl = new URL("../content/site-map.json", import.meta.url);
 const headerUrl = new URL("../components/site-header.tsx", import.meta.url);
+const megaMenuUrl = new URL("../components/navigation/mega-menu.tsx", import.meta.url);
 const footerUrl = new URL("../components/site-footer.tsx", import.meta.url);
 const expectedGroups = ["找學校", "成績分析", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"];
 const requiredLabels = [
@@ -26,7 +27,7 @@ test("site map defines the final eight menu groups from the uploaded product sit
 });
 
 test("desktop and mobile navigation render the same complete submenu model", async () => {
-  const [header, footer] = await Promise.all([readFile(headerUrl, "utf8"), readFile(footerUrl, "utf8")]);
+  const [header, megaMenu, footer] = await Promise.all([readFile(headerUrl, "utf8"), readFile(megaMenuUrl, "utf8"), readFile(footerUrl, "utf8")]);
   assert.match(header, /menuGroups\.map/);
   assert.match(header, /mobileNavigation = primaryNavigation/);
   assert.match(header, /mobileNavigation\.map/);
@@ -38,22 +39,22 @@ test("desktop and mobile navigation render the same complete submenu model", asy
   assert.match(header, /SiteIcon/);
   assert.match(header, /jshs-mobile-nav-item/);
   assert.match(header, /開啟更多功能選單/);
-  assert.match(header, /MobileNavigationGroup/);
-  assert.match(header, /jshs-mobile-group-heading/);
-  assert.match(header, /jshs-mobile-group-items/);
-  assert.match(header, /查看全部/);
+  assert.match(header, /NavMobileAccordion/);
+  assert.match(megaMenu, /jshs-mobile-group-heading/);
+  assert.match(header, /NavMegaMenuItem/);
+  assert.match(megaMenu, /查看全部/);
   assert.match(header, /jshs-desktop-more/);
-  assert.match(header, /DesktopNavigationGroup/);
-  assert.match(header, /<details name="jshs-desktop-nav"/);
-  assert.match(header, /<summary aria-label=/);
+  assert.match(header, /NavDropdown/);
+  assert.match(megaMenu, /name="jshs-desktop-nav"/);
+  assert.match(megaMenu, /<summary aria-label=/);
   assert.match(header, /keepSingleDesktopMenu/);
   assert.match(header, /querySelectorAll<HTMLDetailsElement>\("\.jshs-desktop-more\[open\]"\)/);
   assert.match(header, /onNavigate=\{closeDesktopMenus\}/);
-  assert.match(header, /is-layout-\$\{group\.layout/);
+  assert.match(header, /components\/navigation\/mega-menu/);
   assert.doesNotMatch(header, /return <Link key=\{item\.href\}/);
   assert.doesNotMatch(header, /<details key=\{item\.label\} className=\{`jshs-mobile-group/);
   assert.doesNotMatch(header, /[♧♙⌕☰↗]/);
-  assert.match(header, /group\.items/);
+  assert.match(megaMenu, /group\.items/);
   assert.doesNotMatch(header, /功能準備中/);
   assert.match(footer, /footerGroups\.map/);
   assert.match(footer, /快速入口/);
@@ -61,14 +62,20 @@ test("desktop and mobile navigation render the same complete submenu model", asy
   assert.match(footer, /法律/);
 });
 
-test("navigation menus use a shared data-driven panel system", async () => {
-  const [header, siteMap] = await Promise.all([readFile(headerUrl, "utf8"), readFile(siteMapUrl, "utf8")]);
+test("navigation menus use one shared data-driven mega-menu system", async () => {
+  const [header, megaMenu, siteMap] = await Promise.all([readFile(headerUrl, "utf8"), readFile(megaMenuUrl, "utf8"), readFile(siteMapUrl, "utf8")]);
   const catalog = JSON.parse(siteMap);
-  assert.match(header, /function groupSections\(group: MenuGroup\)/);
-  assert.match(header, /function NavigationSection/);
-  assert.match(header, /jshs-navigation-panel/);
-  assert.match(header, /jshs-menu-item-copy/);
-  assert.match(header, /jshs-mobile-group-body/);
+  assert.match(header, /NavDropdown/);
+  assert.match(header, /NavMobileAccordion/);
+  assert.match(megaMenu, /export function NavMegaMenuItem/);
+  assert.match(megaMenu, /export function NavDropdownHeader/);
+  assert.match(megaMenu, /export function NavDropdownGrid/);
+  assert.match(megaMenu, /export function NavDropdownSection/);
+  assert.match(megaMenu, /export function NavDropdownFooter/);
+  assert.match(megaMenu, /window\.innerWidth/);
+  assert.match(megaMenu, /aria-expanded=\{open\}/);
+  assert.doesNotMatch(header, /function DesktopNavigationGroup/);
+  assert.doesNotMatch(header, /function MobileNavigationGroup/);
   assert.match(header, /aria-expanded=\{drawerOpen\}/);
   assert.ok(catalog.menuGroups.some(({ layout }) => layout === "compact"));
   assert.ok(catalog.menuGroups.some(({ items }) => items.some(({ section }) => section)));
