@@ -1,0 +1,17 @@
+{
+  "120303": {
+    "schoolCode": "120303",
+    "schoolName": "國立鳳山高中",
+    "status": "unresolved",
+    "source": "placeholder",
+    "confidence": "low",
+    "identity": {
+      "address": "高雄市鳳山區光復路二段130號",
+      "latitude": 22.629945,
+      "longitude": 120.345725
+    },
+    "resolvedAt": "2026-09-18T15:42:12.208Z",
+    "expiresAt": "2026-10-18T15:42:12.208Z",
+    "reason": "no_exact_osm_entity"
+  }
+}

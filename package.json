@@ -37,7 +37,8 @@
     "schools:validate": "node scripts/generate-schools.mjs --validate",
     "schools:prepare": "pnpm run schools:generate && pnpm run schools:validate",
     "schools:generate": "node scripts/generate-schools.mjs",
-    "schools:geocode": "node scripts/geocode-schools.mjs"
+    "schools:geocode": "node scripts/geocode-schools.mjs",
+    "schools:images": "node scripts/resolve-school-images.mjs"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
