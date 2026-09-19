@@ -13,7 +13,7 @@ test("public trust surfaces explain the JSHS promise and editorial independence"
     read("content/route-metadata.json"),
   ]);
 
-  assert.match(home, /stitch-home-shell/);
+  assert.match(home, /jshs-v2-home/);
   for (const principle of ["看得懂", "查得到", "算得清楚", "自己決定"]) assert.match(trust + detail, new RegExp(principle));
   for (const slug of ["about", "sponsor", "updates"]) {
     assert.match(detail, new RegExp(`\\b${slug}\\b`));

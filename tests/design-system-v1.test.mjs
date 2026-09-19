@@ -25,18 +25,18 @@ test("the desktop header uses the shared eight-item navigation and full brand", 
   assert.match(header, />登入</);
 });
 
-test("the homepage follows the Stitch workbench layout and preserves the shared task routes", async () => {
+test("the homepage follows the approved JSHS visual system and preserves the shared task routes", async () => {
   const [home, header, css] = await Promise.all([source("app/page.tsx"), source("components/site-header.tsx"), source("app/globals.css")]);
-  assert.match(home, /stitch-home-shell/);
-  assert.match(home, /先確認下一步/);
+  assert.match(home, /jshs-v2-home/);
+  assert.match(home, /找到屬於你的下一站/);
   assert.match(home, /HomeAiPanel/);
-  assert.match(home, new RegExp("/districts"));
+  assert.match(home, new RegExp("/schools"));
   assert.match(home, new RegExp("/planner"));
   assert.match(home, new RegExp("/scores/mock"));
   assert.match(header, /mobileNavigation = primaryNavigation/);
-  assert.match(css, /jshs-score-entry/);
-  assert.match(css, /\.stitch-home-shell/);
-  assert.match(css, /\.stitch-ai-panel/);
+  assert.match(css, /\.jshs-v2-home/);
+  assert.match(css, /\.jshs-v2-feature-grid/);
+  assert.match(css, /\.jshs-v2-ai-card/);
 });
 
 test("reference function pages use the reusable feature hero instead of a coloured feature band", async () => {

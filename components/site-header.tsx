@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { SiteIcon, type SiteIconName } from "@/components/site-icons";
+import { SiteIcon } from "@/components/site-icons";
 import { NavDropdown, NavMegaMenuItem, NavMobileAccordion, type NavigationItem } from "@/components/navigation/mega-menu";
 import { DonationLink } from "@/components/donation-link";
 import { getDistrictLabel, readStoredDistrict, subscribeToDistrict } from "@/lib/district-context";
@@ -15,7 +15,7 @@ const navigationGroups = new Map(menuGroups.map((group) => [group.label, group])
 function districtSnapshot() { return getDistrictLabel(readStoredDistrict()); }
 
 function Brand() {
-  return <Link href="/" className="jshs-brand" aria-label="全國國中升學資訊網首頁"><span className="jshs-brand-logo" aria-hidden="true"><SiteIcon name="school" size={21} /></span><span>全國國中升學資訊網</span></Link>;
+  return <Link href="/" className="jshs-brand" aria-label="全國國中升學資訊網首頁"><span className="jshs-brand-logo" aria-hidden="true"><SiteIcon name="school" size={21} /></span><span className="jshs-brand-wordmark"><strong>jshs.cc</strong><small>全國國中升學資訊網</small></span></Link>;
 }
 
 function NavIcon({ item }: { item: NavigationItem }) { return <SiteIcon name={item.icon || "more"} size={17} />; }

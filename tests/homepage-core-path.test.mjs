@@ -4,12 +4,12 @@ import test from "node:test";
 
 const readSource = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("homepage exposes canonical Stitch task routes and the AI workspace", async () => {
+test("homepage exposes canonical task routes and the AI workspace", async () => {
   const [home, ai, scoreRegistry] = await Promise.all([readSource("app/page.tsx"), readSource("components/home-ai-panel.tsx"), readSource("content/score-features.json")]);
 
   assert.match(scoreRegistry, /"href": "\/scores\/mock"/);
-  assert.match(home, /stitch-home-shell/);
-  assert.match(home, /\/districts/);
+  assert.match(home, /jshs-v2-home/);
+  assert.match(home, /\/schools/);
   assert.match(home, /\/planner/);
   assert.match(home, /HomeAiPanel/);
   assert.match(ai, /\/api\/assistant/);

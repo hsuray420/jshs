@@ -90,23 +90,23 @@ test("admin and legacy guide inherit the same education iOS system", async () =>
 test("core visitor surfaces use neutral design-system primitives for future pages", async () => {
   for (const url of surfaceUrls) {
     const source = await readFile(url, "utf8");
-    assert.match(source, /jshs-page-shell|jshs-hero-section|jshs-section|jshs-surface-card|jshs-button|sv-root|stitch-home-shell/);
+    assert.match(source, /jshs-page-shell|jshs-hero-section|jshs-section|jshs-surface-card|jshs-button|sv-root|jshs-v2-home/);
     assert.doesNotMatch(source, /jshs-organic|jshs-hero-band|jshs-pill-button/);
   }
 });
 
-test("homepage uses the Stitch workbench while keeping first-party destinations", async () => {
+test("homepage uses the approved JSHS system while keeping first-party destinations", async () => {
   const [home, ai, header, css] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/home-ai-panel.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/site-header.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
-  assert.match(home, /stitch-home-shell/);
+  assert.match(home, /jshs-v2-home/);
   assert.match(home, /HomeAiPanel/);
-  assert.match(home, /\/districts/);
+  assert.match(home, /\/schools/);
   assert.match(home, /\/planner/);
   assert.match(ai, /\/api\/assistant/);
   assert.match(header, /mobileNavigation = primaryNavigation/);
-  assert.match(css, /\.stitch-home-workspace/);
+  assert.match(css, /\.jshs-v2-dashboard/);
 });

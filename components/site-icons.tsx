@@ -2,9 +2,11 @@ export type SiteIconName =
   | "account"
   | "calendar"
   | "calculator"
+  | "chart"
   | "chevron-down"
   | "chevron-right"
   | "close"
+  | "compare"
   | "home"
   | "knowledge"
   | "menu"
@@ -42,12 +44,16 @@ export function SiteIcon({ name, size = 20, className }: SiteIconProps) {
       return <svg {...props}><rect x="4" y="5.5" width="16" height="14" rx="2" /><path d="M8 3.5v4M16 3.5v4M4 10h16" /><path d="M8 13h.01M12 13h.01M16 13h.01M8 16.5h.01M12 16.5h.01" /></svg>;
     case "calculator":
       return <svg {...props}><rect x="5" y="3.5" width="14" height="17" rx="2" /><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 18h.01M12 18h.01M16 18h.01" /></svg>;
+    case "chart":
+      return <svg {...props}><path d="M5 19V10M12 19V5M19 19v-8" /><path d="M3.5 19.5h17" /></svg>;
     case "chevron-down":
       return <svg {...props}><path d="m6 9 6 6 6-6" /></svg>;
     case "chevron-right":
       return <svg {...props}><path d="m9 6 6 6-6 6" /></svg>;
     case "close":
       return <svg {...props}><path d="m6 6 12 12M18 6 6 18" /></svg>;
+    case "compare":
+      return <svg {...props}><rect x="4" y="5" width="6" height="14" rx="1.5" /><rect x="14" y="5" width="6" height="14" rx="1.5" /><path d="M10 9h4M10 15h4" /></svg>;
     case "home":
       return <svg {...props}><path d="m4 10 8-6 8 6v9.5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V10Z" /><path d="M9.5 20.5v-6h5v6" /></svg>;
     case "knowledge":

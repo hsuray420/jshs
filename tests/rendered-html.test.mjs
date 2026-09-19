@@ -19,10 +19,10 @@ test("root route is the canonical public homepage", async () => {
   const [page, ai] = await Promise.all([readFile(appPageUrl, "utf8"), readFile(homeAiUrl, "utf8")]);
 
   assert.match(page, /canonical:\s*"\/"/);
-  assert.match(page, /stitch-home-shell/);
+  assert.match(page, /jshs-v2-home/);
   assert.match(page, /HomeAiPanel/);
   assert.match(ai, /\/api\/assistant/);
-  for (const label of ["/districts", "/planner", "/scores\/mock"]) assert.match(page, new RegExp(label.replace("/", "\\/")));
+  for (const label of ["/schools", "/planner", "/scores\/mock"]) assert.match(page, new RegExp(label.replace("/", "\\/")));
   assert.doesNotMatch(page, /先別急，來到這裡，就能找到下一步/);
   assert.doesNotMatch(page, /redirect\(/);
   assert.doesNotMatch(page, /localStorage|role="dialog"|setSelectedDistrict/);

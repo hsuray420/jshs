@@ -70,7 +70,7 @@ test("shared navigation and sitemap expose the canonical official information en
     readFile(sitemapUrl, "utf8"),
   ]);
 
-  assert.match(homePage, /stitch-home-shell/);
+  assert.match(homePage, /jshs-v2-home/);
   assert.match(header, /navigationGroups/);
   assert.doesNotMatch(homePage, /getFeaturedNews/);
   assert.match(sitemap, /<loc>https:\/\/jshs\.cc\/admission-guides<\/loc>/);

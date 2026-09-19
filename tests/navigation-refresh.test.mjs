@@ -23,10 +23,10 @@ test("header uses the common navigation config and one full brand component", as
   assert.match(header, /mobileNavigation = primaryNavigation/);
 });
 
-test("homepage follows Stitch while the shared navigation remains data-driven", async () => {
+test("homepage follows the approved visual system while navigation remains data-driven", async () => {
   const [home, header, catalog] = await Promise.all([source("app/page.tsx"), source("components/site-header.tsx"), source("content/site-map.json")]);
-  assert.match(home, /stitch-home-shell/);
-  assert.match(home, /現在想先處理哪件事/);
+  assert.match(home, /jshs-v2-home/);
+  assert.match(home, /找到屬於你的下一站/);
   assert.match(home, /HomeAiPanel/);
   assert.match(header, /mobileNavigation = primaryNavigation/);
   for (const label of ["找學校", "成績分析", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"]) assert.match(catalog, new RegExp(label));
