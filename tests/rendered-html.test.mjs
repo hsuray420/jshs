@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const appPageUrl = new URL("../app/page.tsx", import.meta.url);
-const homeNextStepUrl = new URL("../components/home-next-step.tsx", import.meta.url);
+const homeAiUrl = new URL("../components/home-ai-panel.tsx", import.meta.url);
 const legacyJshsHtmlUrl = new URL("../public/jshs/jshs.html", import.meta.url);
 const districtScriptUrl = new URL("../public/it_hs/guide.js", import.meta.url);
 const districtIndexUrl = new URL("../public/it_hs/ilan/index.html", import.meta.url);
@@ -16,12 +16,13 @@ const workerUrl = new URL("../worker/index.ts", import.meta.url);
 const wranglerConfigUrl = new URL("../wrangler.jsonc", import.meta.url);
 
 test("root route is the canonical public homepage", async () => {
-  const [page, nextStep] = await Promise.all([readFile(appPageUrl, "utf8"), readFile(homeNextStepUrl, "utf8")]);
+  const [page, ai] = await Promise.all([readFile(appPageUrl, "utf8"), readFile(homeAiUrl, "utf8")]);
 
   assert.match(page, /canonical:\s*"\/"/);
-  assert.match(page, /SERVICE_YEAR\} 學年度 <i[^>]*>·<\/i> 升學規劃/);
-  for (const label of ["HomeNextStep", "HomeScoreActions", "HomeProgress"]) assert.match(page, new RegExp(label));
-  for (const label of ["找學校", "成績分析", "我的志願", "升學指南"]) assert.match(nextStep, new RegExp(label));
+  assert.match(page, /stitch-home-shell/);
+  assert.match(page, /HomeAiPanel/);
+  assert.match(ai, /\/api\/assistant/);
+  for (const label of ["/districts", "/planner", "/scores\/mock"]) assert.match(page, new RegExp(label.replace("/", "\\/")));
   assert.doesNotMatch(page, /先別急，來到這裡，就能找到下一步/);
   assert.doesNotMatch(page, /redirect\(/);
   assert.doesNotMatch(page, /localStorage|role="dialog"|setSelectedDistrict/);

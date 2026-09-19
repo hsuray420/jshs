@@ -90,25 +90,23 @@ test("admin and legacy guide inherit the same education iOS system", async () =>
 test("core visitor surfaces use neutral design-system primitives for future pages", async () => {
   for (const url of surfaceUrls) {
     const source = await readFile(url, "utf8");
-    assert.match(source, /jshs-page-shell|jshs-hero-section|jshs-section|jshs-surface-card|jshs-button|sv-root/);
-    assert.doesNotMatch(source, /jshs-organic|jshs-hero-band|jshs-pill-button|jshs-primary-action|jshs-secondary-action/);
+    assert.match(source, /jshs-page-shell|jshs-hero-section|jshs-section|jshs-surface-card|jshs-button|sv-root|stitch-home-shell/);
+    assert.doesNotMatch(source, /jshs-organic|jshs-hero-band|jshs-pill-button/);
   }
 });
 
-test("homepage uses a next-step guide and compact fixed four-colour actions", async () => {
-  const [home, nextStep] = await Promise.all([
+test("homepage uses the Stitch workbench while keeping first-party destinations", async () => {
+  const [home, ai, header, css] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../components/home-next-step.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/home-ai-panel.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/site-header.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
-
-  assert.match(home, /HomeNextStep/);
-  assert.match(home, /HomeScoreActions/);
-  assert.doesNotMatch(home, /jshs-home-task-(?:grid|card)/);
-  assert.match(nextStep, /ScoreFeatureEntry/);
-  assert.match(nextStep, /tone: "score"/);
-  assert.match(nextStep, /SiteIcon/);
-  assert.doesNotMatch(nextStep, /[▤⌂∑☷]/);
-  assert.match(home, /jshs-home-hero/);
-  assert.doesNotMatch(home, /StatusItem[^\n]*border-b/);
-  assert.doesNotMatch(home, /districtMetadata\.disclaimer[^\n]*border-t/);
+  assert.match(home, /stitch-home-shell/);
+  assert.match(home, /HomeAiPanel/);
+  assert.match(home, /\/districts/);
+  assert.match(home, /\/planner/);
+  assert.match(ai, /\/api\/assistant/);
+  assert.match(header, /mobileNavigation = primaryNavigation/);
+  assert.match(css, /\.stitch-home-workspace/);
 });

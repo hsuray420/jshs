@@ -23,18 +23,13 @@ test("header uses the common navigation config and one full brand component", as
   assert.match(header, /mobileNavigation = primaryNavigation/);
 });
 
-test("homepage offers a next-step guide and compact colour-coded quick actions", async () => {
-  const [home, guide, scoreEntry] = await Promise.all([source("app/page.tsx"), source("components/home-next-step.tsx"), source("components/score-feature-entry.tsx")]);
-  assert.match(home, /HomeNextStep/);
-  assert.match(home, /HomeScoreActions/);
-  assert.doesNotMatch(home, /jshs-home-task-grid/);
-  assert.match(guide, /第一次來？不知道從哪裡開始/);
-  assert.match(guide, /幫我確認下一步/);
-  assert.match(guide, /學生目前階段/);
-  assert.match(guide, /就學區是否已知/);
-  assert.match(guide, /現在最想處理的問題/);
-  assert.match(scoreEntry, /現在想先處理哪件事/);
-  assert.match(guide, /ScoreFeatureEntry/);
+test("homepage follows Stitch while the shared navigation remains data-driven", async () => {
+  const [home, header, catalog] = await Promise.all([source("app/page.tsx"), source("components/site-header.tsx"), source("content/site-map.json")]);
+  assert.match(home, /stitch-home-shell/);
+  assert.match(home, /現在想先處理哪件事/);
+  assert.match(home, /HomeAiPanel/);
+  assert.match(header, /mobileNavigation = primaryNavigation/);
+  for (const label of ["找學校", "成績分析", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"]) assert.match(catalog, new RegExp(label));
 });
 
 test("guide has six canonical sections and directs detailed score rules to the calculator", async () => {

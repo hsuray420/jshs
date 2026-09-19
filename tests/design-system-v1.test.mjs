@@ -25,20 +25,18 @@ test("the desktop header uses the shared eight-item navigation and full brand", 
   assert.match(header, />登入</);
 });
 
-test("the homepage starts with a full-bleed hero and compact fixed-colour actions", async () => {
-  const [home, nextStep, scoreEntry, css] = await Promise.all([source("app/page.tsx"), source("components/home-next-step.tsx"), source("components/score-feature-entry.tsx"), source("app/globals.css")]);
-  assert.match(home, /jshs-home-hero/);
+test("the homepage follows the Stitch workbench layout and preserves the shared task routes", async () => {
+  const [home, header, css] = await Promise.all([source("app/page.tsx"), source("components/site-header.tsx"), source("app/globals.css")]);
+  assert.match(home, /stitch-home-shell/);
   assert.match(home, /先確認下一步/);
-  assert.match(home, /HomeNextStep/);
-  assert.match(home, /HomeScoreActions/);
-  assert.match(nextStep, /ScoreFeatureEntry/);
-  assert.match(nextStep, /第一次來？不知道從哪裡開始/);
-  assert.match(scoreEntry, /現在想先處理哪件事/);
+  assert.match(home, /HomeAiPanel/);
+  assert.match(home, new RegExp("/districts"));
+  assert.match(home, new RegExp("/planner"));
+  assert.match(home, new RegExp("/scores/mock"));
+  assert.match(header, /mobileNavigation = primaryNavigation/);
   assert.match(css, /jshs-score-entry/);
-  assert.doesNotMatch(home, /jshs-home-task-card/);
-  assert.match(home, /jshs-home-hero-v2\.png/);
-  assert.match(css, /jshs-home-hero-background/);
-  assert.match(css, /object-fit: cover/);
+  assert.match(css, /\.stitch-home-shell/);
+  assert.match(css, /\.stitch-ai-panel/);
 });
 
 test("reference function pages use the reusable feature hero instead of a coloured feature band", async () => {

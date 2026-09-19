@@ -63,13 +63,15 @@ test("official information hub stays official-only and article slugs render thei
   assert.match(newsLibrary, /export function getRelatedNews/);
 });
 
-test("homepage and sitemap expose the canonical official information entry", async () => {
-  const [homePage, sitemap] = await Promise.all([
+test("shared navigation and sitemap expose the canonical official information entry", async () => {
+  const [homePage, header, sitemap] = await Promise.all([
     readFile(homePageUrl, "utf8"),
+    readFile(new URL("../components/site-header.tsx", import.meta.url), "utf8"),
     readFile(sitemapUrl, "utf8"),
   ]);
 
-  assert.match(homePage, /href="\/admission-guides"/);
+  assert.match(homePage, /stitch-home-shell/);
+  assert.match(header, /navigationGroups/);
   assert.doesNotMatch(homePage, /getFeaturedNews/);
   assert.match(sitemap, /<loc>https:\/\/jshs\.cc\/admission-guides<\/loc>/);
   assert.doesNotMatch(sitemap, /<loc>https:\/\/jshs\.cc\/news\/[^<]+<\/loc>/);
