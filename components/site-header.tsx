@@ -54,11 +54,14 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key === "Escape") closeDesktopMenus();
     }
+    function closeForAi() { closeDesktopMenus(); }
     document.addEventListener("pointerdown", closeOnOutsidePointer);
     document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("jshs:ai-open", closeForAi);
     return () => {
       document.removeEventListener("pointerdown", closeOnOutsidePointer);
       document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("jshs:ai-open", closeForAi);
     };
   }, []);
 
@@ -67,6 +70,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
   function closeDesktopMenus() { desktopNavRef.current?.querySelectorAll<HTMLDetailsElement>(".jshs-desktop-more[open]").forEach((menu) => { menu.open = false; }); }
   function keepSingleDesktopMenu(openMenu: HTMLDetailsElement) {
     if (!openMenu.open) return;
+    document.dispatchEvent(new Event("jshs:nav-open"));
     desktopNavRef.current?.querySelectorAll<HTMLDetailsElement>(".jshs-desktop-more[open]").forEach((menu) => {
       if (menu !== openMenu) menu.open = false;
     });

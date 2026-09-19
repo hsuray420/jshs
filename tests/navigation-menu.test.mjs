@@ -6,6 +6,8 @@ const siteMapUrl = new URL("../content/site-map.json", import.meta.url);
 const headerUrl = new URL("../components/site-header.tsx", import.meta.url);
 const megaMenuUrl = new URL("../components/navigation/mega-menu.tsx", import.meta.url);
 const footerUrl = new URL("../components/site-footer.tsx", import.meta.url);
+const globalsUrl = new URL("../app/globals.css", import.meta.url);
+const assistantUrl = new URL("../components/ai-assistant.tsx", import.meta.url);
 const expectedGroups = ["找學校", "成績分析", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"];
 const requiredLabels = [
   "全國校科查詢", "歷年錄取", "學長姐分享", "學校地圖", "費用試算", "通勤比較", "群科介紹",
@@ -80,4 +82,15 @@ test("navigation menus use one shared data-driven mega-menu system", async () =>
   assert.ok(catalog.menuGroups.some(({ layout }) => layout === "compact"));
   assert.ok(catalog.menuGroups.some(({ items }) => items.some(({ section }) => section)));
   assert.ok(catalog.menuGroups.some(({ items }) => items.some(({ icon }) => icon)));
+});
+
+test("mega menu descriptions remain readable and floating surfaces are mutually exclusive", async () => {
+  const [globals, header, assistant] = await Promise.all([readFile(globalsUrl, "utf8"), readFile(headerUrl, "utf8"), readFile(assistantUrl, "utf8")]);
+  assert.match(globals, /\.jshs-nav-mega-item-copy span \{[^}]*overflow: visible;[^}]*overflow-wrap: anywhere;[^}]*white-space: normal;[^}]*word-break: break-word;/s);
+  assert.match(globals, /\.jshs-nav-mega-footer \{[^}]*padding: 12px 16px 0;/s);
+  assert.doesNotMatch(globals, /\.jshs-desktop-more > div \{/);
+  assert.match(header, /new Event\("jshs:nav-open"\)/);
+  assert.match(header, /jshs:ai-open/);
+  assert.match(assistant, /new Event\("jshs:ai-open"\)/);
+  assert.match(assistant, /jshs:nav-open/);
 });
