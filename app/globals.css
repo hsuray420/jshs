@@ -1657,3 +1657,5 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .jshs-home-school-card > .sv-school-media-placeholder { align-items:center; background:linear-gradient(135deg,#dcecff,#f1f7ff); color:#6d8aa9; display:flex; flex-direction:column; font-size:12px; gap:10px; justify-content:center; text-align:center; }
 .jshs-home-school-card .sv-school-media-building { border:2px solid #7ba1cc; border-radius:5px 5px 0 0; display:flex; gap:4px; height:36px; padding:7px 5px 0; width:52px; }
 .jshs-home-school-card .sv-school-media-building i { background:#7ba1cc; border-radius:1px; flex:1; height:14px; }
+.jshs-home-belief.is-truthful { display:block; }
+.jshs-home-belief.is-truthful > div:first-child { max-width:650px; }
