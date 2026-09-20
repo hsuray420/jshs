@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const override = await getSchoolMediaOverride(code);
   if (!override) return new Response("Not found", { status: 404 });
   const file = await getAdminFileBlob(override.file_id);
-  const bytes = fileBlobToBytes(file?.file_blob);
+  const bytes = fileBlobToBytes(file?.file_blob_hex ?? file?.file_blob);
   if (!file || file.visibility !== "public" || !file.content_type.startsWith("image/") || !bytes?.byteLength) {
     return new Response("Not found", { status: 404 });
   }

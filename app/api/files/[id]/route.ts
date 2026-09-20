@@ -18,7 +18,7 @@ export async function GET(
     }
   }
 
-  const bytes = fileBlobToBytes(file.file_blob);
+  const bytes = fileBlobToBytes(file.file_blob_hex ?? file.file_blob);
   if (!bytes?.byteLength) return new Response("Not found", { status: 404 });
 
   const headers = new Headers();

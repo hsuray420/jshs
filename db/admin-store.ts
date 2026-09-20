@@ -13,10 +13,21 @@ export type AdminFile = {
   created_at: string;
 };
 
-export type AdminFileWithBlob = AdminFile & { file_blob: ArrayBuffer | ArrayBufferView };
+export type AdminFileWithBlob = AdminFile & {
+  file_blob?: ArrayBuffer | ArrayBufferView;
+  file_blob_hex?: string;
+};
 
 export function fileBlobToBytes(blob: unknown) {
   if (!blob) return null;
+  if (typeof blob === "string") {
+    if (!/^(?:[0-9a-f]{2})*$/i.test(blob)) return null;
+    const bytes = new Uint8Array(blob.length / 2);
+    for (let index = 0; index < bytes.length; index += 1) {
+      bytes[index] = Number.parseInt(blob.slice(index * 2, index * 2 + 2), 16);
+    }
+    return bytes.buffer;
+  }
   const value = blob as { buffer?: ArrayBufferLike; byteOffset?: number; byteLength?: number };
   if (typeof value.byteLength !== "number" || value.byteLength <= 0) return null;
   if (value.buffer) {
@@ -186,7 +197,7 @@ export async function getAdminFile(id: string) {
 export async function getAdminFileBlob(id: string) {
   await ensureAdminSchema();
   return getD1().prepare(`SELECT id, object_key, file_name, content_type, size,
-    category, visibility, description, uploaded_by, created_at, file_blob
+    category, visibility, description, uploaded_by, created_at, hex(file_blob) AS file_blob_hex
     FROM admin_files WHERE id = ? LIMIT 1`).bind(id).first<AdminFileWithBlob>();
 }
 

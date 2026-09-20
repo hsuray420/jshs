@@ -97,6 +97,7 @@ test("school image administration is provenance-bound and public output is appro
   assert.match(imageApi, /adminMedia/);
   assert.match(store, /school_media_overrides/);
   assert.match(store, /fileBlobToBytes/);
+  assert.match(store, /hex\(file_blob\)/);
   assert.match(fileRoute, /fileBlobToBytes/);
   assert.match(component, /api\/school-image/);
 });
