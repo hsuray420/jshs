@@ -15,13 +15,14 @@ export type AdminFile = {
 
 export type AdminFileWithBlob = AdminFile & { file_blob: ArrayBuffer | ArrayBufferView };
 
-export function fileBlobToBytes(blob: ArrayBuffer | ArrayBufferView | null | undefined) {
+export function fileBlobToBytes(blob: unknown) {
   if (!blob) return null;
-  if (blob instanceof ArrayBuffer) return blob.slice(0);
-  if (ArrayBuffer.isView(blob)) {
-    return blob.buffer.slice(blob.byteOffset, blob.byteOffset + blob.byteLength) as ArrayBuffer;
+  const value = blob as { buffer?: ArrayBufferLike; byteOffset?: number; byteLength?: number };
+  if (typeof value.byteLength !== "number" || value.byteLength <= 0) return null;
+  if (value.buffer) {
+    return new Uint8Array(value.buffer, value.byteOffset || 0, value.byteLength).slice().buffer;
   }
-  return null;
+  return new Uint8Array(blob as ArrayBuffer).slice().buffer;
 }
 
 export type SchoolMediaOverride = {
