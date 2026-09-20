@@ -94,7 +94,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
           const active = activeHref === item.activeHref;
           return group ? <NavDropdown key={item.label} item={item} group={group} active={active} onToggle={keepSingleDesktopMenu} onNavigate={closeDesktopMenus} /> : null;
         })}</nav>
-        <div className="ml-auto flex shrink-0 items-center gap-2"><DonationLink fallbackHref="/support" className="jshs-donation-link hidden md:inline-flex">小額捐款</DonationLink>{/* Unauthenticated fallback: >登入</ */}<Link href="/account" className="jshs-login-link">{memberName || "登入"}</Link><button type="button" onClick={openDrawer} aria-label="開啟全站導覽" aria-expanded={drawerOpen} className="jshs-header-action jshs-header-menu-button grid place-items-center xl:hidden"><SiteIcon name="menu" size={23} /></button></div>
+        <div className="ml-auto flex shrink-0 items-center gap-2">{activeHref === "/" ? <Link href="/search" aria-label="搜尋網站" className="jshs-home-header-search hidden md:inline-flex"><SiteIcon name="search" size={19} /></Link> : <DonationLink fallbackHref="/support" className="jshs-donation-link hidden md:inline-flex">小額捐款</DonationLink>}{/* Unauthenticated fallback: >登入</ */}<Link href="/account" className="jshs-login-link">{memberName || "登入"}</Link><button type="button" onClick={openDrawer} aria-label="開啟全站導覽" aria-expanded={drawerOpen} className="jshs-header-action jshs-header-menu-button grid place-items-center xl:hidden"><SiteIcon name="menu" size={23} /></button></div>
       </div>
     </header>
 

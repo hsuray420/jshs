@@ -1,0 +1,26 @@
+{
+  "reference_size": [
+    1225,
+    1284
+  ],
+  "canonical": "docs/design-reference/homepage/homepage-master-reference.jpg",
+  "production": {
+    "hero": "docs/design-reference/homepage/hero-students-production.png"
+  },
+  "reference_only": [
+    "reference-header.jpg",
+    "reference-hero.jpg",
+    "reference-popular-schools.jpg",
+    "reference-brand-section.jpg",
+    "reference-school-card-1.jpg",
+    "reference-school-card-2.jpg",
+    "reference-school-card-3.jpg",
+    "reference-school-card-4.jpg"
+  ],
+  "hard_rules": [
+    "No invented statistics",
+    "No invented features",
+    "Reference school photos are not authentic school data",
+    "Use admin-approved school photos or fallback"
+  ]
+}
