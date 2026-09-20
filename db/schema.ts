@@ -13,6 +13,18 @@ export const adminFiles = sqliteTable("admin_files", {
   createdAt: text("created_at").notNull(),
 });
 
+export const schoolMediaOverrides = sqliteTable("school_media_overrides", {
+  schoolCode: text("school_code").primaryKey(),
+  fileId: text("file_id").notNull(),
+  source: text("source").notNull(),
+  sourceUrl: text("source_url").notNull().default(""),
+  license: text("license").notNull().default(""),
+  credit: text("credit").notNull().default(""),
+  alt: text("alt").notNull().default(""),
+  updatedBy: text("updated_by").notNull(),
+  updatedAt: text("updated_at").notNull(),
+}, (table) => [index("idx_school_media_overrides_updated_at").on(table.updatedAt)]);
+
 export const siteSettings = sqliteTable("site_settings", {
   key: text("key").primaryKey(),
   value: text("value").notNull().default(""),

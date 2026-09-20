@@ -15,6 +15,18 @@ export type AdminFile = {
 
 export type AdminFileWithBlob = AdminFile & { file_blob: ArrayBuffer };
 
+export type SchoolMediaOverride = {
+  school_code: string;
+  file_id: string;
+  source: "jshs-owned" | "official-school-site" | "licensed-public" | "admin-provided";
+  source_url: string;
+  license: string;
+  credit: string;
+  alt: string;
+  updated_by: string;
+  updated_at: string;
+};
+
 export type DeploymentEvent = {
   id: string;
   file_id: string;
@@ -82,6 +94,19 @@ export async function ensureAdminSchema() {
       ON admin_files(visibility)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_line_users_last_seen_at
       ON line_users(last_seen_at)`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS school_media_overrides (
+      school_code TEXT PRIMARY KEY,
+      file_id TEXT NOT NULL,
+      source TEXT NOT NULL,
+      source_url TEXT NOT NULL DEFAULT '',
+      license TEXT NOT NULL DEFAULT '',
+      credit TEXT NOT NULL DEFAULT '',
+      alt TEXT NOT NULL DEFAULT '',
+      updated_by TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    )`),
+    db.prepare(`CREATE INDEX IF NOT EXISTS idx_school_media_overrides_updated_at
+      ON school_media_overrides(updated_at)`),
     db.prepare(`CREATE TABLE IF NOT EXISTS deployment_events (
       id TEXT PRIMARY KEY,
       file_id TEXT NOT NULL,
@@ -181,6 +206,54 @@ export async function createAdminFile(input: AdminFileWithBlob) {
 export async function deleteAdminFile(id: string) {
   await ensureAdminSchema();
   const result = await getD1().prepare(`DELETE FROM admin_files WHERE id = ?`).bind(id).run();
+  return (result.meta.changes ?? 0) > 0;
+}
+
+export async function listSchoolMediaOverrides() {
+  await ensureAdminSchema();
+  const result = await getD1()
+    .prepare(`SELECT school_code, file_id, source, source_url, license, credit, alt,
+      updated_by, updated_at FROM school_media_overrides ORDER BY updated_at DESC`)
+    .all<SchoolMediaOverride>();
+  return result.results ?? [];
+}
+
+export async function getSchoolMediaOverride(schoolCode: string) {
+  await ensureAdminSchema();
+  return getD1()
+    .prepare(`SELECT school_code, file_id, source, source_url, license, credit, alt,
+      updated_by, updated_at FROM school_media_overrides WHERE school_code = ? LIMIT 1`)
+    .bind(schoolCode)
+    .first<SchoolMediaOverride>();
+}
+
+export async function upsertSchoolMediaOverride(input: SchoolMediaOverride) {
+  await ensureAdminSchema();
+  await getD1().prepare(`INSERT INTO school_media_overrides (
+    school_code, file_id, source, source_url, license, credit, alt, updated_by, updated_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  ON CONFLICT(school_code) DO UPDATE SET
+    file_id = excluded.file_id,
+    source = excluded.source,
+    source_url = excluded.source_url,
+    license = excluded.license,
+    credit = excluded.credit,
+    alt = excluded.alt,
+    updated_by = excluded.updated_by,
+    updated_at = excluded.updated_at`)
+    .bind(
+      input.school_code, input.file_id, input.source, input.source_url, input.license,
+      input.credit, input.alt, input.updated_by, input.updated_at,
+    )
+    .run();
+}
+
+export async function deleteSchoolMediaOverride(schoolCode: string) {
+  await ensureAdminSchema();
+  const result = await getD1()
+    .prepare(`DELETE FROM school_media_overrides WHERE school_code = ?`)
+    .bind(schoolCode)
+    .run();
   return (result.meta.changes ?? 0) > 0;
 }
 

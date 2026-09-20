@@ -74,3 +74,26 @@ test("media administration remains first-party without becoming a public IA entr
   assert.doesNotMatch(sitemap, /Podcast|影片|影音/);
   assert.match(manifest, /"items"/);
 });
+
+test("school image administration is provenance-bound and public output is approved-only", async () => {
+  const [page, adminRoute, publicRoute, imageApi, store, component] = await Promise.all([
+    read("app/admin/media/page.tsx"),
+    read("app/api/admin/school-media/route.ts"),
+    read("app/api/school-media/route.ts"),
+    read("app/api/school-image/route.ts"),
+    read("db/admin-store.ts"),
+    read("components/school-media.tsx"),
+  ]);
+  assert.match(page, /學校圖片管理/);
+  assert.match(page, /source_url/);
+  assert.match(adminRoute, /requireAdmin/);
+  assert.match(adminRoute, /schoolCode/);
+  assert.match(adminRoute, /MAX_IMAGE_BYTES/);
+  assert.match(adminRoute, /isHttpsUrl/);
+  assert.match(adminRoute, /upsertSchoolMediaOverride/);
+  assert.match(publicRoute, /getSchoolMediaOverride/);
+  assert.match(publicRoute, /visibility !== "public"/);
+  assert.match(imageApi, /adminMedia/);
+  assert.match(store, /school_media_overrides/);
+  assert.match(component, /api\/school-image/);
+});
