@@ -17,7 +17,7 @@ test("task hubs route users into the new first-party admission surfaces", async 
   assert.match(tools, /ScoreFeatureEntry/);
   assert.match(schools, /SchoolExplorer/);
   assert.match(planner, /PlannerHub/);
-  assert.match(home, /HomeAiPanel/);
+  assert.match(home, /jshs-v2-home/);
   assert.match(ai, /\/api\/assistant/);
   assert.match(scoreRegistry, /"href": "\/scores\/mock"/);
   assert.match(home, /\/planner/);

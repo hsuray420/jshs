@@ -14,7 +14,7 @@ test("school repository exposes the canonical entity and admission relation sour
 test("national school center supports full-text search and source-derived filters", async () => {
   const explorer = await read("components/school-explorer.tsx");
 
-  for (const label of ["搜尋學校、科別或課程方向", "招生區／免試就學區", "學制", "公私立", "縣市", "清除篩選"]) {
+  for (const label of ["搜尋學校、科別或課程方向", "目前就學區", "學制", "公私立", "縣市", "清除"]) {
     assert.match(explorer, new RegExp(label));
   }
   assert.match(explorer, /normalizedSearchText/);

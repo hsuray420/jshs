@@ -21,15 +21,15 @@ test("every school-code route resolves a canonical, source-backed detail page", 
   assert.doesNotMatch(page, /getSchoolByCode|getSchools\(/);
   assert.match(detail, /\/data\/schools\/by-code\/\$\{encodeURIComponent\(code\)\}\.json/);
   assert.match(detail, /BreadcrumbList/);
-  assert.match(detail, /科系與名額/);
+  assert.match(detail, /招生資訊/);
   assert.match(detail, /查看資料來源/);
 });
 
 test("school search results link by the canonical school code", async () => {
   const explorer = await read("components/school-explorer.tsx");
-  assert.match(explorer, /href={`\/schools\/\$\{s\.code\}`}/);
-  assert.match(explorer, /招生區／免試就學區/);
-  assert.match(explorer, /住宿資訊依 CSV 原文/);
+  assert.match(explorer, /href={`\/schools\/\$\{school\.code\}`}/);
+  assert.match(explorer, /目前就學區/);
+  assert.match(explorer, /資料準備中/);
 });
 
 test("sitemap generator includes all canonical school-code records", async () => {

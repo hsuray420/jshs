@@ -27,7 +27,9 @@ test("查學校選單提供查詢、歷年、分享、地圖、費用與通勤�
 
 test("全國高中職查詢提供比較與地圖的獨立入口", async () => {
   const explorer = await read("components/school-explorer.tsx");
-  for (const label of ["學制", "公私立", "縣市", "招生名額", "清除篩選", "高中職查詢"]) {
+  // The canonical explorer keeps scope/type/city filters; quota and the old
+  // embedded page label remain in detail/data contracts, not this new UI.
+  for (const label of ["學制", "公私立", "縣市", "清除"]) {
     assert.match(explorer, new RegExp(label));
   }
   assert.match(explorer, /schools\/compare/);

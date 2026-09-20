@@ -103,7 +103,7 @@ test("homepage uses the approved JSHS system while keeping first-party destinati
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
   ]);
   assert.match(home, /jshs-v2-home/);
-  assert.match(home, /HomeAiPanel/);
+  assert.match(home, /jshs-home-belief/);
   assert.match(home, /\/schools/);
   assert.match(home, /\/planner/);
   assert.match(ai, /\/api\/assistant/);

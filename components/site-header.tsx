@@ -11,6 +11,7 @@ import { searchSite } from "@/lib/search-index";
 
 const mobileNavigation = primaryNavigation as readonly NavigationItem[];
 const navigationGroups = new Map(menuGroups.map((group) => [group.label, group]));
+const canonicalDesktopSources = ["找學校", "成績分析", "官方資訊", "升學指南", "資料與信任"] as const;
 
 function districtSnapshot() { return getDistrictLabel(readStoredDistrict()); }
 
@@ -29,6 +30,14 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
   const lastFocusRef = useRef<HTMLElement | null>(null);
   const districtLabel = useSyncExternalStore(subscribeToDistrict, districtSnapshot, () => "選擇就學區");
   const results = useMemo(() => searchSite(query, 12), [query]);
+  const desktopNavigation = useMemo(() => canonicalDesktopSources.flatMap((source, index) => {
+    const original = mobileNavigation.find((item) => item.label === source);
+    if (!original) return [];
+    const visualLabels = activeHref === "/"
+      ? ["學校探索", "升學資訊", "學習資源", "社群討論", "關於我們"]
+      : ["找學校", "成績分析", "升學資訊", "學習資源", "關於我們"];
+    return [{ ...original, label: visualLabels[index], source }];
+  }), [activeHref]);
 
   useEffect(() => {
     document.body.classList.toggle("jshs-nav-open", drawerOpen);
@@ -80,8 +89,8 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
     <header className="sticky top-0 z-40 w-full border-b border-[var(--jshs-border)] bg-white jshs-site-header">
       <div className="jshs-header-inner">
         <Brand />
-        <nav ref={desktopNavRef} aria-label="主要導覽" className="jshs-desktop-nav">{mobileNavigation.map((item) => {
-          const group = navigationGroups.get(item.label);
+        <nav ref={desktopNavRef} aria-label="主要導覽" className="jshs-desktop-nav">{desktopNavigation.map((item) => {
+          const group = navigationGroups.get(item.source);
           const active = activeHref === item.activeHref;
           return group ? <NavDropdown key={item.label} item={item} group={group} active={active} onToggle={keepSingleDesktopMenu} onNavigate={closeDesktopMenus} /> : null;
         })}</nav>

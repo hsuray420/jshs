@@ -28,15 +28,14 @@ test("the desktop header uses the shared eight-item navigation and full brand", 
 test("the homepage follows the approved JSHS visual system and preserves the shared task routes", async () => {
   const [home, header, css] = await Promise.all([source("app/page.tsx"), source("components/site-header.tsx"), source("app/globals.css")]);
   assert.match(home, /jshs-v2-home/);
-  assert.match(home, /找到屬於你的下一站/);
-  assert.match(home, /HomeAiPanel/);
+  assert.match(home, /發現更大的/);
   assert.match(home, new RegExp("/schools"));
   assert.match(home, new RegExp("/planner"));
-  assert.match(home, new RegExp("/scores/mock"));
+  assert.match(home, new RegExp("/scores"));
   assert.match(header, /mobileNavigation = primaryNavigation/);
   assert.match(css, /\.jshs-v2-home/);
-  assert.match(css, /\.jshs-v2-feature-grid/);
-  assert.match(css, /\.jshs-v2-ai-card/);
+  assert.match(css, /\.jshs-v2-feature-strip/);
+  assert.match(css, /\.jshs-home-belief/);
 });
 
 test("reference function pages use the reusable feature hero instead of a coloured feature band", async () => {

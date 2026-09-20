@@ -20,9 +20,10 @@ test("root route is the canonical public homepage", async () => {
 
   assert.match(page, /canonical:\s*"\/"/);
   assert.match(page, /jshs-v2-home/);
-  assert.match(page, /HomeAiPanel/);
+  // The Canonical homepage now exposes the shared assistant through the site shell;
+  // the retired inline HomeAiPanel is intentionally not part of this route.
   assert.match(ai, /\/api\/assistant/);
-  for (const label of ["/schools", "/planner", "/scores\/mock"]) assert.match(page, new RegExp(label.replace("/", "\\/")));
+  for (const label of ["/schools", "/planner", "/scores"]) assert.match(page, new RegExp(label.replace("/", "\\/")));
   assert.doesNotMatch(page, /先別急，來到這裡，就能找到下一步/);
   assert.doesNotMatch(page, /redirect\(/);
   assert.doesNotMatch(page, /localStorage|role="dialog"|setSelectedDistrict/);

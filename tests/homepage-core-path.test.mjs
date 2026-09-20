@@ -11,7 +11,8 @@ test("homepage exposes canonical task routes and the AI workspace", async () => 
   assert.match(home, /jshs-v2-home/);
   assert.match(home, /\/schools/);
   assert.match(home, /\/planner/);
-  assert.match(home, /HomeAiPanel/);
+  // The canonical home reference replaces the legacy inline AI panel with the
+  // shared assistant surface; keep the AI endpoint contract covered below.
   assert.match(ai, /\/api\/assistant/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm#(?:calculator|analysis|home)/);
   assert.doesNotMatch(home, /\/it_hs\/guide\.htm\?district=/);
