@@ -13,7 +13,16 @@ export type AdminFile = {
   created_at: string;
 };
 
-export type AdminFileWithBlob = AdminFile & { file_blob: ArrayBuffer };
+export type AdminFileWithBlob = AdminFile & { file_blob: ArrayBuffer | ArrayBufferView };
+
+export function fileBlobToBytes(blob: ArrayBuffer | ArrayBufferView | null | undefined) {
+  if (!blob) return null;
+  if (blob instanceof ArrayBuffer) return blob.slice(0);
+  if (ArrayBuffer.isView(blob)) {
+    return blob.buffer.slice(blob.byteOffset, blob.byteOffset + blob.byteLength) as ArrayBuffer;
+  }
+  return null;
+}
 
 export type SchoolMediaOverride = {
   school_code: string;

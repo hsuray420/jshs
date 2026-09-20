@@ -1,4 +1,4 @@
-import { getAdminFileBlob } from "../../../../db/admin-store";
+import { fileBlobToBytes, getAdminFileBlob } from "../../../../db/admin-store";
 import { getAdminSession } from "../../../admin/auth";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +18,8 @@ export async function GET(
     }
   }
 
-  if (!file.file_blob) return new Response("Not found", { status: 404 });
+  const bytes = fileBlobToBytes(file.file_blob);
+  if (!bytes?.byteLength) return new Response("Not found", { status: 404 });
 
   const headers = new Headers();
   headers.set("content-type", file.content_type);
@@ -27,5 +28,5 @@ export async function GET(
     `attachment; filename*=UTF-8''${encodeURIComponent(file.file_name)}`,
   );
 
-  return new Response(file.file_blob, { headers });
+  return new Response(bytes, { headers });
 }

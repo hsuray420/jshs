@@ -76,13 +76,14 @@ test("media administration remains first-party without becoming a public IA entr
 });
 
 test("school image administration is provenance-bound and public output is approved-only", async () => {
-  const [page, adminRoute, publicRoute, imageApi, store, component] = await Promise.all([
+  const [page, adminRoute, publicRoute, imageApi, store, component, fileRoute] = await Promise.all([
     read("app/admin/media/page.tsx"),
     read("app/api/admin/school-media/route.ts"),
     read("app/api/school-media/route.ts"),
     read("app/api/school-image/route.ts"),
     read("db/admin-store.ts"),
     read("components/school-media.tsx"),
+    read("app/api/files/[id]/route.ts"),
   ]);
   assert.match(page, /學校圖片管理/);
   assert.match(page, /source_url/);
@@ -95,5 +96,7 @@ test("school image administration is provenance-bound and public output is appro
   assert.match(publicRoute, /visibility !== "public"/);
   assert.match(imageApi, /adminMedia/);
   assert.match(store, /school_media_overrides/);
+  assert.match(store, /fileBlobToBytes/);
+  assert.match(fileRoute, /fileBlobToBytes/);
   assert.match(component, /api\/school-image/);
 });

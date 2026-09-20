@@ -1,4 +1,4 @@
-import { getAdminFileBlob, getSchoolMediaOverride } from "../../../db/admin-store";
+import { fileBlobToBytes, getAdminFileBlob, getSchoolMediaOverride } from "../../../db/admin-store";
 
 export const dynamic = "force-dynamic";
 
@@ -8,10 +8,11 @@ export async function GET(request: Request) {
   const override = await getSchoolMediaOverride(code);
   if (!override) return new Response("Not found", { status: 404 });
   const file = await getAdminFileBlob(override.file_id);
-  if (!file || file.visibility !== "public" || !file.content_type.startsWith("image/") || !file.file_blob) {
+  const bytes = fileBlobToBytes(file?.file_blob);
+  if (!file || file.visibility !== "public" || !file.content_type.startsWith("image/") || !bytes?.byteLength) {
     return new Response("Not found", { status: 404 });
   }
-  return new Response(file.file_blob, {
+  return new Response(bytes, {
     headers: {
       "content-type": file.content_type,
       "cache-control": "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
