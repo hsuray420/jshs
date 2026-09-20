@@ -8,7 +8,7 @@ const megaMenuUrl = new URL("../components/navigation/mega-menu.tsx", import.met
 const footerUrl = new URL("../components/site-footer.tsx", import.meta.url);
 const globalsUrl = new URL("../app/globals.css", import.meta.url);
 const assistantUrl = new URL("../components/ai-assistant.tsx", import.meta.url);
-const expectedGroups = ["找學校", "成績分析", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"];
+const expectedGroups = ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任"];
 const requiredLabels = [
   "全國校科查詢", "歷年錄取", "學長姐分享", "學校地圖", "費用試算", "通勤比較", "群科介紹",
   "模擬考", "模擬考中心", "對答案", "我的模考", "成績趨勢", "模考落點",
@@ -21,7 +21,7 @@ const requiredLabels = [
 
 function collectLabels(items) { return items.flatMap(({ label, children = [] }) => [label, ...collectLabels(children)]); }
 
-test("site map defines the final eight menu groups from the uploaded product sitemap", async () => {
+test("site map defines the final seven menu groups from the product navigation", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
   assert.deepEqual(siteMap.menuGroups.map(({ label }) => label), expectedGroups);
   const labels = siteMap.menuGroups.flatMap(({ items }) => collectLabels(items));

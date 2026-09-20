@@ -15,13 +15,13 @@ test("JSHS Design System V1 defines the requested restrained palette and 1200px 
   assert.match(tokens, /--radius-md: 12px/);
 });
 
-test("the desktop header uses the shared eight-item navigation and full brand", async () => {
+test("the desktop header uses the shared seven-item navigation and full brand", async () => {
   const [header, catalog] = await Promise.all([source("components/site-header.tsx"), source("content/site-map.json")]);
   assert.match(header, /mobileNavigation = primaryNavigation/);
   assert.match(header, /mobileNavigation\.map/);
   assert.match(header, /全國國中升學資訊網/);
   assert.match(header, /<SiteIcon name="school"/);
-  assert.deepEqual(JSON.parse(catalog).primaryNavigation.map(({ label }) => label), ["找學校", "成績分析", "我的志願", "升學日程", "官方資訊", "升學指南", "資料與信任", "其他"]);
+  assert.deepEqual(JSON.parse(catalog).primaryNavigation.map(({ label }) => label), ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任"]);
   assert.match(header, />登入</);
 });
 

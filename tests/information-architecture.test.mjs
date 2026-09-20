@@ -16,28 +16,27 @@ const visitorSurfaceUrls = [
 
 const expectedNavigation = [
   ["找學校", "/schools"],
+  ["模擬考", "/scores/mock"],
   ["成績分析", "/scores"],
   ["我的志願", "/planner"],
-  ["升學日程", "/schedule"],
-  ["官方資訊", "/admission-guides"],
+  ["日程", "/schedule"],
   ["升學指南", "/knowledge"],
   ["資料與信任", "/trust"],
-  ["其他", "/trust/credibility"],
 ];
 
 const legacyNewsCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
 
-test("the information architecture follows the final eight-group product sitemap", async () => {
+test("the information architecture follows the seven-item primary navigation", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
 
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ label, href }) => [label, href]),
     expectedNavigation,
   );
-  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 8);
+  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 7);
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ activeHref }) => activeHref),
-    ["/schools", "/scores", "/planner", "/schedule", "/admission-guides", "/knowledge", "/trust", "/trust/credibility"],
+    ["/schools", "/scores/mock", "/scores", "/planner", "/schedule", "/knowledge", "/trust"],
   );
   assert.equal(siteMap.primaryNavigation.some(({ label }) => label === "就學區"), false);
 });
@@ -108,6 +107,7 @@ test("primary navigation lands on an interactive surface instead of an introduct
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
   const schools = await readFile(new URL("../app/schools/page.tsx", import.meta.url), "utf8");
   const scores = await readFile(new URL("../app/scores/page.tsx", import.meta.url), "utf8");
+  const mockScores = await readFile(new URL("../app/scores/mock/page.tsx", import.meta.url), "utf8");
   const tools = await readFile(new URL("../app/tools/page.tsx", import.meta.url), "utf8");
   const planner = await readFile(new URL("../app/planner/page.tsx", import.meta.url), "utf8");
   const schedule = await readFile(new URL("../app/schedule/page.tsx", import.meta.url), "utf8");
@@ -119,7 +119,8 @@ test("primary navigation lands on an interactive surface instead of an introduct
       assert.match(schools, /<SchoolExplorer/);
       continue;
     }
-    if (url.pathname === "/scores") assert.match(scores, /ScoreFeatureEntry/);
+    if (url.pathname === "/scores/mock") assert.match(mockScores, /ScoreFeatureList/);
+    else if (url.pathname === "/scores") assert.match(scores, /ScoreFeatureEntry/);
     else if (url.pathname === "/tools") assert.match(tools, /AdmissionCalculator/);
     else if (url.pathname === "/planner") assert.match(planner, /PlannerHub/);
     else if (url.pathname === "/schedule") assert.match(schedule, /ScheduleWorkspace/);

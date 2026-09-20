@@ -2,13 +2,12 @@
   "updatedAt": "2026-08-28",
   "primaryNavigation": [
     { "label": "找學校", "href": "/schools", "activeHref": "/schools", "icon": "school", "tone": "school" },
+    { "label": "模擬考", "href": "/scores/mock", "activeHref": "/scores/mock", "icon": "calculator", "tone": "score" },
     { "label": "成績分析", "href": "/scores", "activeHref": "/scores", "icon": "calculator", "tone": "score" },
     { "label": "我的志願", "href": "/planner", "activeHref": "/planner", "icon": "planner", "tone": "planner" },
-    { "label": "升學日程", "href": "/schedule", "activeHref": "/schedule", "icon": "calendar", "tone": "guide" },
-    { "label": "官方資訊", "href": "/admission-guides", "activeHref": "/admission-guides", "icon": "knowledge", "tone": "school" },
+    { "label": "日程", "href": "/schedule", "activeHref": "/schedule", "icon": "calendar", "tone": "guide" },
     { "label": "升學指南", "href": "/knowledge", "activeHref": "/knowledge", "icon": "knowledge", "tone": "guide" },
-    { "label": "資料與信任", "href": "/trust", "activeHref": "/trust", "icon": "shield", "tone": "trust" },
-    { "label": "其他", "href": "/trust/credibility", "activeHref": "/trust/credibility", "icon": "more", "tone": "trust" }
+    { "label": "資料與信任", "href": "/trust", "activeHref": "/trust", "icon": "shield", "tone": "trust" }
   ],
   "menuGroups": [
     {
@@ -23,6 +22,15 @@
         { "label": "學長姐分享", "href": "/schools/alumni", "description": "參考社群經驗，不代表校方立場", "section": "更多資訊" },
         { "label": "校園開放日", "href": "/schools/open-days", "description": "整理官方公告的參訪活動", "section": "更多資訊" },
         { "label": "群科介紹", "href": "/schools/groups", "description": "理解學習內容與後續方向", "section": "更多資訊" }
+      ]
+    },
+    {
+      "label": "模擬考", "href": "/scores/mock", "activeHref": "/scores/mock", "eyebrow": "模擬考", "description": "保存模考成績，查看趨勢與歷史參考。", "layout": "compact",
+      "items": [
+        { "label": "模擬考中心", "href": "/scores/mock", "description": "集中查看模考入口、資料狀態與下一步。", "section": "模擬考" },
+        { "label": "我的模考", "href": "/scores/history", "description": "查看已保存的模考紀錄；目前不假造紀錄。", "section": "模擬考" },
+        { "label": "成績趨勢", "href": "/scores/trends", "description": "用已保存成績產生趨勢，不以空資料推估。", "section": "模擬考" },
+        { "label": "模考落點", "href": "/scores/placement", "description": "查看資料條件與歷史參考，不提供無依據預測。", "section": "模擬考" }
       ]
     },
     {
@@ -53,21 +61,12 @@
       ]
     },
     {
-      "label": "升學日程", "href": "/schedule", "activeHref": "/schedule", "eyebrow": "升學日程", "description": "掌握階段、重要日期與下一步。", "layout": "compact",
+      "label": "日程", "href": "/schedule", "activeHref": "/schedule", "eyebrow": "日程", "description": "掌握階段、重要日期與下一步。", "layout": "compact",
       "items": [
         { "label": "升學總覽", "href": "/schedule", "description": "查看階段、倒數與下一個日期", "section": "查看日程", "icon": "calendar" },
         { "label": "重要時程", "href": "/schedule/timeline", "description": "區分已公告、待公告與上年度參考", "section": "查看日程" },
         { "label": "現在該做什麼", "href": "/schedule/now", "description": "依日期、區域與進度產生下一步", "section": "完成待辦" },
         { "label": "我的待辦", "href": "/schedule/tasks", "description": "管理系統與自訂待辦", "section": "完成待辦" }
-      ]
-    },
-    {
-      "label": "官方資訊", "href": "/admission-guides", "activeHref": "/admission-guides", "eyebrow": "官方資訊", "description": "公告、簡章與正式招生平台。", "layout": "compact",
-      "items": [
-        { "label": "官方資訊入口", "href": "/news", "description": "查看已登錄的官方公告", "section": "官方入口", "icon": "knowledge" },
-        { "label": "官方簡章與規則", "href": "/admission-guides", "description": "查看各區原始 PDF 與官方網站", "section": "官方入口" },
-        { "label": "官方招生時程", "href": "/admission-guides/schedule", "description": "查看公告與上年度參考日期", "section": "官方入口" },
-        { "label": "官方招生平台", "href": "/planner/official-platform", "description": "前往報名、選填與錄取平台", "section": "官方入口" }
       ]
     },
     {
@@ -78,7 +77,11 @@
         { "label": "特殊入學與資格", "href": "/eligibility", "description": "查看特殊管道與資格檢測", "section": "探索方向" },
         { "label": "升學百科", "href": "/knowledge/glossary", "description": "查詢名詞、迷思與制度說明", "section": "探索方向" },
         { "label": "生涯探索", "href": "/knowledge/fit-quiz", "description": "探索高中、技高、五專與未來方向", "section": "探索方向" },
-        { "label": "升學動態", "href": "/knowledge/updates", "description": "掌握制度更新與重要提醒", "section": "探索方向" }
+        { "label": "升學動態", "href": "/knowledge/updates", "description": "掌握制度更新與重要提醒", "section": "探索方向" },
+        { "label": "官方資訊入口", "href": "/news", "description": "查看已登錄的官方公告", "section": "官方資訊", "icon": "knowledge" },
+        { "label": "官方簡章與規則", "href": "/admission-guides", "description": "查看各區原始 PDF 與官方網站", "section": "官方資訊" },
+        { "label": "官方招生時程", "href": "/admission-guides/schedule", "description": "查看公告與上年度參考日期", "section": "官方資訊" },
+        { "label": "官方招生平台", "href": "/planner/official-platform", "description": "前往報名、選填與錄取平台", "section": "官方資訊" }
       ]
     },
     {
@@ -91,12 +94,7 @@
         { "label": "資料版本紀錄", "href": "/trust/versions", "description": "查看資料版本與校核事件", "section": "來源與方法" },
         { "label": "錯誤回報", "href": "/trust/report", "description": "回報資料、規則或功能問題", "section": "回報與說明" },
         { "label": "平台可信度說明", "href": "/trust/credibility", "description": "了解 JSHS 與官方的界線", "section": "回報與說明" },
-        { "label": "資料更新紀錄", "href": "/trust/updates", "description": "查看資料與功能的實際更新", "section": "回報與說明" }
-      ]
-    },
-    {
-      "label": "其他", "href": "/trust/credibility", "activeHref": "/trust/credibility", "eyebrow": "其他", "description": "平台、聯絡方式與使用規範。", "layout": "compact",
-      "items": [
+        { "label": "資料更新紀錄", "href": "/trust/updates", "description": "查看資料與功能的實際更新", "section": "回報與說明" },
         { "label": "平台", "href": "/trust/credibility", "description": "認識本站與取得協助", "children": [
           { "label": "關於本站", "href": "/trust/about", "description": "了解本站定位與資料界線" },
           { "label": "贊助與編輯獨立", "href": "/trust/sponsor", "description": "查看支持方式與內容獨立原則" },
