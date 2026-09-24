@@ -9,7 +9,7 @@ type AdminNavGroup = { label: string; items: readonly AdminNavItem[] };
 
 const groups: readonly AdminNavGroup[] = [
   { label: "總覽", items: [["總覽", "/admin"]] },
-  { label: "資料與內容", items: [["學校與資料", "/admin/data"], ["內容管理", "/admin/content"]] },
+  { label: "資料與內容", items: [["學校與資料", "/admin/data"], ["學校資料管理", "/admin/schools"], ["內容管理", "/admin/content"]] },
   { label: "營運", items: [["通知中心", "/admin/notifications"], ["媒體與檔案", "/admin/media"], ["支持與付款", "/admin/payments"]] },
   { label: "平台", items: [["網站與部署", "/admin/deployments"], ["系統與安全", "/admin/system"], ["網站設定", "/admin/settings"]] },
 ] as const;
