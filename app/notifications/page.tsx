@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getMemberSession } from "@/lib/member-auth";
 
-export const metadata: Metadata = { title: "通知與提醒｜JSHS", description: "管理分數、LINE、Email 與重要日期提醒。", alternates: { canonical: "/notifications" }, robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "通知與提醒｜全國國中生升學資訊網", description: "管理分數、LINE、Email 與重要日期提醒。", alternates: { canonical: "/notifications" }, robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function NotificationsPage() {

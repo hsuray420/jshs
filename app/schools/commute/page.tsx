@@ -4,7 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { FeatureHero } from "@/components/feature-hero";
 
-export const metadata: Metadata = { title: "比較學校交通與你的上學路線｜全國高中職查詢", description: "分別查看校方交通資訊，並開啟 Google 地圖計算你的通勤路線。", alternates: { canonical: "/schools/commute" } };
+export const metadata: Metadata = { title: "通勤比較｜全國國中生升學資訊網", description: "分別查看校方交通資訊，並開啟 Google 地圖計算你的通勤路線。", alternates: { canonical: "/schools/commute" } };
 
 export default async function SchoolRoute({ searchParams }: { searchParams: Promise<{ district?: string }> }) {
   const params = await searchParams;

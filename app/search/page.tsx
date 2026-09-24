@@ -4,7 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { commonSearchEntrypoints, searchSite, searchSuggestions, type SearchResult } from "@/lib/search-index";
 
-export const metadata: Metadata = { title: "全站搜尋與升學百科", description: "搜尋學校、科系、群科、文章、規則名詞、重要日程與官方來源。", alternates: { canonical: "/search" }, robots: { index: false, follow: true } };
+export const metadata: Metadata = { title: "全站搜尋與升學百科｜全國國中生升學資訊網", description: "搜尋學校、科系、群科、文章、規則名詞、重要日程與官方來源。", alternates: { canonical: "/search" }, robots: { index: false, follow: true } };
 
 export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
   const params = await searchParams;

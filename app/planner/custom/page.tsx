@@ -6,7 +6,7 @@ import { getMemberSession } from "@/lib/member-auth";
 import { getPlannerSchools } from "@/lib/planner-data";
 import { FeatureHero } from "@/components/feature-hero";
 
-export const metadata: Metadata = { title: "自選排序志願｜我的志願", robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "自選排序志願｜全國國中生升學資訊網", robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 export default async function CustomPlannerPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const params = await searchParams;
