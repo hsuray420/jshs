@@ -4,7 +4,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { FeatureHero } from "@/components/feature-hero";
 
-export const metadata: Metadata = { title: "學校地圖｜全國國中生升學資訊網", description: "查詢正式學校地址，並以 Google 地圖查看學校位置。", alternates: { canonical: "/schools/map" } };
+export const metadata: Metadata = { title: "學校地圖｜全國國中升學資訊網", description: "查詢正式學校地址，並以 Google 地圖查看學校位置。", alternates: { canonical: "/schools/map" } };
 
 export default async function SchoolRoute({ searchParams }: { searchParams: Promise<{ district?: string }> }) {
   const params = await searchParams;

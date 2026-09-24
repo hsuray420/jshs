@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { CompactFeatureHero } from "@/components/feature-hero";
 
 export const metadata: Metadata = {
-  title: "群科介紹｜找學校｜全國國中生升學資訊網",
+  title: "群科介紹｜找學校｜全國國中升學資訊網",
   description: "從學習內容、常見科別與後續升學方向認識高中職群科。",
   alternates: { canonical: "/schools/groups" },
 };

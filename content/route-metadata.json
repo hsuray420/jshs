@@ -1,7 +1,7 @@
 {
   "updatedAt": "2026-09-01",
   "routes": [
-    { "pathname": "/", "title": "全國國中生升學資訊網", "description": "找學校、成績分析、規劃志願與掌握升學資訊。", "indexable": true, "sitemap": true, "canonical": "/", "category": "功能", "priority": "1.0", "changefreq": "weekly", "aliases": ["首頁", "JSHS", "國中升學"] },
+    { "pathname": "/", "title": "全國國中升學資訊網", "description": "找學校、成績分析、規劃志願與掌握升學資訊。", "indexable": true, "sitemap": true, "canonical": "/", "category": "功能", "priority": "1.0", "changefreq": "weekly", "aliases": ["首頁", "JSHS", "國中升學"] },
     { "pathname": "/schools", "title": "全國高中職查詢", "description": "搜尋全國高中、高職、綜高與進修部，查看分區招生、課程、交通、住宿與資料來源。", "indexable": true, "sitemap": true, "canonical": "/schools", "category": "學校", "priority": "0.9", "changefreq": "weekly", "aliases": ["找學校", "學校搜尋", "校科"] },
     { "pathname": "/schools/groups", "title": "群科介紹", "description": "理解技高群科、學習內容與後續方向。", "indexable": true, "sitemap": true, "canonical": "/schools/groups", "category": "科別", "priority": "0.7", "changefreq": "monthly", "aliases": ["十五群科", "技高群科", "科系"] },
     { "pathname": "/schools/history", "title": "歷年錄取參考", "description": "查看不同年度、學校與科別的錄取參考資料。", "indexable": true, "sitemap": true, "canonical": "/schools/history", "category": "學校", "priority": "0.7", "changefreq": "monthly", "aliases": ["錄取分數", "歷年分數", "最低錄取"] },

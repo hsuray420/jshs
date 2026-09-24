@@ -9,7 +9,7 @@ const field = (value: string) => value.trim() || "目前沒有資料";
 const external = (value: string) => /^https?:\/\//.test(value.trim()) && !value.includes("：") ? value.trim() : "";
 function Sources({ links }: { links: readonly SourceLink[] }) { return <div className="sv-source-links">{links.map((link, i) => <a key={`${link.url}-${i}`} href={link.url} target="_blank" rel="noopener noreferrer" title={link.label}>查看資料來源{links.length > 1 ? ` ${i + 1}` : ""} ↗</a>)}</div>; }
 export function schoolPageMetadata(s: School): Metadata {
-  return { title: `${s.name}｜招生科別、交通、住宿與課程｜全國國中生升學資訊網`, description: `${s.name}位於${s.city}${s.area}，${s.ownership}${s.schoolType}、${s.gender}。查看115學年度招生科別、課程方向、交通與住宿公開資訊及資料來源。`, alternates: { canonical: `/schools/${s.code}` } };
+  return { title: `${s.name}｜招生科別、交通、住宿與課程｜全國國中升學資訊網`, description: `${s.name}位於${s.city}${s.area}，${s.ownership}${s.schoolType}、${s.gender}。查看115學年度招生科別、課程方向、交通與住宿公開資訊及資料來源。`, alternates: { canonical: `/schools/${s.code}` } };
 }
 export function SchoolDetail({ school: s }: { school: School }) {
   const website = external(s.website);

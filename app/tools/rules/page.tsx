@@ -4,5 +4,5 @@ import { SiteHeader } from "@/components/site-header";
 import { InteractiveRuleTable } from "@/components/interactive-rule-table";
 import { FeatureHero } from "@/components/feature-hero";
 
-export const metadata: Metadata = { title: "積分規則｜成績分析｜全國國中生升學資訊網", description: "以互動規則表查看採計項目、上限、同分比序與官方來源。", alternates: { canonical: "/tools/rules" } };
+export const metadata: Metadata = { title: "積分規則｜成績分析｜全國國中升學資訊網", description: "以互動規則表查看採計項目、上限、同分比序與官方來源。", alternates: { canonical: "/tools/rules" } };
 export default function ScoreRulesPage() { return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/scores" /><FeatureHero theme="tools" eyebrow="成績分析 · 積分規則" title="先看採計項目，再展開完整規則" description="規則保留來源年度與核對狀態，讓試算結果可以回查。" illustration="score-rules" /><InteractiveRuleTable /><SiteFooter /></main>; }

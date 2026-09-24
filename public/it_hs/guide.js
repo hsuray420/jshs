@@ -108,7 +108,7 @@ function updateCurrentDistrictBadge() {
     const district = DISTRICT_OPTIONS[getSelectedDistrict()];
     const label = district ? `目前：${district.label}` : '尚未選擇就學區';
     document.querySelectorAll('[data-current-district-label]').forEach(badge => { badge.textContent = label; });
-    if (district) document.title = `${district.label}｜全國國中生升學資訊網`;
+    if (district) document.title = `${district.label}｜全國國中升學資訊網`;
 }
 
 function initDistrictPicker() {
@@ -296,7 +296,7 @@ function showDistrictUnavailablePage() {
     if (modal) modal.hidden = true;
     if (nav) nav.hidden = true;
     if (mobileMenu) setMobileMenuOpen(false);
-    document.title = `${district.label}資料建置中｜全國國中生升學資訊網`;
+    document.title = `${district.label}資料建置中｜全國國中升學資訊網`;
 
     if (!main) return true;
     main.innerHTML = `

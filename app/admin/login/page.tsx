@@ -5,7 +5,7 @@ import { SiteHeader } from "../../../components/site-header";
 import { hasLineLoginConfigured } from "../../../lib/line";
 
 export const metadata: Metadata = {
-  title: "後台登入｜全國國中生升學資訊網",
+  title: "後台登入｜全國國中升學資訊網",
 };
 
 export default async function AdminLoginPage({

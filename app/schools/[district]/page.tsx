@@ -9,9 +9,9 @@ export function generateStaticParams() { return getSchoolSearchIndex().map(s => 
 export async function generateMetadata({ params }: { params: Promise<{ district: string }> }) {
   const value = (await params).district;
   const region = getRegionById(value);
-  if (region) return { title: `${region.name}學校資料尚未開放｜全國國中生升學資訊網` };
+  if (region) return { title: `${region.name}學校資料尚未開放｜全國國中升學資訊網` };
   const s = getSchoolSearchEntryByCode(value);
-  return s ? { title: `${s.name}｜招生科別、交通、住宿與課程｜全國國中生升學資訊網`, description: `${s.name}位於${s.city}${s.area}，${s.ownership}${s.schoolType}、${s.gender}。查看115學年度招生科別、課程方向、交通與住宿公開資訊及資料來源。`, alternates: { canonical: `/schools/${s.code}` } } : {};
+  return s ? { title: `${s.name}｜招生科別、交通、住宿與課程｜全國國中升學資訊網`, description: `${s.name}位於${s.city}${s.area}，${s.ownership}${s.schoolType}、${s.gender}。查看115學年度招生科別、課程方向、交通與住宿公開資訊及資料來源。`, alternates: { canonical: `/schools/${s.code}` } } : {};
 }
 export default async function SchoolCodePage({ params }: { params: Promise<{ district: string }> }) {
   const value = (await params).district;

@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ topic: st
   const { topic } = await params;
   const page = getGuideTopic(topic);
   if (page) return { title: page.title + "｜升學指南", description: page.description, alternates: { canonical: "/knowledge/" + topic } };
-  return { title: "升學指南｜全國國中生升學資訊網", robots: { index: false, follow: false } };
+  return { title: "升學指南｜全國國中升學資訊網", robots: { index: false, follow: false } };
 }
 
 export default async function KnowledgeTopicPage({ params }: { params: Promise<{ topic: string }> }) {

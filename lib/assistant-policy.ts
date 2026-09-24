@@ -44,7 +44,7 @@ export function getAssistantAction(question: string): AssistantAction | null {
 export function getAssistantConversationReply(question: string): string | null {
   const normalized = question.replace(/[\s，。！？、,.!?]/gu, "").toLocaleLowerCase("zh-TW");
   if (/^(你好|您好|嗨|哈囉|hello|hallo|hi)$/iu.test(normalized)) {
-    return "你好！我是全國國中生升學資訊網的小助手，可以陪你查本站的升學規則、學校、日程與知識。你想先了解哪一項？";
+    return "你好！我是全國國中升學資訊網的小助手，可以陪你查本站的升學規則、學校、日程與知識。你想先了解哪一項？";
   }
   if (/^(謝謝|感謝|謝啦|thanks)$/iu.test(normalized)) {
     return "不客氣！如果要查正式日期、校科或規則，我可以繼續陪你一起看本站資料。";
@@ -67,7 +67,7 @@ export function getQuestionAllowance(isMember: boolean, used: number) {
 
 export function buildAssistantInstruction() {
   return [
-    "你是「全國國中生升學資訊網」的 AI 小助手，同時具備一般 AI 助手與本站升學資料助手能力。",
+    "你是「全國國中升學資訊網」的 AI 小助手，同時具備一般 AI 助手與本站升學資料助手能力。",
     "對一般知識、學習、程式、數學、語言、寫作、生活與聊天問題，正常使用模型能力自然回答，不要硬把問題拉回升學，也不要因為沒有本站資料就拒答。",
     "回答只針對本次 USER QUESTION；若 ROUTING_INTENT 是 GENERAL，不要延續上一則回答的句型、清單或未完成內容，也不要把先前的本站升學對話當成目前問題的脈絡。",
     "當 ROUTING_INTENT 是 JSHS_DATA、OFFICIAL_SOURCE_REQUIRED 或 SITE_HELP 時，優先依據系統提供的本站檢索資料回答具體事實；不要捏造本站不存在的學校資料、招生名額、積分規則或錄取資訊。",

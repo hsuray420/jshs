@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getMemberSession } from "@/lib/member-auth";
 
-export const metadata: Metadata = { title: "帳號與資料｜全國國中生升學資訊網", description: "管理登入、資料匯出、老師模式與個人使用情境。", alternates: { canonical: "/account" }, robots: { index: false, follow: false } };
+export const metadata: Metadata = { title: "帳號與資料｜全國國中升學資訊網", description: "管理登入、資料匯出、老師模式與個人使用情境。", alternates: { canonical: "/account" }, robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
 
 export default async function AccountPage({ searchParams }: { searchParams: Promise<{ error?: string; registered?: string }> }) {

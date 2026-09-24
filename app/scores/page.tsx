@@ -5,7 +5,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
-  title: "成績分析｜全國國中生升學資訊網",
+  title: "成績分析｜全國國中升學資訊網",
   description: "從模擬考到會考積分，集中查看你的成績與升學位置。",
   alternates: { canonical: "/scores" },
 };

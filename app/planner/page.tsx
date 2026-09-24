@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { FeatureHero } from "@/components/feature-hero";
 import { getMemberSession } from "@/lib/member-auth";
 
-const title = "我的志願｜全國國中生升學資訊網";
+const title = "我的志願｜全國國中升學資訊網";
 const description = "先完成成績試算，再選擇系統推薦或自選排序兩種填志願方式。";
 
 export const metadata: Metadata = {

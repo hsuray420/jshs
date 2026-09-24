@@ -1719,3 +1719,28 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 @media (max-width:1199px) { .jshs-header-inner { padding-inline:20px; } }
 @media (max-width:760px) { .jshs-header-inner { height:64px; padding-inline:16px; }.jshs-brand { font-size:15px; }.jshs-brand-logo { height:32px; width:32px; }.jshs-login-link span { display:none; }.jshs-login-link { width:40px; padding:0; }.jshs-header-utilities { gap:4px; }.jshs-nav-mega-grid { grid-template-columns:1fr; }.jshs-nav-mega-item { min-height:58px; } }
 @media (prefers-reduced-motion: reduce) { .jshs-desktop-more > button > svg,.jshs-nav-mega-item,.jshs-nav-mega-chevron { transition:none; } }
+
+/* Homepage Hero repair: keep the verified production asset inside the Hero's
+   stacking context, above the page background and below interactive content. */
+.jshs-v2-home .jshs-v2-hero-image { background-image:url("/images/hero-students-production.png"); z-index:0; }
+.jshs-v2-home .jshs-v2-hero-content { position:relative; z-index:1; }
+
+/* Mature three-zone desktop navigation. At narrower widths the existing
+   drawer and bottom navigation take over instead of compressing this row. */
+@media (min-width:1180px) {
+  .jshs-header-inner { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:24px; height:72px; max-width:1400px; padding-inline:28px; width:100%; }
+  .jshs-brand { font-size:18px; font-weight:700; justify-self:start; line-height:1; }
+  .jshs-brand-logo { height:34px; width:34px; }
+  .jshs-desktop-nav { display:flex; gap:20px; height:72px; justify-self:center; left:auto; position:static; transform:none; }
+  .jshs-desktop-more > button { font-size:14px; font-weight:600; gap:4px; height:38px; padding:0 7px; padding-inline:7px; }
+  .jshs-header-utilities { gap:10px; justify-self:end; margin-left:0; }
+  .jshs-home-header-search { height:40px; width:40px; }
+  .jshs-login-link { background:#eef4ff; border:1px solid #dbe8ff; color:#2459b8 !important; font-size:14px; font-weight:600; height:40px; padding:0 14px; padding-inline:14px; }
+  .jshs-login-link:hover { background:#e2ecff; color:#17489e !important; }
+  .jshs-header-menu-button,.mobile-bottom-nav { display:none !important; }
+}
+
+@media (max-width:1179px) {
+  .jshs-desktop-nav { display:none; }
+  .jshs-header-inner { height:64px; }
+}

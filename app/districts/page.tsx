@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: "/districts" },
-  openGraph: { type: "website", locale: "zh_TW", url: "/districts", siteName: "全國國中生升學資訊網", title, description },
+  openGraph: { type: "website", locale: "zh_TW", url: "/districts", siteName: "全國國中升學資訊網", title, description },
 };
 
 type District = (typeof districtMetadata.districts)[keyof typeof districtMetadata.districts];

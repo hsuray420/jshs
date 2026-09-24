@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: "/tools" },
-  openGraph: { type: "website", locale: "zh_TW", url: "/tools", siteName: "全國國中生升學資訊網", title, description },
+  openGraph: { type: "website", locale: "zh_TW", url: "/tools", siteName: "全國國中升學資訊網", title, description },
 };
 
 export default async function ToolsPage({ searchParams }: { searchParams: Promise<{ district?: string }> }) {

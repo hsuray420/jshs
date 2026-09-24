@@ -7,7 +7,7 @@ import { schoolDistrictOptions } from "@/lib/school-districts";
 import { FeatureHero } from "@/components/feature-hero";
 
 export const metadata: Metadata = {
-  title: "學長姐分享｜找學校｜全國國中生升學資訊網",
+  title: "學長姐分享｜找學校｜全國國中升學資訊網",
   description: "依學校與就學區查看社群分享；內容不代表校方立場。",
   alternates: { canonical: "/schools/alumni" },
 };

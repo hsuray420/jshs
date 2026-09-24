@@ -97,7 +97,7 @@ export function NavDropdown({ item, group, active, open, onToggle, onNavigate }:
   }, [open, positionPanel]);
 
   return <div ref={rootRef} className={`jshs-desktop-more jshs-nav-dropdown jshs-nav-theme--${featureThemeFor(item.label)} ${active || open ? "is-active" : ""}`}>
-    <button type="button" aria-label={`${item.label}，展開副選單`} aria-haspopup="menu" aria-expanded={open} aria-controls={panelId} onClick={onToggle}><span>{item.label}</span><SiteIcon name="chevron-down" size={14} /></button>
+    <button type="button" aria-label={`${item.label}，展開副選單`} aria-haspopup="menu" aria-expanded={open} aria-controls={panelId} onClick={onToggle}><span>{item.label}</span><SiteIcon name="chevron-down" size={12} /></button>
     {open ? <div ref={panelRef} id={panelId} role="menu" style={panelStyle} className="jshs-nav-mega-panel">
       <NavDropdownHeader group={group} />
       <NavDropdownGrid group={group} onNavigate={onNavigate} />

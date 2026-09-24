@@ -7,7 +7,7 @@ import { getDistrictAdmissionSchedule, type AdmissionScheduleStatus } from "@/li
 import { SERVICE_YEAR, SOURCE_ACADEMIC_YEAR } from "@/lib/trust";
 
 export const metadata: Metadata = {
-  title: "官方招生時程｜官方資訊｜全國國中生升學資訊網",
+  title: "官方招生時程｜官方資訊｜全國國中升學資訊網",
   description: "查看各就學區官方招生時程的公告狀態、來源年度與原始官方來源。",
   alternates: { canonical: "/admission-guides/schedule" },
 };

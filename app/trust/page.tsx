@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SourceBadge } from "@/components/source-badge";
 import { SERVICE_YEAR, SOURCE_ACADEMIC_YEAR, VERIFICATION_STATUS } from "@/lib/trust";
 
-export const metadata: Metadata = { title: "資料與信任｜全國國中生升學資訊網", description: "查看本平台的資料來源、更新狀態、試算方法、版本與更正機制。", alternates: { canonical: "/trust" } };
+export const metadata: Metadata = { title: "資料與信任｜全國國中升學資訊網", description: "查看本平台的資料來源、更新狀態、試算方法、版本與更正機制。", alternates: { canonical: "/trust" } };
 
 const sections = [
   ["sources", "資料來源", "查看官方來源、JSHS 整理方式，以及官方、計算、推估與社群資料的界線。"],
