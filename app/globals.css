@@ -1662,3 +1662,60 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .jshs-home-belief.is-truthful > div:first-child { max-width:480px; }
 .jshs-v2-home .jshs-home-header-search { align-items:center; color:#111923; display:inline-flex; height:32px; justify-content:center; width:32px; }
 @media (max-width:760px) { .jshs-v2-home .jshs-header-inner { padding-inline:16px; }.jshs-v2-home .jshs-brand-logo { display:none; }.jshs-v2-home .jshs-brand-wordmark strong { font-size:18px; } }
+
+/* Shared navigation system: the header is intentionally neutral; feature
+   accents begin inside an opened menu or mobile group. */
+:root { --nav-header-height: 74px; }
+.jshs-site-header { isolation:isolate; }
+.jshs-header-inner { height:var(--nav-header-height); max-width:none; padding-inline:clamp(20px,3vw,44px); position:relative; }
+.jshs-brand { color:#1f2937 !important; font-size:clamp(16px,1.35vw,21px); font-weight:700; letter-spacing:-.04em; gap:9px; }
+.jshs-brand-logo { background:#f1f5f9; color:#334155; box-shadow:none; border-radius:10px; height:36px; width:36px; }
+.jshs-brand-wordmark strong { color:#1f2937; font-size:inherit; }
+.jshs-header-utilities { align-items:center; display:flex; gap:12px; margin-left:auto; z-index:1; }
+.jshs-home-header-search,.jshs-login-link { align-items:center; color:#334155 !important; display:inline-flex; justify-content:center; min-height:40px; text-decoration:none !important; }
+.jshs-home-header-search { border-radius:10px; width:40px; }
+.jshs-login-link { background:transparent; border-radius:10px; box-shadow:none; font-size:14px; font-weight:650; gap:7px; padding:8px 10px; }
+.jshs-home-header-search:hover,.jshs-login-link:hover { background:#f1f5f9; color:#111827 !important; }
+.jshs-desktop-nav { display:none; gap:clamp(16px,1.8vw,27px); height:var(--nav-header-height); left:50vw; position:absolute; transform:translateX(-50%); }
+.jshs-desktop-more { position:relative; }
+.jshs-desktop-nav a,.jshs-desktop-more > button { align-items:center; appearance:none; background:transparent; border:0; border-radius:9px; color:#374151 !important; cursor:pointer; display:inline-flex; font-size:15px; font-weight:650; gap:5px; height:40px; padding:8px 10px; text-decoration:none !important; white-space:nowrap; }
+.jshs-desktop-more > button > svg { display:block; transition:transform 170ms ease; }
+.jshs-desktop-more.is-active > button > svg { transform:rotate(180deg); }
+.jshs-desktop-more > button:hover,.jshs-desktop-more.is-active > button { background:#f1f5f9; color:#111827 !important; }
+.jshs-desktop-more.is-active > button { font-weight:700; }
+.jshs-desktop-more > button:focus-visible,.jshs-home-header-search:focus-visible,.jshs-login-link:focus-visible { outline:2px solid #64748b; outline-offset:2px; }
+
+.jshs-nav-theme--schools { --nav-accent:#2563eb; --nav-soft:#eff6ff; }
+.jshs-nav-theme--mock-exam { --nav-accent:#7c3aed; --nav-soft:#f5f3ff; }
+.jshs-nav-theme--analytics { --nav-accent:#059669; --nav-soft:#ecfdf5; }
+.jshs-nav-theme--planner { --nav-accent:#e11d48; --nav-soft:#fff1f2; }
+.jshs-nav-theme--schedule { --nav-accent:#d97706; --nav-soft:#fffbeb; }
+.jshs-nav-theme--guide { --nav-accent:#0f766e; --nav-soft:#f0fdfa; }
+.jshs-nav-theme--trust { --nav-accent:#475569; --nav-soft:#f8fafc; }
+.jshs-nav-mega-panel { background:#fff; border:1px solid #e2e8f0; border-radius:20px; box-shadow:0 12px 32px rgb(15 23 42 / 8%),0 2px 8px rgb(15 23 42 / 4%); left:0; padding:24px; position:absolute; top:calc(100% + 10px); width:clamp(620px,56vw,780px); z-index:var(--z-popover,60); }
+.jshs-nav-mega-header { border-bottom:1px solid #e8edf3; margin:0 0 18px; padding:0 0 14px; }
+.jshs-nav-mega-header h2 { color:#172033; font-size:18px; margin:0; }
+.jshs-nav-mega-header p { color:#64748b; font-size:13px; margin:4px 0 0; }
+.jshs-nav-mega-grid { display:grid; gap:20px 28px; grid-template-columns:repeat(2,minmax(0,1fr)); }
+.jshs-nav-mega-section h3 { color:#475569; font-size:14px; font-weight:700; margin:0 0 7px; }
+.jshs-nav-mega-section-items { display:grid; gap:5px; }
+.jshs-nav-mega-item { align-items:center; border-radius:12px; color:#172033; display:flex; gap:11px; min-height:62px; padding:8px 10px; text-decoration:none; transition:background-color 170ms ease,transform 170ms ease; }
+.jshs-nav-mega-icon { align-items:center; background:var(--nav-soft); border-radius:11px; color:var(--nav-accent); display:flex; flex:0 0 38px; height:38px; justify-content:center; width:38px; }
+.jshs-nav-mega-item-copy b { color:#172033; font-size:15px; font-weight:650; }
+.jshs-nav-mega-item-copy span { color:#64748b; font-size:13px; line-height:1.45; }
+.jshs-nav-mega-item:hover,.jshs-nav-mega-item:focus-visible { background:var(--nav-soft); outline:none; }
+.jshs-nav-mega-item:hover .jshs-nav-mega-icon,.jshs-nav-mega-item:focus-visible .jshs-nav-mega-icon { background:color-mix(in srgb,var(--nav-soft) 60%,var(--nav-accent)); }
+.jshs-nav-mega-item:hover b,.jshs-nav-mega-item:focus-visible b { color:var(--nav-accent); }
+.jshs-nav-mega-item:hover .jshs-nav-mega-chevron,.jshs-nav-mega-item:focus-visible .jshs-nav-mega-chevron { color:var(--nav-accent); transform:translateX(2px); }
+.jshs-nav-mega-item:focus-visible { box-shadow:0 0 0 2px color-mix(in srgb,var(--nav-accent) 45%,white); }
+.jshs-nav-mega-chevron { transition:color 170ms ease,transform 170ms ease; }
+.jshs-nav-mega-footer { border-top:1px solid #e8edf3; margin-top:18px; padding-top:14px; }
+.jshs-nav-mega-footer a { color:#334155; font-size:14px; font-weight:650; }
+.jshs-nav-mobile-accordion .jshs-nav-mobile-icon { background:var(--nav-soft); color:var(--nav-accent); }
+.jshs-nav-mobile-accordion[open] .jshs-mobile-group-heading { color:var(--nav-accent); }
+.jshs-nav-mobile-accordion[open] .jshs-mobile-group-heading > svg { transform:rotate(180deg); }
+
+@media (min-width:1200px) { .jshs-desktop-nav { display:flex; } }
+@media (max-width:1199px) { .jshs-header-inner { padding-inline:20px; } }
+@media (max-width:760px) { .jshs-header-inner { height:64px; padding-inline:16px; }.jshs-brand { font-size:15px; }.jshs-brand-logo { height:32px; width:32px; }.jshs-login-link span { display:none; }.jshs-login-link { width:40px; padding:0; }.jshs-header-utilities { gap:4px; }.jshs-nav-mega-grid { grid-template-columns:1fr; }.jshs-nav-mega-item { min-height:58px; } }
+@media (prefers-reduced-motion: reduce) { .jshs-desktop-more > button > svg,.jshs-nav-mega-item,.jshs-nav-mega-chevron { transition:none; } }

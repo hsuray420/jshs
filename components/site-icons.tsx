@@ -16,7 +16,14 @@ export type SiteIconName =
   | "school"
   | "shield"
   | "sparkle"
-  | "bell";
+  | "bell"
+  | "book"
+  | "check"
+  | "file"
+  | "history"
+  | "messages"
+  | "route"
+  | "target";
 
 type SiteIconProps = {
   name: SiteIconName;
@@ -40,6 +47,20 @@ export function SiteIcon({ name, size = 20, className }: SiteIconProps) {
       return <svg {...props}><circle cx="12" cy="8" r="3.2" /><path d="M5.5 19c.9-3 3.1-4.5 6.5-4.5s5.6 1.5 6.5 4.5" /></svg>;
     case "bell":
       return <svg {...props}><path d="M6.5 10.5a5.5 5.5 0 0 1 11 0c0 4 1.8 4.4 2 5.5H4.5c.2-1.1 2-1.5 2-5.5Z" /><path d="M10 19h4" /></svg>;
+    case "book":
+      return <svg {...props}><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5A2.5 2.5 0 0 0 5 21V4.5Z" /><path d="M5 4.5V21M9 7h6M9 10h6" /></svg>;
+    case "check":
+      return <svg {...props}><circle cx="12" cy="12" r="8.5" /><path d="m8.5 12 2.2 2.2 4.8-5" /></svg>;
+    case "file":
+      return <svg {...props}><path d="M7 3.5h6l4 4V20H7a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z" /><path d="M13 3.5v4h4M8.5 12h7M8.5 15.5h5" /></svg>;
+    case "history":
+      return <svg {...props}><path d="M4.5 12a7.5 7.5 0 1 0 2-5.1" /><path d="M4.5 5.5v3.8h3.8M12 7.5V12l3 1.8" /></svg>;
+    case "messages":
+      return <svg {...props}><path d="M5.5 5.5h10a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3h-6l-4 3v-10a3 3 0 0 1 3-3Z" /><path d="M9 10h.01M12 10h.01M15 10h.01" /></svg>;
+    case "route":
+      return <svg {...props}><circle cx="7" cy="17" r="2" /><circle cx="17" cy="7" r="2" /><path d="M7 15V9a2 2 0 0 1 2-2h6" /></svg>;
+    case "target":
+      return <svg {...props}><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /><path d="M12 2v2M22 12h-2M12 22v-2M2 12h2" /></svg>;
     case "calendar":
       return <svg {...props}><rect x="4" y="5.5" width="16" height="14" rx="2" /><path d="M8 3.5v4M16 3.5v4M4 10h16" /><path d="M8 13h.01M12 13h.01M16 13h.01M8 16.5h.01M12 16.5h.01" /></svg>;
     case "calculator":

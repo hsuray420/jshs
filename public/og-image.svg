@@ -7,6 +7,6 @@
   <rect x="88" y="92" width="92" height="92" rx="28" fill="#2F6FA3"/>
   <path d="M112 133h44v30h-44zM104 133l30-24 30 24" fill="none" stroke="white" stroke-width="8" stroke-linejoin="round"/>
   <text x="88" y="300" font-family="-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif" font-size="72" font-weight="800" fill="#1C1C1E">全國國中升學資訊網</text>
-  <text x="92" y="385" font-family="-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif" font-size="38" font-weight="700" fill="#2F6FA3">JSHS.CC</text>
+  <text x="92" y="385" font-family="-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif" font-size="32" font-weight="700" fill="#2F6FA3">全國國中生選資訊網</text>
   <text x="92" y="468" font-family="-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif" font-size="32" fill="#5A5A60">找學校・算成績・規劃志願</text>
 </svg>

@@ -33,7 +33,7 @@ test("desktop and mobile navigation render the same complete submenu model", asy
   assert.match(header, /menuGroups\.map/);
   assert.match(header, /mobileNavigation = primaryNavigation/);
   assert.match(header, /mobileNavigation\.map/);
-  assert.match(header, /全國國中升學資訊網/);
+  assert.match(header, /全國國中生選資訊網/);
   assert.match(header, /aria-label="主要導覽"/);
   assert.match(header, /role="dialog"/);
   assert.match(header, /搜尋內容與功能/);
@@ -45,12 +45,12 @@ test("desktop and mobile navigation render the same complete submenu model", asy
   assert.match(megaMenu, /jshs-mobile-group-heading/);
   assert.match(header, /NavMegaMenuItem/);
   assert.match(megaMenu, /查看全部/);
-  assert.match(header, /jshs-desktop-more/);
+  assert.match(megaMenu, /jshs-desktop-more/);
   assert.match(header, /NavDropdown/);
-  assert.match(megaMenu, /name="jshs-desktop-nav"/);
-  assert.match(megaMenu, /<summary aria-label=/);
+  assert.match(megaMenu, /className=\{`jshs-desktop-more/);
+  assert.match(megaMenu, /<button[\s\S]*aria-haspopup="menu"/);
   assert.match(header, /keepSingleDesktopMenu/);
-  assert.match(header, /querySelectorAll<HTMLDetailsElement>\("\.jshs-desktop-more\[open\]"\)/);
+  assert.match(header, /setOpenDesktopMenu\(null\)/);
   assert.match(header, /onNavigate=\{closeDesktopMenus\}/);
   assert.match(header, /components\/navigation\/mega-menu/);
   assert.doesNotMatch(header, /return <Link key=\{item\.href\}/);

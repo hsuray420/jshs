@@ -82,7 +82,7 @@ test("shared header exposes the JSHS Design System V1 primary navigation", async
   assert.deepEqual(JSON.parse(catalog).primaryNavigation.map(({ label }) => label), finalGroups);
   assert.match(header, /primaryNavigation/);
   assert.match(header, /mobileNavigation = primaryNavigation/);
-  assert.match(header, /全國國中升學資訊網/);
+  assert.match(header, /全國國中生選資訊網/);
   assert.match(header, /SiteIcon/);
   assert.match(header, /登入/);
   assert.match(header, /jshs-login-link/);
