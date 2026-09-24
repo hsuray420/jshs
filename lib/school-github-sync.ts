@@ -25,6 +25,7 @@ function headers(token: string) {
 
 function filePathForRegion(regionCode: string) {
   const region = assertAvailableSchoolRegion(regionCode);
+  if (!region.csvPath) throw new Error("school_data_source_missing");
   return region.csvPath.replace(/^content\//, "content/");
 }
 
