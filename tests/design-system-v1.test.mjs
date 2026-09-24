@@ -19,7 +19,7 @@ test("the desktop header uses the shared seven-item navigation and full brand", 
   const [header, catalog] = await Promise.all([source("components/site-header.tsx"), source("content/site-map.json")]);
   assert.match(header, /mobileNavigation = primaryNavigation/);
   assert.match(header, /mobileNavigation\.map/);
-  assert.match(header, /全國國中生選資訊網/);
+  assert.match(header, /SITE_NAME/);
   assert.match(header, /<SiteIcon name="school"/);
   assert.deepEqual(JSON.parse(catalog).primaryNavigation.map(({ label }) => label), ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任"]);
   assert.match(header, /memberName \|\| "登入"/);

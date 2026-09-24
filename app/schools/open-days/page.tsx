@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { FeatureHero } from "@/components/feature-hero";
 
 export const metadata: Metadata = {
-  title: "校園開放日｜找學校｜全國國中升學資訊網",
+  title: "校園開放日｜找學校｜全國國中生升學資訊網",
   description: "依學校官方公告整理個人的校園開放日清單，並可加入行事曆。",
   alternates: { canonical: "/schools/open-days" },
 };

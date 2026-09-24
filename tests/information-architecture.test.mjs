@@ -59,10 +59,10 @@ test("shared header exposes scalable desktop, drawer, and mobile bottom navigati
   assert.match(header, /jshs-login-link/);
   assert.match(header, /mobileNavigation = primaryNavigation/);
   assert.match(header, /mobileNavigation\.map/);
-  assert.match(header, /全國國中生選資訊網/);
+  assert.match(header, /SITE_NAME/);
   assert.doesNotMatch(header, />導覽選單</);
   assert.match(footer, /footerGroups\.map/);
-  assert.match(footer, /全國國中生選資訊網/);
+  assert.match(footer, /SITE_NAME/);
   assert.match(footer, /資料最後更新/);
 });
 

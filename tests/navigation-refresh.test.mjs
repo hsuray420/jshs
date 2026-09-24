@@ -17,7 +17,7 @@ test("header uses the common navigation config and one full brand component", as
   const header = await source("components/site-header.tsx");
   assert.match(header, /from "@\/lib\/site-map"/);
   assert.doesNotMatch(header, /const primaryNavigation = \[/);
-  assert.match(header, /全國國中生選資訊網/);
+  assert.match(header, /SITE_NAME/);
   assert.match(header, /SiteIcon name="school"/);
   assert.match(header, /mobileNavigation\.map/);
   assert.match(header, /mobileNavigation = primaryNavigation/);

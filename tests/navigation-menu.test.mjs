@@ -33,7 +33,7 @@ test("desktop and mobile navigation render the same complete submenu model", asy
   assert.match(header, /menuGroups\.map/);
   assert.match(header, /mobileNavigation = primaryNavigation/);
   assert.match(header, /mobileNavigation\.map/);
-  assert.match(header, /全國國中生選資訊網/);
+  assert.match(header, /SITE_NAME/);
   assert.match(header, /aria-label="主要導覽"/);
   assert.match(header, /role="dialog"/);
   assert.match(header, /搜尋內容與功能/);

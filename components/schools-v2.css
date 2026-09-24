@@ -981,7 +981,7 @@
   }
 }
 
-/* Approved JSHS.CC visual target: airy official-data discovery. */
+/* Approved visual target: airy official-data discovery. */
 .sv-root { --sv-blue:#1677ff; --sv-ink:#10223f; --sv-muted:#647892; --sv-line:#e4edf7; background:#f5f9fe; color:var(--sv-ink); font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang TC","Noto Sans TC",sans-serif; line-height:1.6; }
 .sv-container { width:min(1180px,calc(100% - 40px)); }
 .sv-hero { background:linear-gradient(112deg,#e8f3ff 0%,#eff7ff 56%,#d6eaff 100%); border:0; padding:50px 0 30px; position:relative; overflow:hidden; }

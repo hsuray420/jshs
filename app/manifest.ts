@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
+import { SITE_NAME } from "@/lib/brand";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "全國國中升學資訊網｜JSHS",
-    short_name: "JSHS",
+    name: SITE_NAME,
+    short_name: SITE_NAME,
     description: "找學校、成績分析、規劃志願與掌握升學資訊。",
     start_url: "/",
     display: "standalone",

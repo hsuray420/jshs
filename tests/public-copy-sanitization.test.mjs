@@ -55,7 +55,7 @@ test("open-day and account screens do not expose administration workflows or imp
   assert.doesNotMatch(schedule, /管理員可用 CSV 匯入官方整理資料/);
   assert.doesNotMatch(schedule, /須由後台審核後才可視為官方整理資料/);
   assert.doesNotMatch(account, /找學校、算成績、我的志願與升學日程都可以先直接使用/);
-  assert.doesNotMatch(account, /登入會員功能前，必須先加入全國國中升學資訊網官方 LINE 好友/);
+  assert.doesNotMatch(account, /登入會員功能前，必須先加入全國國中生升學資訊網官方 LINE 好友/);
   assert.doesNotMatch(account, /匯出只包含這台裝置上保存的偏好與進度/);
 });
 

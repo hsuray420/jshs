@@ -3,6 +3,7 @@ import { DonationLink } from "@/components/donation-link";
 import { PageContainer } from "@/components/ui/layout";
 import districtMetadata from "../public/it_hs/district-metadata.json";
 import { SERVICE_YEAR } from "@/lib/trust";
+import { SITE_NAME } from "@/lib/brand";
 
 const footerGroups = [
   { title: "快速入口", links: [["找學校", "/schools"], ["成績分析", "/scores"], ["我的志願", "/planner"], ["升學日程", "/schedule"], ["官方資訊", "/admission-guides"]] },
@@ -17,7 +18,7 @@ export function SiteFooter() {
       <PageContainer>
         <div className="grid gap-10 lg:grid-cols-[1.1fr_2fr]">
           <div>
-            <div className="flex items-center gap-3"><span className="jshs-icon-tile" aria-hidden="true">↗</span><b className="text-[var(--text-primary)]">全國國中生選資訊網</b></div>
+            <div className="flex items-center gap-3"><span className="jshs-icon-tile" aria-hidden="true">↗</span><b className="text-[var(--text-primary)]">{SITE_NAME}</b></div>
             <p className="mt-3 max-w-sm text-sm leading-6 text-[var(--text-secondary)]">從制度理解、校科探索到志願規劃，把升學資訊整理成下一步。</p>
           </div>
           <nav aria-label="頁尾導覽" className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
@@ -32,7 +33,7 @@ export function SiteFooter() {
           </nav>
         </div>
         <div className="mt-10 grid gap-2 border-t border-[var(--border-light)] pt-5 text-xs leading-5 text-[var(--text-secondary)] sm:grid-cols-2 lg:grid-cols-4">
-          <span>全國國中生選資訊網</span>
+          <span>{SITE_NAME}</span>
           <span>{SERVICE_YEAR} 學年度升學資訊</span>
           <span>資料最後更新：{districtMetadata.updatedAt}</span>
           <span>15 個就學區皆可試算與填志願</span>

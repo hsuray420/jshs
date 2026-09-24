@@ -7,13 +7,14 @@ import { NavDropdown, NavMegaMenuItem, NavMobileAccordion, type NavigationItem }
 import { getDistrictLabel, readStoredDistrict, subscribeToDistrict } from "@/lib/district-context";
 import { menuGroups, primaryNavigation } from "@/lib/site-map";
 import { searchSite } from "@/lib/search-index";
+import { SITE_NAME } from "@/lib/brand";
 
 const mobileNavigation = primaryNavigation as readonly NavigationItem[];
 const navigationGroups = new Map(menuGroups.map((group) => [group.label, group]));
 function districtSnapshot() { return getDistrictLabel(readStoredDistrict()); }
 
 function Brand() {
-  return <Link href="/" className="jshs-brand" aria-label="全國國中生選資訊網首頁"><span className="jshs-brand-logo" aria-hidden="true"><SiteIcon name="school" size={21} /></span><span className="jshs-brand-wordmark"><strong>全國國中生選資訊網</strong></span></Link>;
+  return <Link href="/" className="jshs-brand" aria-label={`${SITE_NAME}首頁`}><span className="jshs-brand-logo" aria-hidden="true"><SiteIcon name="school" size={21} /></span><span className="jshs-brand-wordmark"><strong>{SITE_NAME}</strong></span></Link>;
 }
 
 function NavIcon({ item }: { item: NavigationItem }) { return <SiteIcon name={item.icon || "more"} size={17} />; }

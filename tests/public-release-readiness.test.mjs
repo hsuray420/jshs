@@ -58,5 +58,5 @@ test("release gate and discovery metadata are wired into the project", async () 
   assert.match(gate, /Coming soon|功能開發中|placeholder/i);
   assert.match(gate, /not-found/);
   assert.match(layout, /og-image/);
-  assert.match(manifest, /JSHS/);
+  assert.match(manifest, /SITE_NAME/);
 });

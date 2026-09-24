@@ -6,7 +6,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
 export const metadata: Metadata = {
-  title: "模擬考中心｜成績分析｜全國國中升學資訊網",
+  title: "模擬考中心｜成績分析｜全國國中生升學資訊網",
   description: "集中查看模擬考入口、資料狀態與下一步。",
   alternates: { canonical: "/scores/mock" },
 };

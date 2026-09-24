@@ -6,7 +6,7 @@ import { FeatureHero } from "@/components/feature-hero";
 import guideNavigation from "@/content/guide/navigation.json";
 
 export const metadata: Metadata = {
-  title: "升學指南｜全國國中升學資訊網",
+  title: "升學指南｜全國國中生升學資訊網",
   description: "從升學入門、志願與積分、特殊入學與資格、升學百科到生涯探索，建立升學判斷。",
   alternates: { canonical: "/knowledge" },
 };

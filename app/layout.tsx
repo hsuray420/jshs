@@ -4,19 +4,20 @@ import { AiAssistant } from "@/components/ai-assistant";
 import { SiteIntroModal } from "@/components/site-intro-modal";
 import { getMemberSession } from "@/lib/member-auth";
 import { PwaRegister } from "@/components/pwa-register";
+import { SITE_NAME } from "@/lib/brand";
 
 const googleTagId = "G-Y9298RKYMZ";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://jshs.cc"),
-  title: "全國國中升學資訊網",
-  description: "全國國中升學資訊：全區學校查詢、積分試算、志願分析與高中職、五專升學路徑。",
+  title: SITE_NAME,
+  description: `${SITE_NAME}：全區學校查詢、積分試算、志願分析與高中職、五專升學路徑。`,
   themeColor: "#F2F2F7",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
   },
-  openGraph: { type: "website", locale: "zh_TW", siteName: "全國國中升學資訊網", images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: "JSHS 全國國中升學資訊網" }] },
+  openGraph: { type: "website", locale: "zh_TW", siteName: SITE_NAME, images: [{ url: "/og-image.svg", width: 1200, height: 630, alt: SITE_NAME }] },
   twitter: { card: "summary_large_image", images: ["/og-image.svg"] },
 };
 

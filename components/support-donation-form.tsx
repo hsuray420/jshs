@@ -26,7 +26,7 @@ export function SupportDonationForm() {
   return (
     <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-10">
       <div className="grid gap-5 p-6 jshs-surface-card">
-        <div className="text-center"><h2 className="text-2xl">— 選擇捐款金額 —</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">感謝你支持全國國中生選資訊網。選擇或輸入金額後，系統會前往綠界付款頁面。</p></div>
+        <div className="text-center"><h2 className="text-2xl">— 選擇捐款金額 —</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">感謝你支持全國國中生升學資訊網。選擇或輸入金額後，系統會前往綠界付款頁面。</p></div>
         <form className="grid gap-4" target="_blank" onSubmit={submitDonation}>
           <fieldset className="grid gap-3"><legend className="sr-only">捐款金額（最低 10 元，最高 100,000 元）</legend><div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {PRESET_AMOUNTS.map((preset) => <label key={preset} className="cursor-pointer"><input className="sr-only" type="radio" name="amount" value={preset} checked={amount === String(preset)} onChange={(event) => setAmount(event.target.value)} /><span className={`block rounded-lg border px-3 py-4 text-center text-lg ${amount === String(preset) ? "border-emerald-600 bg-emerald-50 font-bold text-emerald-800" : "border-slate-200"}`}>{preset.toLocaleString()}<small className="ml-1 text-sm font-normal">元</small></span></label>)}
