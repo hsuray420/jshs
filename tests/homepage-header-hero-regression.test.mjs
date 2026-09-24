@@ -27,6 +27,7 @@ test("the homepage hero asset stays above the page background at every viewport"
 test("desktop header uses a collision-safe three-zone layout and calibrated controls", async () => {
   const [css, menu] = await Promise.all([source("app/globals.css"), source("components/navigation/mega-menu.tsx")]);
   assert.match(css, /@media \(min-width:1180px\) \{[\s\S]*?\.jshs-v2-home \.jshs-header-inner \{[^}]*display:grid;[^}]*grid-template-columns:minmax\(0,1fr\) auto minmax\(0,1fr\);[^}]*height:72px;/);
+  assert.match(css, /\.jshs-v2-home \.jshs-brand-wordmark strong \{[^}]*font-weight:700;/s);
   assert.match(css, /\.jshs-v2-home \.jshs-desktop-nav \{[^}]*gap:20px;[^}]*height:72px;[^}]*justify-self:center;/s);
   assert.match(css, /\.jshs-v2-home \.jshs-desktop-more > button \{[^}]*font-size:14px;[^}]*font-weight:600;[^}]*gap:4px;[^}]*height:38px;[^}]*min-height:38px;[^}]*padding-inline:7px;/s);
   assert.match(css, /\.jshs-v2-home \.jshs-home-header-search \{[^}]*height:40px;[^}]*width:40px;/s);

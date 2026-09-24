@@ -1730,6 +1730,7 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 @media (min-width:1180px) {
   .jshs-v2-home .jshs-header-inner { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); gap:24px; height:72px; max-width:1400px; padding-inline:28px; width:100%; }
   .jshs-v2-home .jshs-brand { font-size:18px; font-weight:700; justify-self:start; line-height:1; margin-right:0; }
+  .jshs-v2-home .jshs-brand-wordmark strong { font-weight:700; }
   .jshs-brand-logo { height:34px; width:34px; }
   .jshs-v2-home .jshs-desktop-nav { display:flex; gap:20px; height:72px; justify-self:center; left:auto; position:static; transform:none; }
   .jshs-v2-home .jshs-desktop-more > button { font-size:14px; font-weight:600; gap:4px; height:38px; min-height:38px; padding:0 7px; padding-inline:7px; }
