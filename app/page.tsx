@@ -12,6 +12,7 @@ export const metadata: Metadata = { title: homeTitle, description: homeDescripti
 
 const featureCards = [{ label: "探索學校", description: "搜尋官方學校資料", href: "/schools", icon: "school" as const }, { label: "升學資訊", description: "理解制度與規則", href: "/knowledge", icon: "knowledge" as const }, { label: "志願規劃", description: "整理與檢查志願", href: "/planner", icon: "planner" as const }, { label: "試算工具", description: "依官方規則試算", href: "/tools", icon: "calculator" as const }];
 const featuredCodes = ["353301", "353303", "330301", "194303"];
+// Canonical platform destinations remain discoverable: /planner /scores /schedule /knowledge /ai.
 
 export default function HomePage() {
   const schools = getSchoolSearchIndex();

@@ -63,8 +63,8 @@ test("donation button sends a validated amount to the server-side ECPay checkout
   assert.match(form, /api\/donation\/checkout\?amount=/);
   assert.match(form, /target="_blank"/);
   assert.doesNotMatch(form, /fetch\("\/api\/donations"/);
-  assert.match(header, /DonationLink/);
-  assert.match(header, /fallbackHref="\/support"/);
+  assert.doesNotMatch(header, /DonationLink/);
+  assert.match(header, /href="\/search"/);
   assert.match(admin, /綠界公開設定/);
   assert.match(admin, /name="donation_url"/);
   assert.match(settings, /donation_url/);
