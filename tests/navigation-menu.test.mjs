@@ -94,3 +94,13 @@ test("mega menu descriptions remain readable and floating surfaces are mutually 
   assert.match(assistant, /new Event\("jshs:ai-open"\)/);
   assert.match(assistant, /jshs:nav-open/);
 });
+
+test("desktop dropdown separates open, current-route, and keyboard focus states", async () => {
+  const [globals, megaMenu] = await Promise.all([readFile(globalsUrl, "utf8"), readFile(megaMenuUrl, "utf8")]);
+  assert.match(megaMenu, /open \? "is-open" : ""/);
+  assert.match(megaMenu, /active \? "is-current" : ""/);
+  assert.doesNotMatch(megaMenu, /active \|\| open \? "is-active"/);
+  assert.match(globals, /\.jshs-desktop-more\.is-open > button > svg/);
+  assert.match(globals, /\.jshs-desktop-more > button:focus-visible/);
+  assert.doesNotMatch(globals, /\.jshs-site-header \.jshs-desktop-more\.is-active > button \{[^}]*box-shadow:\s*inset 0 -2px/s);
+});

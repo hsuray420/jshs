@@ -5,12 +5,27 @@ import { readFile } from "node:fs/promises";
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
 test("school search uses a concise search-first result card", async () => {
-  const [page, route] = await Promise.all([source("components/school-explorer.tsx"), source("app/schools/page.tsx")]);
+  const [page, route, styles, detail] = await Promise.all([
+    source("components/school-explorer.tsx"),
+    source("app/schools/page.tsx"),
+    source("components/schools-v2.css"),
+    source("components/school-detail-client.tsx"),
+  ]);
   assert.doesNotMatch(route, /getSchoolSummaries|getSchools\(/);
   assert.match(page, /school-search-index\.json/);
   assert.match(page, /找到適合你的學校/);
   assert.match(page, /目前就學區/);
-  assert.match(page, /資料準備中/);
+  assert.match(page, /依目前選擇的就學區顯示可用資料，可隨時切換。/);
+  assert.match(page, /共 <strong>\{result\.length\}<\/strong> 所學校/);
+  assert.match(page, /sv-school-card-link/);
+  assert.doesNotMatch(page, /SchoolMedia|sv-school-card-image|校園圖片尚未提供/);
+  assert.doesNotMatch(page, /查看全部/);
+  assert.match(route, /getRegionRegistry/);
+  assert.match(route, /regions=\{getRegionRegistry\(\)\}/);
+  assert.match(styles, /\.sv-explorer-root \.sv-school-grid \{[^}]*grid-template-columns:\s*repeat\(4,/s);
+  assert.match(styles, /@media \(max-width:\s*1023px\)[\s\S]*?\.sv-explorer-root \.sv-school-grid \{[^}]*repeat\(2,/s);
+  assert.match(styles, /@media \(max-width:\s*767px\)[\s\S]*?\.sv-explorer-root \.sv-school-grid \{[^}]*grid-template-columns:\s*1fr/s);
+  assert.match(detail, /SchoolMedia/);
 });
 
 test("map only renders verified coordinates and keeps Google Maps as an address link", async () => {
