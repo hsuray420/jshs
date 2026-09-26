@@ -7,7 +7,8 @@
     { "label": "我的志願", "href": "/planner", "activeHref": "/planner", "icon": "planner", "tone": "planner" },
     { "label": "日程", "href": "/schedule", "activeHref": "/schedule", "icon": "calendar", "tone": "guide" },
     { "label": "升學指南", "href": "/knowledge", "activeHref": "/knowledge", "icon": "knowledge", "tone": "guide" },
-    { "label": "資料與信任", "href": "/trust", "activeHref": "/trust", "icon": "shield", "tone": "trust" }
+    { "label": "資料與信任", "href": "/trust", "activeHref": "/trust", "icon": "shield", "tone": "trust" },
+    { "label": "官方資訊", "href": "/admission-guides", "activeHref": "/admission-guides", "icon": "file", "tone": "official" }
   ],
   "menuGroups": [
     {
@@ -77,11 +78,7 @@
         { "label": "特殊入學與資格", "href": "/eligibility", "description": "查看特殊管道與資格檢測", "section": "探索方向" },
         { "label": "升學百科", "href": "/knowledge/glossary", "description": "查詢名詞、迷思與制度說明", "section": "探索方向" },
         { "label": "生涯探索", "href": "/knowledge/fit-quiz", "description": "探索高中、技高、五專與未來方向", "section": "探索方向" },
-        { "label": "升學動態", "href": "/knowledge/updates", "description": "掌握制度更新與重要提醒", "section": "探索方向" },
-        { "label": "官方資訊入口", "href": "/news", "description": "查看已登錄的官方公告", "section": "官方資訊", "icon": "knowledge" },
-        { "label": "官方簡章與規則", "href": "/admission-guides", "description": "查看各區原始 PDF 與官方網站", "section": "官方資訊" },
-        { "label": "官方招生時程", "href": "/admission-guides/schedule", "description": "查看公告與上年度參考日期", "section": "官方資訊" },
-        { "label": "官方招生平台", "href": "/planner/official-platform", "description": "前往報名、選填與錄取平台", "section": "官方資訊" }
+        { "label": "升學動態", "href": "/knowledge/updates", "description": "掌握制度更新與重要提醒", "section": "探索方向" }
       ]
     },
     {
@@ -107,6 +104,15 @@
           { "label": "服務條款", "href": "/trust/terms", "description": "查看服務使用規範" },
           { "label": "Cookie／資料使用說明", "href": "/trust/credibility", "description": "了解裝置資料與使用方式" }
         ] }
+      ]
+    },
+    {
+      "label": "官方資訊", "href": "/admission-guides", "activeHref": "/admission-guides", "eyebrow": "官方資訊", "description": "從官方公告、簡章與時程查閱下一步。", "layout": "compact",
+      "items": [
+        { "label": "官方公告", "href": "/news", "description": "查看已登錄的官方公告", "section": "官方公告", "icon": "knowledge" },
+        { "label": "官方簡章與規則", "href": "/admission-guides", "description": "查看各區原始 PDF 與官方網站", "section": "簡章與規則", "icon": "file" },
+        { "label": "官方招生時程", "href": "/admission-guides/schedule", "description": "查看公告與上年度參考日期", "section": "簡章與規則", "icon": "calendar" },
+        { "label": "官方招生平台", "href": "/planner/official-platform", "description": "前往報名、選填與錄取平台", "section": "官方入口", "icon": "school" }
       ]
     }
   ]

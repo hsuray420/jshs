@@ -22,21 +22,22 @@ const expectedNavigation = [
   ["日程", "/schedule"],
   ["升學指南", "/knowledge"],
   ["資料與信任", "/trust"],
+  ["官方資訊", "/admission-guides"],
 ];
 
 const legacyNewsCategories = ["exam", "rules", "strategy", "schools", "career", "parents"];
 
-test("the information architecture follows the seven-item primary navigation", async () => {
+test("the information architecture follows the primary navigation", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
 
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ label, href }) => [label, href]),
     expectedNavigation,
   );
-  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 7);
+  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 8);
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ activeHref }) => activeHref),
-    ["/schools", "/scores/mock", "/scores", "/planner", "/schedule", "/knowledge", "/trust"],
+    ["/schools", "/scores/mock", "/scores", "/planner", "/schedule", "/knowledge", "/trust", "/admission-guides"],
   );
   assert.equal(siteMap.primaryNavigation.some(({ label }) => label === "就學區"), false);
 });
@@ -124,8 +125,8 @@ test("primary navigation lands on an interactive surface instead of an introduct
     else if (url.pathname === "/tools") assert.match(tools, /AdmissionCalculator/);
     else if (url.pathname === "/planner") assert.match(planner, /PlannerHub/);
     else if (url.pathname === "/schedule") assert.match(schedule, /ScheduleWorkspace/);
-    else if (url.pathname === "/admission-guides") assert.match(await readFile(new URL("../app/admission-guides/page.tsx", import.meta.url), "utf8"), /AdmissionGuideLibrary/);
     else if (url.pathname === "/knowledge") assert.match(knowledge, /guideSections/);
+    else if (url.pathname === "/admission-guides") assert.match(await readFile(new URL("../app/admission-guides/page.tsx", import.meta.url), "utf8"), /AdmissionGuideLibrary/);
     else if (url.pathname === "/trust/credibility") assert.match(await readFile(new URL("../app/trust/[slug]/page.tsx", import.meta.url), "utf8"), /credibility/);
     else assert.equal(url.pathname, "/trust");
   }

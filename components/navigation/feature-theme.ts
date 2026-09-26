@@ -6,6 +6,7 @@ export const featureThemes = {
   "日程": "schedule",
   "升學指南": "guide",
   "資料與信任": "trust",
+  "官方資訊": "official",
 } as const;
 
 export type FeatureTheme = (typeof featureThemes)[keyof typeof featureThemes];

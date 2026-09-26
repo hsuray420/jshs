@@ -1693,6 +1693,7 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .jshs-nav-theme--schedule { --nav-accent:#d97706; --nav-soft:#fffbeb; }
 .jshs-nav-theme--guide { --nav-accent:#0f766e; --nav-soft:#f0fdfa; }
 .jshs-nav-theme--trust { --nav-accent:#475569; --nav-soft:#f8fafc; }
+.jshs-nav-theme--official { --nav-accent:#2563eb; --nav-soft:#eff6ff; }
 .jshs-nav-mega-panel { background:#fff; border:1px solid #e2e8f0; border-radius:20px; box-shadow:0 12px 32px rgb(15 23 42 / 8%),0 2px 8px rgb(15 23 42 / 4%); left:0; padding:24px; position:absolute; top:calc(100% + 10px); width:clamp(620px,56vw,780px); z-index:var(--z-popover,60); }
 .jshs-nav-mega-header { border-bottom:1px solid #e8edf3; margin:0 0 18px; padding:0 0 14px; }
 .jshs-nav-mega-header h2 { color:#172033; font-size:18px; margin:0; }
@@ -1748,3 +1749,33 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
   .jshs-v2-home .jshs-login-link { background:transparent; color:#334155 !important; }
 }
 @media (max-width:359px) { .jshs-site-header .jshs-home-header-search { display:none; } }
+
+/* One shared desktop frame keeps the brand, navigation, and utilities related
+   at every public route instead of letting the homepage carry a separate bar. */
+@media (min-width:1360px) {
+  .jshs-site-header .jshs-header-inner {
+    display:grid;
+    grid-template-columns:minmax(180px,1fr) minmax(0,auto) minmax(132px,1fr);
+    gap:24px;
+    height:76px;
+    margin-inline:auto;
+    max-width:1680px;
+    padding-inline:clamp(32px,3vw,48px);
+    width:100%;
+  }
+  .jshs-site-header .jshs-brand { font-size:17px; justify-self:start; margin-right:0; }
+  .jshs-site-header .jshs-brand-logo { height:34px; width:34px; }
+  .jshs-site-header .jshs-desktop-nav { align-items:center; display:flex; gap:28px; height:76px; justify-self:center; left:auto; min-width:0; position:static; transform:none; }
+  .jshs-site-header .jshs-desktop-more > button { color:#475569 !important; font-size:14px; font-weight:560; gap:8px; height:44px; min-height:44px; padding:0; padding-inline:0; font-weight:560 !important; }
+  .jshs-site-header .jshs-desktop-more > button > svg { flex:0 0 auto; height:16px; width:16px; }
+  .jshs-site-header .jshs-desktop-more > button:hover,.jshs-site-header .jshs-desktop-more.is-active > button { background:transparent; color:#172033 !important; }
+  .jshs-site-header .jshs-desktop-more.is-active > button { box-shadow:inset 0 -2px 0 var(--brand-primary); font-weight:650 !important; }
+  .jshs-site-header .jshs-header-utilities { gap:12px; justify-self:end; margin-left:0; }
+  .jshs-site-header .jshs-home-header-search { background:#f7f9fc; border:1px solid #e7ecf3; border-radius:12px; height:44px; width:44px; }
+  .jshs-site-header .jshs-login-link { background:#f7f9fc; border:1px solid #e7ecf3; border-radius:12px; color:#334155 !important; font-size:13px; font-weight:600 !important; height:44px; padding:0 14px; padding-inline:14px; }
+  .jshs-site-header .jshs-login-link:hover,.jshs-site-header .jshs-home-header-search:hover { background:#eef2f7; color:#172033 !important; }
+  .jshs-header-menu-button,.mobile-bottom-nav { display:none !important; }
+}
+
+@media (max-width:1359px) { .jshs-desktop-nav { display:none !important; } }
+@media (min-width:1280px) and (max-width:1359px) { .jshs-header-menu-button { display:grid !important; } }

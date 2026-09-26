@@ -16,7 +16,7 @@ const fallbackIcons: Readonly<Record<string, SiteIconName>> = {
   "成績積分試算": "calculator", "積分規則": "book", "個人積分摘要": "chart",
   "自己排": "planner", "志願探索": "search", "版本紀錄": "history", "列印／下載": "file", "官方選填平台": "school",
   "升學總覽": "calendar", "重要時程": "calendar", "現在該做什麼": "check", "我的待辦": "check",
-  "升學入門": "book", "志願與積分": "calculator", "特殊入學與資格": "shield", "升學百科": "knowledge", "生涯探索": "target", "升學動態": "bell", "官方資訊入口": "shield", "官方簡章與規則": "file", "官方招生時程": "calendar", "官方招生平台": "school",
+  "升學入門": "book", "志願與積分": "calculator", "特殊入學與資格": "shield", "升學百科": "knowledge", "生涯探索": "target", "升學動態": "bell", "官方公告": "knowledge", "官方簡章與規則": "file", "官方招生時程": "calendar", "官方招生平台": "school",
   "資料來源": "shield", "資料更新狀態": "history", "15 區建置進度": "chart", "試算與分析方法": "calculator", "資料版本紀錄": "history", "錯誤回報": "messages", "平台可信度說明": "shield", "資料更新紀錄": "history",
   "關於本站": "knowledge", "贊助與編輯獨立": "shield", "支持／合作": "messages", "聯絡我們": "messages", "服務狀態": "check", "隱私權政策": "shield", "服務條款": "file", "Cookie／資料使用說明": "file",
 };
@@ -97,7 +97,7 @@ export function NavDropdown({ item, group, active, open, onToggle, onNavigate }:
   }, [open, positionPanel]);
 
   return <div ref={rootRef} className={`jshs-desktop-more jshs-nav-dropdown jshs-nav-theme--${featureThemeFor(item.label)} ${active || open ? "is-active" : ""}`}>
-    <button type="button" aria-label={`${item.label}，展開副選單`} aria-haspopup="menu" aria-expanded={open} aria-controls={panelId} onClick={onToggle}><span>{item.label}</span><SiteIcon name="chevron-down" size={12} /></button>
+    <button type="button" aria-label={`${item.label}，展開副選單`} aria-haspopup="menu" aria-expanded={open} aria-controls={panelId} onClick={onToggle}><span>{item.label}</span><SiteIcon name="chevron-down" size={16} /></button>
     {open ? <div ref={panelRef} id={panelId} role="menu" style={panelStyle} className="jshs-nav-mega-panel">
       <NavDropdownHeader group={group} />
       <NavDropdownGrid group={group} onNavigate={onNavigate} />

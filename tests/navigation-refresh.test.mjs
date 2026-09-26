@@ -4,13 +4,13 @@ import test from "node:test";
 
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-const primaryLabels = ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任"];
+const primaryLabels = ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"];
 
-test("one content catalog defines the seven primary destinations", async () => {
+test("one content catalog defines the primary destinations", async () => {
   const catalog = JSON.parse(await source("content/site-map.json"));
   assert.deepEqual(catalog.primaryNavigation.map(({ label }) => label), primaryLabels);
-  assert.equal(catalog.menuGroups.at(-1)?.label, "資料與信任");
-  assert.ok(catalog.menuGroups.at(-1)?.items.some(({ label }) => label === "平台"));
+  assert.equal(catalog.menuGroups.at(-1)?.label, "官方資訊");
+  assert.ok(catalog.menuGroups.at(-1)?.items.some(({ label }) => label === "官方簡章與規則"));
 });
 
 test("header uses the common navigation config and one full brand component", async () => {
@@ -28,7 +28,7 @@ test("homepage follows the approved visual system while navigation remains data-
   assert.match(home, /jshs-v2-home/);
   assert.match(home, /發現更大的/);
   assert.match(header, /mobileNavigation = primaryNavigation/);
-  for (const label of ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任"]) assert.match(catalog, new RegExp(label));
+  for (const label of primaryLabels) assert.match(catalog, new RegExp(label));
 });
 
 test("guide has six canonical sections and directs detailed score rules to the calculator", async () => {

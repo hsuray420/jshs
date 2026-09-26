@@ -5,9 +5,9 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 
-const finalGroups = ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任"];
+const finalGroups = ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"];
 
-test("final sitemap defines the seven user-facing navigation groups", async () => {
+test("final sitemap defines the user-facing navigation groups", async () => {
   const catalog = JSON.parse(await read("content/site-map.json"));
   assert.deepEqual(catalog.menuGroups.map(({ label }) => label), finalGroups);
 

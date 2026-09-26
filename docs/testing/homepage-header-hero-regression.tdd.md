@@ -4,8 +4,9 @@
 
 - The existing `/images/hero-students-production.png` asset must render inside the homepage Hero at every supported viewport.
 - The public site name is exactly `全國國中升學資訊網`.
-- Desktop navigation uses a collision-safe three-zone grid at 1180px and wider; narrower layouts keep the existing mobile navigation.
-- Desktop controls use 14px labels, a 20px menu gap, 38px menu buttons, 12px chevrons, and 40px search/account controls.
+- Desktop navigation uses a collision-safe three-zone grid at 1360px and wider; narrower layouts retain a visible full-navigation trigger.
+- Desktop controls use 14px labels, a 28px menu gap, 44px menu buttons, 16px chevrons, and 44px search/account controls.
+- The frame is centred at a 1680px maximum width, with eight primary groups including `官方資訊`.
 
 ## RED
 
@@ -15,13 +16,9 @@ The initial three tests failed because the Hero image layer used a negative stac
 
 ## GREEN
 
-The implementation keeps the verified Hero asset above the page background, scopes the desktop header rules to the homepage's real DOM specificity, and normalizes the formal public name.
+The implementation keeps the verified Hero asset above the page background, uses one shared desktop Header frame across public routes, and normalizes the formal public name.
 
 Verified with:
 
-- `node --test tests/homepage-header-hero-regression.test.mjs` — 3/3 pass
-- `pnpm run test:unit` — 270/270 pass
-- `pnpm run typecheck` — pass
-- `pnpm run lint` — 0 errors; 22 pre-existing warnings
-- `pnpm run build` — pass
-- Browser checks at 1536, 1440, 1366, 1280, 1200, 1100, 1024, 768, 390, and 375 CSS pixels — no horizontal overflow or desktop-zone collision
+- `node --test tests/homepage-header-hero-regression.test.mjs`
+- Full unit, typecheck, lint, build, and production browser checks are required before release.
