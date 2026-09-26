@@ -25,7 +25,7 @@ test("shared navigation keeps account access, 44px targets, and Escape dismissal
   assert.match(css, /\.jshs-home-header-search,\.jshs-login-link\s*\{[^}]*min-height:44px/s);
   assert.match(css, /\.jshs-home-header-search\s*\{[^}]*width:44px/s);
   assert.match(css, /\.jshs-login-link > svg\s*\{[^}]*flex:0 0 auto/s);
-  assert.match(css, /@media \(max-width:1359px\)\s*\{\s*\.jshs-desktop-nav\s*\{\s*display:none !important;/s);
+  assert.match(css, /@media \(max-width:1199px\)\s*\{[\s\S]*?\.jshs-desktop-nav\s*\{\s*display:none !important;/s);
   assert.match(css, /\.jshs-v2-home \.jshs-v2-search button\s*\{[^}]*height:44px[^}]*width:44px/s);
 });
 

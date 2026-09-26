@@ -26,13 +26,14 @@ test("the homepage hero asset stays above the page background at every viewport"
 
 test("desktop header uses a collision-safe three-zone layout and calibrated controls", async () => {
   const [css, menu] = await Promise.all([source("app/globals.css"), source("components/navigation/mega-menu.tsx")]);
-  assert.match(css, /@media \(min-width:1360px\) \{[\s\S]*?\.jshs-header-inner \{[^}]*display:grid;[^}]*grid-template-columns:minmax\(180px,1fr\) minmax\(0,auto\) minmax\(132px,1fr\);[^}]*height:76px;[^}]*max-width:1680px;[^}]*padding-inline:clamp\(32px,3vw,48px\);/);
+  assert.match(css, /@media \(min-width:1200px\) \{[\s\S]*?\.jshs-header-inner \{[^}]*display:grid;[^}]*grid-template-columns:max-content minmax\(0,1fr\) max-content;[^}]*height:76px;[^}]*max-width:1680px;[^}]*padding-inline:clamp\(32px,3vw,48px\);/);
   assert.match(css, /\.jshs-v2-home \.jshs-brand-wordmark strong \{[^}]*font-weight:700;/s);
-  assert.match(css, /\.jshs-desktop-nav \{[^}]*gap:28px;[^}]*height:76px;[^}]*justify-self:center;/s);
-  assert.match(css, /\.jshs-desktop-more > button \{[^}]*font-size:14px;[^}]*font-weight:560;[^}]*gap:8px;[^}]*height:44px;[^}]*min-height:44px;[^}]*padding-inline:0;/s);
+  assert.match(css, /\.jshs-desktop-nav \{[^}]*gap:clamp\(12px,1\.82vw,28px\);[^}]*height:76px;[^}]*justify-content:center;[^}]*justify-self:stretch;/s);
+  assert.match(css, /\.jshs-desktop-more > button \{[^}]*font-size:clamp\(13px,1\.04vw,16px\);[^}]*font-weight:560;[^}]*gap:6px;[^}]*height:44px;[^}]*min-height:44px;[^}]*padding-inline:0;/s);
   assert.match(css, /\.jshs-home-header-search \{[^}]*height:44px;[^}]*width:44px;/s);
   assert.match(css, /\.jshs-login-link \{[^}]*height:44px;[^}]*padding-inline:14px;/s);
   assert.match(css, /\.jshs-header-menu-button,\.mobile-bottom-nav \{ display:none !important; \}/);
+  assert.match(css, /@media \(max-width:1199px\)\s*\{[\s\S]*?\.jshs-desktop-nav\s*\{\s*display:none !important;[^}]*\}[\s\S]*?\.jshs-header-menu-button\s*\{\s*display:grid !important;/);
   assert.match(menu, /name="chevron-down" size=\{16\}/);
 });
 
