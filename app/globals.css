@@ -1675,6 +1675,7 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .jshs-home-header-search,.jshs-login-link { align-items:center; color:#334155 !important; display:inline-flex; justify-content:center; min-height:44px; text-decoration:none !important; }
 .jshs-home-header-search { border-radius:10px; width:44px; }
 .jshs-login-link { background:transparent; border-radius:10px; box-shadow:none; font-size:14px; font-weight:650; gap:7px; padding:8px 10px; }
+.jshs-login-link > svg { flex:0 0 auto; }
 .jshs-home-header-search:hover,.jshs-login-link:hover { background:#f1f5f9; color:#111827 !important; }
 .jshs-desktop-nav { display:none; gap:clamp(16px,1.8vw,27px); height:var(--nav-header-height); left:50vw; position:absolute; transform:translateX(-50%); }
 .jshs-desktop-more { position:relative; }
