@@ -19,8 +19,9 @@ function contrast(first, second) {
 test("shared navigation keeps account access, 44px targets, and Escape dismissal", async () => {
   const [header, css] = await Promise.all([read("components/site-header.tsx"), read("app/globals.css")]);
   assert.match(header, /event\.key === "Escape"[^}]*closeDrawer\(\)/s);
-  assert.match(header, /href="\/account"[^>]*onClick=\{closeDrawer\}/);
+  assert.match(header, /href="\/account"[^>]*aria-label="帳號"/);
   assert.doesNotMatch(css, /a\[aria-label="帳號"\]\s*\{\s*display:\s*none/);
+  assert.match(css, /@media \(max-width:359px\)[^{]*\{[^}]*\.jshs-site-header \.jshs-home-header-search \{ display:none; \}/s);
   assert.match(css, /\.jshs-home-header-search,\.jshs-login-link\s*\{[^}]*min-height:44px/s);
   assert.match(css, /\.jshs-home-header-search\s*\{[^}]*width:44px/s);
   assert.match(css, /\.jshs-v2-home \.jshs-v2-search button\s*\{[^}]*height:44px[^}]*width:44px/s);

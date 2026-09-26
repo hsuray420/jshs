@@ -16,7 +16,7 @@ const misconceptions = faqContent.misconceptions.map(({ question, answer }) => [
 
 export function KnowledgeTopicWorkspace({ topic }: { topic: Topic }) {
   const [title, description] = pageCopy[topic];
-  return <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-10"><div className="mb-6"><p className="jshs-eyebrow">{topic === "groups" ? "找學校 · 群科探索" : "升學指南"}</p><h1 className="mt-2">{title}</h1><p className="mt-3 max-w-3xl text-base leading-7 jshs-muted-copy">{description}</p></div>{topic === "admission-basics" ? <Basics /> : topic === "rules" ? <RulesGuide /> : topic === "glossary" ? <Glossary /> : topic === "fit-quiz" ? <FitQuiz /> : <GroupsGuide />}</section>;
+  return <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-10"><div className="mb-6"><p className="jshs-eyebrow">{topic === "groups" ? "找學校 · 群科探索" : "升學指南"}</p><h2 className="mt-2">{title}</h2><p className="mt-3 max-w-3xl text-base leading-7 jshs-muted-copy">{description}</p></div>{topic === "admission-basics" ? <Basics /> : topic === "rules" ? <RulesGuide /> : topic === "glossary" ? <Glossary /> : topic === "fit-quiz" ? <FitQuiz /> : <GroupsGuide />}</section>;
 }
 
 function Basics() {

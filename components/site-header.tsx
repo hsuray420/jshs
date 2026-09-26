@@ -39,6 +39,15 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
   }, [drawerOpen]);
 
   useEffect(() => {
+    if (!drawerOpen) return;
+    function closeDrawerOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") closeDrawer();
+    }
+    document.addEventListener("keydown", closeDrawerOnEscape);
+    return () => document.removeEventListener("keydown", closeDrawerOnEscape);
+  }, [drawerOpen]);
+
+  useEffect(() => {
     let cancelled = false;
     fetch("/api/member/session", { cache: "no-store", headers: { accept: "application/json" } })
       .then(response => response.ok ? response.json() as Promise<{ authenticated?: boolean; displayName?: string }> : null)

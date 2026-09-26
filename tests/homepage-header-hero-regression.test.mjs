@@ -29,9 +29,9 @@ test("desktop header uses a collision-safe three-zone layout and calibrated cont
   assert.match(css, /@media \(min-width:1180px\) \{[\s\S]*?\.jshs-v2-home \.jshs-header-inner \{[^}]*display:grid;[^}]*grid-template-columns:minmax\(0,1fr\) auto minmax\(0,1fr\);[^}]*height:72px;/);
   assert.match(css, /\.jshs-v2-home \.jshs-brand-wordmark strong \{[^}]*font-weight:700;/s);
   assert.match(css, /\.jshs-v2-home \.jshs-desktop-nav \{[^}]*gap:20px;[^}]*height:72px;[^}]*justify-self:center;/s);
-  assert.match(css, /\.jshs-v2-home \.jshs-desktop-more > button \{[^}]*font-size:14px;[^}]*font-weight:600;[^}]*gap:4px;[^}]*height:38px;[^}]*min-height:38px;[^}]*padding-inline:7px;/s);
-  assert.match(css, /\.jshs-v2-home \.jshs-home-header-search \{[^}]*height:40px;[^}]*width:40px;/s);
-  assert.match(css, /\.jshs-v2-home \.jshs-login-link \{[^}]*height:40px;[^}]*padding-inline:14px;/s);
+  assert.match(css, /\.jshs-v2-home \.jshs-desktop-more > button \{[^}]*font-size:14px;[^}]*font-weight:600;[^}]*gap:4px;[^}]*height:44px;[^}]*min-height:44px;[^}]*padding-inline:7px;/s);
+  assert.match(css, /\.jshs-v2-home \.jshs-home-header-search \{[^}]*height:44px;[^}]*width:44px;/s);
+  assert.match(css, /\.jshs-v2-home \.jshs-login-link \{[^}]*height:44px;[^}]*padding-inline:14px;/s);
   assert.match(css, /\.jshs-header-menu-button,\.mobile-bottom-nav \{ display:none !important; \}/);
   assert.match(menu, /name="chevron-down" size=\{12\}/);
 });

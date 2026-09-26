@@ -94,7 +94,7 @@ export function AdmissionCalculator({ initialDistrict, isMember }: { initialDist
   const [ruleValues, setRuleValues] = useState<Record<string, unknown>>({});
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [status, setStatus] = useState("");
-  const [showRuleIntro, setShowRuleIntro] = useState(() => typeof window !== "undefined" && window.localStorage.getItem(`jshs_rule_intro_seen:${requestedDistrict || "ct"}`) !== "1");
+  const [showRuleIntro, setShowRuleIntro] = useState(false);
   const draftHydrated = useRef(false);
   const rule = getAdmissionRule(district);
   const calculatorAvailable = academicYear === SERVICE_YEAR && isAdmissionCalculatorAvailable(district);
@@ -262,7 +262,7 @@ export function AdmissionCalculator({ initialDistrict, isMember }: { initialDist
 
   return <>
     {showRuleIntro && step === "context" ? <section className="mx-auto mt-5 w-[min(1120px,calc(100%-32px))] rounded-2xl border border-[var(--jshs-border)] bg-white p-5 shadow-sm" role="status"><strong>先快速了解本區規則</strong><p className="mt-2 text-sm leading-6 jshs-muted-copy">不同就學區的採計方式差異很大，建議先快速了解本區積分規則。</p><div className="mt-4 flex flex-wrap gap-2"><Link href={`/tools/rules?district=${district}`} className="px-4 py-3 text-sm jshs-button-secondary">先看積分規則</Link><button type="button" onClick={acknowledgeRuleIntro} className="px-4 py-3 text-sm jshs-button-primary">我了解，直接開始</button></div></section> : null}
-    <section className="jshs-hero-section"><div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-14"><p className="jshs-eyebrow">算成績 · 目前位於第 {stepNumber} 步／共 4 步 · {rule.label}</p><h1 className="mt-3 max-w-4xl">每一項輸入，都說清楚它怎麼影響分數。</h1><p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">先確認適用規則，再輸入會考、志願與多元表現。這是規則試算，不是錄取保證；正式送出前請回到當年度官方簡章核對。</p></div></section>
+    <section className="jshs-hero-section"><div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-14"><p className="jshs-eyebrow">算成績 · 目前位於第 {stepNumber} 步／共 4 步 · {rule.label}</p><h2 className="mt-3 max-w-4xl">每一項輸入，都說清楚它怎麼影響分數。</h2><p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">先確認適用規則，再輸入會考、志願與多元表現。這是規則試算，不是錄取保證；正式送出前請回到當年度官方簡章核對。</p></div></section>
     <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-6 md:py-8"><nav aria-label="試算步驟" className="grid grid-cols-2 gap-2 md:grid-cols-4">{steps.map(([id, number, label]) => <button key={id} type="button" onClick={() => { if (id === "context" || calculatorAvailable) setStep(id); else setStatus("此區目前無法試算，請重新載入規則資料。"); }} className={`flex items-center gap-3 p-3 text-left text-sm jshs-button ${step === id ? "jshs-button-primary" : "jshs-button-secondary"}`}><span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-black/5 font-black">{number}</span><span>{label}</span></button>)}</nav></section>
     <section className="mx-auto grid w-[min(1120px,calc(100%-32px))] gap-5 pb-12 lg:grid-cols-[minmax(0,1fr)_340px]"><div className="p-5 md:p-7 jshs-surface-card admission-rule-form">
       {step === "context" ? <ContextStep district={district} academicYear={academicYear} rule={rule} calculatorAvailable={calculatorAvailable} onDistrictChange={(value) => { setDistrict(value); setRuleValues({}); setResult(null); setStatus(""); }} onYearChange={setAcademicYear} onLoadExample={loadExample} /> : null}
