@@ -48,15 +48,15 @@
       "schoolYear": 115,
       "displayOrder": 5
     },
-    { "id": "changhua", "name": "彰化區", "schoolDataStatus": "unavailable", "calculatorStatus": "available", "schoolYear": 115, "displayOrder": 6 },
-    { "id": "yunlin", "name": "雲林區", "schoolDataStatus": "unavailable", "calculatorStatus": "available", "schoolYear": 115, "displayOrder": 7 },
-    { "id": "chiayi", "name": "嘉義區", "schoolDataStatus": "unavailable", "calculatorStatus": "available", "schoolYear": 115, "displayOrder": 8 },
-    { "id": "tainan", "name": "臺南區", "schoolDataStatus": "unavailable", "calculatorStatus": "available", "schoolYear": 115, "displayOrder": 9 },
-    { "id": "pingtung", "name": "屏東區", "schoolDataStatus": "unavailable", "calculatorStatus": "available", "schoolYear": 115, "displayOrder": 10 },
-    { "id": "ilan", "name": "宜蘭區", "schoolDataStatus": "unavailable", "calculatorStatus": "available", "schoolYear": 115, "displayOrder": 11 },
-    { "id": "hualien", "name": "花蓮區", "schoolDataStatus": "unavailable", "calculatorStatus": "available", "schoolYear": 115, "displayOrder": 12 },
-    { "id": "taitung", "name": "臺東區", "schoolDataStatus": "unavailable", "calculatorStatus": "available", "schoolYear": 115, "displayOrder": 13 },
-    { "id": "penghu", "name": "澎湖區", "schoolDataStatus": "unavailable", "calculatorStatus": "available", "schoolYear": 115, "displayOrder": 14 },
-    { "id": "kinmen", "name": "金門區", "schoolDataStatus": "unavailable", "calculatorStatus": "available", "schoolYear": 115, "displayOrder": 15 }
+    { "id": "changhua", "name": "彰化區", "schoolDataStatus": "available", "calculatorStatus": "available", "csvPath": "content/schools/regions/彰化區_changhua/JSHS_彰化區_49校_最終完成版_2026-09-08.csv", "schoolYear": 115, "displayOrder": 6 },
+    { "id": "yunlin", "name": "雲林區", "schoolDataStatus": "available", "calculatorStatus": "available", "csvPath": "content/schools/regions/雲林區_yunlin/schools.csv", "schoolYear": 115, "displayOrder": 7 },
+    { "id": "chiayi", "name": "嘉義區", "schoolDataStatus": "available", "calculatorStatus": "available", "csvPath": "content/schools/regions/嘉義區_chiayi/schools.csv", "schoolYear": 115, "displayOrder": 8 },
+    { "id": "tainan", "name": "臺南區", "schoolDataStatus": "available", "calculatorStatus": "available", "csvPath": "content/schools/regions/臺南區_tainan/JSHS_臺南區_73校_最終完成版_2026-09-08.csv", "schoolYear": 115, "displayOrder": 9 },
+    { "id": "pingtung", "name": "屏東區", "schoolDataStatus": "available", "calculatorStatus": "available", "csvPath": "content/schools/regions/屏東區_pingtung/schools.csv", "schoolYear": 115, "displayOrder": 10 },
+    { "id": "ilan", "name": "宜蘭區", "schoolDataStatus": "available", "calculatorStatus": "available", "csvPath": "content/schools/regions/宜蘭區_ilan/schools.csv", "schoolYear": 115, "displayOrder": 11 },
+    { "id": "hualien", "name": "花蓮區", "schoolDataStatus": "available", "calculatorStatus": "available", "csvPath": "content/schools/regions/花蓮區_hualien/schools.csv", "schoolYear": 115, "displayOrder": 12 },
+    { "id": "taitung", "name": "臺東區", "schoolDataStatus": "available", "calculatorStatus": "available", "csvPath": "content/schools/regions/臺東區_taitung/schools.csv", "schoolYear": 115, "displayOrder": 13 },
+    { "id": "penghu", "name": "澎湖區", "schoolDataStatus": "available", "calculatorStatus": "available", "csvPath": "content/schools/regions/澎湖區_penghu/schools.csv", "schoolYear": 115, "displayOrder": 14 },
+    { "id": "kinmen", "name": "金門區", "schoolDataStatus": "available", "calculatorStatus": "available", "csvPath": "content/schools/regions/金門區_kinmen/schools.csv", "schoolYear": 115, "displayOrder": 15 }
   ]
 }

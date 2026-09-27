@@ -49,6 +49,13 @@ test("region registry keeps school-data availability separate from all-region ca
   assert.equal(REGION_REGISTRY.every((region) => region.csvPath), true);
 });
 
+test("school explorer reads its existing region selector from the canonical registry", async () => {
+  const explorer = await read("components/school-explorer.tsx");
+  assert.match(explorer, /getRegionRegistry/);
+  assert.match(explorer, /const regions = getRegionRegistry\(\)/);
+  assert.doesNotMatch(explorer, /const regions = \[\{/);
+});
+
 test("field classification separates school identity, regional records, and source metadata", () => {
   assert.deepEqual(SCHOOL_FIELD_CLASSIFICATION.schoolLevel, ["學校代碼", "公私立", "縣市", "區"]);
   assert.ok(SCHOOL_FIELD_CLASSIFICATION.regionSpecific.includes("招生區"));

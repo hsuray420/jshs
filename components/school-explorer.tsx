@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SiteIcon } from "@/components/site-icons";
 import { SchoolMedia } from "@/components/school-media";
+import { getRegionRegistry } from "@/lib/region-registry";
 import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
 import "@/components/schools-v2.css";
 
@@ -14,8 +15,8 @@ const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort((
 // it is not a runtime ranking or a fabricated popularity score.
 const curatedPopularCodes = ["060322", "060323", "061301", "061306"];
 // Existing utility routes remain available: /schools/compare and /schools/map.
-// Kept client-safe and aligned with content/schools/region-registry.json.
-const regions = [{ id: "tp", name: "基北區", schoolDataStatus: "available" }, { id: "taoyuan-lienchiang", name: "桃連區", schoolDataStatus: "available" }, { id: "hsinchu-miaoli", name: "竹苗區", schoolDataStatus: "available" }, { id: "ct", name: "中投區", schoolDataStatus: "available" }, { id: "kaohsiung", name: "高雄區", schoolDataStatus: "available" }] as const;
+// The selector keeps its existing UI and reads availability from the canonical registry.
+const regions = getRegionRegistry();
 const defaultDistrict = "ct";
 
 function SearchBox({ value, onChange }: { value: string; onChange: (value: string) => void }) {

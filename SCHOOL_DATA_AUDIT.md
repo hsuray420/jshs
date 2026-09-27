@@ -2,15 +2,25 @@
 
 資料年度：115；來源更新日：2026-09-08。
 
-本次找學校 runtime source of truth 為 registry 標示 available 的 5 個招生區 CSV。generated JSON 與 public CSV 皆由這 5 份 CSV 自動產生；未開放區域不建立假 CSV、不讀舊版備援資料。
+本次找學校 runtime source of truth 為 registry 標示 available 且實際存在的 15 個招生區 CSV。generated JSON 與 public CSV 皆由這些 CSV 自動產生；loader 不讀舊版備援資料。
 
-| Region | CSV | Rows | Columns | Status |
-|---|---|---:|---:|---|
-| 基北區 | content/schools/regions/基北區_tp/JSHS_基北區_135校_完成版_無排序分數_2026-09-07.csv | 135 | 30 | PASS |
-| 桃連區 | content/schools/regions/桃連區_taoyuan-lienchiang/JSHS_桃連區_50校_最終完成版_2026-09-08.csv | 50 | 30 | PASS |
-| 竹苗區 | content/schools/regions/竹苗區_hsinchu-miaoli/JSHS_竹苗區_39校_最終完成版_2026-09-08.csv | 39 | 30 | PASS |
-| 中投區 | content/schools/regions/中投區_ct/JSHS_中投區_96校_最終版_2026-09-07.csv | 96 | 30 | PASS |
-| 高雄區 | content/schools/regions/高雄區_kaohsiung/JSHS_高雄區_53校_最終完成版_2026-09-07.csv | 53 | 30 | PASS |
+| Region | CSV | Rows | Schema | Enabled | Loader 使用中 |
+|---|---|---:|---|---|---|
+| 基北區 | content/schools/regions/基北區_tp/JSHS_基北區_135校_完成版_無排序分數_2026-09-07.csv | 135 | PASS | yes | yes |
+| 桃連區 | content/schools/regions/桃連區_taoyuan-lienchiang/JSHS_桃連區_50校_最終完成版_2026-09-08.csv | 50 | PASS | yes | yes |
+| 竹苗區 | content/schools/regions/竹苗區_hsinchu-miaoli/JSHS_竹苗區_39校_最終完成版_2026-09-08.csv | 39 | PASS | yes | yes |
+| 中投區 | content/schools/regions/中投區_ct/JSHS_中投區_96校_最終版_2026-09-07.csv | 96 | PASS | yes | yes |
+| 高雄區 | content/schools/regions/高雄區_kaohsiung/JSHS_高雄區_53校_最終完成版_2026-09-07.csv | 53 | PASS | yes | yes |
+| 彰化區 | content/schools/regions/彰化區_changhua/JSHS_彰化區_49校_最終完成版_2026-09-08.csv | 49 | PASS | yes | yes |
+| 雲林區 | content/schools/regions/雲林區_yunlin/schools.csv | 22 | PASS | yes | yes |
+| 嘉義區 | content/schools/regions/嘉義區_chiayi/schools.csv | 21 | PASS | yes | yes |
+| 臺南區 | content/schools/regions/臺南區_tainan/JSHS_臺南區_73校_最終完成版_2026-09-08.csv | 73 | PASS | yes | yes |
+| 屏東區 | content/schools/regions/屏東區_pingtung/schools.csv | 23 | PASS | yes | yes |
+| 宜蘭區 | content/schools/regions/宜蘭區_ilan/schools.csv | 12 | PASS | yes | yes |
+| 花蓮區 | content/schools/regions/花蓮區_hualien/schools.csv | 16 | PASS | yes | yes |
+| 臺東區 | content/schools/regions/臺東區_taitung/schools.csv | 11 | PASS | yes | yes |
+| 澎湖區 | content/schools/regions/澎湖區_penghu/schools.csv | 2 | PASS | yes | yes |
+| 金門區 | content/schools/regions/金門區_kinmen/schools.csv | 2 | PASS | yes | yes |
 
 ## 欄位
 
@@ -20,18 +30,19 @@
 
 ## 統計
 
-學校筆數：347
+學校筆數：545
 
-| SCHOOL_DATA_AVAILABLE_REGIONS | 5/5 |
-| SCHOOL_DATA_UNAVAILABLE_REGIONS | 10 |
-| SOURCE_ROWS | 373 |
-| UNIQUE_SCHOOL_ENTITIES | 347 |
-| RUNTIME_ADMISSION_RECORDS | 373 |
+| REGIONAL_CSV_COUNT | 15 |
+| SCHOOL_DATA_AVAILABLE_REGIONS | 15/15 |
+| SCHOOL_DATA_UNAVAILABLE_REGIONS | 0 |
+| SOURCE_ROWS | 604 |
+| UNIQUE_SCHOOL_ENTITIES | 545 |
+| RUNTIME_ADMISSION_RECORDS | 604 |
 | ROW_CONSERVATION | PASS |
 | SCHOOL_LEVEL_CONFLICTS | 0 |
 | REGION_SPECIFIC_RECORDS | PASS |
 | CSV_PARSE | PASS |
-| SCHOOL_CODE_DUPLICATES | 0 |
+| DUPLICATE_SCHOOL_CODES | 58 |
 | SCHEMA | PASS |
 | CSV_RUNTIME_MATCH | PASS |
 | BUILD_AUTO_GENERATE | PASS |
@@ -47,11 +58,11 @@ Source metadata：課程資料來源、實習專題資料來源、校車／專�
 
 ## Duplicate School Audit
 
-duplicate school codes：26
+duplicate school codes：58
 
-number of affected schools：26
+number of affected schools：58
 
-number of extra rows：26
+number of extra rows：59
 
 | schoolCode | schoolName | regions | rowCount |
 |---|---|---|---:|
@@ -65,6 +76,7 @@ number of extra rows：26
 | 014322 | 市立樹林高中 | 基北區、桃連區 | 2 |
 | 014353 | 市立丹鳳高中 | 基北區、桃連區 | 2 |
 | 014439 | 市立鶯歌工商 | 基北區、桃連區 | 2 |
+| 020409 | 國立頭城家商 | 基北區、宜蘭區 | 2 |
 | 031317 | 私立光啟高中 | 基北區、桃連區 | 2 |
 | 031414 | 桃園市世紀綠能工商 | 基北區、桃連區 | 2 |
 | 034306 | 市立南崁高中 | 基北區、桃連區 | 2 |
@@ -81,8 +93,39 @@ number of extra rows：26
 | 051413 | 苗栗縣私立龍德家事商業職業學校 | 竹苗區、中投區 | 2 |
 | 054308 | 苗栗縣立三義高級中學 | 竹苗區、中投區 | 2 |
 | 054309 | 苗栗縣立苑裡高級中學 | 竹苗區、中投區 | 2 |
+| 061306 | 臺中市私立明台高級中學 | 中投區、彰化區 | 2 |
+| 063408 | 臺中市立霧峰農業工業高級中等學校 | 中投區、彰化區 | 2 |
+| 063C08 | 臺中市立霧峰農業工業高級中等學校進修部 | 中投區、彰化區 | 2 |
+| 071414 | 彰化縣私立達德高級商工職業學校 | 中投區、彰化區 | 2 |
+| 080302 | 國立南投高級中學 | 中投區、彰化區 | 2 |
+| 080305 | 國立中興高級中學 | 中投區、彰化區 | 2 |
+| 080307 | 國立竹山高級中學 | 中投區、彰化區 | 2 |
+| 080404 | 國立南投高級商業職業學校 | 中投區、彰化區 | 2 |
+| 080406 | 國立草屯高級商工職業學校 | 中投區、彰化區 | 2 |
+| 080C06 | 國立草屯高級商工職業學校進修部 | 中投區、彰化區 | 2 |
+| 081311 | 南投縣私立五育高級中學 | 中投區、彰化區 | 2 |
+| 081313 | 南投縣私立弘明實驗高級中等學校 | 中投區、彰化區 | 2 |
+| 081409 | 同德學校財團法人南投縣同德高級中等學校 | 中投區、彰化區 | 2 |
+| 084309 | 南投縣立旭光高級中學 | 中投區、彰化區 | 2 |
+| 090402 | 國立西螺高級農工職業學校 | 彰化區、雲林區 | 2 |
+| 091318 | 義峰學校財團法人雲林縣義峰高級中學 | 中投區、彰化區、雲林區 | 3 |
+| 100301 | 國立東石高級中學 | 嘉義區、臺南區 | 2 |
+| 120304 | 國立岡山高級中學 | 高雄區、臺南區 | 2 |
+| 120311 | 國立旗美高級中學 | 高雄區、臺南區 | 2 |
+| 120401 | 國立旗山高級農工職業學校 | 高雄區、臺南區 | 2 |
+| 120402 | 國立岡山高級農工職業學校 | 高雄區、臺南區 | 2 |
+| 121415 | 華德學校財團法人高雄市華德高級工業家事職業學校 | 高雄區、臺南區 | 2 |
+| 124311 | 高雄市立林園高級中學 | 高雄區、屏東區 | 2 |
+| 124322 | 高雄市立路竹高級中學 | 高雄區、臺南區 | 2 |
+| 200302 | 國立嘉義女子高級中學 | 嘉義區、臺南區 | 2 |
+| 200303 | 國立嘉義高級中學 | 嘉義區、臺南區 | 2 |
+| 200405 | 國立嘉義高級工業職業學校 | 嘉義區、臺南區 | 2 |
+| 201304 | 嘉義市私立興華高級中學 | 嘉義區、臺南區 | 2 |
+| 201312 | 嘉義市私立輔仁高級中學 | 嘉義區、臺南區 | 2 |
+| 201314 | 嘉義市私立立仁高級中學 | 嘉義區、臺南區 | 2 |
+| 201408 | 嘉義市私立東吳高級工業家事職業學校 | 嘉義區、臺南區 | 2 |
 
-IDENTICAL_FIELDS：排名、學校代碼、學校名稱、公私立、學制分類、縣市、區、地址、官網、電話、課程方向、實習／專題、校車／專車資訊、通勤資訊、住宿資訊、Google地圖、課程資料來源、實習專題資料來源、校車／專車資料來源、通勤資料來源、住宿資料來源、地址資料來源、生活資料來源、資料更新日期
+IDENTICAL_FIELDS：排名、學校代碼、學校名稱、公私立、學制分類、男女校、縣市、區、地址、官網、電話、簡章招生名額、資優班/特色班、課程方向、實習／專題、校車／專車資訊、通勤資訊、住宿資訊、Google地圖、課程資料來源、實習專題資料來源、校車／專車資料來源、通勤資料來源、住宿資料來源、地址資料來源、生活資料來源、資料更新日期
 
 REGION_SPECIFIC_FIELDS：學校名稱、招生區、學制分類、男女校、地址、官網、電話、科系與名額、簡章招生名額、招生名額、資優班/特色班、課程方向、實習／專題、校車／專車資訊、通勤資訊、住宿資訊、Google地圖、課程資料來源、實習專題資料來源、校車／專車資料來源、通勤資料來源、住宿資料來源、地址資料來源、生活資料來源、資料更新日期
 
@@ -92,29 +135,52 @@ CONFLICT_FIELDS：無
 
 | 中投區免試入學日間部 | 73 |
 | 中投區免試入學進修部 | 23 |
+| 嘉義區學校名錄 | 21 |
 | 基北區 | 129 |
 | 基北區共同就學區 | 6 |
+| 宜蘭區學校名錄 | 12 |
+| 屏東區免試入學日間部 | 19 |
+| 屏東區免試入學進修部 | 4 |
+| 彰化區免試入學日間部 | 37 |
+| 彰化區免試入學進修部 | 12 |
 | 桃連區共同就學區（基北區） | 10 |
 | 桃連區共同就學區（竹苗區） | 4 |
 | 桃連區日間部 | 36 |
+| 澎湖區學校名錄 | 2 |
 | 竹苗區學校名錄 | 39 |
+| 臺南區免試入學日間部 | 58 |
+| 臺南區免試入學進修部 | 15 |
+| 臺東區免試入學日間部 | 10 |
+| 臺東區免試入學進修部 | 1 |
+| 花蓮區免試入學日間部 | 11 |
+| 花蓮區免試入學進修部 | 5 |
+| 金門區學校名錄 | 2 |
+| 雲林區學校名錄 | 22 |
 | 高雄區學校名錄 | 53 |
 
 ## 縣市
 
 | 南投縣 | 21 |
+| 嘉義市 | 15 |
+| 嘉義縣 | 9 |
 | 基隆市 | 11 |
-| 宜蘭縣 | 1 |
-| 彰化縣 | 1 |
+| 宜蘭縣 | 12 |
+| 屏東縣 | 22 |
+| 彰化縣 | 33 |
 | 新北市 | 58 |
 | 新竹市 | 13 |
 | 新竹縣 | 10 |
 | 桃園市 | 35 |
+| 澎湖縣 | 2 |
 | 臺中市 | 65 |
 | 臺北市 | 60 |
+| 臺南市 | 56 |
+| 臺東縣 | 11 |
+| 花蓮縣 | 16 |
 | 苗栗縣 | 17 |
 | 連江縣 | 1 |
-| 雲林縣 | 1 |
+| 金門縣 | 2 |
+| 雲林縣 | 23 |
 | 高雄市 | 53 |
 
 ## 警告
@@ -129,6 +195,7 @@ CONFLICT_FIELDS：無
 - cross-region school code aggregated: 014322
 - cross-region school code aggregated: 014353
 - cross-region school code aggregated: 014439
+- cross-region school code aggregated: 020409
 - cross-region school code aggregated: 031317
 - cross-region school code aggregated: 031414
 - cross-region school code aggregated: 034306
@@ -145,6 +212,37 @@ CONFLICT_FIELDS：無
 - cross-region school code aggregated: 051413
 - cross-region school code aggregated: 054308
 - cross-region school code aggregated: 054309
+- cross-region school code aggregated: 061306
+- cross-region school code aggregated: 063408
+- cross-region school code aggregated: 063C08
+- cross-region school code aggregated: 071414
+- cross-region school code aggregated: 080302
+- cross-region school code aggregated: 080305
+- cross-region school code aggregated: 080307
+- cross-region school code aggregated: 080404
+- cross-region school code aggregated: 080406
+- cross-region school code aggregated: 080C06
+- cross-region school code aggregated: 081311
+- cross-region school code aggregated: 081313
+- cross-region school code aggregated: 081409
+- cross-region school code aggregated: 084309
+- cross-region school code aggregated: 090402
+- cross-region school code aggregated: 091318
+- cross-region school code aggregated: 100301
+- cross-region school code aggregated: 120304
+- cross-region school code aggregated: 120311
+- cross-region school code aggregated: 120401
+- cross-region school code aggregated: 120402
+- cross-region school code aggregated: 121415
+- cross-region school code aggregated: 124311
+- cross-region school code aggregated: 124322
+- cross-region school code aggregated: 200302
+- cross-region school code aggregated: 200303
+- cross-region school code aggregated: 200405
+- cross-region school code aggregated: 201304
+- cross-region school code aggregated: 201312
+- cross-region school code aggregated: 201314
+- cross-region school code aggregated: 201408
 
 ## 錯誤
 

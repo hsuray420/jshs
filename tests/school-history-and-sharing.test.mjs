@@ -57,8 +57,8 @@ test("canonical school data and historical records remain separate", async () =>
     read("scripts/generate-school-directory.mjs"),
   ]);
 
-  assert.equal(directory.schoolCount, 347);
-  assert.equal(directory.admissionRecordCount, 373);
+  assert.equal(directory.schoolCount, 545);
+  assert.equal(directory.admissionRecordCount, 604);
   assert.ok(history.schools.length > 0);
   assert.ok(history.schools.every((school) => school.sourceType === "community"));
   assert.match(generator, /generate-schools/);

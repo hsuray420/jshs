@@ -79,7 +79,7 @@ export default async function DistrictsPage({
         <div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-12">
           <p className="jshs-eyebrow">15 ADMISSION DISTRICTS</p>
           <h1 className="mt-3 max-w-4xl text-4xl font-black leading-tight md:text-5xl">先選對就學區，直接進入{requestedLabel}。</h1>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">{target ? `選擇地區後會直接開啟${requestedLabel}；積分試算維持全區可用，找學校目前只開放 5 區正式 CSV 資料。` : description}</p>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">{target ? `選擇地區後會直接開啟${requestedLabel}；找學校與積分試算依目前通過驗證的區域資料提供。` : description}</p>
         </div>
       </section>
 

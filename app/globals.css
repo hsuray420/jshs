@@ -1681,9 +1681,9 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .jshs-desktop-more { position:relative; }
 .jshs-desktop-nav a,.jshs-desktop-more > button { align-items:center; appearance:none; background:transparent; border:0; border-radius:9px; color:#374151 !important; cursor:pointer; display:inline-flex; font-size:15px; font-weight:650; gap:5px; height:40px; padding:8px 10px; text-decoration:none !important; white-space:nowrap; }
 .jshs-desktop-more > button > svg { display:block; transition:transform 150ms ease; }
-.jshs-desktop-more.is-active > button > svg { transform:rotate(180deg); }
-.jshs-desktop-more > button:hover,.jshs-desktop-more.is-active > button { background:#f1f5f9; color:#111827 !important; }
-.jshs-desktop-more.is-active > button { font-weight:700; }
+.jshs-desktop-more.is-open > button > svg { transform:rotate(180deg); }
+.jshs-desktop-more > button:hover,.jshs-desktop-more.is-open > button { background:#f1f5f9; color:#111827 !important; }
+.jshs-desktop-more.is-current > button { color:#24364d !important; font-weight:700; }
 .jshs-desktop-more > button:focus-visible,.jshs-home-header-search:focus-visible,.jshs-login-link:focus-visible { outline:2px solid #64748b; outline-offset:2px; }
 
 .jshs-nav-theme--schools { --nav-accent:#2563eb; --nav-soft:#eff6ff; }
@@ -1769,8 +1769,8 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
   .jshs-site-header .jshs-desktop-nav { align-items:center; display:flex; gap:clamp(12px,1.82vw,28px); height:76px; justify-content:center; justify-self:stretch; left:auto; min-width:0; position:static; transform:none; }
   .jshs-site-header .jshs-desktop-more > button { color:#475569 !important; font-size:clamp(13px,1.04vw,16px); font-weight:560; gap:6px; height:44px; min-height:44px; padding:0; padding-inline:0; font-weight:560 !important; }
   .jshs-site-header .jshs-desktop-more > button > svg { flex:0 0 auto; height:16px; width:16px; }
-  .jshs-site-header .jshs-desktop-more > button:hover,.jshs-site-header .jshs-desktop-more.is-active > button { background:transparent; color:#172033 !important; }
-  .jshs-site-header .jshs-desktop-more.is-active > button { box-shadow:inset 0 -2px 0 var(--brand-primary); font-weight:650 !important; }
+  .jshs-site-header .jshs-desktop-more > button:hover,.jshs-site-header .jshs-desktop-more.is-open > button { background:#f8fafc; color:#172033 !important; }
+  .jshs-site-header .jshs-desktop-more.is-current > button { color:#24364d !important; font-weight:650 !important; }
   .jshs-site-header .jshs-header-utilities { gap:12px; justify-self:end; margin-left:0; }
   .jshs-site-header .jshs-home-header-search { background:#f7f9fc; border:1px solid #e7ecf3; border-radius:12px; height:44px; width:44px; }
   .jshs-site-header .jshs-login-link { background:#f7f9fc; border:1px solid #e7ecf3; border-radius:12px; color:#334155 !important; font-size:13px; font-weight:600 !important; height:44px; padding:0 14px; padding-inline:14px; }

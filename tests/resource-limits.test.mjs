@@ -20,9 +20,9 @@ test("school discovery uses a lightweight static search index", async () => {
   const publicSearchIndex = await stat(new URL("../public/data/school-search-index.json", import.meta.url));
   const publicLegacySummary = await stat(new URL("../public/data/schools.json", import.meta.url));
 
-  assert.equal(payload.schoolCount, 347);
-  assert.equal(payload.admissionRecordCount, 373);
-  assert.equal(indexPayload.length, 347);
+  assert.equal(payload.schoolCount, 545);
+  assert.equal(payload.admissionRecordCount, 604);
+  assert.equal(indexPayload.length, 545);
   assert.ok(indexPayload.every((school) => school.normalizedSearchText && !school.admissionRecords && !school.raw));
   assert.ok(publicSearchIndex.size < publicLegacySummary.size, "search index must be smaller than the legacy public summary payload");
   assert.doesNotMatch(page, /getSchoolSummaries|getSchools\(/);

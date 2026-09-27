@@ -325,14 +325,15 @@
     "name": "國立頭城家商",
     "ownership": "公立",
     "admissionDistricts": [
-      "基北區共同就學區"
+      "基北區共同就學區",
+      "宜蘭區學校名錄"
     ],
     "schoolType": "高職",
-    "gender": "男女兼收",
+    "gender": "基北區：男女兼收；宜蘭區：男女校",
     "city": "宜蘭縣",
     "area": "頭城鎮",
     "address": "261 宜蘭縣頭城鎮新興路111號",
-    "admissionQuota": "5",
+    "admissionQuota": "基北區：5；宜蘭區：16",
     "departmentNames": [
       "幼兒保育科",
       "觀光事業科",
@@ -343,13 +344,14 @@
       "高職"
     ],
     "genders": [
-      "男女兼收"
+      "男女兼收",
+      "男女校"
     ],
     "lodgingStatus": "confirmed",
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "020409國立頭城家商頭城家商宜蘭縣頭城鎮公立高職男女兼收基北區共同就學區幼兒保育科觀光事業科餐飲管理科表演藝術科幼兒保育科:1;觀光事業科:2;餐飲管理科:1;表演藝術科:1"
+    "normalizedSearchText": "020409國立頭城家商頭城家商宜蘭縣頭城鎮公立高職基北區:男女兼收;宜蘭區:男女校基北區共同就學區宜蘭區學校名錄幼兒保育科觀光事業科餐飲管理科表演藝術科基北區:幼兒保育科:1;觀光事業科:2;餐飲管理科:1;表演藝術科:1;宜蘭區:餐飲管理科:16"
   },
   {
     "code": "010301",
@@ -6420,17 +6422,18 @@
   },
   {
     "code": "061306",
-    "name": "臺中市明台高級中學",
+    "name": "臺中市私立明台高級中學",
     "ownership": "私立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
     "schoolType": "高職",
     "gender": "不限",
     "city": "臺中市",
     "area": "霧峰區",
     "address": "413 臺中市霧峰區萊園路91號",
-    "admissionQuota": "423",
+    "admissionQuota": "中投區：423；彰化區：18",
     "departmentNames": [
       "資料處理科",
       "觀光事業科",
@@ -6449,7 +6452,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "061306臺中市明臺高級中學臺中市明臺高中臺中市霧峰區私立高職不限中投區免試入學日間部資料處理科觀光事業科餐飲管理科幼兒保育科美容科室內設計科資料處理科:87(不限);觀光事業科:83(不限);餐飲管理科:82(不限);幼兒保育科:43(不限);美容科:42(不限);室內設計科:86(不限)"
+    "normalizedSearchText": "061306臺中市私立明臺高級中學臺中市私立明臺高中臺中市霧峰區私立高職不限中投區免試入學日間部彰化區免試入學日間部資料處理科觀光事業科餐飲管理科幼兒保育科美容科室內設計科中投區:資料處理科:87(不限);觀光事業科:83(不限);餐飲管理科:82(不限);幼兒保育科:43(不限);美容科:42(不限);室內設計科:86(不限);彰化區:資料處理科:2(不限);觀光事業科:5(不限);餐飲管理科:5(不限);幼兒保育科:2(不限);美容科:2(不限);室內設計科:2(不限)"
   },
   {
     "code": "061309",
@@ -7152,14 +7155,15 @@
     "name": "臺中市立霧峰農業工業高級中等學校",
     "ownership": "公立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
     "schoolType": "高職",
     "gender": "不限",
     "city": "臺中市",
     "area": "霧峰區",
     "address": "413010 臺中市霧峰區中正路1222號",
-    "admissionQuota": "341",
+    "admissionQuota": "中投區：341；彰化區：1",
     "departmentNames": [
       "園藝科(產特)",
       "食品加工科",
@@ -7179,7 +7183,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "063408臺中市立霧峰農業工業高級中等學校臺中市立霧峰農業工業高中臺中市霧峰區公立高職不限中投區免試入學日間部園藝科(產特)食品加工科機械科汽車科電子科電機科餐飲管理科園藝科(產特):35(不限);食品加工科:34(不限);機械科:67(不限);汽車科:34(不限);電子科:69(不限);電機科:68(不限);餐飲管理科:34(不限)"
+    "normalizedSearchText": "063408臺中市立霧峰農業工業高級中等學校臺中市立霧峰農業工業高中臺中市霧峰區公立高職不限中投區免試入學日間部彰化區免試入學日間部園藝科(產特)食品加工科機械科汽車科電子科電機科餐飲管理科中投區:園藝科(產特):35(不限);食品加工科:34(不限);機械科:67(不限);汽車科:34(不限);電子科:69(不限);電機科:68(不限);餐飲管理科:34(不限);彰化區:餐飲管理科:1(不限)"
   },
   {
     "code": "063C01",
@@ -7302,14 +7306,15 @@
     "name": "臺中市立霧峰農業工業高級中等學校進修部",
     "ownership": "公立",
     "admissionDistricts": [
-      "中投區免試入學進修部"
+      "中投區免試入學進修部",
+      "彰化區免試入學進修部"
     ],
     "schoolType": "進修部",
     "gender": "不限",
     "city": "臺中市",
     "area": "霧峰區",
     "address": "413010 臺中市霧峰區中正路1222號",
-    "admissionQuota": "44",
+    "admissionQuota": "中投區：44；彰化區：2",
     "departmentNames": [
       "食品加工科(夜間班)",
       "汽車科(夜間班)"
@@ -7324,7 +7329,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "063c08臺中市立霧峰農業工業高級中等學校進修部臺中市立霧峰農業工業高中進修部臺中市霧峰區公立進修部不限中投區免試入學進修部食品加工科(夜間班)汽車科(夜間班)食品加工科(夜間班):22(不限);汽車科(夜間班):22(不限)"
+    "normalizedSearchText": "063c08臺中市立霧峰農業工業高級中等學校進修部臺中市立霧峰農業工業高中進修部臺中市霧峰區公立進修部不限中投區免試入學進修部彰化區免試入學進修部食品加工科(夜間班)汽車科(夜間班)中投區:食品加工科(夜間班):22(不限);汽車科(夜間班):22(不限);彰化區:食品加工科(夜間班):1(不限);汽車科(夜間班):1(不限)"
   },
   {
     "code": "064308",
@@ -7559,14 +7564,15 @@
     "name": "彰化縣私立達德高級商工職業學校",
     "ownership": "私立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
     "schoolType": "高職",
     "gender": "不限",
     "city": "彰化縣",
     "area": "田中鎮",
     "address": "520 彰化縣田中鎮中南路二段277號",
-    "admissionQuota": "9",
+    "admissionQuota": "中投區：9；彰化區：385",
     "departmentNames": [
       "汽車科",
       "電機科",
@@ -7585,21 +7591,22 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "071414彰化縣私立達德高級商工職業學校彰化縣私立達德高級商工職業學校彰化縣田中鎮私立高職不限中投區免試入學日間部汽車科電機科資料處理科餐飲管理科幼兒保育科美容科汽車科:2(不限);電機科:1(不限);資料處理科:1(不限);餐飲管理科:2(不限);幼兒保育科:2(不限);美容科:1(不限)"
+    "normalizedSearchText": "071414彰化縣私立達德高級商工職業學校彰化縣私立達德高級商工職業學校彰化縣田中鎮私立高職不限中投區免試入學日間部彰化區免試入學日間部汽車科電機科資料處理科餐飲管理科幼兒保育科美容科中投區:汽車科:2(不限);電機科:1(不限);資料處理科:1(不限);餐飲管理科:2(不限);幼兒保育科:2(不限);美容科:1(不限);彰化區:汽車科:32(不限);電機科:40(不限);資料處理科:41(不限);餐飲管理科:157(不限);幼兒保育科:37(不限);美容科:78(不限)"
   },
   {
     "code": "080302",
     "name": "國立南投高級中學",
     "ownership": "公立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
-    "schoolType": "綜高",
+    "schoolType": "中投區：綜高；彰化區：高職",
     "gender": "不限",
     "city": "南投縣",
     "area": "南投市",
     "address": "540 南投縣南投市建國路137號",
-    "admissionQuota": "420",
+    "admissionQuota": "中投區：420；彰化區：3",
     "departmentNames": [
       "普通科",
       "電子科",
@@ -7611,7 +7618,8 @@
       "應用英語科"
     ],
     "schoolTypes": [
-      "綜高"
+      "綜高",
+      "高職"
     ],
     "genders": [
       "不限"
@@ -7620,21 +7628,22 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "080302國立南投高級中學南投高中南投縣南投市公立綜高不限中投區免試入學日間部普通科電子科電機科建築科美工科電腦機械製圖科電子商務科應用英語科普通科:198(不限);電子科:31(不限);電機科:32(不限);建築科:32(不限);美工科:31(不限);電腦機械製圖科:31(不限);電子商務科:32(不限);應用英語科:33(不限)"
+    "normalizedSearchText": "080302國立南投高級中學南投高中南投縣南投市公立中投區:綜高;彰化區:高職不限中投區免試入學日間部彰化區免試入學日間部普通科電子科電機科建築科美工科電腦機械製圖科電子商務科應用英語科中投區:普通科:198(不限);電子科:31(不限);電機科:32(不限);建築科:32(不限);美工科:31(不限);電腦機械製圖科:31(不限);電子商務科:32(不限);應用英語科:33(不限);彰化區:電子科:1(不限);建築科:1(不限);電腦機械製圖科:1(不限)"
   },
   {
     "code": "080305",
     "name": "國立中興高級中學",
     "ownership": "公立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
     "schoolType": "高中",
     "gender": "不限",
     "city": "南投縣",
     "area": "南投市",
     "address": "54044 南投縣南投市中興新村中學路2號",
-    "admissionQuota": "350",
+    "admissionQuota": "中投區：350；彰化區：3",
     "departmentNames": [
       "普通科"
     ],
@@ -7648,21 +7657,22 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "080305國立中興高級中學中興高中南投縣南投市公立高中不限中投區免試入學日間部普通科普通科:350(不限)"
+    "normalizedSearchText": "080305國立中興高級中學中興高中南投縣南投市公立高中不限中投區免試入學日間部彰化區免試入學日間部普通科中投區:普通科:350(不限);彰化區:普通科:3(不限)"
   },
   {
     "code": "080307",
     "name": "國立竹山高級中學",
     "ownership": "公立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
     "schoolType": "綜高",
     "gender": "不限",
     "city": "南投縣",
     "area": "竹山鎮",
-    "address": "557002 南投縣竹山鎮枋坪巷1-3號",
-    "admissionQuota": "229",
+    "address": "中投區：557002 南投縣竹山鎮枋坪巷1-3號；彰化區：557 南投縣竹山鎮下橫街253號",
+    "admissionQuota": "中投區：229；彰化區：10",
     "departmentNames": [
       "綜合高中",
       "商業經營科",
@@ -7681,7 +7691,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "080307國立竹山高級中學竹山高中南投縣竹山鎮公立綜高不限中投區免試入學日間部綜合高中商業經營科國際貿易科資料處理科廣告設計科多媒體設計科綜合高中:148(不限);商業經營科:10(不限);國際貿易科:18(不限);資料處理科:26(不限);廣告設計科:14(不限);多媒體設計科:13(不限)"
+    "normalizedSearchText": "080307國立竹山高級中學竹山高中南投縣竹山鎮公立綜高不限中投區免試入學日間部彰化區免試入學日間部綜合高中商業經營科國際貿易科資料處理科廣告設計科多媒體設計科中投區:綜合高中:148(不限);商業經營科:10(不限);國際貿易科:18(不限);資料處理科:26(不限);廣告設計科:14(不限);多媒體設計科:13(不限);彰化區:綜合高中:2(不限);商業經營科:2(不限);國際貿易科:3(不限);資料處理科:1(不限);廣告設計科:1(不限);多媒體設計科:1(不限)"
   },
   {
     "code": "080308",
@@ -7785,14 +7795,15 @@
     "name": "國立南投高級商業職業學校",
     "ownership": "公立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
     "schoolType": "高職",
     "gender": "不限",
     "city": "南投縣",
     "area": "南投市",
     "address": "540 南投縣南投市三興里彰南路一段993號",
-    "admissionQuota": "227",
+    "admissionQuota": "中投區：227；彰化區：10",
     "departmentNames": [
       "商業經營科",
       "會計事務科",
@@ -7813,21 +7824,22 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "080404國立南投高級商業職業學校南投高級商業職業學校南投縣南投市公立高職不限中投區免試入學日間部商業經營科會計事務科資料處理科廣告設計科觀光事業科餐飲管理科電子商務科應用英語科商業經營科:47(不限);會計事務科:29(不限);資料處理科:23(不限);廣告設計科:31(不限);觀光事業科:12(不限);餐飲管理科:30(不限);電子商務科:29(不限);應用英語科:26(不限)"
+    "normalizedSearchText": "080404國立南投高級商業職業學校南投高級商業職業學校南投縣南投市公立高職不限中投區免試入學日間部彰化區免試入學日間部商業經營科會計事務科資料處理科廣告設計科觀光事業科餐飲管理科電子商務科應用英語科中投區:商業經營科:47(不限);會計事務科:29(不限);資料處理科:23(不限);廣告設計科:31(不限);觀光事業科:12(不限);餐飲管理科:30(不限);電子商務科:29(不限);應用英語科:26(不限);彰化區:商業經營科:2(不限);會計事務科:1(不限);資料處理科:2(不限);廣告設計科:1(不限);觀光事業科:1(不限);餐飲管理科:1(不限);電子商務科:1(不限);應用英語科:1(不限)"
   },
   {
     "code": "080406",
     "name": "國立草屯高級商工職業學校",
     "ownership": "公立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
     "schoolType": "高職",
     "gender": "不限",
     "city": "南投縣",
     "area": "草屯鎮",
     "address": "542015 南投縣草屯鎮新庄里20鄰芬草路二段736號",
-    "admissionQuota": "377",
+    "admissionQuota": "中投區：377；彰化區：14",
     "departmentNames": [
       "機械科",
       "配管科(產特)",
@@ -7846,7 +7858,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "080406國立草屯高級商工職業學校草屯高級商工職業學校南投縣草屯鎮公立高職不限中投區免試入學日間部機械科配管科(產特)商業經營科會計事務科資料處理科應用英語科機械科:60(不限);配管科(產特):29(不限);商業經營科:128(不限);會計事務科:65(不限);資料處理科:64(不限);應用英語科:31(不限)"
+    "normalizedSearchText": "080406國立草屯高級商工職業學校草屯高級商工職業學校南投縣草屯鎮公立高職不限中投區免試入學日間部彰化區免試入學日間部機械科配管科(產特)商業經營科會計事務科資料處理科應用英語科中投區:機械科:60(不限);配管科(產特):29(不限);商業經營科:128(不限);會計事務科:65(不限);資料處理科:64(不限);應用英語科:31(不限);彰化區:機械科:4(不限);配管科(產特):2(不限);商業經營科:4(不限);會計事務科:1(不限);資料處理科:1(不限);應用英語科:2(不限)"
   },
   {
     "code": "080410",
@@ -8002,14 +8014,15 @@
     "name": "國立草屯高級商工職業學校進修部",
     "ownership": "公立",
     "admissionDistricts": [
-      "中投區免試入學進修部"
+      "中投區免試入學進修部",
+      "彰化區免試入學進修部"
     ],
     "schoolType": "進修部",
     "gender": "不限",
     "city": "南投縣",
     "area": "草屯鎮",
     "address": "542015 南投縣草屯鎮新庄里20鄰芬草路二段736號",
-    "admissionQuota": "51",
+    "admissionQuota": "中投區：51；彰化區：15",
     "departmentNames": [
       "機械科(夜間班)",
       "商業經營科(夜間班)",
@@ -8025,7 +8038,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "080c06國立草屯高級商工職業學校進修部草屯高級商工職業學校進修部南投縣草屯鎮公立進修部不限中投區免試入學進修部機械科(夜間班)商業經營科(夜間班)資料處理科(夜間班)機械科(夜間班):17(不限);商業經營科(夜間班):17(不限);資料處理科(夜間班):17(不限)"
+    "normalizedSearchText": "080c06國立草屯高級商工職業學校進修部草屯高級商工職業學校進修部南投縣草屯鎮公立進修部不限中投區免試入學進修部彰化區免試入學進修部機械科(夜間班)商業經營科(夜間班)資料處理科(夜間班)中投區:機械科(夜間班):17(不限);商業經營科(夜間班):17(不限);資料處理科(夜間班):17(不限);彰化區:機械科(夜間班):5(不限);商業經營科(夜間班):5(不限);資料處理科(夜間班):5(不限)"
   },
   {
     "code": "080C10",
@@ -8060,14 +8073,15 @@
     "name": "南投縣私立五育高級中學",
     "ownership": "私立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
     "schoolType": "高職",
     "gender": "不限",
     "city": "南投縣",
     "area": "南投市",
     "address": "540 南投縣南投市樂利路200號",
-    "admissionQuota": "99",
+    "admissionQuota": "中投區：99；彰化區：15",
     "departmentNames": [
       "美容科",
       "照顧服務科(產特)",
@@ -8083,7 +8097,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "081311南投縣私立五育高級中學南投縣私立五育高中南投縣南投市私立高職不限中投區免試入學日間部美容科照顧服務科(產特)多媒體動畫科美容科:34(不限);照顧服務科(產特):31(不限);多媒體動畫科:34(不限)"
+    "normalizedSearchText": "081311南投縣私立五育高級中學南投縣私立五育高中南投縣南投市私立高職不限中投區免試入學日間部彰化區免試入學日間部美容科照顧服務科(產特)多媒體動畫科中投區:美容科:34(不限);照顧服務科(產特):31(不限);多媒體動畫科:34(不限);彰化區:美容科:5(不限);照顧服務科(產特):5(不限);多媒體動畫科:5(不限)"
   },
   {
     "code": "081312",
@@ -8119,14 +8133,15 @@
     "name": "南投縣私立弘明實驗高級中等學校",
     "ownership": "私立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
     "schoolType": "高中",
     "gender": "不限",
     "city": "南投縣",
     "area": "名間鄉",
     "address": "551 南投縣名間鄉東湖村大老巷102號",
-    "admissionQuota": "33",
+    "admissionQuota": "中投區：33；彰化區：2",
     "departmentNames": [
       "普通科"
     ],
@@ -8140,7 +8155,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "081313南投縣私立弘明實驗高級中等學校南投縣私立弘明實驗高中南投縣名間鄉私立高中不限中投區免試入學日間部普通科普通科:33(不限)"
+    "normalizedSearchText": "081313南投縣私立弘明實驗高級中等學校南投縣私立弘明實驗高中南投縣名間鄉私立高中不限中投區免試入學日間部彰化區免試入學日間部普通科中投區:普通科:33(不限);彰化區:普通科:2(不限)"
   },
   {
     "code": "081314",
@@ -8175,14 +8190,15 @@
     "name": "同德學校財團法人南投縣同德高級中等學校",
     "ownership": "私立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
     "schoolType": "綜高",
     "gender": "不限",
     "city": "南投縣",
     "area": "草屯鎮",
     "address": "542 南投縣草屯鎮中正路培英巷8號",
-    "admissionQuota": "240",
+    "admissionQuota": "中投區：240；彰化區：12",
     "departmentNames": [
       "普通科",
       "餐飲管理科",
@@ -8198,21 +8214,22 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "081409同德學校財團法人南投縣同德高級中等學校同德學校財團法人南投縣同德高中南投縣草屯鎮私立綜高不限中投區免試入學日間部普通科餐飲管理科烘焙科普通科:117(不限);餐飲管理科:82(不限);烘焙科:41(不限)"
+    "normalizedSearchText": "081409同德學校財團法人南投縣同德高級中等學校同德學校財團法人南投縣同德高中南投縣草屯鎮私立綜高不限中投區免試入學日間部彰化區免試入學日間部普通科餐飲管理科烘焙科中投區:普通科:117(不限);餐飲管理科:82(不限);烘焙科:41(不限);彰化區:普通科:6(不限);餐飲管理科:4(不限);烘焙科:2(不限)"
   },
   {
     "code": "084309",
     "name": "南投縣立旭光高級中學",
     "ownership": "公立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部"
     ],
     "schoolType": "高中",
     "gender": "不限",
     "city": "南投縣",
     "area": "草屯鎮",
     "address": "542 南投縣草屯鎮中正路568-23號",
-    "admissionQuota": "152",
+    "admissionQuota": "中投區：152；彰化區：8",
     "departmentNames": [
       "普通科"
     ],
@@ -8226,17 +8243,19 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "084309南投縣立旭光高級中學南投縣立旭光高中南投縣草屯鎮公立高中不限中投區免試入學日間部普通科普通科:152(不限)"
+    "normalizedSearchText": "084309南投縣立旭光高級中學南投縣立旭光高中南投縣草屯鎮公立高中不限中投區免試入學日間部彰化區免試入學日間部普通科中投區:普通科:152(不限);彰化區:普通科:8(不限)"
   },
   {
     "code": "091318",
     "name": "義峰學校財團法人雲林縣義峰高級中學",
     "ownership": "私立",
     "admissionDistricts": [
-      "中投區免試入學日間部"
+      "中投區免試入學日間部",
+      "彰化區免試入學日間部",
+      "雲林區學校名錄"
     ],
     "schoolType": "高職",
-    "gender": "不限",
+    "gender": "中投區：不限；彰化區：不限；雲林區：男女校",
     "city": "雲林縣",
     "area": "林內鄉",
     "address": "643 雲林縣林內鄉烏麻村長源201號",
@@ -8244,19 +8263,28 @@
     "departmentNames": [
       "餐飲管理科",
       "照顧服務科(產特)",
-      "多媒體動畫科"
+      "多媒體動畫科",
+      "照顧服務科",
+      "餐飲管理科(日)",
+      "電子商務科(日)",
+      "照顧服務科(日)",
+      "多媒體動畫科(日)",
+      "農園藝整理服務科(日)",
+      "餐飲技術科(日)",
+      "美容造型科(日)"
     ],
     "schoolTypes": [
       "高職"
     ],
     "genders": [
-      "不限"
+      "不限",
+      "男女校"
     ],
-    "lodgingStatus": "confirmed",
-    "transportStatus": "confirmed",
-    "hasSchoolBus": true,
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
     "hasPublicTransport": true,
-    "normalizedSearchText": "091318義峰學校財團法人雲林縣義峰高級中學義峰學校財團法人雲林縣義峰高中雲林縣林內鄉私立高職不限中投區免試入學日間部餐飲管理科照顧服務科(產特)多媒體動畫科餐飲管理科:3(不限);照顧服務科(產特):3(不限);多媒體動畫科:3(不限)"
+    "normalizedSearchText": "091318義峰學校財團法人雲林縣義峰高級中學義峰學校財團法人雲林縣義峰高中雲林縣林內鄉私立高職中投區:不限;彰化區:不限;雲林區:男女校中投區免試入學日間部彰化區免試入學日間部雲林區學校名錄餐飲管理科照顧服務科(產特)多媒體動畫科照顧服務科餐飲管理科(日)電子商務科(日)照顧服務科(日)多媒體動畫科(日)農園藝整理服務科(日)餐飲技術科(日)美容造型科(日)中投區:餐飲管理科:3(不限);照顧服務科(產特):3(不限);多媒體動畫科:3(不限);彰化區:餐飲管理科:3(不限);照顧服務科:3(不限);多媒體動畫科:3(不限);雲林區:餐飲管理科(日);電子商務科(日);照顧服務科(日);多媒體動畫科(日);農園藝整理服務科(日);餐飲技術科(日);美容造型科(日)"
   },
   {
     "code": "190406",
@@ -9071,20 +9099,22 @@
   },
   {
     "code": "120304",
-    "name": "國立岡山高中",
+    "name": "國立岡山高級中學",
     "ownership": "公立",
     "admissionDistricts": [
-      "高雄區學校名錄"
+      "高雄區學校名錄",
+      "臺南區免試入學日間部"
     ],
     "schoolType": "高中",
     "gender": "男女校",
     "city": "高雄市",
     "area": "岡山區",
     "address": "高雄市岡山區公園路52號",
-    "admissionQuota": "",
+    "admissionQuota": "10",
     "departmentNames": [
       "普通科(日)",
-      "體育班(日)"
+      "體育班(日)",
+      "普通科"
     ],
     "schoolTypes": [
       "高中"
@@ -9096,27 +9126,31 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "120304國立岡山高中岡山高中高雄市岡山區公立高中男女校高雄區學校名錄普通科(日)體育班(日)普通科(日);體育班(日)"
+    "normalizedSearchText": "120304國立岡山高級中學岡山高中高雄市岡山區公立高中男女校高雄區學校名錄臺南區免試入學日間部普通科(日)體育班(日)普通科高雄區:普通科(日);體育班(日);臺南區:普通科:10(不限)"
   },
   {
     "code": "120311",
-    "name": "國立旗美高中",
+    "name": "國立旗美高級中學",
     "ownership": "公立",
     "admissionDistricts": [
-      "高雄區學校名錄"
+      "高雄區學校名錄",
+      "臺南區免試入學日間部"
     ],
     "schoolType": "綜高",
     "gender": "男女校",
     "city": "高雄市",
     "area": "旗山區",
     "address": "高雄市旗山區東平里樹人路21號",
-    "admissionQuota": "",
+    "admissionQuota": "16",
     "departmentNames": [
       "普通科(日)",
       "體育班(日)",
       "多媒體設計科(日)",
       "家政科(日)",
-      "幼兒保育科(日)"
+      "幼兒保育科(日)",
+      "普通科",
+      "家政群不分科",
+      "多媒體設計科"
     ],
     "schoolTypes": [
       "綜高"
@@ -9128,7 +9162,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "120311國立旗美高中旗美高中高雄市旗山區公立綜高男女校高雄區學校名錄普通科(日)體育班(日)多媒體設計科(日)家政科(日)幼兒保育科(日)普通科(日);體育班(日);多媒體設計科(日);家政科(日);幼兒保育科(日)"
+    "normalizedSearchText": "120311國立旗美高級中學旗美高中高雄市旗山區公立綜高男女校高雄區學校名錄臺南區免試入學日間部普通科(日)體育班(日)多媒體設計科(日)家政科(日)幼兒保育科(日)普通科家政群不分科多媒體設計科高雄區:普通科(日);體育班(日);多媒體設計科(日);家政科(日);幼兒保育科(日);臺南區:普通科:10(不限);家政群不分科:4(不限);多媒體設計科:2(不限)"
   },
   {
     "code": "120319",
@@ -9188,17 +9222,18 @@
   },
   {
     "code": "120401",
-    "name": "國立旗山農工",
+    "name": "國立旗山高級農工職業學校",
     "ownership": "公立",
     "admissionDistricts": [
-      "高雄區學校名錄"
+      "高雄區學校名錄",
+      "臺南區免試入學日間部"
     ],
     "schoolType": "高職",
     "gender": "男女校",
     "city": "高雄市",
     "area": "旗山區",
     "address": "高雄市旗山區旗甲路一段195號",
-    "admissionQuota": "",
+    "admissionQuota": "16",
     "departmentNames": [
       "農場經營科(日)",
       "園藝科(日)",
@@ -9212,7 +9247,15 @@
       "綜合職能科(日)",
       "烘焙食品科(日)",
       "機車修護科(日)",
-      "餐飲技術科(日)"
+      "餐飲技術科(日)",
+      "農場經營科",
+      "園藝科",
+      "畜產保健科",
+      "機械科",
+      "汽車科",
+      "電機科",
+      "生物產業機電科",
+      "家政科"
     ],
     "schoolTypes": [
       "高職"
@@ -9224,21 +9267,22 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "120401國立旗山農工旗山農工高雄市旗山區公立高職男女校高雄區學校名錄農場經營科(日)園藝科(日)食品加工科(日)畜產保健科(日)機械科(日)汽車科(日)電機科(日)生物產業機電科(日)家政科(日)綜合職能科(日)烘焙食品科(日)機車修護科(日)餐飲技術科(日)農場經營科(日);園藝科(日);食品加工科(日);畜產保健科(日);機械科(日);汽車科(日);電機科(日);生物產業機電科(日);家政科(日);綜合職能科(日);烘焙食品科(日);機車修護科(日);餐飲技術科(日)"
+    "normalizedSearchText": "120401國立旗山高級農工職業學校旗山高級農工職業學校高雄市旗山區公立高職男女校高雄區學校名錄臺南區免試入學日間部農場經營科(日)園藝科(日)食品加工科(日)畜產保健科(日)機械科(日)汽車科(日)電機科(日)生物產業機電科(日)家政科(日)綜合職能科(日)烘焙食品科(日)機車修護科(日)餐飲技術科(日)農場經營科園藝科畜產保健科機械科汽車科電機科生物產業機電科家政科高雄區:農場經營科(日);園藝科(日);食品加工科(日);畜產保健科(日);機械科(日);汽車科(日);電機科(日);生物產業機電科(日);家政科(日);綜合職能科(日);烘焙食品科(日);機車修護科(日);餐飲技術科(日);臺南區:農場經營科:2(不限);園藝科:2(不限);畜產保健科:2(不限);機械科:2(不限);汽車科:2(不限);電機科:2(不限);生物產業機電科:2(不限);家政科:2(不限)"
   },
   {
     "code": "120402",
-    "name": "國立岡山農工",
+    "name": "國立岡山高級農工職業學校",
     "ownership": "公立",
     "admissionDistricts": [
-      "高雄區學校名錄"
+      "高雄區學校名錄",
+      "臺南區免試入學日間部"
     ],
     "schoolType": "高職",
     "gender": "男女校",
     "city": "高雄市",
     "area": "岡山區",
     "address": "高雄市岡山區壽天里岡山路533號",
-    "admissionQuota": "",
+    "admissionQuota": "11",
     "departmentNames": [
       "園藝科(日)",
       "食品加工科(日)",
@@ -9258,7 +9302,17 @@
       "生物產業機電科(日)",
       "家政科(日)",
       "家政科(夜)",
-      "綜合職能科(日)"
+      "綜合職能科(日)",
+      "園藝科",
+      "食品加工科",
+      "機械科",
+      "汽車科",
+      "資訊科",
+      "電子科",
+      "電機科",
+      "建築科",
+      "化工科",
+      "室內空間設計科"
     ],
     "schoolTypes": [
       "高職"
@@ -9270,7 +9324,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "120402國立岡山農工岡山農工高雄市岡山區公立高職男女校高雄區學校名錄園藝科(日)食品加工科(日)食品加工科(夜)機械科(日)機械科(夜)汽車科(日)汽車科(夜)資訊科(日)資訊科(夜)電子科(日)電機科(日)電機科(夜)建築科(日)化工科(日)室內空間設計科(日)生物產業機電科(日)家政科(日)家政科(夜)綜合職能科(日)園藝科(日);食品加工科(日);食品加工科(夜);機械科(日);機械科(夜);汽車科(日);汽車科(夜);資訊科(日);資訊科(夜);電子科(日);電機科(日);電機科(夜);建築科(日);化工科(日);室內空間設計科(日);生物產業機電科(日);家政科(日);家政科(夜);綜合職能科(日)"
+    "normalizedSearchText": "120402國立岡山高級農工職業學校岡山高級農工職業學校高雄市岡山區公立高職男女校高雄區學校名錄臺南區免試入學日間部園藝科(日)食品加工科(日)食品加工科(夜)機械科(日)機械科(夜)汽車科(日)汽車科(夜)資訊科(日)資訊科(夜)電子科(日)電機科(日)電機科(夜)建築科(日)化工科(日)室內空間設計科(日)生物產業機電科(日)家政科(日)家政科(夜)綜合職能科(日)園藝科食品加工科機械科汽車科資訊科電子科電機科建築科化工科室內空間設計科高雄區:園藝科(日);食品加工科(日);食品加工科(夜);機械科(日);機械科(夜);汽車科(日);汽車科(夜);資訊科(日);資訊科(夜);電子科(日);電機科(日);電機科(夜);建築科(日);化工科(日);室內空間設計科(日);生物產業機電科(日);家政科(日);家政科(夜);綜合職能科(日);臺南區:園藝科:1(不限);食品加工科:1(不限);機械科:1(不限);汽車科:2(不限);資訊科:1(不限);電子科:1(不限);電機科:1(不限);建築科:1(不限);化工科:1(不限);室內空間設計科:1(不限)"
   },
   {
     "code": "120409",
@@ -9578,24 +9632,30 @@
   },
   {
     "code": "121415",
-    "name": "私立華德工家",
+    "name": "華德學校財團法人高雄市華德高級工業家事職業學校",
     "ownership": "私立",
     "admissionDistricts": [
-      "高雄區學校名錄"
+      "高雄區學校名錄",
+      "臺南區免試入學日間部"
     ],
     "schoolType": "高職",
     "gender": "男女校",
     "city": "高雄市",
     "area": "茄萣區",
     "address": "高雄市茄萣區濱海路四段66號",
-    "admissionQuota": "",
+    "admissionQuota": "118",
     "departmentNames": [
       "汽車科(日)",
       "資訊科(日)",
       "飛機修護科(日)",
       "餐飲管理科(日)",
       "烘焙科(日)",
-      "餐飲技術科(日)"
+      "餐飲技術科(日)",
+      "資訊科",
+      "飛機修護科",
+      "餐飲管理科",
+      "時尚造型科",
+      "烘焙科"
     ],
     "schoolTypes": [
       "高職"
@@ -9607,7 +9667,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": false,
     "hasPublicTransport": true,
-    "normalizedSearchText": "121415私立華德工家華德工家高雄市茄萣區私立高職男女校高雄區學校名錄汽車科(日)資訊科(日)飛機修護科(日)餐飲管理科(日)烘焙科(日)餐飲技術科(日)汽車科(日);資訊科(日);飛機修護科(日);餐飲管理科(日);烘焙科(日);餐飲技術科(日)"
+    "normalizedSearchText": "121415華德學校財團法人高雄市華德高級工業家事職業學校華德學校財團法人高雄市華德高級工業家事職業學校高雄市茄萣區私立高職男女校高雄區學校名錄臺南區免試入學日間部汽車科(日)資訊科(日)飛機修護科(日)餐飲管理科(日)烘焙科(日)餐飲技術科(日)資訊科飛機修護科餐飲管理科時尚造型科烘焙科高雄區:汽車科(日);資訊科(日);飛機修護科(日);餐飲管理科(日);烘焙科(日);餐飲技術科(日);臺南區:資訊科:23(不限);飛機修護科:24(不限);餐飲管理科:24(不限);時尚造型科:23(不限);烘焙科:24(不限)"
   },
   {
     "code": "121417",
@@ -9677,20 +9737,22 @@
   },
   {
     "code": "124311",
-    "name": "高雄市立林園高中",
+    "name": "高雄市立林園高級中學",
     "ownership": "公立",
     "admissionDistricts": [
-      "高雄區學校名錄"
+      "高雄區學校名錄",
+      "屏東區免試入學日間部"
     ],
     "schoolType": "高中",
     "gender": "男女校",
     "city": "高雄市",
     "area": "林園區",
     "address": "高雄市林園區林園北路481號",
-    "admissionQuota": "",
+    "admissionQuota": "1",
     "departmentNames": [
       "普通科(日)",
-      "體育班(日)"
+      "體育班(日)",
+      "普通科"
     ],
     "schoolTypes": [
       "高中"
@@ -9698,11 +9760,11 @@
     "genders": [
       "男女校"
     ],
-    "lodgingStatus": "confirmed",
-    "transportStatus": "confirmed",
-    "hasSchoolBus": true,
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
     "hasPublicTransport": true,
-    "normalizedSearchText": "124311高雄市立林園高中高雄市立林園高中高雄市林園區公立高中男女校高雄區學校名錄普通科(日)體育班(日)普通科(日);體育班(日)"
+    "normalizedSearchText": "124311高雄市立林園高級中學高雄市立林園高中高雄市林園區公立高中男女校高雄區學校名錄屏東區免試入學日間部普通科(日)體育班(日)普通科高雄區:普通科(日);體育班(日);屏東區:普通科:1(不限)"
   },
   {
     "code": "124313",
@@ -9735,20 +9797,22 @@
   },
   {
     "code": "124322",
-    "name": "高雄市立路竹高中",
+    "name": "高雄市立路竹高級中學",
     "ownership": "公立",
     "admissionDistricts": [
-      "高雄區學校名錄"
+      "高雄區學校名錄",
+      "臺南區免試入學日間部"
     ],
     "schoolType": "高中",
     "gender": "男女校",
     "city": "高雄市",
     "area": "路竹區",
     "address": "高雄市路竹區中華路292號",
-    "admissionQuota": "",
+    "admissionQuota": "20",
     "departmentNames": [
       "普通科(日)",
-      "體育班(日)"
+      "體育班(日)",
+      "普通科"
     ],
     "schoolTypes": [
       "高中"
@@ -9760,7 +9824,7 @@
     "transportStatus": "confirmed",
     "hasSchoolBus": true,
     "hasPublicTransport": true,
-    "normalizedSearchText": "124322高雄市立路竹高中高雄市立路竹高中高雄市路竹區公立高中男女校高雄區學校名錄普通科(日)體育班(日)普通科(日);體育班(日)"
+    "normalizedSearchText": "124322高雄市立路竹高級中學高雄市立路竹高中高雄市路竹區公立高中男女校高雄區學校名錄臺南區免試入學日間部普通科(日)體育班(日)普通科高雄區:普通科(日);體育班(日);臺南區:普通科:20(不限)"
   },
   {
     "code": "124333",
@@ -10770,5 +10834,6049 @@
     "hasSchoolBus": true,
     "hasPublicTransport": true,
     "normalizedSearchText": "613301高雄市立小港高中高雄市立小港高中高雄市小港區公立高中男女校高雄區學校名錄普通科(日)體育班(日)普通科(日);體育班(日)"
+  },
+  {
+    "code": "070301",
+    "name": "國立彰化女子高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "女生",
+    "city": "彰化縣",
+    "area": "彰化市",
+    "address": "500 彰化縣彰化市光復路62號",
+    "admissionQuota": "386",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "女生"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070301國立彰化女子高級中學彰化女子高中彰化縣彰化市公立高中女生彰化區免試入學日間部普通科普通科:386(女生)"
+  },
+  {
+    "code": "070304",
+    "name": "國立員林高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "員林市",
+    "address": "51048 彰化縣員林市靜修路79號",
+    "admissionQuota": "418",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070304國立員林高級中學員林高中彰化縣員林市公立高中不限彰化區免試入學日間部普通科普通科:418(不限)"
+  },
+  {
+    "code": "070307",
+    "name": "國立彰化高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男生",
+    "city": "彰化縣",
+    "area": "彰化市",
+    "address": "500017 彰化縣彰化市中興路78號",
+    "admissionQuota": "494",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男生"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070307國立彰化高級中學彰化高中彰化縣彰化市公立高中男生彰化區免試入學日間部普通科普通科:494(男生)"
+  },
+  {
+    "code": "070316",
+    "name": "國立鹿港高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "鹿港鎮",
+    "address": "505 彰化縣鹿港鎮東石里中山路661號",
+    "admissionQuota": "348",
+    "departmentNames": [
+      "普通科",
+      "汽車科",
+      "商業經營科",
+      "國際貿易科",
+      "水產養殖科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070316國立鹿港高級中學鹿港高中彰化縣鹿港鎮公立綜高不限彰化區免試入學日間部普通科汽車科商業經營科國際貿易科水產養殖科普通科:134(不限);汽車科:53(不限);商業經營科:79(不限);國際貿易科:57(不限);水產養殖科:25(不限)"
+  },
+  {
+    "code": "070319",
+    "name": "國立溪湖高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "溪湖鎮",
+    "address": "51452 彰化縣溪湖鎮大溪路二段86號",
+    "admissionQuota": "383",
+    "departmentNames": [
+      "綜合高中"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070319國立溪湖高級中學溪湖高中彰化縣溪湖鎮公立綜高不限彰化區免試入學日間部綜合高中綜合高中:383(不限)"
+  },
+  {
+    "code": "070401",
+    "name": "國立彰化師範大學附屬高級工業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "彰化市",
+    "address": "500 彰化縣彰化市工校街1號",
+    "admissionQuota": "469",
+    "departmentNames": [
+      "機械科",
+      "鑄造科(產特)",
+      "汽車科",
+      "資訊科",
+      "電子科",
+      "控制科",
+      "電機科",
+      "建築科",
+      "機械木模科(產特)",
+      "機電科",
+      "製圖科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070401國立彰化師範大學附屬高級工業職業學校彰化師範大學附屬高工彰化縣彰化市公立高職不限彰化區免試入學日間部機械科鑄造科(產特)汽車科資訊科電子科控制科電機科建築科機械木模科(產特)機電科製圖科機械科:54(不限);鑄造科(產特):31(不限);汽車科:43(不限);資訊科:25(不限);電子科:58(不限);控制科:30(不限);電機科:50(不限);建築科:55(不限);機械木模科(產特):32(不限);機電科:61(不限);製圖科:30(不限)"
+  },
+  {
+    "code": "070402",
+    "name": "國立永靖高級工業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "永靖鄉",
+    "address": "51247 彰化縣永靖鄉永坡路101號",
+    "admissionQuota": "297",
+    "departmentNames": [
+      "機械科",
+      "資訊科",
+      "電機科",
+      "建築科",
+      "化工科",
+      "製圖科",
+      "室內空間設計科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070402國立永靖高級工業職業學校永靖高工彰化縣永靖鄉公立高職不限彰化區免試入學日間部機械科資訊科電機科建築科化工科製圖科室內空間設計科機械科:82(不限);資訊科:27(不限);電機科:51(不限);建築科:28(不限);化工科:57(不限);製圖科:25(不限);室內空間設計科:27(不限)"
+  },
+  {
+    "code": "070403",
+    "name": "國立二林高級工商職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "二林鎮",
+    "address": "526021 彰化縣二林鎮豐田里斗苑路四段500號",
+    "admissionQuota": "252",
+    "departmentNames": [
+      "機械科",
+      "電子科",
+      "電機科",
+      "建築科",
+      "室內空間設計科",
+      "商業經營科",
+      "資料處理科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070403國立二林高級工商職業學校二林高級工商職業學校彰化縣二林鎮公立高職不限彰化區免試入學日間部機械科電子科電機科建築科室內空間設計科商業經營科資料處理科機械科:51(不限);電子科:25(不限);電機科:48(不限);建築科:25(不限);室內空間設計科:25(不限);商業經營科:54(不限);資料處理科:24(不限)"
+  },
+  {
+    "code": "070405",
+    "name": "國立秀水高級工業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "秀水鄉",
+    "address": "504 彰化縣秀水鄉中山路364號",
+    "admissionQuota": "205",
+    "departmentNames": [
+      "機械科",
+      "電機科",
+      "建築科",
+      "製圖科",
+      "室內空間設計科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070405國立秀水高級工業職業學校秀水高工彰化縣秀水鄉公立高職不限彰化區免試入學日間部機械科電機科建築科製圖科室內空間設計科機械科:60(不限);電機科:57(不限);建築科:29(不限);製圖科:31(不限);室內空間設計科:28(不限)"
+  },
+  {
+    "code": "070406",
+    "name": "國立彰化高級商業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "彰化市",
+    "address": "500 彰化縣彰化市南郭路一段326號",
+    "admissionQuota": "513",
+    "departmentNames": [
+      "綜合高中",
+      "商業經營科",
+      "國際貿易科",
+      "資料處理科",
+      "廣告設計科",
+      "應用英語科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070406國立彰化高級商業職業學校彰化高級商業職業學校彰化縣彰化市公立綜高不限彰化區免試入學日間部綜合高中商業經營科國際貿易科資料處理科廣告設計科應用英語科綜合高中:127(不限);商業經營科:112(不限);國際貿易科:107(不限);資料處理科:59(不限);廣告設計科:50(不限);應用英語科:58(不限)"
+  },
+  {
+    "code": "070408",
+    "name": "國立員林高級農工職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "員林市",
+    "address": "510 彰化縣員林市員水路二段313號",
+    "admissionQuota": "336",
+    "departmentNames": [
+      "農場經營科(產特)",
+      "園藝科(產特)",
+      "食品加工科",
+      "畜產保健科(產特)",
+      "機械科",
+      "建築科",
+      "生物產業機電科",
+      "電子商務科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070408國立員林高級農工職業學校員林高級農工職業學校彰化縣員林市公立高職不限彰化區免試入學日間部農場經營科(產特)園藝科(產特)食品加工科畜產保健科(產特)機械科建築科生物產業機電科電子商務科農場經營科(產特):29(不限);園藝科(產特):59(不限);食品加工科:55(不限);畜產保健科(產特):24(不限);機械科:57(不限);建築科:55(不限);生物產業機電科:30(不限);電子商務科:27(不限)"
+  },
+  {
+    "code": "070409",
+    "name": "國立員林崇實高級工業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "員林市",
+    "address": "510002 彰化縣員林市育英路103號",
+    "admissionQuota": "256",
+    "departmentNames": [
+      "資訊科",
+      "電機科",
+      "化工科",
+      "電機空調科",
+      "室內空間設計科",
+      "家具設計科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070409國立員林崇實高級工業職業學校員林崇實高工彰化縣員林市公立高職不限彰化區免試入學日間部資訊科電機科化工科電機空調科室內空間設計科家具設計科資訊科:27(不限);電機科:54(不限);化工科:63(不限);電機空調科:59(不限);室內空間設計科:21(不限);家具設計科:32(不限)"
+  },
+  {
+    "code": "070410",
+    "name": "國立員林高級家事商業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "員林市",
+    "address": "51045 彰化縣員林市中正路56號",
+    "admissionQuota": "257",
+    "departmentNames": [
+      "商業經營科",
+      "國際貿易科",
+      "應用英語科",
+      "家政科",
+      "服裝科",
+      "幼兒保育科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070410國立員林高級家事商業職業學校員林高級家事商業職業學校彰化縣員林市公立高職不限彰化區免試入學日間部商業經營科國際貿易科應用英語科家政科服裝科幼兒保育科商業經營科:50(不限);國際貿易科:79(不限);應用英語科:52(不限);家政科:23(不限);服裝科:29(不限);幼兒保育科:24(不限)"
+  },
+  {
+    "code": "070415",
+    "name": "國立北斗高級家事商業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "北斗鎮",
+    "address": "521 彰化縣北斗鎮大道里學府路50號",
+    "admissionQuota": "293",
+    "departmentNames": [
+      "商業經營科",
+      "國際貿易科",
+      "資料處理科",
+      "廣告設計科",
+      "餐飲管理科",
+      "美容科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070415國立北斗高級家事商業職業學校北斗高級家事商業職業學校彰化縣北斗鎮公立高職不限彰化區免試入學日間部商業經營科國際貿易科資料處理科廣告設計科餐飲管理科美容科商業經營科:86(不限);國際貿易科:29(不限);資料處理科:29(不限);廣告設計科:77(不限);餐飲管理科:22(不限);美容科:50(不限)"
+  },
+  {
+    "code": "070B16",
+    "name": "國立鹿港高級中學進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "鹿港鎮",
+    "address": "505 彰化縣鹿港鎮東石里中山路661號",
+    "admissionQuota": "28",
+    "departmentNames": [
+      "商業經營科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070b16國立鹿港高級中學進修部鹿港高中進修部彰化縣鹿港鎮公立進修部不限彰化區免試入學進修部商業經營科(夜間班)商業經營科(夜間班):28(不限)"
+  },
+  {
+    "code": "070C01",
+    "name": "國立彰化師範大學附屬高級工業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "彰化市",
+    "address": "500 彰化縣彰化市工校街1號",
+    "admissionQuota": "190",
+    "departmentNames": [
+      "機械科(夜間班)",
+      "汽車科(夜間班)",
+      "資訊科(夜間班)",
+      "電機科(夜間班)",
+      "製圖科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070c01國立彰化師範大學附屬高級工業職業學校進修部彰化師範大學附屬高工進修部彰化縣彰化市公立進修部不限彰化區免試入學進修部機械科(夜間班)汽車科(夜間班)資訊科(夜間班)電機科(夜間班)製圖科(夜間班)機械科(夜間班):38(不限);汽車科(夜間班):38(不限);資訊科(夜間班):38(不限);電機科(夜間班):38(不限);製圖科(夜間班):38(不限)"
+  },
+  {
+    "code": "070C02",
+    "name": "國立永靖高級工業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "永靖鄉",
+    "address": "51247 彰化縣永靖鄉永坡路101號",
+    "admissionQuota": "38",
+    "departmentNames": [
+      "資訊科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070c02國立永靖高級工業職業學校進修部永靖高工進修部彰化縣永靖鄉公立進修部不限彰化區免試入學進修部資訊科(夜間班)資訊科(夜間班):38(不限)"
+  },
+  {
+    "code": "070C03",
+    "name": "國立二林高級工商職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "二林鎮",
+    "address": "526021 彰化縣二林鎮豐田里斗苑路四段500號",
+    "admissionQuota": "46",
+    "departmentNames": [
+      "商業經營科(夜間班)",
+      "資料處理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070c03國立二林高級工商職業學校進修部二林高級工商職業學校進修部彰化縣二林鎮公立進修部不限彰化區免試入學進修部商業經營科(夜間班)資料處理科(夜間班)商業經營科(夜間班):23(不限);資料處理科(夜間班):23(不限)"
+  },
+  {
+    "code": "070C05",
+    "name": "國立秀水高級工業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "秀水鄉",
+    "address": "504 彰化縣秀水鄉中山路364號",
+    "admissionQuota": "92",
+    "departmentNames": [
+      "機械科(夜間班)",
+      "電機科(夜間班)",
+      "製圖科(夜間班)",
+      "室內空間設計科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070c05國立秀水高級工業職業學校進修部秀水高工進修部彰化縣秀水鄉公立進修部不限彰化區免試入學進修部機械科(夜間班)電機科(夜間班)製圖科(夜間班)室內空間設計科(夜間班)機械科(夜間班):23(不限);電機科(夜間班):23(不限);製圖科(夜間班):23(不限);室內空間設計科(夜間班):23(不限)"
+  },
+  {
+    "code": "070C06",
+    "name": "國立彰化高級商業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "彰化市",
+    "address": "500 彰化縣彰化市南郭路一段326號",
+    "admissionQuota": "66",
+    "departmentNames": [
+      "商業經營科(夜間班)",
+      "資料處理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070c06國立彰化高級商業職業學校進修部彰化高級商業職業學校進修部彰化縣彰化市公立進修部不限彰化區免試入學進修部商業經營科(夜間班)資料處理科(夜間班)商業經營科(夜間班):35(不限);資料處理科(夜間班):31(不限)"
+  },
+  {
+    "code": "070C08",
+    "name": "國立員林高級農工職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "員林市",
+    "address": "510 彰化縣員林市員水路二段313號",
+    "admissionQuota": "35",
+    "departmentNames": [
+      "園藝科(產特)(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070c08國立員林高級農工職業學校進修部員林高級農工職業學校進修部彰化縣員林市公立進修部不限彰化區免試入學進修部園藝科(產特)(夜間班)園藝科(產特)(夜間班):35(不限)"
+  },
+  {
+    "code": "070C09",
+    "name": "國立員林崇實高級工業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "員林市",
+    "address": "510002 彰化縣員林市育英路103號",
+    "admissionQuota": "71",
+    "departmentNames": [
+      "電機科(夜間班)",
+      "室內空間設計科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070c09國立員林崇實高級工業職業學校進修部員林崇實高工進修部彰化縣員林市公立進修部不限彰化區免試入學進修部電機科(夜間班)室內空間設計科(夜間班)電機科(夜間班):35(不限);室內空間設計科(夜間班):36(不限)"
+  },
+  {
+    "code": "070C15",
+    "name": "國立北斗高級家事商業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "北斗鎮",
+    "address": "521 彰化縣北斗鎮大道里學府路50號",
+    "admissionQuota": "10",
+    "departmentNames": [
+      "照顧服務科(產特)(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070c15國立北斗高級家事商業職業學校進修部北斗高級家事商業職業學校進修部彰化縣北斗鎮公立進修部不限彰化區免試入學進修部照顧服務科(產特)(夜間班)照顧服務科(產特)(夜間班):10(不限)"
+  },
+  {
+    "code": "070F01",
+    "name": "國立和美實驗學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "和美鎮",
+    "address": "508 彰化縣和美鎮鹿和路六段115號",
+    "admissionQuota": "78",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "070f01國立和美實驗學校和美實驗學校彰化縣和美鎮公立高中不限彰化區免試入學日間部普通科普通科:78(不限)"
+  },
+  {
+    "code": "071311",
+    "name": "彰化縣私立精誠高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "彰化市",
+    "address": "50055 彰化縣彰化市林森路200號",
+    "admissionQuota": "218",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "071311彰化縣私立精誠高級中學彰化縣私立精誠高中彰化縣彰化市私立高中不限彰化區免試入學日間部普通科普通科:218(不限)"
+  },
+  {
+    "code": "071317",
+    "name": "彰化縣私立文興高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "田中鎮",
+    "address": "520 彰化縣田中鎮員集路三段93號",
+    "admissionQuota": "92",
+    "departmentNames": [
+      "綜合高中"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "071317彰化縣私立文興高級中學彰化縣私立文興高中彰化縣田中鎮私立綜高不限彰化區免試入學日間部綜合高中綜合高中:92(不限)"
+  },
+  {
+    "code": "071318",
+    "name": "彰化縣私立正德高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "彰化市",
+    "address": "500 彰化縣彰化市彰水路145號",
+    "admissionQuota": "209",
+    "departmentNames": [
+      "普通科",
+      "應用英語科",
+      "應用日語科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "071318彰化縣私立正德高級中學彰化縣私立正德高中彰化縣彰化市私立綜高不限彰化區免試入學日間部普通科應用英語科應用日語科普通科:128(不限);應用英語科:43(不限);應用日語科:38(不限)"
+  },
+  {
+    "code": "074308",
+    "name": "彰化縣立彰化藝術高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "彰化市",
+    "address": "500 彰化縣彰化市卦山路13號",
+    "admissionQuota": "114",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "074308彰化縣立彰化藝術高級中學彰化縣立彰化藝術高中彰化縣彰化市公立高中不限彰化區免試入學日間部普通科普通科:114(不限)"
+  },
+  {
+    "code": "074313",
+    "name": "彰化縣立二林高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "二林鎮",
+    "address": "52652 彰化縣二林鎮中西里二城路6號",
+    "admissionQuota": "63",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "074313彰化縣立二林高級中學彰化縣立二林高中彰化縣二林鎮公立高中不限彰化區免試入學日間部普通科普通科:63(不限)"
+  },
+  {
+    "code": "074323",
+    "name": "彰化縣立和美高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "和美鎮",
+    "address": "508 彰化縣和美鎮西園路31號",
+    "admissionQuota": "90",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "074323彰化縣立和美高級中學彰化縣立和美高中彰化縣和美鎮公立高中不限彰化區免試入學日間部普通科普通科:90(不限)"
+  },
+  {
+    "code": "074328",
+    "name": "彰化縣立田中高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "田中鎮",
+    "address": "520 彰化縣田中鎮文化街23號",
+    "admissionQuota": "87",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "074328彰化縣立田中高級中學彰化縣立田中高中彰化縣田中鎮公立高中不限彰化區免試入學日間部普通科普通科:87(不限)"
+  },
+  {
+    "code": "074339",
+    "name": "彰化縣立成功高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "不限",
+    "city": "彰化縣",
+    "area": "溪湖鎮",
+    "address": "514 彰化縣溪湖鎮福德路310號",
+    "admissionQuota": "81",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "074339彰化縣立成功高級中學彰化縣立成功高中彰化縣溪湖鎮公立高中不限彰化區免試入學日間部普通科普通科:81(不限)"
+  },
+  {
+    "code": "090402",
+    "name": "國立西螺高級農工職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學日間部",
+      "雲林區學校名錄"
+    ],
+    "schoolType": "綜高",
+    "gender": "彰化區：不限；雲林區：男女校",
+    "city": "雲林縣",
+    "area": "西螺鎮",
+    "address": "彰化區：648001 雲林縣西螺鎮大同路4號；雲林區：648 雲林縣西螺鎮大同路4號",
+    "admissionQuota": "13",
+    "departmentNames": [
+      "綜合高中",
+      "食品加工科",
+      "畜產保健科(產特)",
+      "機械科",
+      "汽車科",
+      "電子科",
+      "電機科",
+      "化工科",
+      "生物產業機電科",
+      "食品加工科(日)",
+      "食品加工科(夜)",
+      "畜產保健科(日)",
+      "機械科(日)",
+      "汽車科(日)",
+      "電子科(日)",
+      "電機科(日)",
+      "電機科(夜)",
+      "化工科(日)",
+      "生物產業機電科(日)",
+      "電腦機械製圖科(夜)",
+      "微電腦修護科(日)",
+      "電腦繪圖科(日)",
+      "機械加工科(日)",
+      "商用資訊科(日)"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "不限",
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "090402國立西螺高級農工職業學校西螺高級農工職業學校雲林縣西螺鎮公立綜高彰化區:不限;雲林區:男女校彰化區免試入學日間部雲林區學校名錄綜合高中食品加工科畜產保健科(產特)機械科汽車科電子科電機科化工科生物產業機電科食品加工科(日)食品加工科(夜)畜產保健科(日)機械科(日)汽車科(日)電子科(日)電機科(日)電機科(夜)化工科(日)生物產業機電科(日)電腦機械製圖科(夜)微電腦修護科(日)電腦繪圖科(日)機械加工科(日)商用資訊科(日)彰化區:綜合高中:5(不限);食品加工科:1(不限);畜產保健科(產特):1(不限);機械科:1(不限);汽車科:1(不限);電子科:1(不限);電機科:1(不限);化工科:1(不限);生物產業機電科:1(不限);雲林區:食品加工科(日);食品加工科(夜);畜產保健科(日);機械科(日);汽車科(日);電子科(日);電機科(日);電機科(夜);化工科(日);生物產業機電科(日);電腦機械製圖科(夜);微電腦修護科(日);電腦繪圖科(日);機械加工科(日);商用資訊科(日)"
+  },
+  {
+    "code": "090C02",
+    "name": "國立西螺高級農工職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "彰化區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "不限",
+    "city": "雲林縣",
+    "area": "西螺鎮",
+    "address": "648001 雲林縣西螺鎮大同路4號",
+    "admissionQuota": "2",
+    "departmentNames": [
+      "電機科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "不限"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "090c02國立西螺高級農工職業學校進修部西螺高級農工職業學校進修部雲林縣西螺鎮公立進修部不限彰化區免試入學進修部電機科(夜間班)電機科(夜間班):2(不限)"
+  },
+  {
+    "code": "090305",
+    "name": "國立斗六高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "斗六市",
+    "address": "640 雲林縣斗六市民生路224號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)",
+      "美術班(日)",
+      "體育班(日)",
+      "數理資優班(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "090305國立斗六高中斗六高中雲林縣斗六市公立高中男女校雲林區學校名錄普通科(日)美術班(日)體育班(日)數理資優班(日)普通科(日);美術班(日);體育班(日);數理資優班(日)"
+  },
+  {
+    "code": "090306",
+    "name": "國立北港高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "北港鎮",
+    "address": "651005 雲林縣北港鎮成功路26號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)",
+      "體育班(日)",
+      "商業經營科(日)",
+      "國際貿易科(日)",
+      "資料處理科(日)",
+      "應用英語科(日)"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "090306國立北港高中北港高中雲林縣北港鎮公立綜高男女校雲林區學校名錄普通科(日)體育班(日)商業經營科(日)國際貿易科(日)資料處理科(日)應用英語科(日)普通科(日);體育班(日);商業經營科(日);國際貿易科(日);資料處理科(日);應用英語科(日)"
+  },
+  {
+    "code": "090315",
+    "name": "國立虎尾高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "虎尾鎮",
+    "address": "632302 雲林縣虎尾鎮光復路222號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)",
+      "體育班(日)",
+      "數理資優班(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "090315國立虎尾高中虎尾高中雲林縣虎尾鎮公立高中男女校雲林區學校名錄普通科(日)體育班(日)數理資優班(日)普通科(日);體育班(日);數理資優班(日)"
+  },
+  {
+    "code": "090401",
+    "name": "國立虎尾農工",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "虎尾鎮",
+    "address": "632 雲林縣虎尾鎮博愛路65號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "食品加工科(日)",
+      "畜產保健科(日)",
+      "機械科(日)",
+      "電機科(日)",
+      "建築科(日)",
+      "生物產業機電科(日)",
+      "電腦機械製圖科(日)",
+      "商業經營科(日)",
+      "門市服務科(日)",
+      "農業技術科(日)",
+      "烘焙食品科(日)",
+      "電機修護科(日)",
+      "營造技術科(日)",
+      "電腦繪圖科(日)"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "090401國立虎尾農工虎尾農工雲林縣虎尾鎮公立高職男女校雲林區學校名錄食品加工科(日)畜產保健科(日)機械科(日)電機科(日)建築科(日)生物產業機電科(日)電腦機械製圖科(日)商業經營科(日)門市服務科(日)農業技術科(日)烘焙食品科(日)電機修護科(日)營造技術科(日)電腦繪圖科(日)食品加工科(日);畜產保健科(日);機械科(日);電機科(日);建築科(日);生物產業機電科(日);電腦機械製圖科(日);商業經營科(日);門市服務科(日);農業技術科(日);烘焙食品科(日);電機修護科(日);營造技術科(日);電腦繪圖科(日)"
+  },
+  {
+    "code": "090403",
+    "name": "國立斗六家商",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "斗六市",
+    "address": "640 雲林縣斗六市成功路120號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "商業經營科(夜)",
+      "國際貿易科(日)",
+      "資料處理科(日)",
+      "廣告設計科(日)",
+      "應用英語科(日)",
+      "幼兒保育科(日)"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "090403國立斗六家商斗六家商雲林縣斗六市公立高職男女校雲林區學校名錄商業經營科(夜)國際貿易科(日)資料處理科(日)廣告設計科(日)應用英語科(日)幼兒保育科(日)商業經營科(夜);國際貿易科(日);資料處理科(日);廣告設計科(日);應用英語科(日);幼兒保育科(日)"
+  },
+  {
+    "code": "090404",
+    "name": "國立北港農工",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "北港鎮",
+    "address": "651 雲林縣北港鎮太平路80號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "農場經營科(日)",
+      "農業機械科(日)",
+      "畜產保健科(日)",
+      "機械科(日)",
+      "資訊科(日)",
+      "電機科(日)",
+      "化工科(日)",
+      "餐飲服務科(日)",
+      "微電腦修護科(日)"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "090404國立北港農工北港農工雲林縣北港鎮公立高職男女校雲林區學校名錄農場經營科(日)農業機械科(日)畜產保健科(日)機械科(日)資訊科(日)電機科(日)化工科(日)餐飲服務科(日)微電腦修護科(日)農場經營科(日);農業機械科(日);畜產保健科(日);機械科(日);資訊科(日);電機科(日);化工科(日);餐飲服務科(日);微電腦修護科(日)"
+  },
+  {
+    "code": "090413",
+    "name": "國立土庫商工",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "土庫鎮",
+    "address": "633 雲林縣土庫鎮中央路2號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "建築科(日)",
+      "美工科(日)",
+      "商業經營科(日)",
+      "會計事務科(日)",
+      "資料處理科(日)",
+      "廣告設計科(日)",
+      "營造技術科(日)",
+      "商業事務科(日)",
+      "商用資訊科(日)"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "090413國立土庫商工土庫商工雲林縣土庫鎮公立高職男女校雲林區學校名錄建築科(日)美工科(日)商業經營科(日)會計事務科(日)資料處理科(日)廣告設計科(日)營造技術科(日)商業事務科(日)商用資訊科(日)建築科(日);美工科(日);商業經營科(日);會計事務科(日);資料處理科(日);廣告設計科(日);營造技術科(日);商業事務科(日);商用資訊科(日)"
+  },
+  {
+    "code": "091307",
+    "name": "私立永年高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "土庫鎮",
+    "address": "633 雲林縣土庫鎮建國路13號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "091307私立永年高中永年高中雲林縣土庫鎮私立高中男女校雲林區學校名錄普通科(日)普通科(日)"
+  },
+  {
+    "code": "091308",
+    "name": "私立正心高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "斗六市",
+    "address": "雲林縣斗六市正心路1號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "091308私立正心高中正心高中雲林縣斗六市私立高中男女校雲林區學校名錄普通科(日)普通科(日)"
+  },
+  {
+    "code": "091311",
+    "name": "私立文生高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "四湖鄉",
+    "address": "雲林縣四湖鄉中正路509號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "091311私立文生高中文生高中雲林縣四湖鄉私立高中男女校雲林區學校名錄普通科(日)普通科(日)"
+  },
+  {
+    "code": "091312",
+    "name": "私立巨人高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "北港鎮",
+    "address": "雲林縣北港鎮大同路647號",
+    "admissionQuota": "",
+    "departmentNames": [],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "091312私立巨人高中巨人高中雲林縣北港鎮私立綜高男女校雲林區學校名錄"
+  },
+  {
+    "code": "091316",
+    "name": "私立揚子高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "虎尾鎮",
+    "address": "632 雲林縣虎尾鎮林森路二段541號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "091316私立揚子高中揚子高中雲林縣虎尾鎮私立高中男女校雲林區學校名錄普通科(日)普通科(日)"
+  },
+  {
+    "code": "091319",
+    "name": "福智高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "古坑鄉",
+    "address": "雲林縣古坑鄉麻園村平和23號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "091319福智高中福智高中雲林縣古坑鄉私立高中男女校雲林區學校名錄普通科(日)普通科(日)"
+  },
+  {
+    "code": "091320",
+    "name": "雲林縣維多利亞實驗高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "斗六市",
+    "address": "640 雲林縣斗六市鎮南路1110號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "091320雲林縣維多利亞實驗高中雲林縣維多利亞實驗高中雲林縣斗六市私立高中男女校雲林區學校名錄普通科(日)普通科(日)"
+  },
+  {
+    "code": "091410",
+    "name": "私立大成商工",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "虎尾鎮",
+    "address": "632 雲林縣虎尾鎮成平街21號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "汽車科(日)",
+      "餐飲管理科(日)",
+      "餐飲管理科(夜)",
+      "汽車修護科(日)",
+      "水電技術科(日)",
+      "餐飲技術科(日)",
+      "多媒體技術科(日)",
+      "美髮技術科(日)"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "091410私立大成商工大成商工雲林縣虎尾鎮私立高職男女校雲林區學校名錄汽車科(日)餐飲管理科(日)餐飲管理科(夜)汽車修護科(日)水電技術科(日)餐飲技術科(日)多媒體技術科(日)美髮技術科(日)汽車科(日);餐飲管理科(日);餐飲管理科(夜);汽車修護科(日);水電技術科(日);餐飲技術科(日);多媒體技術科(日);美髮技術科(日)"
+  },
+  {
+    "code": "091414",
+    "name": "私立大德工商",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "斗南鎮",
+    "address": "630 雲林縣斗南鎮大同路400號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "汽車科(日)",
+      "資訊科(日)",
+      "資料處理科(夜)",
+      "餐飲管理科(日)",
+      "電子商務科(日)",
+      "餐飲服務科(日)",
+      "水電技術科(日)"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "091414私立大德工商大德工商雲林縣斗南鎮私立高職男女校雲林區學校名錄汽車科(日)資訊科(日)資料處理科(夜)餐飲管理科(日)電子商務科(日)餐飲服務科(日)水電技術科(日)汽車科(日);資訊科(日);資料處理科(夜);餐飲管理科(日);電子商務科(日);餐飲服務科(日);水電技術科(日)"
+  },
+  {
+    "code": "094301",
+    "name": "雲林縣立斗南高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "斗南鎮",
+    "address": "雲林縣斗南鎮西歧里中山路212號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)",
+      "體育班(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "094301雲林縣立斗南高中雲林縣立斗南高中雲林縣斗南鎮公立高中男女校雲林區學校名錄普通科(日)體育班(日)普通科(日);體育班(日)"
+  },
+  {
+    "code": "094307",
+    "name": "雲林縣立麥寮高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "麥寮鄉",
+    "address": "63850 雲林縣麥寮鄉中興路310號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)",
+      "體育班(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "094307雲林縣立麥寮高中雲林縣立麥寮高中雲林縣麥寮鄉公立高中男女校雲林區學校名錄普通科(日)體育班(日)普通科(日);體育班(日)"
+  },
+  {
+    "code": "094308",
+    "name": "雲林縣立古坑華德福實驗高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "古坑鄉",
+    "address": "雲林縣古坑鄉崁腳村南昌6-27號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "094308雲林縣立古坑華德福實驗高級中學雲林縣立古坑華德福實驗高中雲林縣古坑鄉公立高中男女校雲林區學校名錄普通科(日)普通科(日)"
+  },
+  {
+    "code": "094326",
+    "name": "雲林縣立蔦松藝術高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "雲林區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "雲林縣",
+    "area": "水林鄉",
+    "address": "652002 雲林縣水林鄉松北村一之一號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "094326雲林縣立蔦松藝術高中雲林縣立蔦松藝術高中雲林縣水林鄉公立高中男女校雲林區學校名錄普通科(日)普通科(日)"
+  },
+  {
+    "code": "100301",
+    "name": "國立東石高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄",
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "嘉義縣",
+    "area": "朴子市",
+    "address": "613013 嘉義縣朴子市大鄉里253號",
+    "admissionQuota": "嘉義區：116；臺南區：13",
+    "departmentNames": [
+      "普通科",
+      "機械科",
+      "汽車科",
+      "電機科",
+      "食品加工科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "100301國立東石高級中學東石高中嘉義縣朴子市公立綜高男女校嘉義區學校名錄臺南區免試入學日間部普通科機械科汽車科電機科食品加工科嘉義區:普通科:30;機械科:11;汽車科:3;電機科:60;食品加工科:12;臺南區:普通科:5(不限);食品加工科:3(不限);機械科:4(不限);汽車科:1(不限)"
+  },
+  {
+    "code": "100302",
+    "name": "國立新港藝術高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "嘉義縣",
+    "area": "新港鄉",
+    "address": "616009 嘉義縣新港鄉宮後村藝高路1號",
+    "admissionQuota": "90",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "100302國立新港藝術高中新港藝術高中嘉義縣新港鄉公立高中男女校嘉義區學校名錄普通科普通科:90"
+  },
+  {
+    "code": "100303",
+    "name": "國立嘉科實驗高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "西區",
+    "address": "600023 嘉義市西區新民路580號",
+    "admissionQuota": "96",
+    "departmentNames": [
+      "普通科",
+      "機械科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "100303國立嘉科實驗高中嘉科實驗高中嘉義市西區公立高中男女校嘉義區學校名錄普通科機械科普通科:75;機械科:21"
+  },
+  {
+    "code": "100402",
+    "name": "國立民雄農工",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "嘉義縣",
+    "area": "民雄鄉",
+    "address": "621013 嘉義縣民雄鄉文隆村81號",
+    "admissionQuota": "73",
+    "departmentNames": [
+      "汽車科",
+      "電機科",
+      "園藝科",
+      "食品加工科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "100402國立民雄農工民雄農工嘉義縣民雄鄉公立高職男女校嘉義區學校名錄汽車科電機科園藝科食品加工科汽車科:21;電機科:21;園藝科:10;食品加工科:21"
+  },
+  {
+    "code": "101303",
+    "name": "私立同濟高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "嘉義縣",
+    "area": "大林鎮",
+    "address": "嘉義縣大林鎮中興路二段303號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)",
+      "普通科(夜)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_applicable",
+    "transportStatus": "not_applicable",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "101303私立同濟高中同濟高中嘉義縣大林鎮私立高中男女校嘉義區學校名錄普通科(日)普通科(夜)普通科(日);普通科(夜)"
+  },
+  {
+    "code": "101304",
+    "name": "私立協同高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "嘉義縣",
+    "area": "民雄鄉",
+    "address": "嘉義縣民雄鄉建國路二段31號",
+    "admissionQuota": "104",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "101304私立協同高中協同高中嘉義縣民雄鄉私立高中男女校嘉義區學校名錄普通科普通科:104"
+  },
+  {
+    "code": "101406",
+    "name": "私立萬能工商",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "嘉義縣",
+    "area": "水上鄉",
+    "address": "608 嘉義縣水上鄉萬能路1號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "資訊科(日)",
+      "餐飲管理科(日)",
+      "烘焙科(日)",
+      "汽車修護科(日)",
+      "水電技術科(日)",
+      "餐飲技術科(日)",
+      "多媒體技術科(日)"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "101406私立萬能工商萬能工商嘉義縣水上鄉私立高職男女校嘉義區學校名錄資訊科(日)餐飲管理科(日)烘焙科(日)汽車修護科(日)水電技術科(日)餐飲技術科(日)多媒體技術科(日)資訊科(日);餐飲管理科(日);烘焙科(日);汽車修護科(日);水電技術科(日);餐飲技術科(日);多媒體技術科(日)"
+  },
+  {
+    "code": "104319",
+    "name": "嘉義縣立竹崎高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "嘉義縣",
+    "area": "竹崎鄉",
+    "address": "604008 嘉義縣竹崎鄉文化路23號",
+    "admissionQuota": "50",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "104319嘉義縣立竹崎高中嘉義縣立竹崎高中嘉義縣竹崎鄉公立高中男女校嘉義區學校名錄普通科普通科:50"
+  },
+  {
+    "code": "104326",
+    "name": "嘉義縣立永慶高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "嘉義縣",
+    "area": "太保市",
+    "address": "61248 嘉義縣太保市信義二路1號",
+    "admissionQuota": "56",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "104326嘉義縣立永慶高中嘉義縣立永慶高中嘉義縣太保市公立高中男女校嘉義區學校名錄普通科普通科:56"
+  },
+  {
+    "code": "200302",
+    "name": "國立嘉義女子高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄",
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "女校",
+    "city": "嘉義市",
+    "area": "西區",
+    "address": "嘉義市西區垂楊路243號",
+    "admissionQuota": "嘉義區：470；臺南區：2",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "200302國立嘉義女子高級中學嘉義女子高中嘉義市西區公立高中女校嘉義區學校名錄臺南區免試入學日間部普通科嘉義區:普通科(男):16;普通科(女):454;臺南區:普通科:2(女生)"
+  },
+  {
+    "code": "200303",
+    "name": "國立嘉義高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄",
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "600044 嘉義市東區大雅路二段738號",
+    "admissionQuota": "嘉義區：749；臺南區：5",
+    "departmentNames": [
+      "普通科",
+      "商業經營科",
+      "國際貿易科",
+      "資料處理科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "200303國立嘉義高級中學嘉義高中嘉義市東區公立高中男校嘉義區學校名錄臺南區免試入學日間部普通科商業經營科國際貿易科資料處理科嘉義區:普通科(男):516;普通科(女):15;普通科:128;商業經營科:30;國際貿易科:30;資料處理科:30;臺南區:普通科:5(男生)"
+  },
+  {
+    "code": "200401",
+    "name": "國立華南高商",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "600012 嘉義市東區光彩街69號",
+    "admissionQuota": "210",
+    "departmentNames": [
+      "電子商務科",
+      "航運管理科",
+      "應用英語科",
+      "應用日語科",
+      "美工科",
+      "廣告設計科",
+      "觀光事業科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "200401國立華南高商華南高商嘉義市東區公立綜高男女校嘉義區學校名錄電子商務科航運管理科應用英語科應用日語科美工科廣告設計科觀光事業科電子商務科:30;航運管理科:30;應用英語科:30;應用日語科:30;美工科:30;廣告設計科:30;觀光事業科:30"
+  },
+  {
+    "code": "200405",
+    "name": "國立嘉義高級工業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄",
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "嘉義市東區彌陀路174號",
+    "admissionQuota": "嘉義區：589；臺南區：10",
+    "departmentNames": [
+      "綜合高中",
+      "機械科",
+      "製圖科",
+      "汽車科",
+      "電子科",
+      "電機科",
+      "電機空調科",
+      "化工科",
+      "建築科",
+      "普通科",
+      "室內空間設計科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "200405國立嘉義高級工業職業學校嘉義高工嘉義市東區公立綜高男女校嘉義區學校名錄臺南區免試入學日間部綜合高中機械科製圖科汽車科電子科電機科電機空調科化工科建築科普通科室內空間設計科嘉義區:綜合高中:95;機械科:59;製圖科:29;汽車科:43;電子科:59;電機科:59;電機空調科:29;化工科:59;建築科:29;普通科:128;臺南區:綜合高中:1(不限);機械科:1(不限);汽車科:1(不限);電子科:1(不限);電機科:1(不限);建築科:1(不限);化工科:1(不限);電機空調科:1(不限);製圖科:1(不限);室內空間設計科:1(不限)"
+  },
+  {
+    "code": "200406",
+    "name": "國立嘉義高商",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "600 嘉義市東區中山路7號",
+    "admissionQuota": "295",
+    "departmentNames": [
+      "商業經營科",
+      "國際貿易科",
+      "資料處理科",
+      "應用英語科",
+      "廣告設計科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_offered",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "200406國立嘉義高商嘉義高商嘉義市東區公立綜高男女校嘉義區學校名錄商業經營科國際貿易科資料處理科應用英語科廣告設計科商業經營科:60;國際貿易科:90;資料處理科:60;應用英語科:25;廣告設計科:60"
+  },
+  {
+    "code": "200407",
+    "name": "國立嘉義家職",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "600035 嘉義市東區體育路7號",
+    "admissionQuota": "216",
+    "departmentNames": [
+      "食品科",
+      "幼兒保育科",
+      "流行服飾科",
+      "時尚造型科",
+      "餐飲管理科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "200407國立嘉義家職嘉義家職嘉義市東區公立高職男女校嘉義區學校名錄食品科幼兒保育科流行服飾科時尚造型科餐飲管理科食品科:60;幼兒保育科:40;流行服飾科:12;時尚造型科:44;餐飲管理科:60"
+  },
+  {
+    "code": "201304",
+    "name": "嘉義市私立興華高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "嘉義區學校名錄",
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "嘉義市東區林森東路239號",
+    "admissionQuota": "嘉義區：76；臺南區：6",
+    "departmentNames": [
+      "普通科",
+      "資料處理科",
+      "餐旅群不分科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "201304嘉義市私立興華高級中學嘉義市私立興華高中嘉義市東區私立綜高男女校嘉義區學校名錄臺南區免試入學日間部普通科資料處理科餐旅群不分科嘉義區:普通科:55;資料處理科:21;臺南區:普通科:2(不限);餐旅群不分科:4(不限)"
+  },
+  {
+    "code": "201310",
+    "name": "私立嘉華高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "嘉義市東區民權東路45號",
+    "admissionQuota": "44",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "201310私立嘉華高中嘉華高中嘉義市東區私立高中男女校嘉義區學校名錄普通科普通科:44"
+  },
+  {
+    "code": "201312",
+    "name": "嘉義市私立輔仁高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "嘉義區學校名錄",
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "600 嘉義市東區吳鳳南路270號",
+    "admissionQuota": "嘉義區：121；臺南區：10",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "201312嘉義市私立輔仁高級中學嘉義市私立輔仁高中嘉義市東區私立高中男女校嘉義區學校名錄臺南區免試入學日間部普通科嘉義區:普通科:121;臺南區:普通科:10(不限)"
+  },
+  {
+    "code": "201313",
+    "name": "私立宏仁高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "嘉義區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "嘉義市東區忠孝路667號",
+    "admissionQuota": "15",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "201313私立宏仁高中宏仁高中嘉義市東區私立高中男女校嘉義區學校名錄普通科普通科:15"
+  },
+  {
+    "code": "201314",
+    "name": "嘉義市私立立仁高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "嘉義區學校名錄",
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "600 嘉義市東區立仁路235號",
+    "admissionQuota": "嘉義區：112；臺南區：5",
+    "departmentNames": [
+      "綜合高中",
+      "資訊科",
+      "資料處理科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "201314嘉義市私立立仁高級中學嘉義市私立立仁高中嘉義市東區私立綜高男女校嘉義區學校名錄臺南區免試入學日間部綜合高中資訊科資料處理科嘉義區:綜合高中:64;資訊科:24;資料處理科:24;臺南區:綜合高中:5(不限)"
+  },
+  {
+    "code": "201408",
+    "name": "嘉義市私立東吳高級工業家事職業學校",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "嘉義區學校名錄",
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "600 嘉義市東區宣信街252號",
+    "admissionQuota": "嘉義區：149；臺南區：14",
+    "departmentNames": [
+      "幼兒保育科",
+      "時尚造型科",
+      "觀光事業科",
+      "餐飲管理科",
+      "表演藝術科",
+      "資訊科",
+      "資料處理科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "201408嘉義市私立東吳高級工業家事職業學校嘉義市私立東吳高級工業家事職業學校嘉義市東區私立高職男女校嘉義區學校名錄臺南區免試入學日間部幼兒保育科時尚造型科觀光事業科餐飲管理科表演藝術科資訊科資料處理科嘉義區:幼兒保育科:24;時尚造型科:19;觀光事業科:43;餐飲管理科:39;表演藝術科:24;臺南區:資訊科:2(不限);資料處理科:2(不限);餐飲管理科:4(不限);幼兒保育科:2(不限);時尚造型科:2(不限);表演藝術科:2(不限)"
+  },
+  {
+    "code": "100B01",
+    "name": "國立東石高級中學進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "嘉義縣",
+    "area": "朴子市",
+    "address": "613013 嘉義縣朴子市大鄉里253號",
+    "admissionQuota": "4",
+    "departmentNames": [
+      "食品科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "100b01國立東石高級中學進修部東石高中進修部嘉義縣朴子市公立進修部男女校臺南區免試入學進修部食品科(夜間班)食品科(夜間班):4(不限)"
+  },
+  {
+    "code": "110302",
+    "name": "國立新豐高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "歸仁區",
+    "address": "711 臺南市歸仁區中正北路一段148號",
+    "admissionQuota": "328",
+    "departmentNames": [
+      "綜合高中"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110302國立新豐高級中學新豐高中臺南市歸仁區公立綜高男女校臺南區免試入學日間部綜合高中綜合高中:328(不限)"
+  },
+  {
+    "code": "110308",
+    "name": "國立臺南大學附屬高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "永康區",
+    "address": "710 臺南市永康區中山南路948號",
+    "admissionQuota": "487",
+    "departmentNames": [
+      "普通科",
+      "綜合高中"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110308國立臺南大學附屬高級中學臺南大學附屬高中臺南市永康區公立綜高男女校臺南區免試入學日間部普通科綜合高中普通科:131(不限);綜合高中:356(不限)"
+  },
+  {
+    "code": "110311",
+    "name": "國立北門高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "佳里區",
+    "address": "722 臺南市佳里區六安里269號",
+    "admissionQuota": "297",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110311國立北門高級中學北門高中臺南市佳里區公立高中男女校臺南區免試入學日間部普通科普通科:297(不限)"
+  },
+  {
+    "code": "110312",
+    "name": "國立新營高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "新營區",
+    "address": "730 臺南市新營區民權路101號",
+    "admissionQuota": "312",
+    "departmentNames": [
+      "普通科",
+      "商業經營科",
+      "資料處理科",
+      "電子商務科",
+      "應用英語科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110312國立新營高級中學新營高中臺南市新營區公立綜高男女校臺南區免試入學日間部普通科商業經營科資料處理科電子商務科應用英語科普通科:155(不限);商業經營科:63(不限);資料處理科:31(不限);電子商務科:31(不限);應用英語科:32(不限)"
+  },
+  {
+    "code": "110314",
+    "name": "國立後壁高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "後壁區",
+    "address": "731 臺南市後壁區嘉苳里下茄苳132號",
+    "admissionQuota": "195",
+    "departmentNames": [
+      "普通科",
+      "資訊科",
+      "電機科",
+      "建築科",
+      "美工科",
+      "室內空間設計科",
+      "廣告設計科",
+      "多媒體設計科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110314國立後壁高級中學後壁高中臺南市後壁區公立綜高男女校臺南區免試入學日間部普通科資訊科電機科建築科美工科室內空間設計科廣告設計科多媒體設計科普通科:42(不限);資訊科:24(不限);電機科:20(不限);建築科:22(不限);美工科:48(不限);室內空間設計科:12(不限);廣告設計科:18(不限);多媒體設計科:9(不限)"
+  },
+  {
+    "code": "110315",
+    "name": "國立善化高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "善化區",
+    "address": "741 臺南市善化區大成路195號",
+    "admissionQuota": "252",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110315國立善化高級中學善化高中臺南市善化區公立高中男女校臺南區免試入學日間部普通科普通科:252(不限)"
+  },
+  {
+    "code": "110317",
+    "name": "國立新化高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "新化區",
+    "address": "712005 臺南市新化區忠孝路2號",
+    "admissionQuota": "394",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110317國立新化高級中學新化高中臺南市新化區公立高中男女校臺南區免試入學日間部普通科普通科:394(不限)"
+  },
+  {
+    "code": "110328",
+    "name": "國立南科國際實驗高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "新市區",
+    "address": "744094 臺南市新市區西拉雅大道888巷1號",
+    "admissionQuota": "52",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110328國立南科國際實驗高級中學南科國際實驗高中臺南市新市區公立高中男女校臺南區免試入學日間部普通科普通科:52(不限)"
+  },
+  {
+    "code": "110401",
+    "name": "國立新化高級工業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "新化區",
+    "address": "712 臺南市新化區信義路54號",
+    "admissionQuota": "259",
+    "departmentNames": [
+      "機械科",
+      "資訊科",
+      "電子科",
+      "電機科",
+      "建築科",
+      "化工科",
+      "製圖科",
+      "資料處理科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110401國立新化高級工業職業學校新化高工臺南市新化區公立高職男女校臺南區免試入學日間部機械科資訊科電子科電機科建築科化工科製圖科資料處理科機械科:33(不限);資訊科:33(不限);電子科:31(不限);電機科:32(不限);建築科:32(不限);化工科:33(不限);製圖科:33(不限);資料處理科:32(不限)"
+  },
+  {
+    "code": "110403",
+    "name": "國立白河高級商工職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "白河區",
+    "address": "732 臺南市白河區新興路528號",
+    "admissionQuota": "131",
+    "departmentNames": [
+      "機械科",
+      "汽車科",
+      "資訊科",
+      "電機科",
+      "土木科",
+      "商業經營科",
+      "資料處理科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110403國立白河高級商工職業學校白河高級商工職業學校臺南市白河區公立高職男女校臺南區免試入學日間部機械科汽車科資訊科電機科土木科商業經營科資料處理科機械科:23(不限);汽車科:13(不限);資訊科:18(不限);電機科:20(不限);土木科:17(不限);商業經營科:18(不限);資料處理科:22(不限)"
+  },
+  {
+    "code": "110404",
+    "name": "國立北門高級農工職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "佳里區",
+    "address": "722 臺南市佳里區六安里117號",
+    "admissionQuota": "321",
+    "departmentNames": [
+      "食品加工科",
+      "造園科",
+      "畜產保健科",
+      "機械科",
+      "電子科",
+      "電機科",
+      "土木科",
+      "電腦機械製圖科",
+      "電子商務科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110404國立北門高級農工職業學校北門高級農工職業學校臺南市佳里區公立高職男女校臺南區免試入學日間部食品加工科造園科畜產保健科機械科電子科電機科土木科電腦機械製圖科電子商務科食品加工科:32(不限);造園科:21(不限);畜產保健科:18(不限);機械科:54(不限);電子科:54(不限);電機科:52(不限);土木科:41(不限);電腦機械製圖科:29(不限);電子商務科:20(不限)"
+  },
+  {
+    "code": "110405",
+    "name": "國立曾文高級家事商業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "麻豆區",
+    "address": "721 臺南市麻豆區和平路9號",
+    "admissionQuota": "219",
+    "departmentNames": [
+      "商業經營科",
+      "資料處理科",
+      "廣告設計科",
+      "餐飲管理科",
+      "電子商務科",
+      "幼兒保育科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110405國立曾文高級家事商業職業學校曾文高級家事商業職業學校臺南市麻豆區公立高職男女校臺南區免試入學日間部商業經營科資料處理科廣告設計科餐飲管理科電子商務科幼兒保育科商業經營科:64(不限);資料處理科:33(不限);廣告設計科:32(不限);餐飲管理科:26(不限);電子商務科:32(不限);幼兒保育科:32(不限)"
+  },
+  {
+    "code": "110406",
+    "name": "國立新營高級工業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "新營區",
+    "address": "730 臺南市新營區中正路68號",
+    "admissionQuota": "190",
+    "departmentNames": [
+      "機械科",
+      "資訊科",
+      "電機科",
+      "模具科",
+      "製圖科",
+      "餐飲管理科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110406國立新營高級工業職業學校新營高工臺南市新營區公立高職男女校臺南區免試入學日間部機械科資訊科電機科模具科製圖科餐飲管理科機械科:20(不限);資訊科:41(不限);電機科:37(不限);模具科:26(不限);製圖科:44(不限);餐飲管理科:22(不限)"
+  },
+  {
+    "code": "110407",
+    "name": "國立玉井高級工商職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "玉井區",
+    "address": "714003 臺南市玉井區中山路1-1號",
+    "admissionQuota": "191",
+    "departmentNames": [
+      "普通科",
+      "食品加工科",
+      "電子科",
+      "電機科",
+      "資料處理科",
+      "廣告設計科",
+      "餐飲管理科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110407國立玉井高級工商職業學校玉井高級工商職業學校臺南市玉井區公立綜高男女校臺南區免試入學日間部普通科食品加工科電子科電機科資料處理科廣告設計科餐飲管理科普通科:31(不限);食品加工科:20(不限);電子科:29(不限);電機科:27(不限);資料處理科:29(不限);廣告設計科:30(不限);餐飲管理科:25(不限)"
+  },
+  {
+    "code": "110409",
+    "name": "國立成功大學附屬臺南工業高級中等學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "永康區",
+    "address": "710 臺南市永康區中山南路193號",
+    "admissionQuota": "593",
+    "departmentNames": [
+      "機械科",
+      "鑄造科",
+      "汽車科",
+      "板金科",
+      "資訊科",
+      "電子科",
+      "電機科",
+      "建築科",
+      "化工科",
+      "製圖科",
+      "土木科",
+      "飛機修護科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110409國立成功大學附屬臺南工業高級中等學校成功大學附屬臺南工業高中臺南市永康區公立高職男女校臺南區免試入學日間部機械科鑄造科汽車科板金科資訊科電子科電機科建築科化工科製圖科土木科飛機修護科機械科:91(不限);鑄造科:32(不限);汽車科:30(不限);板金科:41(不限);資訊科:61(不限);電子科:60(不限);電機科:61(不限);建築科:30(不限);化工科:63(不限);製圖科:61(不限);土木科:32(不限);飛機修護科:31(不限)"
+  },
+  {
+    "code": "110410",
+    "name": "國立曾文高級農工職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "麻豆區",
+    "address": "721 臺南市麻豆區南勢1號",
+    "admissionQuota": "333",
+    "departmentNames": [
+      "普通科",
+      "園藝科",
+      "食品加工科",
+      "畜產保健科",
+      "機械科",
+      "汽車科",
+      "電子科",
+      "電機科",
+      "化工科",
+      "電腦機械製圖科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110410國立曾文高級農工職業學校曾文高級農工職業學校臺南市麻豆區公立綜高男女校臺南區免試入學日間部普通科園藝科食品加工科畜產保健科機械科汽車科電子科電機科化工科電腦機械製圖科普通科:33(不限);園藝科:29(不限);食品加工科:49(不限);畜產保健科:32(不限);機械科:46(不限);汽車科:26(不限);電子科:32(不限);電機科:22(不限);化工科:32(不限);電腦機械製圖科:32(不限)"
+  },
+  {
+    "code": "110B02",
+    "name": "國立新豐高級中學進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "歸仁區",
+    "address": "711 臺南市歸仁區中正北路一段148號",
+    "admissionQuota": "36",
+    "departmentNames": [
+      "商業經營科(夜間班)",
+      "照顧服務科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110b02國立新豐高級中學進修部新豐高中進修部臺南市歸仁區公立進修部男女校臺南區免試入學進修部商業經營科(夜間班)照顧服務科(夜間班)商業經營科(夜間班):18(不限);照顧服務科(夜間班):18(不限)"
+  },
+  {
+    "code": "110C01",
+    "name": "國立新化高級工業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "新化區",
+    "address": "712 臺南市新化區信義路54號",
+    "admissionQuota": "20",
+    "departmentNames": [
+      "電子科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110c01國立新化高級工業職業學校進修部新化高工進修部臺南市新化區公立進修部男女校臺南區免試入學進修部電子科(夜間班)電子科(夜間班):20(不限)"
+  },
+  {
+    "code": "110C04",
+    "name": "國立北門高級農工職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "佳里區",
+    "address": "722 臺南市佳里區六安里117號",
+    "admissionQuota": "14",
+    "departmentNames": [
+      "資料處理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110c04國立北門高級農工職業學校進修部北門高級農工職業學校進修部臺南市佳里區公立進修部男女校臺南區免試入學進修部資料處理科(夜間班)資料處理科(夜間班):14(不限)"
+  },
+  {
+    "code": "110C06",
+    "name": "國立新營高級工業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "新營區",
+    "address": "730 臺南市新營區中正路68號",
+    "admissionQuota": "17",
+    "departmentNames": [
+      "餐飲管理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110c06國立新營高級工業職業學校進修部新營高工進修部臺南市新營區公立進修部男女校臺南區免試入學進修部餐飲管理科(夜間班)餐飲管理科(夜間班):17(不限)"
+  },
+  {
+    "code": "110C09",
+    "name": "國立成功大學附屬臺南工業高級中等學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "永康區",
+    "address": "710 臺南市永康區中山南路193號",
+    "admissionQuota": "175",
+    "departmentNames": [
+      "機械科(夜間班)",
+      "資訊科(夜間班)",
+      "電子科(夜間班)",
+      "電機科(夜間班)",
+      "建築科(夜間班)",
+      "機電科(夜間班)",
+      "室內空間設計科(夜間班)",
+      "電腦機械製圖科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "110c09國立成功大學附屬臺南工業高級中等學校進修部成功大學附屬臺南工業高中進修部臺南市永康區公立進修部男女校臺南區免試入學進修部機械科(夜間班)資訊科(夜間班)電子科(夜間班)電機科(夜間班)建築科(夜間班)機電科(夜間班)室內空間設計科(夜間班)電腦機械製圖科(夜間班)機械科(夜間班):22(不限);資訊科(夜間班):22(不限);電子科(夜間班):22(不限);電機科(夜間班):21(不限);建築科(夜間班):22(不限);機電科(夜間班):22(不限);室內空間設計科(夜間班):22(不限);電腦機械製圖科(夜間班):22(不限)"
+  },
+  {
+    "code": "111313",
+    "name": "臺南市私立南光高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "新營區",
+    "address": "730 臺南市新營區中興路62號",
+    "admissionQuota": "128",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "111313臺南市私立南光高級中學臺南市私立南光高中臺南市新營區私立高中男女校臺南區免試入學日間部普通科普通科:128(不限)"
+  },
+  {
+    "code": "111320",
+    "name": "臺南市私立港明高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "西港區",
+    "address": "723 臺南市西港區慶安路229號",
+    "admissionQuota": "258",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "111320臺南市私立港明高級中學臺南市私立港明高中臺南市西港區私立高中男女校臺南區免試入學日間部普通科普通科:258(不限)"
+  },
+  {
+    "code": "111321",
+    "name": "中信金國際學校財團法人臺南市私立中信國際高級中等學校",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "新營區",
+    "address": "730 臺南市新營區大同路86號",
+    "admissionQuota": "84",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "111321中信金國際學校財團法人臺南市私立中信國際高級中等學校中信金國際學校財團法人臺南市私立中信國際高中臺南市新營區私立高中男女校臺南區免試入學日間部普通科普通科:84(不限)"
+  },
+  {
+    "code": "111322",
+    "name": "臺南市私立明達高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "鹽水區",
+    "address": "737 臺南市鹽水區忠孝路73號",
+    "admissionQuota": "49",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "111322臺南市私立明達高級中學臺南市私立明達高中臺南市鹽水區私立高中男女校臺南區免試入學日間部普通科普通科:49(不限)"
+  },
+  {
+    "code": "111323",
+    "name": "方濟會學校財團法人臺南市黎明高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "麻豆區",
+    "address": "721 臺南市麻豆區井東里磚子井141號",
+    "admissionQuota": "151",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "111323方濟會學校財團法人臺南市黎明高級中學方濟會學校財團法人臺南市黎明高中臺南市麻豆區私立高中男女校臺南區免試入學日間部普通科普通科:151(不限)"
+  },
+  {
+    "code": "111427",
+    "name": "臺南市私立育德工業家事職業學校",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "新營區",
+    "address": "730 臺南市新營區健康路211號",
+    "admissionQuota": "53",
+    "departmentNames": [
+      "汽車科",
+      "餐飲管理科",
+      "時尚造型科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "111427臺南市私立育德工業家事職業學校臺南市私立育德工業家事職業學校臺南市新營區私立高職男女校臺南區免試入學日間部汽車科餐飲管理科時尚造型科汽車科:22(不限);餐飲管理科:15(不限);時尚造型科:16(不限)"
+  },
+  {
+    "code": "111C27",
+    "name": "臺南市私立育德工業家事職業學校進修部",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "新營區",
+    "address": "730 臺南市新營區健康路211號",
+    "admissionQuota": "10",
+    "departmentNames": [
+      "餐飲管理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "111c27臺南市私立育德工業家事職業學校進修部臺南市私立育德工業家事職業學校進修部臺南市新營區私立進修部男女校臺南區免試入學進修部餐飲管理科(夜間班)餐飲管理科(夜間班):10(不限)"
+  },
+  {
+    "code": "114306",
+    "name": "臺南市立大灣高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "永康區",
+    "address": "710 臺南市永康區文賢街68巷1號",
+    "admissionQuota": "153",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "114306臺南市立大灣高級中學臺南市立大灣高中臺南市永康區公立高中男女校臺南區免試入學日間部普通科普通科:153(不限)"
+  },
+  {
+    "code": "114307",
+    "name": "臺南市立永仁高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "永康區",
+    "address": "710 臺南市永康區忠孝路74號",
+    "admissionQuota": "114",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "114307臺南市立永仁高級中學臺南市立永仁高中臺南市永康區公立高中男女校臺南區免試入學日間部普通科普通科:114(不限)"
+  },
+  {
+    "code": "114344",
+    "name": "臺南市立沙崙國際高級中等學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "歸仁區",
+    "address": "711 臺南市歸仁區武東里歸仁六路2號",
+    "admissionQuota": "86",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "114344臺南市立沙崙國際高級中等學校臺南市立沙崙國際高中臺南市歸仁區公立高中男女校臺南區免試入學日間部普通科普通科:86(不限)"
+  },
+  {
+    "code": "200C05",
+    "name": "國立嘉義高級工業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "嘉義市東區彌陀路174號",
+    "admissionQuota": "15",
+    "departmentNames": [
+      "電子科(夜間班)",
+      "電機科(夜間班)",
+      "機電科(夜間班)",
+      "室內空間設計科(夜間班)",
+      "電腦機械製圖科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "200c05國立嘉義高級工業職業學校進修部嘉義高工進修部嘉義市東區公立進修部男女校臺南區免試入學進修部電子科(夜間班)電機科(夜間班)機電科(夜間班)室內空間設計科(夜間班)電腦機械製圖科(夜間班)電子科(夜間班):3(不限);電機科(夜間班):3(不限);機電科(夜間班):3(不限);室內空間設計科(夜間班):3(不限);電腦機械製圖科(夜間班):3(不限)"
+  },
+  {
+    "code": "201C08",
+    "name": "嘉義市私立東吳高級工業家事職業學校進修部",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "嘉義市",
+    "area": "東區",
+    "address": "600 嘉義市東區宣信街252號",
+    "admissionQuota": "1",
+    "departmentNames": [
+      "餐飲管理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "201c08嘉義市私立東吳高級工業家事職業學校進修部嘉義市私立東吳高級工業家事職業學校進修部嘉義市東區私立進修部男女校臺南區免試入學進修部餐飲管理科(夜間班)餐飲管理科(夜間班):1(不限)"
+  },
+  {
+    "code": "210303",
+    "name": "國立臺南第二高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "北區",
+    "address": "704 臺南市北區北門路二段125號",
+    "admissionQuota": "569",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "210303國立臺南第二高級中學臺南第二高中臺南市北區公立高中男女校臺南區免試入學日間部普通科普通科:569(不限)"
+  },
+  {
+    "code": "210305",
+    "name": "國立臺南第一高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男校",
+    "city": "臺南市",
+    "area": "東區",
+    "address": "701 臺南市東區民族路一段1號",
+    "admissionQuota": "572",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "210305國立臺南第一高級中學臺南第一高中臺南市東區公立高中男校臺南區免試入學日間部普通科普通科:572(男生)"
+  },
+  {
+    "code": "210306",
+    "name": "國立臺南女子高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "女校",
+    "city": "臺南市",
+    "area": "中西區",
+    "address": "700011 臺南市中西區大埔街97號",
+    "admissionQuota": "570",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "210306國立臺南女子高級中學臺南女子高中臺南市中西區公立高中女校臺南區免試入學日間部普通科普通科:570(女生)"
+  },
+  {
+    "code": "210309",
+    "name": "國立臺南家齊高級中等學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "中西區",
+    "address": "70052 臺南市中西區健康路一段342號",
+    "admissionQuota": "373",
+    "departmentNames": [
+      "普通科",
+      "餐飲管理科",
+      "流行服飾科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "210309國立臺南家齊高級中等學校臺南家齊高中臺南市中西區公立綜高男女校臺南區免試入學日間部普通科餐飲管理科流行服飾科普通科:109(男生);普通科:207(女生);餐飲管理科:28(不限);流行服飾科:29(不限)"
+  },
+  {
+    "code": "210408",
+    "name": "國立臺南高級商業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "南區",
+    "address": "702 臺南市南區健康路一段327號",
+    "admissionQuota": "370",
+    "departmentNames": [
+      "商業經營科",
+      "國際貿易科",
+      "會計事務科",
+      "資料處理科",
+      "廣告設計科",
+      "觀光事業科",
+      "應用英語科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "210408國立臺南高級商業職業學校臺南高級商業職業學校臺南市南區公立高職男女校臺南區免試入學日間部商業經營科國際貿易科會計事務科資料處理科廣告設計科觀光事業科應用英語科商業經營科:91(不限);國際貿易科:95(不限);會計事務科:32(不限);資料處理科:61(不限);廣告設計科:31(不限);觀光事業科:28(不限);應用英語科:32(不限)"
+  },
+  {
+    "code": "210416",
+    "name": "國立臺南高級海事水產職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "安平區",
+    "address": "708 臺南市安平區世平路1號",
+    "admissionQuota": "187",
+    "departmentNames": [
+      "電子科",
+      "機電科",
+      "商業經營科",
+      "電子商務科",
+      "輪機科",
+      "水產養殖科",
+      "水產食品科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "210416國立臺南高級海事水產職業學校臺南高級海事水產職業學校臺南市安平區公立高職男女校臺南區免試入學日間部電子科機電科商業經營科電子商務科輪機科水產養殖科水產食品科電子科:30(不限);機電科:32(不限);商業經營科:32(不限);電子商務科:17(不限);輪機科:30(不限);水產養殖科:16(不限);水產食品科:30(不限)"
+  },
+  {
+    "code": "210B05",
+    "name": "國立臺南第一高級中學進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "東區",
+    "address": "701 臺南市東區民族路一段1號",
+    "admissionQuota": "11",
+    "departmentNames": [
+      "普通科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "210b05國立臺南第一高級中學進修部臺南第一高中進修部臺南市東區公立進修部男女校臺南區免試入學進修部普通科(夜間班)普通科(夜間班):11(不限)"
+  },
+  {
+    "code": "210C08",
+    "name": "國立臺南高級商業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "南區",
+    "address": "702 臺南市南區健康路一段327號",
+    "admissionQuota": "109",
+    "departmentNames": [
+      "商業經營科(夜間班)",
+      "資料處理科(夜間班)",
+      "觀光事業科(夜間班)",
+      "餐飲管理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "210c08國立臺南高級商業職業學校進修部臺南高級商業職業學校進修部臺南市南區公立進修部男女校臺南區免試入學進修部商業經營科(夜間班)資料處理科(夜間班)觀光事業科(夜間班)餐飲管理科(夜間班)商業經營科(夜間班):28(不限);資料處理科(夜間班):28(不限);觀光事業科(夜間班):27(不限);餐飲管理科(夜間班):26(不限)"
+  },
+  {
+    "code": "211301",
+    "name": "臺南市私立長榮高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "東區",
+    "address": "70142 臺南市東區林森路二段79號",
+    "admissionQuota": "524",
+    "departmentNames": [
+      "普通科",
+      "電機科",
+      "廣告設計科",
+      "觀光事業科",
+      "多媒體設計科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211301臺南市私立長榮高級中學臺南市私立長榮高中臺南市東區私立綜高男女校臺南區免試入學日間部普通科電機科廣告設計科觀光事業科多媒體設計科普通科:255(不限);電機科:81(不限);廣告設計科:69(不限);觀光事業科:81(不限);多媒體設計科:38(不限)"
+  },
+  {
+    "code": "211302",
+    "name": "臺南市私立長榮女子高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "東區",
+    "address": "70143 臺南市東區長榮路二段135號",
+    "admissionQuota": "102",
+    "departmentNames": [
+      "餐飲管理科",
+      "美容科",
+      "時尚造型科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211302臺南市私立長榮女子高級中學臺南市私立長榮女子高中臺南市東區私立高職男女校臺南區免試入學日間部餐飲管理科美容科時尚造型科餐飲管理科:33(不限);美容科:30(不限);時尚造型科:39(不限)"
+  },
+  {
+    "code": "211304",
+    "name": "天主教聖功學校財團法人臺南市天主教聖功女子高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "女校",
+    "city": "臺南市",
+    "area": "北區",
+    "address": "704 臺南市北區北園街87巷64號",
+    "admissionQuota": "163",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211304天主教聖功學校財團法人臺南市天主教聖功女子高級中學天主教聖功學校財團法人臺南市天主教聖功女子高中臺南市北區私立高中女校臺南區免試入學日間部普通科普通科:163(女生)"
+  },
+  {
+    "code": "211310",
+    "name": "臺南光華學校財團法人臺南市光華高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "東區",
+    "address": "701006 臺南市東區勝利路41號",
+    "admissionQuota": "366",
+    "departmentNames": [
+      "普通科",
+      "綜合高中",
+      "商業經營科",
+      "餐飲管理科",
+      "多媒體設計科",
+      "幼兒保育科",
+      "流行服飾科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211310臺南光華學校財團法人臺南市光華高級中學臺南光華學校財團法人臺南市光華高中臺南市東區私立綜高男女校臺南區免試入學日間部普通科綜合高中商業經營科餐飲管理科多媒體設計科幼兒保育科流行服飾科普通科:85(不限);綜合高中:115(不限);商業經營科:35(不限);餐飲管理科:43(不限);多媒體設計科:41(不限);幼兒保育科:22(不限);流行服飾科:25(不限)"
+  },
+  {
+    "code": "211315",
+    "name": "臺南市私立瀛海高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "安南區",
+    "address": "709 臺南市安南區長溪路一段76號",
+    "admissionQuota": "172",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211315臺南市私立瀛海高級中學臺南市私立瀛海高中臺南市安南區私立高中男女校臺南區免試入學日間部普通科普通科:172(不限)"
+  },
+  {
+    "code": "211317",
+    "name": "崑山國際學校財團法人臺南市崑山高級中等學校",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "北區",
+    "address": "704032 臺南市北區開元路444號",
+    "admissionQuota": "40",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211317崑山國際學校財團法人臺南市崑山高級中等學校崑山國際學校財團法人臺南市崑山高中臺南市北區私立高中男女校臺南區免試入學日間部普通科普通科:40(不限)"
+  },
+  {
+    "code": "211318",
+    "name": "臺南市德光高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "東區",
+    "address": "701 臺南市東區德光街106號",
+    "admissionQuota": "176",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211318臺南市德光高級中學臺南市德光高中臺南市東區私立高中男女校臺南區免試入學日間部普通科普通科:176(不限)"
+  },
+  {
+    "code": "211320",
+    "name": "慈濟學校財團法人臺南市私立慈濟高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "安平區",
+    "address": "708 臺南市安平區建平五街111號",
+    "admissionQuota": "118",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211320慈濟學校財團法人臺南市私立慈濟高級中學慈濟學校財團法人臺南市私立慈濟高中臺南市安平區私立高中男女校臺南區免試入學日間部普通科普通科:118(不限)"
+  },
+  {
+    "code": "211407",
+    "name": "臺南市私立南英高級商工職業學校",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "中西區",
+    "address": "700190 臺南市中西區永福路一段149號",
+    "admissionQuota": "160",
+    "departmentNames": [
+      "汽車科",
+      "電機空調科",
+      "餐飲管理科",
+      "應用日語科",
+      "電影電視科",
+      "多媒體動畫科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211407臺南市私立南英高級商工職業學校臺南市私立南英高級商工職業學校臺南市中西區私立高職男女校臺南區免試入學日間部汽車科電機空調科餐飲管理科應用日語科電影電視科多媒體動畫科汽車科:19(不限);電機空調科:35(不限);餐飲管理科:53(不限);應用日語科:16(不限);電影電視科:21(不限);多媒體動畫科:16(不限)"
+  },
+  {
+    "code": "211412",
+    "name": "臺南市亞洲高級餐旅職業學校",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "南區",
+    "address": "702 臺南市南區大成路一段5號",
+    "admissionQuota": "75",
+    "departmentNames": [
+      "餐飲管理科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211412臺南市亞洲高級餐旅職業學校臺南市亞洲高級餐旅職業學校臺南市南區私立高職男女校臺南區免試入學日間部餐飲管理科餐飲管理科:75(不限)"
+  },
+  {
+    "code": "211419",
+    "name": "臺南市私立慈幼高級工商職業學校",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "東區",
+    "address": "701 臺南市東區裕農路801號",
+    "admissionQuota": "141",
+    "departmentNames": [
+      "電機與電子群不分科",
+      "汽車科",
+      "烘焙科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211419臺南市私立慈幼高級工商職業學校臺南市私立慈幼高級工商職業學校臺南市東區私立高職男女校臺南區免試入學日間部電機與電子群不分科汽車科烘焙科電機與電子群不分科:75(不限);汽車科:30(不限);烘焙科:36(不限)"
+  },
+  {
+    "code": "211B14",
+    "name": "臺南市六信高級中學進修部",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "南區",
+    "address": "702 臺南市南區新都路20號",
+    "admissionQuota": "15",
+    "departmentNames": [
+      "資料處理科(夜間班)",
+      "餐飲管理科(夜間班)",
+      "照顧服務科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211b14臺南市六信高級中學進修部臺南市六信高中進修部臺南市南區私立進修部男女校臺南區免試入學進修部資料處理科(夜間班)餐飲管理科(夜間班)照顧服務科(夜間班)資料處理科(夜間班):5(不限);餐飲管理科(夜間班):5(不限);照顧服務科(夜間班):5(不限)"
+  },
+  {
+    "code": "211C07",
+    "name": "臺南市私立南英高級商工職業學校進修部",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "中西區",
+    "address": "700190 臺南市中西區永福路一段149號",
+    "admissionQuota": "30",
+    "departmentNames": [
+      "汽車科(夜間班)",
+      "餐飲管理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211c07臺南市私立南英高級商工職業學校進修部臺南市私立南英高級商工職業學校進修部臺南市中西區私立進修部男女校臺南區免試入學進修部汽車科(夜間班)餐飲管理科(夜間班)汽車科(夜間班):15(不限);餐飲管理科(夜間班):15(不限)"
+  },
+  {
+    "code": "211C12",
+    "name": "臺南市亞洲高級餐旅職業學校進修部",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "南區",
+    "address": "702 臺南市南區大成路一段5號",
+    "admissionQuota": "33",
+    "departmentNames": [
+      "烘焙科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211c12臺南市亞洲高級餐旅職業學校進修部臺南市亞洲高級餐旅職業學校進修部臺南市南區私立進修部男女校臺南區免試入學進修部烘焙科(夜間班)烘焙科(夜間班):33(不限)"
+  },
+  {
+    "code": "211C19",
+    "name": "臺南市私立慈幼高級工商職業學校進修部",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺南區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "東區",
+    "address": "701 臺南市東區裕農路801號",
+    "admissionQuota": "38",
+    "departmentNames": [
+      "汽車科(夜間班)",
+      "資訊科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "211c19臺南市私立慈幼高級工商職業學校進修部臺南市私立慈幼高級工商職業學校進修部臺南市東區私立進修部男女校臺南區免試入學進修部汽車科(夜間班)資訊科(夜間班)汽車科(夜間班):19(不限);資訊科(夜間班):19(不限)"
+  },
+  {
+    "code": "213303",
+    "name": "臺南市立南寧高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "南區",
+    "address": "702 臺南市南區萬年路167號",
+    "admissionQuota": "77",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "213303臺南市立南寧高級中學臺南市立南寧高中臺南市南區公立高中男女校臺南區免試入學日間部普通科普通科:77(不限)"
+  },
+  {
+    "code": "213316",
+    "name": "臺南市立土城高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺南區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺南市",
+    "area": "安南區",
+    "address": "709 臺南市安南區安中路五段265號",
+    "admissionQuota": "60",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "213316臺南市立土城高級中學臺南市立土城高中臺南市安南區公立高中男女校臺南區免試入學日間部普通科普通科:60(不限)"
+  },
+  {
+    "code": "130302",
+    "name": "國立屏東女子高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "女校",
+    "city": "屏東縣",
+    "area": "屏東市",
+    "address": "900 屏東縣屏東市仁愛路94號",
+    "admissionQuota": "485",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130302國立屏東女子高級中學屏東女子高中屏東縣屏東市公立高中女校屏東區免試入學日間部普通科普通科:485(女生)"
+  },
+  {
+    "code": "130305",
+    "name": "國立屏東高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男校",
+    "city": "屏東縣",
+    "area": "屏東市",
+    "address": "900 屏東縣屏東市忠孝路231號",
+    "admissionQuota": "495",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130305國立屏東高級中學屏東高中屏東縣屏東市公立高中男校屏東區免試入學日間部普通科普通科:495(男生)"
+  },
+  {
+    "code": "130306",
+    "name": "國立潮州高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "潮州鎮",
+    "address": "920 屏東縣潮州鎮中山路11號",
+    "admissionQuota": "421",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130306國立潮州高級中學潮州高中屏東縣潮州鎮公立高中男女校屏東區免試入學日間部普通科普通科:421(不限)"
+  },
+  {
+    "code": "130307",
+    "name": "國立屏科實驗高級中等學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "屏東市",
+    "address": "900008 屏東縣屏東市凌雲路158巷58號",
+    "admissionQuota": "72",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130307國立屏科實驗高級中等學校屏科實驗高中屏東縣屏東市公立高中男女校屏東區免試入學日間部普通科普通科:72(不限)"
+  },
+  {
+    "code": "130322",
+    "name": "國立屏北高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "鹽埔鄉",
+    "address": "907101 屏東縣鹽埔鄉彭厝村屏北路一段1號",
+    "admissionQuota": "181",
+    "departmentNames": [
+      "綜合高中"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130322國立屏北高級中學屏北高中屏東縣鹽埔鄉公立綜高男女校屏東區免試入學日間部綜合高中綜合高中:181(不限)"
+  },
+  {
+    "code": "130401",
+    "name": "國立內埔高級農工職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "內埔鄉",
+    "address": "912 屏東縣內埔鄉水門村成功路83號",
+    "admissionQuota": "292",
+    "departmentNames": [
+      "農場經營科(產特)",
+      "農業機械科(產特)",
+      "食品加工科",
+      "野生動物保育科(產特)",
+      "機械科",
+      "汽車科",
+      "電機科",
+      "家政科",
+      "烘焙科",
+      "原住民藝能科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130401國立內埔高級農工職業學校內埔高級農工職業學校屏東縣內埔鄉公立高職男女校屏東區免試入學日間部農場經營科(產特)農業機械科(產特)食品加工科野生動物保育科(產特)機械科汽車科電機科家政科烘焙科原住民藝能科農場經營科(產特):31(不限);農業機械科(產特):52(不限);食品加工科:27(不限);野生動物保育科(產特):22(不限);機械科:32(不限);汽車科:24(不限);電機科:22(不限);家政科:25(不限);烘焙科:24(不限);原住民藝能科:33(不限)"
+  },
+  {
+    "code": "130403",
+    "name": "國立屏東高級工業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "屏東市",
+    "address": "900041 屏東縣屏東市建國路25號",
+    "admissionQuota": "460",
+    "departmentNames": [
+      "機械科",
+      "汽車科",
+      "電子科",
+      "電機科",
+      "建築科",
+      "化工科",
+      "製圖科",
+      "土木科(產特)"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130403國立屏東高級工業職業學校屏東高工屏東縣屏東市公立高職男女校屏東區免試入學日間部機械科汽車科電子科電機科建築科化工科製圖科土木科(產特)機械科:61(不限);汽車科:62(不限);電子科:62(不限);電機科:62(不限);建築科:60(不限);化工科:60(不限);製圖科:31(不限);土木科(產特):62(不限)"
+  },
+  {
+    "code": "130404",
+    "name": "國立佳冬高級農業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "佳冬鄉",
+    "address": "931 屏東縣佳冬鄉佳農街67號",
+    "admissionQuota": "207",
+    "departmentNames": [
+      "農場經營科(產特)",
+      "園藝科(產特)",
+      "農業機械科(產特)",
+      "食品加工科",
+      "畜產保健科(產特)",
+      "餐飲管理科",
+      "電子商務科",
+      "烘焙科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130404國立佳冬高級農業職業學校佳冬高級農業職業學校屏東縣佳冬鄉公立高職男女校屏東區免試入學日間部農場經營科(產特)園藝科(產特)農業機械科(產特)食品加工科畜產保健科(產特)餐飲管理科電子商務科烘焙科農場經營科(產特):30(不限);園藝科(產特):28(不限);農業機械科(產特):19(不限);食品加工科:21(不限);畜產保健科(產特):28(不限);餐飲管理科:43(不限);電子商務科:23(不限);烘焙科:15(不限)"
+  },
+  {
+    "code": "130410",
+    "name": "國立東港高級海事水產職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "東港鎮",
+    "address": "928 屏東縣東港鎮豐漁街66號",
+    "admissionQuota": "214",
+    "departmentNames": [
+      "電子科",
+      "家政科",
+      "輪機科(產特)",
+      "水產養殖科(產特)",
+      "航運管理科(產特)",
+      "水產食品科(產特)"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130410國立東港高級海事水產職業學校東港高級海事水產職業學校屏東縣東港鎮公立高職男女校屏東區免試入學日間部電子科家政科輪機科(產特)水產養殖科(產特)航運管理科(產特)水產食品科(產特)電子科:57(不限);家政科:17(不限);輪機科(產特):30(不限);水產養殖科(產特):20(不限);航運管理科(產特):47(不限);水產食品科(產特):43(不限)"
+  },
+  {
+    "code": "130417",
+    "name": "國立恆春高級工商職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "恆春鎮",
+    "address": "94641 屏東縣恆春鎮恆南路38號",
+    "admissionQuota": "231",
+    "departmentNames": [
+      "普通科",
+      "電機與電子群(資訊科、電子科)",
+      "電機科",
+      "資料處理科",
+      "觀光事業科",
+      "餐飲管理科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130417國立恆春高級工商職業學校恆春高級工商職業學校屏東縣恆春鎮公立綜高男女校屏東區免試入學日間部普通科電機與電子群(資訊科、電子科)電機科資料處理科觀光事業科餐飲管理科普通科:30(不限);電機與電子群(資訊科、電子科):57(不限);電機科:51(不限);資料處理科:25(不限);觀光事業科:25(不限);餐飲管理科:43(不限)"
+  },
+  {
+    "code": "130C03",
+    "name": "國立屏東高級工業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "屏東市",
+    "address": "900041 屏東縣屏東市建國路25號",
+    "admissionQuota": "105",
+    "departmentNames": [
+      "汽車科(夜間班)",
+      "電子科(夜間班)",
+      "電機科(夜間班)",
+      "化工科(夜間班)",
+      "製圖科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130c03國立屏東高級工業職業學校進修部屏東高工進修部屏東縣屏東市公立進修部男女校屏東區免試入學進修部汽車科(夜間班)電子科(夜間班)電機科(夜間班)化工科(夜間班)製圖科(夜間班)汽車科(夜間班):21(不限);電子科(夜間班):21(不限);電機科(夜間班):21(不限);化工科(夜間班):21(不限);製圖科(夜間班):21(不限)"
+  },
+  {
+    "code": "130C04",
+    "name": "國立佳冬高級農業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "佳冬鄉",
+    "address": "931 屏東縣佳冬鄉佳農街67號",
+    "admissionQuota": "7",
+    "departmentNames": [
+      "電子商務科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130c04國立佳冬高級農業職業學校進修部佳冬高級農業職業學校進修部屏東縣佳冬鄉公立進修部男女校屏東區免試入學進修部電子商務科(夜間班)電子商務科(夜間班):7(不限)"
+  },
+  {
+    "code": "130C17",
+    "name": "國立恆春高級工商職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "恆春鎮",
+    "address": "94641 屏東縣恆春鎮恆南路38號",
+    "admissionQuota": "7",
+    "departmentNames": [
+      "觀光事業科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "130c17國立恆春高級工商職業學校進修部恆春高級工商職業學校進修部屏東縣恆春鎮公立進修部男女校屏東區免試入學進修部觀光事業科(夜間班)觀光事業科(夜間班):7(不限)"
+  },
+  {
+    "code": "131307",
+    "name": "屏榮學校財團法人屏東縣屏榮高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "屏東市",
+    "address": "900 屏東縣屏東市豐田里民學路100號",
+    "admissionQuota": "440",
+    "departmentNames": [
+      "普通科",
+      "電機與電子群(資訊科、電子科)",
+      "餐飲管理科",
+      "電子商務科",
+      "多媒體設計科",
+      "應用日語科",
+      "幼兒保育科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "unclear",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "131307屏榮學校財團法人屏東縣屏榮高級中學屏榮學校財團法人屏東縣屏榮高中屏東縣屏東市私立綜高男女校屏東區免試入學日間部普通科電機與電子群(資訊科、電子科)餐飲管理科電子商務科多媒體設計科應用日語科幼兒保育科普通科:151(不限);電機與電子群(資訊科、電子科):49(不限);餐飲管理科:88(不限);電子商務科:72(不限);多媒體設計科:49(不限);應用日語科:22(不限);幼兒保育科:9(不限)"
+  },
+  {
+    "code": "131308",
+    "name": "陸興學校財團法人屏東縣陸興高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "屏東市",
+    "address": "900 屏東縣屏東市廣東路150號",
+    "admissionQuota": "60",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "131308陸興學校財團法人屏東縣陸興高級中學陸興學校財團法人屏東縣陸興高中屏東縣屏東市私立高中男女校屏東區免試入學日間部普通科普通科:60(不限)"
+  },
+  {
+    "code": "131311",
+    "name": "屏東縣私立美和高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "內埔鄉",
+    "address": "912 屏東縣內埔鄉美和村學人路323號",
+    "admissionQuota": "99",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "131311屏東縣私立美和高級中學屏東縣私立美和高中屏東縣內埔鄉私立高中男女校屏東區免試入學日間部普通科普通科:99(不限)"
+  },
+  {
+    "code": "131409",
+    "name": "屏東縣私立民生高級家事商業職業學校",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "屏東市",
+    "address": "900 屏東縣屏東市民生東路12號",
+    "admissionQuota": "156",
+    "departmentNames": [
+      "餐飲管理科",
+      "多媒體設計科",
+      "時尚造型科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "131409屏東縣私立民生高級家事商業職業學校屏東縣私立民生高級家事商業職業學校屏東縣屏東市私立高職男女校屏東區免試入學日間部餐飲管理科多媒體設計科時尚造型科餐飲管理科:82(不限);多媒體設計科:42(不限);時尚造型科:32(不限)"
+  },
+  {
+    "code": "131C09",
+    "name": "屏東縣私立民生高級家事商業職業學校進修部",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "屏東區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "屏東市",
+    "address": "900 屏東縣屏東市民生東路12號",
+    "admissionQuota": "22",
+    "departmentNames": [
+      "資料處理科(夜間班)",
+      "餐飲管理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "131c09屏東縣私立民生高級家事商業職業學校進修部屏東縣私立民生高級家事商業職業學校進修部屏東縣屏東市私立進修部男女校屏東區免試入學進修部資料處理科(夜間班)餐飲管理科(夜間班)資料處理科(夜間班):9(不限);餐飲管理科(夜間班):13(不限)"
+  },
+  {
+    "code": "134304",
+    "name": "屏東縣立大同高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "屏東市",
+    "address": "900007 屏東縣屏東市和平路429號",
+    "admissionQuota": "128",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "134304屏東縣立大同高級中學屏東縣立大同高中屏東縣屏東市公立高中男女校屏東區免試入學日間部普通科普通科:128(不限)"
+  },
+  {
+    "code": "134321",
+    "name": "屏東縣立枋寮高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "枋寮鄉",
+    "address": "940 屏東縣枋寮鄉新龍村義民路3號",
+    "admissionQuota": "87",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "134321屏東縣立枋寮高級中學屏東縣立枋寮高中屏東縣枋寮鄉公立高中男女校屏東區免試入學日間部普通科普通科:87(不限)"
+  },
+  {
+    "code": "134324",
+    "name": "屏東縣立東港高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "東港鎮",
+    "address": "928005 屏東縣東港鎮船頭路1號",
+    "admissionQuota": "121",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "134324屏東縣立東港高級中學屏東縣立東港高中屏東縣東港鎮公立高中男女校屏東區免試入學日間部普通科普通科:121(不限)"
+  },
+  {
+    "code": "134334",
+    "name": "屏東縣立來義高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "屏東區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "屏東縣",
+    "area": "來義鄉",
+    "address": "922 屏東縣來義鄉中正路147號",
+    "admissionQuota": "73",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "134334屏東縣立來義高級中學屏東縣立來義高中屏東縣來義鄉公立高中男女校屏東區免試入學日間部普通科普通科:73(不限)"
+  },
+  {
+    "code": "020301",
+    "name": "國立蘭陽女中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "宜蘭區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "女校",
+    "city": "宜蘭縣",
+    "area": "宜蘭市",
+    "address": "260026 宜蘭縣宜蘭市女中路二段355號",
+    "admissionQuota": "424",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "020301國立蘭陽女中蘭陽女中宜蘭縣宜蘭市公立高中女校宜蘭區學校名錄普通科普通科(女):424"
+  },
+  {
+    "code": "020302",
+    "name": "國立宜蘭高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "宜蘭區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "宜蘭縣",
+    "area": "宜蘭市",
+    "address": "26051 宜蘭縣宜蘭市復興路三段8號",
+    "admissionQuota": "391",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "020302國立宜蘭高中宜蘭高中宜蘭縣宜蘭市公立高中男女校宜蘭區學校名錄普通科普通科(男):358;普通科(女):33"
+  },
+  {
+    "code": "020308",
+    "name": "國立羅東高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "宜蘭區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "宜蘭縣",
+    "area": "羅東鎮",
+    "address": "265010 宜蘭縣羅東鎮公正路324號",
+    "admissionQuota": "386",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "020308國立羅東高中羅東高中宜蘭縣羅東鎮公立高中男女校宜蘭區學校名錄普通科普通科:386"
+  },
+  {
+    "code": "020403",
+    "name": "國立宜蘭高商",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "宜蘭區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "宜蘭縣",
+    "area": "宜蘭市",
+    "address": "260 宜蘭縣宜蘭市延平路50號",
+    "admissionQuota": "244",
+    "departmentNames": [
+      "國際貿易科",
+      "資料處理科",
+      "多媒體設計科",
+      "應用英語科",
+      "應用日語科",
+      "商業經營科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "020403國立宜蘭高商宜蘭高商宜蘭縣宜蘭市公立高職男女校宜蘭區學校名錄國際貿易科資料處理科多媒體設計科應用英語科應用日語科商業經營科國際貿易科:54;資料處理科:89;多媒體設計科:26;應用英語科:29;應用日語科:29;商業經營科:17"
+  },
+  {
+    "code": "020404",
+    "name": "國立羅東高商",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "宜蘭區學校名錄"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "宜蘭縣",
+    "area": "羅東鎮",
+    "address": "265 宜蘭縣羅東鎮中山路四段360號",
+    "admissionQuota": "271",
+    "departmentNames": [
+      "國際貿易科",
+      "資料處理科",
+      "餐飲管理科",
+      "多媒體設計科",
+      "表演藝術科",
+      "機械科",
+      "汽車科",
+      "資訊科",
+      "商業經營科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "020404國立羅東高商羅東高商宜蘭縣羅東鎮公立綜高男女校宜蘭區學校名錄國際貿易科資料處理科餐飲管理科多媒體設計科表演藝術科機械科汽車科資訊科商業經營科國際貿易科:21;資料處理科:50;餐飲管理科:28;多媒體設計科:20;表演藝術科:15;機械科:28;汽車科:59;資訊科:30;商業經營科:10;資料處理科:10"
+  },
+  {
+    "code": "020405",
+    "name": "國立蘇澳海事",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "宜蘭區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "宜蘭縣",
+    "area": "蘇澳鎮",
+    "address": "270 宜蘭縣蘇澳鎮蘇港路213號",
+    "admissionQuota": "57",
+    "departmentNames": [
+      "電子科",
+      "觀光事業科",
+      "漁業科",
+      "輪機科",
+      "水產養殖科",
+      "航運管理科",
+      "水產食品科",
+      "進修部水產食品科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "020405國立蘇澳海事蘇澳海事宜蘭縣蘇澳鎮公立高職男女校宜蘭區學校名錄電子科觀光事業科漁業科輪機科水產養殖科航運管理科水產食品科進修部水產食品科電子科:4;觀光事業科:8;漁業科:3;輪機科:11;水產養殖科:4;航運管理科:6;水產食品科:5;進修部水產食品科:16"
+  },
+  {
+    "code": "020407",
+    "name": "國立羅東高工",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "宜蘭區學校名錄"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "宜蘭縣",
+    "area": "冬山鄉",
+    "address": "269022 宜蘭縣冬山鄉廣興路117號",
+    "admissionQuota": "358",
+    "departmentNames": [
+      "電子科",
+      "電機科",
+      "建築科",
+      "製圖科",
+      "綜合高中",
+      "資訊科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "020407國立羅東高工羅東高工宜蘭縣冬山鄉公立綜高男女校宜蘭區學校名錄電子科電機科建築科製圖科綜合高中資訊科電子科:59;電機科:59;建築科:59;製圖科:29;綜合高中:111;資訊科:30;製圖科:11"
+  },
+  {
+    "code": "021301",
+    "name": "私立慧燈高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "宜蘭區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "宜蘭縣",
+    "area": "員山鄉",
+    "address": "264014 宜蘭縣員山鄉協進路88號",
+    "admissionQuota": "118",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "021301私立慧燈高中慧燈高中宜蘭縣員山鄉私立高中男女校宜蘭區學校名錄普通科普通科:118"
+  },
+  {
+    "code": "021310",
+    "name": "私立中道高中",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "宜蘭區學校名錄"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "宜蘭縣",
+    "area": "壯圍鄉",
+    "address": "宜蘭縣壯圍鄉中央路三段312巷7號",
+    "admissionQuota": "228",
+    "departmentNames": [
+      "普通科",
+      "(產特)",
+      "產特",
+      "綜合高中",
+      "商業經營科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "021310私立中道高中中道高中宜蘭縣壯圍鄉私立綜高男女校宜蘭區學校名錄普通科(產特)產特綜合高中商業經營科普通科:80;(產特):3;產特:11;(產特):4;(產特):5;綜合高中:96;商業經營科:29"
+  },
+  {
+    "code": "024322",
+    "name": "宜蘭縣立南澳高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "宜蘭區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "宜蘭縣",
+    "area": "南澳鄉",
+    "address": "272 宜蘭縣南澳鄉蘇花路二段301號",
+    "admissionQuota": "6",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "024322宜蘭縣立南澳高中宜蘭縣立南澳高中宜蘭縣南澳鄉公立高中男女校宜蘭區學校名錄普通科普通科:6"
+  },
+  {
+    "code": "024325",
+    "name": "宜蘭縣立慈心華德福實中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "宜蘭區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "宜蘭縣",
+    "area": "冬山鄉",
+    "address": "269 宜蘭縣冬山鄉照安路257號",
+    "admissionQuota": "6",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "024325宜蘭縣立慈心華德福實中宜蘭縣立慈心華德福實中宜蘭縣冬山鄉公立高中男女校宜蘭區學校名錄普通科普通科:6"
+  },
+  {
+    "code": "150302",
+    "name": "國立花蓮女子高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "花蓮區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "女校",
+    "city": "花蓮縣",
+    "area": "花蓮市",
+    "address": "970 花蓮縣花蓮市菁華街2號",
+    "admissionQuota": "312",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "150302國立花蓮女子高級中學國立花蓮女子高中花蓮縣花蓮市公立高中女校花蓮區免試入學日間部普通科普通科:312(女生)"
+  },
+  {
+    "code": "150303",
+    "name": "國立花蓮高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "花蓮區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男校",
+    "city": "花蓮縣",
+    "area": "花蓮市",
+    "address": "97059 花蓮縣花蓮市民權路42號",
+    "admissionQuota": "316",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "150303國立花蓮高級中學國立花蓮高中花蓮縣花蓮市公立高中男校花蓮區免試入學日間部普通科普通科:316(男生)"
+  },
+  {
+    "code": "150309",
+    "name": "國立玉里高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "花蓮區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "玉里鎮",
+    "address": "981 花蓮縣玉里鎮中華路424號",
+    "admissionQuota": "198",
+    "departmentNames": [
+      "普通科",
+      "餐旅群不分科",
+      "資料處理科",
+      "廣告設計科",
+      "電子商務科",
+      "時尚造型科"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "150309國立玉里高級中學國立玉里高中花蓮縣玉里鎮公立綜高男女校花蓮區免試入學日間部普通科餐旅群不分科資料處理科廣告設計科電子商務科時尚造型科普通科:60(不限);餐旅群不分科:43(不限);資料處理科:21(不限);廣告設計科:27(不限);電子商務科:26(不限);時尚造型科:21(不限)"
+  },
+  {
+    "code": "150401",
+    "name": "國立花蓮高級農業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "花蓮區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "花蓮市",
+    "address": "970 花蓮縣花蓮市建國路161號",
+    "admissionQuota": "129",
+    "departmentNames": [
+      "農場經營科",
+      "園藝科",
+      "森林科",
+      "食品加工科",
+      "畜產保健科",
+      "土木科",
+      "生物產業機電科",
+      "資料處理科",
+      "餐飲管理科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "150401國立花蓮高級農業職業學校花蓮高級農業職業學校花蓮縣花蓮市公立高職男女校花蓮區免試入學日間部農場經營科園藝科森林科食品加工科畜產保健科土木科生物產業機電科資料處理科餐飲管理科農場經營科:18(不限);園藝科:10(不限);森林科:13(不限);食品加工科:9(不限);畜產保健科:15(不限);土木科:14(不限);生物產業機電科:14(不限);資料處理科:28(不限);餐飲管理科:8(不限)"
+  },
+  {
+    "code": "150404",
+    "name": "國立花蓮高級工業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "花蓮區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "花蓮市",
+    "address": "970 花蓮縣花蓮市府前路27號",
+    "admissionQuota": "205",
+    "departmentNames": [
+      "機械科",
+      "汽車科",
+      "資訊科",
+      "電子科",
+      "電機科",
+      "建築科",
+      "化工科",
+      "機電科",
+      "製圖科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "150404國立花蓮高級工業職業學校花蓮高工花蓮縣花蓮市公立高職男女校花蓮區免試入學日間部機械科汽車科資訊科電子科電機科建築科化工科機電科製圖科機械科:10(不限);汽車科:7(不限);資訊科:37(不限);電子科:43(不限);電機科:21(不限);建築科:39(不限);化工科:14(不限);機電科:12(不限);製圖科:22(不限)"
+  },
+  {
+    "code": "150405",
+    "name": "國立花蓮高級商業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "花蓮區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "花蓮市",
+    "address": "970013 花蓮縣花蓮市中山路418號",
+    "admissionQuota": "109",
+    "departmentNames": [
+      "商業經營科",
+      "國際貿易科",
+      "會計事務科",
+      "資料處理科",
+      "多媒體設計科",
+      "應用英語科",
+      "應用日語科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "150405國立花蓮高級商業職業學校花蓮高級商業職業學校花蓮縣花蓮市公立高職男女校花蓮區免試入學日間部商業經營科國際貿易科會計事務科資料處理科多媒體設計科應用英語科應用日語科商業經營科:21(不限);國際貿易科:16(不限);會計事務科:5(不限);資料處理科:24(不限);多媒體設計科:18(不限);應用英語科:10(不限);應用日語科:15(不限)"
+  },
+  {
+    "code": "150411",
+    "name": "國立光復高級商工職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "花蓮區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "光復鄉",
+    "address": "976 花蓮縣光復鄉林森路100號",
+    "admissionQuota": "129",
+    "departmentNames": [
+      "汽車科",
+      "電機科",
+      "資料處理科",
+      "餐飲管理科",
+      "烘焙科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "150411國立光復高級商工職業學校國立光復高級商工職業學校花蓮縣光復鄉公立高職男女校花蓮區免試入學日間部汽車科電機科資料處理科餐飲管理科烘焙科汽車科:19(不限);電機科:26(不限);資料處理科:30(不限);餐飲管理科:30(不限);烘焙科:24(不限)"
+  },
+  {
+    "code": "150B09",
+    "name": "國立玉里高級中學附設進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "花蓮區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "玉里鎮",
+    "address": "981 花蓮縣玉里鎮中華路424號",
+    "admissionQuota": "10",
+    "departmentNames": [
+      "商業經營科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "150b09國立玉里高級中學附設進修部國立玉里高中附設進修部花蓮縣玉里鎮公立進修部男女校花蓮區免試入學進修部商業經營科(夜間班)商業經營科(夜間班):10(不限)"
+  },
+  {
+    "code": "150C04",
+    "name": "國立花蓮高級工業職業學校附設進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "花蓮區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "花蓮市",
+    "address": "970 花蓮縣花蓮市府前路27號",
+    "admissionQuota": "25",
+    "departmentNames": [
+      "建築科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "150c04國立花蓮高級工業職業學校附設進修部國立花蓮高工附設進修部花蓮縣花蓮市公立進修部男女校花蓮區免試入學進修部建築科(夜間班)建築科(夜間班):25(不限)"
+  },
+  {
+    "code": "150C05",
+    "name": "國立花蓮高級商業職業學校附設進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "花蓮區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "花蓮市",
+    "address": "970013 花蓮縣花蓮市中山路418號",
+    "admissionQuota": "20",
+    "departmentNames": [
+      "商業經營科(夜間班)",
+      "資料處理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "150c05國立花蓮高級商業職業學校附設進修部國立花蓮高級商業職業學校附設進修部花蓮縣花蓮市公立進修部男女校花蓮區免試入學進修部商業經營科(夜間班)資料處理科(夜間班)商業經營科(夜間班):10(不限);資料處理科(夜間班):10(不限)"
+  },
+  {
+    "code": "150C11",
+    "name": "國立光復高級商工職業學校附設進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "花蓮區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "光復鄉",
+    "address": "976 花蓮縣光復鄉林森路100號",
+    "admissionQuota": "38",
+    "departmentNames": [
+      "餐飲管理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "150c11國立光復高級商工職業學校附設進修部國立光復高級商工職業學校附設進修部花蓮縣光復鄉公立進修部男女校花蓮區免試入學進修部餐飲管理科(夜間班)餐飲管理科(夜間班):38(不限)"
+  },
+  {
+    "code": "151306",
+    "name": "花蓮縣私立海星高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "花蓮區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "新城鄉",
+    "address": "971 花蓮縣新城鄉嘉新村嘉新路36號",
+    "admissionQuota": "192",
+    "departmentNames": [
+      "普通科",
+      "綜合高中"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "151306花蓮縣私立海星高級中學花蓮縣私立海星高中花蓮縣新城鄉私立綜高男女校花蓮區免試入學日間部普通科綜合高中普通科:96(不限);綜合高中:96(不限)"
+  },
+  {
+    "code": "151307",
+    "name": "四維學校財團法人花蓮縣四維高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "花蓮區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "花蓮市",
+    "address": "970 花蓮縣花蓮市中山路一段200號",
+    "admissionQuota": "297",
+    "departmentNames": [
+      "普通科",
+      "綜合高中"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "151307四維學校財團法人花蓮縣四維高級中學四維學校財團法人花蓮縣四維高中花蓮縣花蓮市私立綜高男女校花蓮區免試入學日間部普通科綜合高中普通科:105(不限);綜合高中:192(不限)"
+  },
+  {
+    "code": "151312",
+    "name": "慈濟學校財團法人慈濟大學附屬高級中學",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "花蓮區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "花蓮市",
+    "address": "970 花蓮縣花蓮市介仁街178號",
+    "admissionQuota": "120",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "151312慈濟學校財團法人慈濟大學附屬高級中學慈濟學校財團法人慈濟大學附屬高中花蓮縣花蓮市私立高中男女校花蓮區免試入學日間部普通科普通科:120(不限)"
+  },
+  {
+    "code": "151410",
+    "name": "上騰學校財團法人花蓮縣上騰高級工商職業學校",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "花蓮區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "吉安鄉",
+    "address": "973 花蓮縣吉安鄉吉安村吉興四街101號",
+    "admissionQuota": "28",
+    "departmentNames": [
+      "飛機修護科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "151410上騰學校財團法人花蓮縣上騰高級工商職業學校上騰學校財團法人花蓮縣上騰高級工商職業學校花蓮縣吉安鄉私立高職男女校花蓮區免試入學日間部飛機修護科飛機修護科:28(不限)"
+  },
+  {
+    "code": "151C10",
+    "name": "上騰學校財團法人花蓮縣上騰高級工商職業學校附設進修部",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "花蓮區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "花蓮縣",
+    "area": "吉安鄉",
+    "address": "973 花蓮縣吉安鄉吉安村吉興四街101號",
+    "admissionQuota": "16",
+    "departmentNames": [
+      "餐飲管理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "151c10上騰學校財團法人花蓮縣上騰高級工商職業學校附設進修部上騰學校財團法人花蓮縣上騰高級工商職業學校附設進修部花蓮縣吉安鄉私立進修部男女校花蓮區免試入學進修部餐飲管理科(夜間班)餐飲管理科(夜間班):16(不限)"
+  },
+  {
+    "code": "140302",
+    "name": "國立臺東女子高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺東區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "女校",
+    "city": "臺東縣",
+    "area": "臺東市",
+    "address": "950304 臺東縣臺東市四維路一段690號",
+    "admissionQuota": "264",
+    "departmentNames": [
+      "綜合高中"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "140302國立臺東女子高級中學臺東女子高中臺東縣臺東市公立綜高女校臺東區免試入學日間部綜合高中綜合高中:264(女生)"
+  },
+  {
+    "code": "140303",
+    "name": "國立臺東高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺東區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男校",
+    "city": "臺東縣",
+    "area": "臺東市",
+    "address": "950307 臺東縣臺東市中華路一段721號",
+    "admissionQuota": "296",
+    "departmentNames": [
+      "原住民藝能班",
+      "綜合高中"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "140303國立臺東高級中學臺東高中臺東縣臺東市公立綜高男校臺東區免試入學日間部原住民藝能班綜合高中原住民藝能班:32(不限);綜合高中:264(男生)"
+  },
+  {
+    "code": "140401",
+    "name": "國立臺東專科學校附設高職部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺東區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺東縣",
+    "area": "臺東市",
+    "address": "950005 臺東縣臺東市正氣北路889號",
+    "admissionQuota": "150",
+    "departmentNames": [
+      "農業機械科",
+      "畜產保健科",
+      "機械科",
+      "汽車科",
+      "資訊科",
+      "電機科",
+      "土木科",
+      "室內空間設計科",
+      "家政科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "140401國立臺東專科學校附設高職部臺東專科學校附設高職部臺東縣臺東市公立高職男女校臺東區免試入學日間部農業機械科畜產保健科機械科汽車科資訊科電機科土木科室內空間設計科家政科農業機械科:14(不限);畜產保健科:12(不限);機械科:24(不限);汽車科:10(不限);資訊科:24(不限);電機科:6(不限);土木科:21(不限);室內空間設計科:25(不限);家政科:14(不限)"
+  },
+  {
+    "code": "140404",
+    "name": "國立關山高級工商職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺東區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺東縣",
+    "area": "關山鎮",
+    "address": "95642 臺東縣關山鎮民權路58號",
+    "admissionQuota": "111",
+    "departmentNames": [
+      "冷凍空調科",
+      "建築科",
+      "餐旅群不分科",
+      "資料處理科",
+      "時尚工藝科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "140404國立關山高級工商職業學校關山高級工商職業學校臺東縣關山鎮公立高職男女校臺東區免試入學日間部冷凍空調科建築科餐旅群不分科資料處理科時尚工藝科冷凍空調科:16(不限);建築科:19(不限);餐旅群不分科:39(不限);資料處理科:21(不限);時尚工藝科:16(不限)"
+  },
+  {
+    "code": "140405",
+    "name": "國立臺東高級商業職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺東區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺東縣",
+    "area": "臺東市",
+    "address": "950302 臺東縣臺東市正氣路440號",
+    "admissionQuota": "146",
+    "departmentNames": [
+      "商業經營科",
+      "會計事務科",
+      "資料處理科",
+      "廣告設計科",
+      "觀光事業科",
+      "電子商務科",
+      "應用英語科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": true,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "140405國立臺東高級商業職業學校臺東高級商業職業學校臺東縣臺東市公立高職男女校臺東區免試入學日間部商業經營科會計事務科資料處理科廣告設計科觀光事業科電子商務科應用英語科商業經營科:17(不限);會計事務科:24(不限);資料處理科:19(不限);廣告設計科:32(不限);觀光事業科:20(不限);電子商務科:21(不限);應用英語科:13(不限)"
+  },
+  {
+    "code": "140408",
+    "name": "國立成功商業水產職業學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺東區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "臺東縣",
+    "area": "成功鎮",
+    "address": "961 臺東縣成功鎮太平路52號",
+    "admissionQuota": "104",
+    "departmentNames": [
+      "綜合高中"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": true,
+    "normalizedSearchText": "140408國立成功商業水產職業學校成功商業水產職業學校臺東縣成功鎮公立綜高男女校臺東區免試入學日間部綜合高中綜合高中:104(不限)"
+  },
+  {
+    "code": "140C01",
+    "name": "國立臺東專科學校附設高級農工職業進修學校",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺東區免試入學日間部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺東縣",
+    "area": "臺東市",
+    "address": "950005 臺東縣臺東市正氣北路889號",
+    "admissionQuota": "10",
+    "departmentNames": [
+      "電機科(夜間班)",
+      "家政科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "140c01國立臺東專科學校附設高級農工職業進修學校臺東專科學校附設高級農工職業進修學校臺東縣臺東市公立進修部男女校臺東區免試入學日間部電機科(夜間班)家政科(夜間班)電機科(夜間班):5(不限);家政科(夜間班):5(不限)"
+  },
+  {
+    "code": "140C05",
+    "name": "國立臺東高級商業職業學校進修部",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺東區免試入學進修部"
+    ],
+    "schoolType": "進修部",
+    "gender": "男女校",
+    "city": "臺東縣",
+    "area": "臺東市",
+    "address": "950302 臺東縣臺東市正氣路440號",
+    "admissionQuota": "34",
+    "departmentNames": [
+      "商業經營科(夜間班)",
+      "資料處理科(夜間班)"
+    ],
+    "schoolTypes": [
+      "進修部"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "unclear",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "140c05國立臺東高級商業職業學校進修部臺東高級商業職業學校進修部臺東縣臺東市公立進修部男女校臺東區免試入學進修部商業經營科(夜間班)資料處理科(夜間班)商業經營科(夜間班):17(不限);資料處理科(夜間班):17(不限)"
+  },
+  {
+    "code": "141301",
+    "name": "均一學校財團法人臺東縣均一國際教育實驗高級中等學校",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺東區免試入學日間部"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "臺東縣",
+    "area": "臺東市",
+    "address": "950 臺東縣臺東市中興路二段366巷36號",
+    "admissionQuota": "8",
+    "departmentNames": [
+      "普通科"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "141301均一學校財團法人臺東縣均一國際教育實驗高級中等學校均一學校財團法人臺東縣均一國際教育實驗高中臺東縣臺東市私立高中男女校臺東區免試入學日間部普通科普通科:8(不限)"
+  },
+  {
+    "code": "141406",
+    "name": "臺東縣私立公東高級工業職業學校",
+    "ownership": "私立",
+    "admissionDistricts": [
+      "臺東區免試入學日間部"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "臺東縣",
+    "area": "臺東市",
+    "address": "95023 臺東縣臺東市中興路一段560號",
+    "admissionQuota": "158",
+    "departmentNames": [
+      "機械科",
+      "電機科",
+      "家具木工科",
+      "室內空間設計科",
+      "時尚造型科"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "confirmed",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "141406臺東縣私立公東高級工業職業學校臺東縣私立公東高工臺東縣臺東市私立高職男女校臺東區免試入學日間部機械科電機科家具木工科室內空間設計科時尚造型科機械科:34(不限);電機科:36(不限);家具木工科:26(不限);室內空間設計科:31(不限);時尚造型科:31(不限)"
+  },
+  {
+    "code": "144322",
+    "name": "臺東縣立蘭嶼高級中學",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "臺東區免試入學日間部"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "臺東縣",
+    "area": "蘭嶼鄉",
+    "address": "952 臺東縣蘭嶼鄉椰油村37號",
+    "admissionQuota": "19",
+    "departmentNames": [
+      "綜合高中"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "144322臺東縣立蘭嶼高級中學臺東縣立蘭嶼高中臺東縣蘭嶼鄉公立綜高男女校臺東區免試入學日間部綜合高中綜合高中:19(不限)"
+  },
+  {
+    "code": "160302",
+    "name": "國立馬公高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "澎湖區學校名錄"
+    ],
+    "schoolType": "綜高",
+    "gender": "男女校",
+    "city": "澎湖縣",
+    "area": "馬公市",
+    "address": "880 澎湖縣馬公市中華路369號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)",
+      "音樂班(日)",
+      "美術班(日)",
+      "舞蹈班(日)",
+      "體育班(日)",
+      "商業經營科(日)",
+      "資料處理科(日)",
+      "觀光事業科(日)",
+      "商用資訊科(夜)"
+    ],
+    "schoolTypes": [
+      "綜高"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "160302國立馬公高中馬公高中澎湖縣馬公市公立綜高男女校澎湖區學校名錄普通科(日)音樂班(日)美術班(日)舞蹈班(日)體育班(日)商業經營科(日)資料處理科(日)觀光事業科(日)商用資訊科(夜)普通科(日);音樂班(日);美術班(日);舞蹈班(日);體育班(日);商業經營科(日);資料處理科(日);觀光事業科(日);商用資訊科(夜)"
+  },
+  {
+    "code": "160401",
+    "name": "國立澎湖海事水產",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "澎湖區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "澎湖縣",
+    "area": "馬公市",
+    "address": "880 澎湖縣馬公市民族路63號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "汽車科(日)",
+      "資訊科(日)",
+      "電子科(日)",
+      "餐飲管理科(日)",
+      "漁業科(日)",
+      "輪機科(日)",
+      "水產養殖科(日)",
+      "航海科(日)",
+      "航運管理科(日)",
+      "水產食品科(日)",
+      "居家生活服務科(日)",
+      "餐飲服務科(日)"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "160401國立澎湖海事水產澎湖海事水產澎湖縣馬公市公立高職男女校澎湖區學校名錄汽車科(日)資訊科(日)電子科(日)餐飲管理科(日)漁業科(日)輪機科(日)水產養殖科(日)航海科(日)航運管理科(日)水產食品科(日)居家生活服務科(日)餐飲服務科(日)汽車科(日);資訊科(日);電子科(日);餐飲管理科(日);漁業科(日);輪機科(日);水產養殖科(日);航海科(日);航運管理科(日);水產食品科(日);居家生活服務科(日);餐飲服務科(日)"
+  },
+  {
+    "code": "710301",
+    "name": "國立金門高中",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "金門區學校名錄"
+    ],
+    "schoolType": "高中",
+    "gender": "男女校",
+    "city": "金門縣",
+    "area": "金城鎮",
+    "address": "893 金門縣金城鎮光前路94號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "普通科(日)"
+    ],
+    "schoolTypes": [
+      "高中"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "confirmed",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "710301國立金門高中金門高中金門縣金城鎮公立高中男女校金門區學校名錄普通科(日)普通科(日)"
+  },
+  {
+    "code": "710401",
+    "name": "國立金門農工",
+    "ownership": "公立",
+    "admissionDistricts": [
+      "金門區學校名錄"
+    ],
+    "schoolType": "高職",
+    "gender": "男女校",
+    "city": "金門縣",
+    "area": "金湖鎮",
+    "address": "891 金門縣金湖鎮新市里復興路1-11號",
+    "admissionQuota": "",
+    "departmentNames": [
+      "園藝科(日)",
+      "機械科(日)",
+      "汽車科(日)",
+      "資訊科(日)",
+      "電子科(日)",
+      "電機科(日)",
+      "電機科(夜)",
+      "建築科(夜)",
+      "商業經營科(日)",
+      "餐飲管理科(日)",
+      "家政科(日)",
+      "漁業科(日)",
+      "水產養殖科(日)",
+      "居家生活服務科(日)"
+    ],
+    "schoolTypes": [
+      "高職"
+    ],
+    "genders": [
+      "男女校"
+    ],
+    "lodgingStatus": "not_published",
+    "transportStatus": "not_published",
+    "hasSchoolBus": false,
+    "hasPublicTransport": false,
+    "normalizedSearchText": "710401國立金門農工金門農工金門縣金湖鎮公立高職男女校金門區學校名錄園藝科(日)機械科(日)汽車科(日)資訊科(日)電子科(日)電機科(日)電機科(夜)建築科(夜)商業經營科(日)餐飲管理科(日)家政科(日)漁業科(日)水產養殖科(日)居家生活服務科(日)園藝科(日);機械科(日);汽車科(日);資訊科(日);電子科(日);電機科(日);電機科(夜);建築科(夜);商業經營科(日);餐飲管理科(日);家政科(日);漁業科(日);水產養殖科(日);居家生活服務科(日)"
   }
 ]
