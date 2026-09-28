@@ -467,7 +467,7 @@ export const SOURCE_FILES: SourceFile[] = [
   },
   {
     "path": "app/schools/explore/page.tsx",
-    "content": "import type { Metadata } from \"next\";\nimport { SchoolDiscoveryExplorer } from \"@/components/school-discovery-explorer\";\nimport { SiteFooter } from \"@/components/site-footer\";\nimport { SiteHeader } from \"@/components/site-header\";\n\nexport const metadata: Metadata = { title: \"探索學校｜全國國中升學資訊網\", description: \"依就學區、縣市、公私立、學制與科別探索高中職。\", alternates: { canonical: \"/schools/explore\" } };\n\nexport default function SchoolExplorePage() {\n  return <main className=\"min-h-screen jshs-page-shell\"><SiteHeader activeHref=\"/schools\" /><SchoolDiscoveryExplorer /><SiteFooter /></main>;\n}\n\n"
+    "content": "import type { Metadata } from \"next\";\nimport { SchoolDiscoveryExplorer } from \"@/components/school-discovery-explorer\";\nimport { SiteFooter } from \"@/components/site-footer\";\nimport { SiteHeader } from \"@/components/site-header\";\n\nexport const metadata: Metadata = { title: \"探索學校｜全國國中升學資訊網\", description: \"依就學區、縣市、公私立、學制與科別探索高中職。\", alternates: { canonical: \"/schools/explore\" } };\n\nexport default function SchoolExplorePage() {\n  return <main className=\"min-h-screen jshs-page-shell\"><SiteHeader activeHref=\"/schools\" /><SchoolDiscoveryExplorer /><SiteFooter /></main>;\n}\n"
   },
   {
     "path": "app/schools/groups/page.tsx",
@@ -799,7 +799,7 @@ export const SOURCE_FILES: SourceFile[] = [
   },
   {
     "path": "components/school-region-control.tsx",
-    "content": "\"use client\";\n\nimport Link from \"next/link\";\nimport { getAvailableSchoolDataRegions } from \"@/lib/region-registry\";\nimport { writeStoredDistrict } from \"@/lib/district-context\";\n\nconst regions = getAvailableSchoolDataRegions();\n\nexport function SchoolRegionControl({ value, onChange }: { value: string; onChange: (region: string) => void }) {\n  const changeRegion = (region: string) => {\n    writeStoredDistrict(region);\n    onChange(region);\n  };\n\n  return <div className=\"sd-context\" aria-label=\"學校模組導覽與就學區\">\n    <nav className=\"sd-module-nav\" aria-label=\"找學校功能\">\n      <Link href=\"/schools/explore\">探索學校</Link>\n      <Link href=\"/schools\">全國校科查詢</Link>\n      <Link href=\"/schools/map\">學校地圖</Link>\n    </nav>\n    <label>目前就學區\n      <select value={value} onChange={(event) => changeRegion(event.target.value)}>\n        {regions.map((region) => <option key={region.id} value={region.id}>{region.name}</option>)}\n      </select>\n    </label>\n  </div>;\n}\n\n"
+    "content": "\"use client\";\n\nimport Link from \"next/link\";\nimport { getAvailableSchoolDataRegions } from \"@/lib/region-registry\";\nimport { writeStoredDistrict } from \"@/lib/district-context\";\n\nconst regions = getAvailableSchoolDataRegions();\n\nexport function SchoolRegionControl({ value, onChange }: { value: string; onChange: (region: string) => void }) {\n  const changeRegion = (region: string) => {\n    writeStoredDistrict(region);\n    onChange(region);\n  };\n\n  return <div className=\"sd-context\" aria-label=\"學校模組導覽與就學區\">\n    <nav className=\"sd-module-nav\" aria-label=\"找學校功能\">\n      <Link href=\"/schools/explore\">探索學校</Link>\n      <Link href=\"/schools\">全國校科查詢</Link>\n      <Link href=\"/schools/map\">學校地圖</Link>\n    </nav>\n    <label>目前就學區\n      <select value={value} onChange={(event) => changeRegion(event.target.value)}>\n        {regions.map((region) => <option key={region.id} value={region.id}>{region.name}</option>)}\n      </select>\n    </label>\n  </div>;\n}\n"
   },
   {
     "path": "components/school-selection.tsx",
@@ -1211,7 +1211,7 @@ export const SOURCE_FILES: SourceFile[] = [
   },
   {
     "path": "lib/school-map-config.ts",
-    "content": "export const SCHOOL_MAP_TILE_URL = \"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\";\nexport const SCHOOL_MAP_ATTRIBUTION = '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap contributors</a>';\nexport const SCHOOL_MAP_DEFAULT_CENTER = [23.72, 120.96] as const;\nexport const SCHOOL_MAP_DEFAULT_ZOOM = 7;\nexport const SCHOOL_MAP_MAX_ZOOM = 19;\n\n"
+    "content": "export const SCHOOL_MAP_TILE_URL = \"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\";\nexport const SCHOOL_MAP_ATTRIBUTION = '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap contributors</a>';\nexport const SCHOOL_MAP_DEFAULT_CENTER = [23.72, 120.96] as const;\nexport const SCHOOL_MAP_DEFAULT_ZOOM = 7;\nexport const SCHOOL_MAP_MAX_ZOOM = 19;\n"
   },
   {
     "path": "lib/school-media.ts",
