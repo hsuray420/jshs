@@ -69,18 +69,19 @@ test("找學校工具各自有 canonical route 與可操作頁面", async () => 
   for (const route of ["history", "map", "compare", "commute", "cost", "alumni", "open-days", "groups"]) {
     await access(new URL(`../app/schools/${route}/page.tsx`, import.meta.url));
   }
-  const [alumni, map, cost, commute, comparison] = await Promise.all([
+  const [alumni, map, mapConfig, cost, commute, comparison] = await Promise.all([
     read("components/school-alumni-explorer.tsx"),
     read("components/school-map-explorer.tsx"),
+    read("lib/school-map-config.ts"),
     read("components/school-cost-planner.tsx"),
     read("components/commute-comparison.tsx"),
     read("components/school-comparison-explorer.tsx"),
   ]);
   assert.match(alumni, /school-reviews/);
   assert.match(alumni, /學長姐分享/);
-  assert.match(map, /已核對學校位置地圖/);
-  assert.match(map, /openstreetmap|OpenStreetMap/i);
-  assert.match(map, /address/);
+  assert.match(map, /已核對座標/);
+  assert.match(mapConfig, /openstreetmap|OpenStreetMap/i);
+  assert.match(map, /school\.address/);
   assert.match(cost, /費用/);
   assert.match(cost, /三年/);
   assert.match(cost, /估算/);
@@ -91,22 +92,23 @@ test("找學校工具各自有 canonical route 與可操作頁面", async () => 
 });
 
 test("學校地圖使用 OpenStreetMap，並只顯示有來源的座標", async () => {
-  const [map, route, globals, packageJson] = await Promise.all([
+  const [map, mapConfig, route, globals, packageJson] = await Promise.all([
     read("components/school-map-explorer.tsx"),
+    read("lib/school-map-config.ts"),
     read("app/api/school-geocode/route.ts"),
     read("app/globals.css"),
     read("package.json"),
   ]);
   const manifest = JSON.parse(packageJson);
   assert.ok(manifest.dependencies.leaflet);
-  assert.match(map, /import\('leaflet'\)/);
-  assert.match(map, /tile.openstreetmap.org/);
+  assert.match(map, /import\(["']leaflet["']\)/);
+  assert.match(mapConfig, /tile.openstreetmap.org/);
   assert.match(map, /fitBounds/);
   assert.match(map, /setView/);
   assert.match(map, /getSchoolCoordinate/);
-  assert.match(map, /尚無已核對座標/);
-  assert.match(map, /Google 地圖開啟/);
-  assert.match(map, /selected/);
+  assert.match(map, /未有可驗證座標/);
+  assert.doesNotMatch(map, /Google 地圖開啟/);
+  assert.match(map, /activeSchoolCode/);
   assert.doesNotMatch(map, /通勤時間|distance/);
   assert.doesNotMatch(route, /nominatim\.openstreetmap\.org/);
   assert.match(globals, /leaflet\/dist\/leaflet\.css/);

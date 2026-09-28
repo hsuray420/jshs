@@ -14,6 +14,7 @@
     {
       "label": "找學校", "href": "/schools", "activeHref": "/schools", "eyebrow": "找學校", "description": "從校科探索開始，找到值得了解的學校。",
       "items": [
+        { "label": "探索學校", "href": "/schools/explore", "description": "依地區與條件瀏覽學校", "section": "探索學校", "icon": "school" },
         { "label": "全國校科查詢", "href": "/schools", "description": "搜尋學區、縣市與群科", "section": "探索學校", "icon": "search" },
         { "label": "學校地圖", "href": "/schools/map", "description": "先選就學區，再看學校位置", "section": "探索學校", "icon": "school" },
         { "label": "學校比較", "href": "/schools/compare", "description": "並排比較 2–4 所學校／校科", "section": "比較決策", "icon": "planner" },

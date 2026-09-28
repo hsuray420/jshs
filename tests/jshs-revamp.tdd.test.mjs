@@ -13,11 +13,12 @@ test("school search uses a concise search-first result card", async () => {
   assert.match(page, /資料準備中/);
 });
 
-test("map only renders verified coordinates and keeps Google Maps as an address link", async () => {
-  const page = await source("components/school-map-explorer.tsx");
+test("map only renders verified coordinates on OpenStreetMap", async () => {
+  const [page, config] = await Promise.all([source("components/school-map-explorer.tsx"), source("lib/school-map-config.ts")]);
   assert.match(page, /getSchoolCoordinate/);
-  assert.match(page, /已核對學校位置地圖/);
-  assert.match(page, /Google 地圖開啟/);
+  assert.match(page, /已核對座標/);
+  assert.match(config, /OpenStreetMap contributors/);
+  assert.doesNotMatch(page, /Google 地圖開啟/);
   assert.doesNotMatch(page, /navigator\.geolocation/);
 });
 
