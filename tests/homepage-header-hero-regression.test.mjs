@@ -24,6 +24,28 @@ test("the homepage hero asset stays above the page background at every viewport"
   assert.match(css, /\.jshs-v2-home \.jshs-v2-hero-content \{[^}]*position:relative;[^}]*z-index:1;/s);
 });
 
+test("homepage hero presents the inclusive school search without shortcut clutter", async () => {
+  const [home, css] = await Promise.all([source("app/page.tsx"), source("app/globals.css")]);
+
+  for (const copy of [
+    "116 學年度升學資訊",
+    "找到屬於你的下一站。",
+    "探索高中、高職與五專，",
+    "從認識學校開始，找到適合自己的方向。",
+    "搜尋學校、科系或地區",
+    "瀏覽所有學校",
+    "認識更多學校",
+    "查看高中、高職與五專的官方資料，找到適合你的選擇。",
+  ]) assert.match(home, new RegExp(copy));
+
+  assert.match(home, /<form action="\/schools" method="get" className="jshs-v2-search"/);
+  assert.match(home, /name="q"/);
+  assert.doesNotMatch(home, /FOR A BRIGHTER TOMORROW|發現更大的|高中世界|featureCards|jshs-v2-feature-strip/);
+  assert.match(css, /\.jshs-v2-home \.jshs-v2-search\s*\{[^}]*height:64px;[^}]*max-width:640px;/s);
+  assert.match(css, /\.jshs-v2-home \.jshs-v2-search:focus-within\s*\{[^}]*border-color:#93b9f8;[^}]*0 0 0 4px rgb\(37 99 235 \/ 10%\)/s);
+  assert.match(css, /@media \(max-width:767px\)[\s\S]*?\.jshs-v2-home \.jshs-v2-hero\s*\{[^}]*display:flex;[^}]*flex-direction:column;/s);
+});
+
 test("desktop header uses a collision-safe three-zone layout and calibrated controls", async () => {
   const [css, menu] = await Promise.all([source("app/globals.css"), source("components/navigation/mega-menu.tsx")]);
   assert.match(css, /@media \(min-width:1200px\) \{[\s\S]*?\.jshs-header-inner \{[^}]*display:grid;[^}]*grid-template-columns:max-content minmax\(0,1fr\) max-content;[^}]*height:76px;[^}]*max-width:1680px;[^}]*padding-inline:clamp\(32px,3vw,48px\);/);
