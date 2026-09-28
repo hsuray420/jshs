@@ -3,4 +3,3 @@ export const SCHOOL_MAP_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap
 export const SCHOOL_MAP_DEFAULT_CENTER = [23.72, 120.96] as const;
 export const SCHOOL_MAP_DEFAULT_ZOOM = 7;
 export const SCHOOL_MAP_MAX_ZOOM = 19;
-

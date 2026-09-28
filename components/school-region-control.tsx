@@ -25,4 +25,3 @@ export function SchoolRegionControl({ value, onChange }: { value: string; onChan
     </label>
   </div>;
 }
-

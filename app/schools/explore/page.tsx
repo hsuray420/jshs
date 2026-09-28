@@ -8,4 +8,3 @@ export const metadata: Metadata = { title: "探索學校｜全國國中升學資
 export default function SchoolExplorePage() {
   return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/schools" /><SchoolDiscoveryExplorer /><SiteFooter /></main>;
 }
-
