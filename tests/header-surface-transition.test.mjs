@@ -12,7 +12,7 @@ test("the shared header fades into every page without a hard divider", async () 
   ]);
 
   assert.match(layout, /import "\.\/header-surface-transition\.css";/);
-  assert.match(css, /\.jshs-site-header\s*\{[^}]*border-bottom-color:\s*transparent !important;[^}]*box-shadow:\s*none !important;/s);
+  assert.match(css, /\.jshs-site-header\s*\{[^}]*border-bottom:\s*0 !important;[^}]*box-shadow:\s*none !important;/s);
   assert.match(css, /\.jshs-site-header::after\s*\{[^}]*linear-gradient\(\s*to bottom,\s*rgb\(255 255 255 \/ 88%\),\s*rgb\(255 255 255 \/ 0%\)\s*\)/s);
   assert.match(css, /pointer-events:\s*none;/);
 });

@@ -1,7 +1,7 @@
 /* The shared header should merge softly into each page surface. Keep the
    transition decorative so it never blocks navigation or page controls. */
 .jshs-site-header {
-  border-bottom-color: transparent !important;
+  border-bottom: 0 !important;
   box-shadow: none !important;
   overflow: visible;
 }
