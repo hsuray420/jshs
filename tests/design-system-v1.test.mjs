@@ -28,14 +28,13 @@ test("the desktop header uses the shared primary navigation and full brand", asy
 test("the homepage follows the approved JSHS visual system and preserves the shared task routes", async () => {
   const [home, header, css] = await Promise.all([source("app/page.tsx"), source("components/site-header.tsx"), source("app/globals.css")]);
   assert.match(home, /jshs-v2-home/);
-  assert.match(home, /找到屬於你的下一站。/);
-  assert.match(home, /探索高中、高職與五專/);
+  assert.match(home, /發現更大的/);
   assert.match(home, new RegExp("/schools"));
   assert.match(home, new RegExp("/planner"));
   assert.match(home, new RegExp("/scores"));
   assert.match(header, /mobileNavigation = primaryNavigation/);
   assert.match(css, /\.jshs-v2-home/);
-  assert.match(css, /\.jshs-v2-all-schools/);
+  assert.match(css, /\.jshs-v2-feature-strip/);
   assert.match(css, /\.jshs-home-belief/);
 });
 
