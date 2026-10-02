@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { FeatureHero } from "@/components/feature-hero";
+import { MockExamWorkspace } from "@/components/mock-exam-workspace";
 import { MockScoreEmptyState } from "@/components/mock-score-empty-state";
 import { ScoreFeatureList } from "@/components/score-feature-entry";
 import { SiteFooter } from "@/components/site-footer";
@@ -17,6 +18,7 @@ export default function MockScoresPage() {
       <SiteHeader activeHref="/scores/mock" />
       <FeatureHero theme="mock-exam" eyebrow="模擬考" title="模擬考中心" description="對答案、我的模考、成績趨勢與落點參考會集中在這裡；目前只顯示已建立的入口與資料狀態。" illustration="score-history" />
       <MockScoreEmptyState />
+      <MockExamWorkspace />
       <ScoreFeatureList area="mock" />
       <SiteFooter />
     </main>
