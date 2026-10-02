@@ -12,7 +12,7 @@ import { SITE_NAME } from "@/lib/brand";
 const mobileNavigation = primaryNavigation as readonly NavigationItem[];
 const navigationGroups = new Map(menuGroups.map((group) => [group.label, group]));
 function navigationDestination(item: NavigationItem) {
-  return item.label === "找學校" ? "/schools/explore" : item.href;
+  return item.label === "找學校" ? "/schools" : item.href;
 }
 function districtSnapshot() { return getDistrictLabel(readStoredDistrict()); }
 

@@ -1664,9 +1664,13 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 @media (max-width:760px) { .jshs-v2-home .jshs-header-inner { padding-inline:16px; }.jshs-v2-home .jshs-brand-logo { display:none; }.jshs-v2-home .jshs-brand-wordmark strong { font-size:18px; } }
 
 /* Shared page hero language: quiet blue surfaces with one small visual cue. */
-.jshs-feature-hero { background: linear-gradient(120deg, #edf6ff 0%, #f8fbff 68%, #e5f1ff 100%); border-color: #d3e6fa; }
-.jshs-feature-hero h1 { color: #123c6f !important; }
-.jshs-feature-eyebrow { color: #2d6fba !important; }
+.jshs-feature-hero.is-schools { background: linear-gradient(120deg, #edf6ff 0%, #f8fbff 68%, #e5f1ff 100%); border-color: #d3e6fa; }
+.jshs-feature-hero.is-schools h1 { color: #123c6f !important; }
+.jshs-feature-hero.is-schools .jshs-feature-eyebrow { color: #2d6fba !important; }
+.jshs-feature-hero.is-mock-exam { background: linear-gradient(120deg, #f4efff 0%, #fbf9ff 68%, #eee6ff 100%); border-color: #d5c3fb; }
+.jshs-feature-hero.is-mock-exam h1 { color: #51328f !important; }
+.jshs-feature-hero.is-mock-exam .jshs-feature-eyebrow { color: #7651c8 !important; }
+.jshs-feature-mock-exam { --brand-primary: #7651c8; --brand-primary-hover: #5a36a5; --brand-tint: #f4efff; }
 
 /* Shared navigation system: the header is intentionally neutral; feature
    accents begin inside an opened menu or mobile group. */

@@ -14,7 +14,6 @@ export function SchoolRegionControl({ value, onChange }: { value: string; onChan
 
   return <div className="sd-context" aria-label="學校模組導覽與就學區">
     <nav className="sd-module-nav" aria-label="找學校功能">
-      <Link href="/schools/explore">探索學校</Link>
       <Link href="/schools">全國校科查詢</Link>
       <Link href="/schools/map">學校地圖</Link>
     </nav>

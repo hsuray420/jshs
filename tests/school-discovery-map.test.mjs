@@ -5,7 +5,7 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 
-test("school information architecture keeps national query separate from discovery and map", async () => {
+test("school information architecture keeps one canonical query and a separate map", async () => {
   const [nationalPage, discoveryPage, siteMap, routes] = await Promise.all([
     read("app/schools/page.tsx"),
     read("app/schools/explore/page.tsx"),
@@ -13,8 +13,7 @@ test("school information architecture keeps national query separate from discove
     read("content/route-metadata.json"),
   ]);
   assert.match(nationalPage, /SchoolExplorer/);
-  assert.match(discoveryPage, /SchoolDiscoveryExplorer/);
-  assert.match(siteMap, /"label": "探索學校", "href": "\/schools\/explore"/);
+  assert.match(discoveryPage, /redirect\("\/schools"\)/);
   assert.match(siteMap, /"label": "全國校科查詢", "href": "\/schools"/);
   assert.match(routes, /"pathname": "\/schools\/explore"/);
 });
