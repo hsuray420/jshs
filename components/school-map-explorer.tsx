@@ -8,6 +8,7 @@ import { useSchoolSearchIndex } from "@/components/school-static-data";
 import { getSchoolCoordinate } from "@/lib/school-geocode";
 import { normalizeDistrict, readStoredDistrict, writeStoredDistrict } from "@/lib/district-context";
 import { getAvailableSchoolDataRegions } from "@/lib/region-registry";
+import { FeatureIllustration } from "@/components/feature-illustrations";
 import { SCHOOL_MAP_ATTRIBUTION, SCHOOL_MAP_DEFAULT_CENTER, SCHOOL_MAP_DEFAULT_ZOOM, SCHOOL_MAP_MAX_ZOOM, SCHOOL_MAP_TILE_URL } from "@/lib/school-map-config";
 import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
 import "@/components/school-discovery.css";
@@ -161,7 +162,7 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
 
   return <div className="sd-root sm-root">
     <div className="sd-container"><SchoolRegionControl value={region} onChange={changeRegion} /></div>
-    <header className="sm-toolbar sd-container"><div><p className="sm-eyebrow">學校地圖</p><h1>在地圖與清單間探索學校</h1><p>{regionName}已核對座標 {coordinateCoverage} 所；未有可驗證座標的學校不會被錯誤標在地圖上。</p></div>
+    <header className="sm-toolbar sd-container"><div className="sm-toolbar-copy"><p className="sm-eyebrow">學校地圖</p><h1>在地圖與清單間探索學校</h1><p>{regionName}已核對座標 {coordinateCoverage} 所；未有可驗證座標的學校不會被錯誤標在地圖上。</p></div><FeatureIllustration name="school-map" theme="schools" className="sm-toolbar-illustration" />
       <div className="sm-search-grid"><label>搜尋<input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="學校、縣市、行政區或科別" /></label><label>縣市<select value={city} onChange={(event) => setCity(event.target.value)}><option value="">全部</option>{cities.map((value) => <option key={value}>{value}</option>)}</select></label><label>公私立<select value={ownership} onChange={(event) => setOwnership(event.target.value)}><option value="">全部</option>{ownerships.map((value) => <option key={value}>{value}</option>)}</select></label><label>學制<select value={schoolType} onChange={(event) => setSchoolType(event.target.value)}><option value="">全部</option>{schoolTypes.map((value) => <option key={value}>{value}</option>)}</select></label><label>科別<select value={department} onChange={(event) => setDepartment(event.target.value)}><option value="">全部</option>{departments.map((value) => <option key={value}>{value}</option>)}</select></label></div>
     </header>
     <section className="sm-layout" aria-label="學校地圖探索器">

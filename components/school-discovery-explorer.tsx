@@ -6,6 +6,7 @@ import { readStoredDistrict, normalizeDistrict, writeStoredDistrict } from "@/li
 import { getAvailableSchoolDataRegions } from "@/lib/region-registry";
 import { SchoolRegionControl } from "@/components/school-region-control";
 import { useSchoolSearchIndex } from "@/components/school-static-data";
+import { FeatureIllustration } from "@/components/feature-illustrations";
 import "@/components/school-discovery.css";
 
 const regions = getAvailableSchoolDataRegions();
@@ -69,9 +70,9 @@ export function SchoolDiscoveryExplorer() {
 
   return <div className="sd-root">
     <div className="sd-container"><SchoolRegionControl value={region} onChange={changeRegion} /></div>
-    <header className="sd-hero"><div className="sd-container"><p>探索學校</p><h1>從地區與校科，找到下一所想了解的學校</h1><p>所有結果來自區域 CSV；沒有資料的欄位會誠實留白，不以推測補齊。</p>
+    <header className="sd-hero"><div className="sd-container"><div className="sd-hero-copy"><p>探索學校</p><h1>從地區與校科，找到下一所想了解的學校</h1><p>所有結果來自官方區域資料；沒有資料的欄位會誠實留白，不以推測補齊。</p>
       <label className="sd-search"><span className="sr-only">搜尋學校、縣市、行政區或科別</span><input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜尋學校、縣市、行政區或科別" /></label>
-    </div></header>
+    </div><FeatureIllustration name="school-search" theme="schools" className="sd-hero-illustration" /></div></header>
     <section className="sd-container sd-body" aria-label="探索學校結果">
       <div className="sd-filters">
         <label>縣市<select value={city} onChange={(event) => setCity(event.target.value)}><option value="">全部縣市</option>{cities.map((value) => <option key={value}>{value}</option>)}</select></label>

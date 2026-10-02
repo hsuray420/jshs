@@ -69,7 +69,8 @@ export function NavDropdownGrid({ group, onNavigate, mobile = false }: { group: 
 }
 
 export function NavDropdownFooter({ group, onNavigate }: { group: MenuGroup; onNavigate?: () => void }) {
-  return <footer className="jshs-nav-mega-footer"><Link href={group.href} onClick={onNavigate}>查看全部{group.label}<SiteIcon name="chevron-right" size={16} /></Link></footer>;
+  const href = group.label === "找學校" ? "/schools/explore" : group.href;
+  return <footer className="jshs-nav-mega-footer"><Link href={href} onClick={onNavigate}>查看全部{group.label}<SiteIcon name="chevron-right" size={16} /></Link></footer>;
 }
 
 export function NavDropdown({ item, group, active, open, onToggle, onNavigate }: { item: NavigationItem; group: MenuGroup; active: boolean; open: boolean; onToggle: () => void; onNavigate: () => void }) {

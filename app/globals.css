@@ -1663,6 +1663,11 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .jshs-v2-home .jshs-home-header-search { align-items:center; color:#111923; display:inline-flex; height:44px; justify-content:center; width:44px; }
 @media (max-width:760px) { .jshs-v2-home .jshs-header-inner { padding-inline:16px; }.jshs-v2-home .jshs-brand-logo { display:none; }.jshs-v2-home .jshs-brand-wordmark strong { font-size:18px; } }
 
+/* Shared page hero language: quiet blue surfaces with one small visual cue. */
+.jshs-feature-hero { background: linear-gradient(120deg, #edf6ff 0%, #f8fbff 68%, #e5f1ff 100%); border-color: #d3e6fa; }
+.jshs-feature-hero h1 { color: #123c6f !important; }
+.jshs-feature-eyebrow { color: #2d6fba !important; }
+
 /* Shared navigation system: the header is intentionally neutral; feature
    accents begin inside an opened menu or mobile group. */
 :root { --nav-header-height: 74px; }
