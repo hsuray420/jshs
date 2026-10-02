@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./header-surface-transition.css";
 import { AiAssistant } from "@/components/ai-assistant";
 import { SiteIntroModal } from "@/components/site-intro-modal";
 import { getMemberSession } from "@/lib/member-auth";
