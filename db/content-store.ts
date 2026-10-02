@@ -1,6 +1,7 @@
 import { ensureAdminSchema, getD1 } from "./admin-store";
 
 export const CONTENT_TYPES = [
+  "knowledge_article",
   "knowledge_term",
   "knowledge_card",
   "schedule_task",

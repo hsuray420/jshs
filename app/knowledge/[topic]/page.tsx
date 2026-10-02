@@ -5,6 +5,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { CompactFeatureHero } from "@/components/feature-hero";
 import { getGuideTopic, getGuideTopics } from "@/lib/content";
+import guideArticles from "@/content/guide/articles.json";
+import { GuideArticleDetail } from "@/components/guide-article-detail";
+import { getPublishedGuideArticles } from "@/lib/guide-center-server";
 
 const legacyRedirects: Record<string, string> = {
   misconceptions: "/knowledge/glossary",
@@ -15,14 +18,16 @@ const legacyRedirects: Record<string, string> = {
   groups: "/schools/groups",
 };
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
 export function generateStaticParams() {
-  return [...getGuideTopics(), ...Object.keys(legacyRedirects)].map((topic) => ({ topic }));
+  return [...new Set([...getGuideTopics(), ...guideArticles.map((article) => article.slug), ...Object.keys(legacyRedirects)])].map((topic) => ({ topic }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ topic: string }> }): Promise<Metadata> {
   const { topic } = await params;
+  const article = (await getPublishedGuideArticles()).find((item) => item.slug === topic) || guideArticles.find((item) => item.slug === topic);
+  if (article) return { title: article.title + "｜升學指南", description: article.summary, alternates: { canonical: "/knowledge/" + topic } };
   const page = getGuideTopic(topic);
   if (page) return { title: page.title + "｜升學指南", description: page.description, alternates: { canonical: "/knowledge/" + topic } };
   return { title: "升學指南｜全國國中升學資訊網", robots: { index: false, follow: false } };
@@ -30,6 +35,8 @@ export async function generateMetadata({ params }: { params: Promise<{ topic: st
 
 export default async function KnowledgeTopicPage({ params }: { params: Promise<{ topic: string }> }) {
   const { topic } = await params;
+  const article = (await getPublishedGuideArticles()).find((item) => item.slug === topic) || guideArticles.find((item) => item.slug === topic);
+  if (article) return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/knowledge" /><CompactFeatureHero theme="guide" eyebrow={article.category} title={article.title} description={article.summary} illustration="admission-basics" /><GuideArticleDetail article={article} /><SiteFooter /></main>;
   const destination = legacyRedirects[topic];
   if (destination) redirect(destination);
   const page = getGuideTopic(topic);
