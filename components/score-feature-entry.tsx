@@ -29,25 +29,6 @@ export function ScoreFeatureEntry() {
   );
 }
 
-function ScoreAreaCard({ areaKey }: { areaKey: ScoreFeatureArea }) {
-  const area = scoreFeatureAreas.find((item) => item.key === areaKey);
-  if (!area) return null;
-  const features = getScoreFeatures(areaKey);
-  return (
-    <article className={`jshs-score-entry-card is-${area.key}`}>
-      <p className="jshs-score-entry-label">{area.label}</p>
-      <h3>{area.title}</h3>
-      <p>{area.description}</p>
-      <Link href={area.primaryHref} className="jshs-button-primary px-5">{area.primaryLabel}</Link>
-      <div aria-label={`${area.label}快速捷徑`} className="jshs-score-entry-shortcuts">
-        {features.slice(area.key === "mock" ? 1 : 1, area.key === "mock" ? 4 : 3).map((feature) => (
-          <Link key={feature.key} href={feature.href}>{feature.label}</Link>
-        ))}
-      </div>
-    </article>
-  );
-}
-
 export function ScoreFeatureList({ area }: { area?: ScoreFeatureArea }) {
   const features = area ? getScoreFeatures(area) : scoreFeatureAreas.flatMap((item) => getScoreFeatures(item.key));
   return (

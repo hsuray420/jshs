@@ -33,9 +33,7 @@ for (const route of routes.filter((item) => item.sitemap && item.indexable)) {
 }
 
 const featureHeroRequired = [
-  "/schools",
   "/schools/history",
-  "/schools/map",
   "/schools/compare",
   "/schools/commute",
   "/schools/cost",
