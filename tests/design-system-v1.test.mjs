@@ -43,7 +43,7 @@ test("reference function pages use the reusable feature hero instead of a colour
   const [schools, tools, hero, themes, illustrations, css] = await Promise.all(["app/schools/page.tsx", "app/tools/page.tsx", "components/feature-hero.tsx", "lib/feature-themes.ts", "components/feature-illustrations.tsx", "app/globals.css"].map(source));
   assert.match(schools, /jshs-feature-school/);
   assert.match(await source("components/school-explorer.tsx"), /sv-hero/);
-  assert.match(tools, /FeatureHero theme="tools"/);
+  assert.match(tools, /FeatureHero theme="analytics"/);
   assert.doesNotMatch(schools, /FeaturePageBand/);
   assert.doesNotMatch(tools, /FeaturePageBand/);
   for (const theme of ["schools", "tools", "planner", "schedule", "official", "guide", "trust"]) assert.match(themes, new RegExp(`${theme}:`));

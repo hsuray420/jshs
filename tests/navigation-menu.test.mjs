@@ -24,8 +24,12 @@ function collectLabels(items) { return items.flatMap(({ label, children = [] }) 
 test("site map defines the final eight menu groups from the product navigation", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
   assert.deepEqual(siteMap.menuGroups.map(({ label }) => label), expectedGroups);
-  const labels = siteMap.menuGroups.flatMap(({ items }) => collectLabels(items));
+  const labels = siteMap.menuGroups.flatMap(({ label, items }) => [label, ...collectLabels(items)]);
   for (const label of requiredLabels) assert.ok(labels.includes(label), `missing menu item: ${label}`);
+  const schoolGroup = siteMap.menuGroups.find(({ label }) => label === "找學校");
+  assert.deepEqual([...new Set(schoolGroup.items.map(({ section }) => section))].sort(), ["探索學校", "比較與參考"]);
+  const analyticsGroup = siteMap.menuGroups.find(({ label }) => label === "成績分析");
+  assert.deepEqual(analyticsGroup.items.map(({ label }) => label), ["會考與免試"]);
 });
 
 test("desktop and mobile navigation render the same complete submenu model", async () => {

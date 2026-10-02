@@ -40,11 +40,17 @@ test("school exploration surfaces use restrained brand texture instead of genera
 });
 
 test("feature families keep their own visual language", async () => {
-  const [themes, mockPage] = await Promise.all([
+  const [themes, navTheme, mockPage] = await Promise.all([
     read("lib/feature-themes.ts"),
+    read("components/navigation/feature-theme.ts"),
     read("app/scores/mock/page.tsx"),
   ]);
-  assert.match(themes, /"mock-exam": \{ primary: "#7651c8"/);
+  assert.match(themes, /"mock-exam": \{ primary: "#7c3aed"/);
+  for (const [name, color] of [["analytics", "#047857"], ["planner", "#e11d48"], ["schedule", "#d97706"], ["guide", "#0f766e"], ["trust", "#475569"], ["official", "#2563eb"]]) {
+    assert.match(themes, new RegExp(`${name}: \\{ primary: "${color}`));
+  }
+  assert.match(navTheme, /"成績分析": "analytics"/);
+  assert.match(navTheme, /"升學指南": "guide"/);
   assert.match(mockPage, /theme="mock-exam"/);
   assert.match(mockPage, /jshs-feature-mock-exam/);
 });

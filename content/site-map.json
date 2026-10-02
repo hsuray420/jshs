@@ -2,10 +2,10 @@
   "updatedAt": "2026-08-28",
   "primaryNavigation": [
     { "label": "找學校", "href": "/schools", "activeHref": "/schools", "icon": "school", "tone": "school" },
-    { "label": "模擬考", "href": "/scores/mock", "activeHref": "/scores/mock", "icon": "calculator", "tone": "score" },
-    { "label": "成績分析", "href": "/scores", "activeHref": "/scores", "icon": "calculator", "tone": "score" },
+    { "label": "模擬考", "href": "/scores/mock", "activeHref": "/scores/mock", "icon": "calculator", "tone": "mock-exam" },
+    { "label": "成績分析", "href": "/scores", "activeHref": "/scores", "icon": "calculator", "tone": "analytics" },
     { "label": "我的志願", "href": "/planner", "activeHref": "/planner", "icon": "planner", "tone": "planner" },
-    { "label": "日程", "href": "/schedule", "activeHref": "/schedule", "icon": "calendar", "tone": "guide" },
+    { "label": "日程", "href": "/schedule", "activeHref": "/schedule", "icon": "calendar", "tone": "schedule" },
     { "label": "升學指南", "href": "/knowledge", "activeHref": "/knowledge", "icon": "knowledge", "tone": "guide" },
     { "label": "資料與信任", "href": "/trust", "activeHref": "/trust", "icon": "shield", "tone": "trust" },
     { "label": "官方資訊", "href": "/admission-guides", "activeHref": "/admission-guides", "icon": "file", "tone": "official" }
@@ -14,40 +14,36 @@
     {
       "label": "找學校", "href": "/schools", "activeHref": "/schools", "eyebrow": "找學校", "description": "從校科探索開始，找到值得了解的學校。",
       "items": [
-        { "label": "全國校科查詢", "href": "/schools", "description": "搜尋學區、縣市與群科", "section": "找學校", "icon": "search" },
+        { "label": "全國校科查詢", "href": "/schools", "description": "搜尋學區、縣市與群科", "section": "探索學校", "icon": "search" },
         { "label": "學校地圖", "href": "/schools/map", "description": "先選就學區，再看學校位置", "section": "探索學校", "icon": "school" },
-        { "label": "學校比較", "href": "/schools/compare", "description": "並排比較 2–4 所學校／校科", "section": "比較決策", "icon": "planner" },
-        { "label": "通勤比較", "href": "/schools/commute", "description": "比較距離、時間與交通方式", "section": "比較決策" },
-        { "label": "歷年錄取", "href": "/schools/history", "description": "查看年度與來源的錄取參考", "section": "升學參考" },
-        { "label": "費用試算", "href": "/schools/cost", "description": "區分官方金額與 JSHS 估算", "section": "升學參考" },
-        { "label": "學長姐分享", "href": "/schools/alumni", "description": "參考社群經驗，不代表校方立場", "section": "更多資訊" },
-        { "label": "校園開放日", "href": "/schools/open-days", "description": "整理官方公告的參訪活動", "section": "更多資訊" },
-        { "label": "群科介紹", "href": "/schools/groups", "description": "理解學習內容與後續方向", "section": "更多資訊" }
+        { "label": "群科介紹", "href": "/schools/groups", "description": "理解學習內容與後續方向", "section": "探索學校" },
+        { "label": "學校比較", "href": "/schools/compare", "description": "並排比較 2–4 所學校／校科", "section": "比較與參考", "icon": "planner" },
+        { "label": "通勤比較", "href": "/schools/commute", "description": "比較距離、時間與交通方式", "section": "比較與參考" },
+        { "label": "歷年錄取", "href": "/schools/history", "description": "查看年度與來源的錄取參考", "section": "比較與參考" },
+        { "label": "費用試算", "href": "/schools/cost", "description": "區分官方金額與 JSHS 估算", "section": "比較與參考" },
+        { "label": "學長姐分享", "href": "/schools/alumni", "description": "參考社群經驗，不代表校方立場", "section": "比較與參考" },
+        { "label": "校園開放日", "href": "/schools/open-days", "description": "整理官方公告的參訪活動", "section": "比較與參考" }
       ]
     },
     {
       "label": "模擬考", "href": "/scores/mock", "activeHref": "/scores/mock", "eyebrow": "模擬考", "description": "保存模考成績，查看趨勢與歷史參考。", "layout": "compact",
       "items": [
         { "label": "模擬考中心", "href": "/scores/mock", "description": "集中查看模考入口、資料狀態與下一步。", "section": "模擬考" },
+        { "label": "對答案", "href": "/scores/mock", "description": "等可驗證答案來源載入後再開放作答。", "section": "模擬考" },
         { "label": "我的模考", "href": "/scores/history", "description": "查看已保存的模考紀錄；目前不假造紀錄。", "section": "模擬考" },
         { "label": "成績趨勢", "href": "/scores/trends", "description": "用已保存成績產生趨勢，不以空資料推估。", "section": "模擬考" },
         { "label": "模考落點", "href": "/scores/placement", "description": "查看資料條件與歷史參考，不提供無依據預測。", "section": "模擬考" }
       ]
     },
     {
-      "label": "成績分析", "href": "/scores", "activeHref": "/scores", "eyebrow": "成績分析", "description": "從模擬考到會考積分，整理你的升學資料。", "layout": "wide",
+      "label": "成績分析", "href": "/scores", "activeHref": "/scores", "eyebrow": "成績分析", "description": "整理會考與免試積分，核對規則與升學條件。", "layout": "wide",
       "items": [
-        { "label": "模擬考", "href": "/scores/mock", "description": "剛考完？從這裡開始。", "children": [
-          { "label": "模擬考中心", "href": "/scores/mock", "description": "集中查看模考入口、資料狀態與下一步" },
-          { "label": "對答案", "href": "/scores/mock", "description": "等可驗證答案來源載入後再開放作答" },
-          { "label": "我的模考", "href": "/scores/history", "description": "查看已保存的模考紀錄；目前不假造紀錄" },
-          { "label": "成績趨勢", "href": "/scores/trends", "description": "用已保存成績產生趨勢，不以空資料推估" },
-          { "label": "模考落點", "href": "/scores/placement", "description": "查看資料條件與歷史參考，不提供無依據預測" }
-        ] },
         { "label": "會考與免試", "href": "/scores/admission", "description": "想知道目前的升學積分？", "children": [
           { "label": "成績積分試算", "href": "/scores/admission", "description": "依 15 就學區官方規則完成積分試算" },
           { "label": "積分規則", "href": "/scores/rules", "description": "互動查看項目、公式、上限與官方來源" },
-          { "label": "個人積分摘要", "href": "/scores/summary", "description": "查看最近一次試算與同分比序資料" }
+          { "label": "個人積分摘要", "href": "/scores/summary", "description": "查看最近一次試算與同分比序資料" },
+          { "label": "試算歷史", "href": "/tools/history", "description": "回看每次試算採用的規則與年度" },
+          { "label": "資格檢測", "href": "/eligibility", "description": "先確認可能適用的升學途徑與資格" }
         ] }
       ]
     },
