@@ -27,6 +27,6 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <nav aria-label="管理後台主選單">{groups.map((group) => <section key={group.label} className="admin-nav-group"><p>{group.label}</p>{group.items.map(([label, href]) => <Link key={href} href={href} onClick={() => setOpen(false)} className={current?.[1] === href ? "is-active" : ""}>{label}</Link>)}</section>)}</nav>
       <div className="admin-sidebar-footer"><Link href="/" target="_blank">查看前台 ↗</Link><Link href="/api/admin/logout">登出</Link></div>
     </aside>
-    <div className="admin-workspace"><header className="admin-topbar"><div><span className="admin-breadcrumb">JSHS Admin</span><strong>{current?.[0] || "總覽"}</strong></div><div className="admin-topbar-actions"><span className="admin-status-dot">● 系統正常</span><Link href="/admin/system">系統狀態</Link></div></header><main className="admin-main">{children}</main></div>
+    <div className="admin-workspace"><header className="admin-topbar"><div><span className="admin-breadcrumb">全國國中升學資訊網／管理後台</span><strong>{current?.[0] || "總覽"}</strong></div><div className="admin-topbar-actions"><span className="admin-status-dot">● 系統正常</span><Link href="/admin/system">系統狀態</Link></div></header><main className="admin-main">{children}</main></div>
   </div>;
 }
