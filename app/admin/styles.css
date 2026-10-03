@@ -628,6 +628,19 @@
 @media (max-width: 650px) { .admin-media-preview, .admin-media-metadata-grid { grid-template-columns: 1fr; }.admin-media-metadata-wide { grid-column: auto; }.admin-media-actions { align-items: stretch; flex-direction: column; }.admin-media-actions .admin-button { width: 100%; }.admin-media-preview-actions { flex-wrap: wrap; }.admin-media-preview-actions button { flex: 1; } }
 
 .admin-school-browser { display: grid; gap: 18px; }
+.admin-region-filter-note { margin: 0; border: 1px solid #bfdbfe; border-radius: 12px; background: #eff6ff; padding: 11px 14px; color: #1e3a8a; font-size: 13px; }
+.admin-region-filter-note a { color: #1d4ed8; font-weight: 800; }
+.admin-csv-principles { max-width: none; }
+.admin-csv-principles h2 { margin: 0; font-size: 18px; }
+.admin-csv-source-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.admin-csv-source-card { min-width: 0; margin: 0; }
+.admin-csv-source-card h2 { margin: 0 0 10px; font-size: 19px; }
+.admin-csv-source-card code { display: block; overflow-wrap: anywhere; border-radius: 10px; background: #f1f5f9; padding: 10px; color: #334155; font-size: 12px; line-height: 1.55; }
+.admin-csv-source-actions { display: flex; flex-wrap: wrap; gap: 9px; }
+.admin-front-mirror { display: flex; align-items: center; justify-content: space-between; gap: 18px; border: 1px solid #bfdbfe; border-radius: 14px; background: linear-gradient(120deg, #eff6ff, #fff); padding: 16px 18px; }
+.admin-front-mirror p { margin-bottom: 4px; }
+.admin-front-mirror strong { color: #172033; font-size: 14px; }
+.admin-front-mirror a { white-space: nowrap; color: #1d4ed8; font-size: 13px; font-weight: 800; }
 .admin-school-search { padding: 18px; }
 .admin-search-row { display: grid; grid-template-columns: minmax(260px, 1.6fr) repeat(3, minmax(140px, .7fr)); gap: 12px; align-items: end; }
 .admin-search-row label { display: grid; gap: 6px; color: #334155; font-size: 12px; font-weight: 800; }
@@ -645,4 +658,4 @@
 .admin-readonly-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }.admin-readonly-grid > div { display: grid; gap: 5px; border-top: 1px solid #e2e8f0; padding-top: 10px; }.admin-readonly-grid span { color: #64748b; font-size: 12px; }.admin-readonly-grid strong { color: #172033; font-size: 13px; line-height: 1.5; }
 .admin-save-status { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; min-height: 38px; border-radius: 10px; background: #f8fafc; padding: 9px 12px; color: #475569; font-size: 13px; }.admin-save-status small { color: #64748b; }.admin-save-status code { margin-left: auto; color: #1d4ed8; font-size: 11px; }.admin-save-status.is-synced { background: #f0fdf4; color: #166534; }.admin-save-status.is-failure { background: #fef2f2; color: #991b1b; }.admin-dirty-notice { border-left: 3px solid #d97706; background: #fffbeb; padding: 10px 12px; color: #92400e; font-size: 13px; font-weight: 800; }.admin-diff-list { display: grid; gap: 12px; margin-top: 16px; }.admin-diff-list div { display: grid; gap: 4px; border-top: 1px solid #e2e8f0; padding-top: 10px; }.admin-diff-list strong { font-size: 13px; }.admin-diff-list small { color: #64748b; line-height: 1.45; overflow-wrap: anywhere; }.admin-save-all { width: 100%; margin-top: 18px; }.admin-region-choice { display: grid; gap: 10px; max-width: 720px; padding: 20px; }.admin-region-choice h2 { margin: 0 0 5px; }.admin-region-choice a { display: flex; justify-content: space-between; gap: 14px; border: 1px solid #e2e8f0; border-radius: 10px; padding: 13px; color: #172033; text-decoration: none; }.admin-region-choice a:hover { border-color: #93c5fd; }.admin-region-choice span { color: #64748b; font-size: 12px; }
 @media (max-width: 980px) { .admin-search-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }.admin-school-detail-layout { grid-template-columns: 1fr; }.admin-school-detail-aside { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 650px) { .admin-search-row, .admin-school-fields, .admin-readonly-grid, .admin-school-detail-aside { grid-template-columns: 1fr; }.admin-school-card, .admin-source-strip, .admin-region-choice a { align-items: start; flex-direction: column; }.admin-school-health { justify-content: start; }.admin-save-status code { margin-left: 0; }.admin-school-fields label:has(textarea), .admin-school-fields label:last-child { grid-column: auto; } }
+@media (max-width: 650px) { .admin-search-row, .admin-school-fields, .admin-readonly-grid, .admin-school-detail-aside, .admin-csv-source-list { grid-template-columns: 1fr; }.admin-school-card, .admin-source-strip, .admin-region-choice a, .admin-front-mirror { align-items: start; flex-direction: column; }.admin-school-health { justify-content: start; }.admin-save-status code { margin-left: 0; }.admin-school-fields label:has(textarea), .admin-school-fields label:last-child { grid-column: auto; } }
