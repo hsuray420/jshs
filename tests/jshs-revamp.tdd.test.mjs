@@ -10,7 +10,7 @@ test("school search uses a concise search-first result card", async () => {
   assert.match(page, /school-search-index\.json/);
   assert.match(page, /找到適合你的學校/);
   assert.match(page, /目前就學區/);
-  assert.match(page, /資料準備中/);
+  assert.match(page, /資料驗證中/);
 });
 
 test("map only renders verified coordinates on OpenStreetMap", async () => {

@@ -2,9 +2,10 @@
   "generatedNotice": "DO NOT EDIT: generated from enabled regional CSV files by scripts/generate-schools.mjs",
   "academicYear": "115",
   "sourceUpdatedAt": "2026-09-08",
-  "schoolCount": 545,
-  "admissionRecordCount": 604,
-  "enabledRegionCount": 15,
+  "schoolCount": 448,
+  "admissionRecordCount": 495,
+  "enabledRegionCount": 7,
+  "verifyingRegionCount": 8,
   "unavailableRegionCount": 0,
   "enabledRegions": [
     {
@@ -50,90 +51,76 @@
       "status": "available"
     },
     {
-      "code": "yunlin",
-      "label": "雲林區",
-      "folder": "雲林區_yunlin",
-      "file": "schools.csv",
-      "status": "available"
-    },
-    {
-      "code": "chiayi",
-      "label": "嘉義區",
-      "folder": "嘉義區_chiayi",
-      "file": "schools.csv",
-      "status": "available"
-    },
-    {
       "code": "tainan",
       "label": "臺南區",
       "folder": "臺南區_tainan",
       "file": "JSHS_臺南區_73校_最終完成版_2026-09-08.csv",
       "status": "available"
+    }
+  ],
+  "verifyingRegions": [
+    {
+      "code": "yunlin",
+      "label": "雲林區",
+      "status": "verifying"
+    },
+    {
+      "code": "chiayi",
+      "label": "嘉義區",
+      "status": "verifying"
     },
     {
       "code": "pingtung",
       "label": "屏東區",
-      "folder": "屏東區_pingtung",
-      "file": "schools.csv",
-      "status": "available"
+      "status": "verifying"
     },
     {
       "code": "ilan",
       "label": "宜蘭區",
-      "folder": "宜蘭區_ilan",
-      "file": "schools.csv",
-      "status": "available"
+      "status": "verifying"
     },
     {
       "code": "hualien",
       "label": "花蓮區",
-      "folder": "花蓮區_hualien",
-      "file": "schools.csv",
-      "status": "available"
+      "status": "verifying"
     },
     {
       "code": "taitung",
       "label": "臺東區",
-      "folder": "臺東區_taitung",
-      "file": "schools.csv",
-      "status": "available"
+      "status": "verifying"
     },
     {
       "code": "penghu",
       "label": "澎湖區",
-      "folder": "澎湖區_penghu",
-      "file": "schools.csv",
-      "status": "available"
+      "status": "verifying"
     },
     {
       "code": "kinmen",
       "label": "金門區",
-      "folder": "金門區_kinmen",
-      "file": "schools.csv",
-      "status": "available"
+      "status": "verifying"
     }
   ],
   "unavailableRegions": [],
-  "districtCount": 24,
-  "cityCount": 22,
+  "districtCount": 13,
+  "cityCount": 17,
   "schoolTypes": {
-    "綜高": 132,
-    "進修部": 64,
-    "高中": 245,
-    "高職": 163
+    "綜高": 109,
+    "進修部": 53,
+    "高中": 200,
+    "高職": 133
   },
   "genders": {
     "不限": 140,
-    "女校": 18,
+    "女校": 13,
     "女生": 2,
     "男女兼收": 127,
-    "男女校": 270,
-    "男校": 6,
+    "男女校": 170,
+    "男校": 2,
     "男生": 2
   },
   "ownership": {
-    "公立": 349,
-    "私立": 196
+    "公立": 280,
+    "私立": 168
   },
   "sourceModel": "regional_csv_registry_available_only",
   "sourceDirectory": "content/schools/regions",
@@ -144,15 +131,7 @@
     "content/schools/regions/中投區_ct/JSHS_中投區_96校_最終版_2026-09-07.csv",
     "content/schools/regions/高雄區_kaohsiung/JSHS_高雄區_53校_最終完成版_2026-09-07.csv",
     "content/schools/regions/彰化區_changhua/JSHS_彰化區_49校_最終完成版_2026-09-08.csv",
-    "content/schools/regions/雲林區_yunlin/schools.csv",
-    "content/schools/regions/嘉義區_chiayi/schools.csv",
-    "content/schools/regions/臺南區_tainan/JSHS_臺南區_73校_最終完成版_2026-09-08.csv",
-    "content/schools/regions/屏東區_pingtung/schools.csv",
-    "content/schools/regions/宜蘭區_ilan/schools.csv",
-    "content/schools/regions/花蓮區_hualien/schools.csv",
-    "content/schools/regions/臺東區_taitung/schools.csv",
-    "content/schools/regions/澎湖區_penghu/schools.csv",
-    "content/schools/regions/金門區_kinmen/schools.csv"
+    "content/schools/regions/臺南區_tainan/JSHS_臺南區_73校_最終完成版_2026-09-08.csv"
   ],
   "fieldClassification": {
     "schoolLevel": [
@@ -204,7 +183,6 @@
       "014322",
       "014353",
       "014439",
-      "020409",
       "031317",
       "031414",
       "034306",
@@ -235,26 +213,16 @@
       "081313",
       "081409",
       "084309",
-      "090402",
       "091318",
-      "100301",
       "120304",
       "120311",
       "120401",
       "120402",
       "121415",
-      "124311",
-      "124322",
-      "200302",
-      "200303",
-      "200405",
-      "201304",
-      "201312",
-      "201314",
-      "201408"
+      "124322"
     ],
-    "affectedSchools": 58,
-    "extraRows": 59,
+    "affectedSchools": 47,
+    "extraRows": 47,
     "identicalFields": [
       "排名",
       "學校代碼",
@@ -268,6 +236,7 @@
       "官網",
       "電話",
       "簡章招生名額",
+      "招生名額",
       "資優班/特色班",
       "課程方向",
       "實習／專題",
@@ -749,50 +718,6 @@
           "招生名額",
           "資優班/特色班",
           "Google地圖",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "020409",
-        "schoolName": "國立頭城家商",
-        "regions": [
-          "基北區",
-          "宜蘭區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "學校名稱",
-          "公私立",
-          "學制分類",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "地址資料來源"
-        ],
-        "regionSpecificFields": [
-          "招生區",
-          "男女校",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "生活資料來源",
           "資料更新日期"
         ],
         "conflictFields": []
@@ -2118,81 +2043,28 @@
         "conflictFields": []
       },
       {
-        "schoolCode": "090402",
-        "schoolName": "國立西螺高級農工職業學校",
+        "schoolCode": "091318",
+        "schoolName": "義峰學校財團法人雲林縣義峰高級中學",
         "regions": [
-          "彰化區",
-          "雲林區"
+          "中投區",
+          "彰化區"
         ],
         "rowCount": 2,
         "identicalFields": [
           "排名",
           "學校代碼",
+          "學校名稱",
           "公私立",
           "學制分類",
+          "男女校",
           "縣市",
           "區",
-          "官網",
-          "住宿資料來源",
-          "地址資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "男女校",
           "地址",
-          "電話",
-          "科系與名額",
           "簡章招生名額",
           "招生名額",
-          "資優班/特色班",
           "課程方向",
           "實習／專題",
           "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "生活資料來源",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "091318",
-        "schoolName": "義峰學校財團法人雲林縣義峰高級中學",
-        "regions": [
-          "中投區",
-          "彰化區",
-          "雲林區"
-        ],
-        "rowCount": 3,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "縣市",
-          "區",
-          "地址"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "男女校",
-          "官網",
-          "電話",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
           "住宿資訊",
           "Google地圖",
           "課程資料來源",
@@ -2201,51 +2073,15 @@
           "通勤資料來源",
           "住宿資料來源",
           "地址資料來源",
-          "生活資料來源",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "100301",
-        "schoolName": "國立東石高級中學",
-        "regions": [
-          "嘉義區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "校車／專車資料來源",
-          "地址資料來源"
+          "生活資料來源"
         ],
         "regionSpecificFields": [
-          "學校名稱",
           "招生區",
+          "官網",
+          "電話",
           "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
+          "資優班/特色班",
           "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "生活資料來源",
           "資料更新日期"
         ],
         "conflictFields": []
@@ -2471,50 +2307,6 @@
         "conflictFields": []
       },
       {
-        "schoolCode": "124311",
-        "schoolName": "高雄市立林園高級中學",
-        "regions": [
-          "高雄區",
-          "屏東區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "簡章招生名額",
-          "校車／專車資料來源",
-          "住宿資料來源",
-          "地址資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "電話",
-          "科系與名額",
-          "招生名額",
-          "資優班/特色班",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "通勤資料來源",
-          "生活資料來源",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
         "schoolCode": "124322",
         "schoolName": "高雄市立路竹高級中學",
         "regions": [
@@ -2557,324 +2349,16 @@
           "資料更新日期"
         ],
         "conflictFields": []
-      },
-      {
-        "schoolCode": "200302",
-        "schoolName": "國立嘉義女子高級中學",
-        "regions": [
-          "嘉義區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "住宿資料來源",
-          "地址資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "生活資料來源",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "200303",
-        "schoolName": "國立嘉義高級中學",
-        "regions": [
-          "嘉義區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "地址資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "住宿資料來源",
-          "生活資料來源",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "200405",
-        "schoolName": "國立嘉義高級工業職業學校",
-        "regions": [
-          "嘉義區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "住宿資料來源",
-          "地址資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "生活資料來源",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "201304",
-        "schoolName": "嘉義市私立興華高級中學",
-        "regions": [
-          "嘉義區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "校車／專車資料來源",
-          "住宿資料來源",
-          "地址資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "通勤資料來源",
-          "生活資料來源",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "201312",
-        "schoolName": "嘉義市私立輔仁高級中學",
-        "regions": [
-          "嘉義區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "住宿資料來源",
-          "地址資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "校車／專車資料來源",
-          "通勤資料來源",
-          "生活資料來源",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "201314",
-        "schoolName": "嘉義市私立立仁高級中學",
-        "regions": [
-          "嘉義區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "校車／專車資料來源",
-          "住宿資料來源",
-          "地址資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "通勤資料來源",
-          "生活資料來源",
-          "資料更新日期"
-        ],
-        "conflictFields": []
-      },
-      {
-        "schoolCode": "201408",
-        "schoolName": "嘉義市私立東吳高級工業家事職業學校",
-        "regions": [
-          "嘉義區",
-          "臺南區"
-        ],
-        "rowCount": 2,
-        "identicalFields": [
-          "排名",
-          "學校代碼",
-          "公私立",
-          "學制分類",
-          "男女校",
-          "縣市",
-          "區",
-          "地址",
-          "官網",
-          "電話",
-          "資優班/特色班",
-          "校車／專車資料來源",
-          "住宿資料來源",
-          "地址資料來源"
-        ],
-        "regionSpecificFields": [
-          "學校名稱",
-          "招生區",
-          "科系與名額",
-          "簡章招生名額",
-          "招生名額",
-          "課程方向",
-          "實習／專題",
-          "校車／專車資訊",
-          "通勤資訊",
-          "住宿資訊",
-          "Google地圖",
-          "課程資料來源",
-          "實習專題資料來源",
-          "通勤資料來源",
-          "生活資料來源",
-          "資料更新日期"
-        ],
-        "conflictFields": []
       }
     ]
   },
   "rowConservation": {
-    "sourceCsvRows": 604,
-    "runtimeAdmissionRecords": 604,
+    "sourceCsvRows": 495,
+    "runtimeAdmissionRecords": 495,
     "status": "PASS"
   },
   "validation": {
     "errors": 0,
-    "warnings": 58
+    "warnings": 47
   }
 }

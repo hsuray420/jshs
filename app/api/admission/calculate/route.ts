@@ -3,6 +3,7 @@ import { createMemberScoreSnapshot } from "../../../../db/score-store";
 import { getMemberSession } from "../../../../lib/member-auth";
 import { notifyMember } from "../../../../lib/notifications";
 import { CURRENT_YEAR_CONTEXT, SOURCE_ACADEMIC_YEAR, SERVICE_YEAR, VERIFICATION_STATUS } from "../../../../lib/trust";
+import { getRegionRegistry } from "../../../../lib/region-registry";
 
 export async function GET() {
   return Response.json({
@@ -10,8 +11,9 @@ export async function GET() {
     endpoint: "/api/admission/calculate",
     method: "POST",
     scoreStorage: "tenths",
-    districts: ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "chiayi", "tainan", "kaohsiung", "pingtung", "hualien", "taitung", "penghu", "kinmen"],
-    note: "POST AdmissionScoreInput JSON to calculate the selected district's score, rule explanation, comparison keys, and per-choice results. Reference-mode districts accept manualCategoryScores from the Notebook report.",
+    districts: getRegionRegistry().filter((region) => region.calculatorStatus === "available").map((region) => region.id),
+    verifyingDistricts: getRegionRegistry().filter((region) => region.calculatorStatus === "verifying").map((region) => region.id),
+    note: "POST AdmissionScoreInput JSON to calculate the selected verified district's score, rule explanation, comparison keys, and per-choice results.",
   });
 }
 
@@ -22,7 +24,7 @@ export async function POST(request: Request) {
     if (!isAdmissionDistrict(district)) {
       return Response.json({ ok: false, error: "不支援的就學區，請重新選擇。" }, { status: 400 });
     }
-    if (!isAdmissionCalculatorAvailable(district)) return Response.json({ ok: false, error: "此區目前無法試算，請重新載入規則資料。" }, { status: 409 });
+    if (!isAdmissionCalculatorAvailable(district)) return Response.json({ ok: false, error: "此區資料驗證中，成績試算尚未開放。" }, { status: 409 });
     const result = calculateAdmissionScore({ ...input, district });
     if ("status" in result && result.status === "incomplete") {
       return Response.json({ ok: false, error: "請補齊本區試算所需項目後再試算。", result }, { status: 422 });

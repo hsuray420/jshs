@@ -36,7 +36,7 @@ export function SiteFooter() {
           <span>{SITE_NAME}</span>
           <span>{SERVICE_YEAR} 學年度升學資訊</span>
           <span>資料最後更新：{districtMetadata.updatedAt}</span>
-          <span>15 個就學區皆可試算與填志願</span>
+          <span>7 區開放學校查詢與試算；8 區資料驗證中</span>
         </div>
         <p className="mt-3 max-w-4xl text-xs leading-6 text-[var(--text-secondary)]">本站提供資訊整理與輔助工具，不取代教育主管機關、招生委員會及學校正式公告。</p>
       </PageContainer>

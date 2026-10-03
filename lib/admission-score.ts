@@ -16,6 +16,7 @@ import hlcResearch from "../data/admission/115/research/hlc_115_admission_rules.
 import tttResearch from "../data/admission/115/research/ttt_115_admission_rules.json" with { type: "json" };
 import phcResearch from "../data/admission/115/research/phc_115_admission_rules.json" with { type: "json" };
 import kmnResearch from "../data/admission/115/research/kmn_115_admission_rules.json" with { type: "json" };
+import { getRegionById } from "./region-registry.ts";
 
 export const CHANGHUA_COMPETITION_CATALOG = changhuaCompetitionCatalog.items;
 
@@ -304,7 +305,8 @@ export function isAdmissionDistrict(value: string): value is AdmissionDistrict {
 }
 
 export function isAdmissionCalculatorAvailable(value: string): value is (typeof SOURCE_BACKED_ADMISSION_DISTRICTS)[number] {
-  return (SOURCE_BACKED_ADMISSION_DISTRICTS as readonly string[]).includes(value);
+  return (SOURCE_BACKED_ADMISSION_DISTRICTS as readonly string[]).includes(value)
+    && getRegionById(value)?.calculatorStatus === "available";
 }
 
 export function getAdmissionChoiceLimit(district: string | undefined): number {

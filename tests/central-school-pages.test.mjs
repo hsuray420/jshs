@@ -29,7 +29,7 @@ test("school search results link by the canonical school code", async () => {
   const explorer = await read("components/school-explorer.tsx");
   assert.match(explorer, /href={`\/schools\/\$\{school\.code\}`}/);
   assert.match(explorer, /目前就學區/);
-  assert.match(explorer, /資料準備中/);
+  assert.match(explorer, /資料驗證中/);
 });
 
 test("sitemap generator includes all canonical school-code records", async () => {

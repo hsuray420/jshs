@@ -7,6 +7,7 @@ import {
   validateRegionalSchools,
   ENABLED_SCHOOL_REGIONS,
   UNAVAILABLE_SCHOOL_REGIONS,
+  VERIFYING_SCHOOL_REGIONS,
   REGION_REGISTRY,
   SCHOOL_FIELD_CLASSIFICATION,
 } from "../lib/school-data/regional-loader.mjs";
@@ -14,7 +15,7 @@ import {
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 
-test("every repository regional school CSV is enabled and loaded", async () => {
+test("only verified region CSVs are loaded; the remaining source files stay registered for verification", async () => {
   assert.deepEqual(ENABLED_SCHOOL_REGIONS.map((region) => region.code), [
     "tp",
     "taoyuan-lienchiang",
@@ -22,31 +23,56 @@ test("every repository regional school CSV is enabled and loaded", async () => {
     "ct",
     "kaohsiung",
     "changhua",
-    "yunlin",
-    "chiayi",
     "tainan",
-    "pingtung",
-    "ilan",
-    "hualien",
-    "taitung",
-    "penghu",
-    "kinmen",
   ]);
   assert.deepEqual(UNAVAILABLE_SCHOOL_REGIONS, []);
+  assert.deepEqual(VERIFYING_SCHOOL_REGIONS.map((region) => region.code), [
+    "yunlin", "chiayi", "pingtung", "ilan", "hualien", "taitung", "penghu", "kinmen",
+  ]);
   const loaded = loadEnabledRegionalSchools();
-  assert.equal(loaded.regions.length, 15);
-  assert.equal(loaded.rows.length, 604);
-  assert.equal(loaded.schools.length, 545);
-  assert.equal(new Set(loaded.schools.map((school) => school.code)).size, 545);
+  assert.equal(loaded.regions.length, 7);
+  assert.equal(loaded.rows.length, 495);
+  assert.equal(loaded.schools.length, 448);
+  assert.equal(new Set(loaded.schools.map((school) => school.code)).size, 448);
   assert.equal(loaded.audit.errors.length, 0);
 });
 
-test("region registry keeps school-data availability separate from all-region calculators", () => {
+test("region registry enables school data and calculators only for the seven verified regions", () => {
   assert.equal(REGION_REGISTRY.length, 15);
-  assert.equal(REGION_REGISTRY.filter((region) => region.schoolDataStatus === "available").length, 15);
+  assert.equal(REGION_REGISTRY.filter((region) => region.schoolDataStatus === "available").length, 7);
+  assert.equal(REGION_REGISTRY.filter((region) => region.schoolDataStatus === "verifying").length, 8);
   assert.equal(REGION_REGISTRY.filter((region) => region.schoolDataStatus === "unavailable").length, 0);
-  assert.equal(REGION_REGISTRY.every((region) => region.calculatorStatus === "available"), true);
+  assert.equal(REGION_REGISTRY.filter((region) => region.calculatorStatus === "available").length, 7);
+  assert.equal(REGION_REGISTRY.filter((region) => region.calculatorStatus === "verifying").length, 8);
   assert.equal(REGION_REGISTRY.every((region) => region.csvPath), true);
+});
+
+test("public district, calculator, school, gate and trust entry points explicitly mark unverified regions", async () => {
+  const [districtPage, calculator, calculateRoute, schoolPage, explorer, gate, scores, tools, footer, trustPage, trustRegistry] = await Promise.all([
+    read("app/districts/page.tsx"),
+    read("components/admission-calculator.tsx"),
+    read("app/api/admission/calculate/route.ts"),
+    read("app/schools/[district]/page.tsx"),
+    read("components/school-explorer.tsx"),
+    read("components/district-gate.tsx"),
+    read("app/scores/page.tsx"),
+    read("app/tools/page.tsx"),
+    read("components/site-footer.tsx"),
+    read("app/trust/[slug]/page.tsx"),
+    read("lib/trust-registry.ts"),
+  ]);
+  assert.match(districtPage, /資料驗證中/);
+  assert.match(calculator, /資料驗證中/);
+  assert.match(calculateRoute, /isAdmissionCalculatorAvailable\(district\)/);
+  assert.match(calculateRoute, /成績試算尚未開放/);
+  assert.match(schoolPage, /region\.schoolDataStatus !== "available"/);
+  assert.match(explorer, /schoolDataStatus !== "available"\) return \[\]/);
+  assert.match(gate, /schoolDataStatus === "verifying"/);
+  assert.match(scores, /8 區資料驗證中/);
+  assert.match(tools, /8 區資料驗證中/);
+  assert.match(footer, /8 區資料驗證中/);
+  assert.match(trustPage, /資料驗證中/);
+  assert.match(trustRegistry, /getRegionById\(district\)/);
 });
 
 test("school explorer reads its existing region selector from the canonical registry", async () => {
@@ -80,7 +106,7 @@ test("regional school loader keeps every CSV value exact through generated runti
       }
     }
   }
-  assert.equal(runtimeAdmissionRecords, 604, "ROW_CONSERVATION");
+  assert.equal(runtimeAdmissionRecords, 495, "ROW_CONSERVATION");
 });
 
 test("duplicate headers fail validation instead of being normalized", () => {
@@ -109,14 +135,14 @@ test("school generation and public CSV route no longer depend on manual master C
   assert.match(csvRoute, /schools\.csv\?raw/);
 });
 
-test("duplicate school audit explains the 604 to 545 aggregation and has no school-level conflicts", async () => {
+test("duplicate school audit explains the 495 to 448 aggregation and has no school-level conflicts", async () => {
   const validation = JSON.parse(await read("content/schools/generated/validation.json"));
-  assert.equal(validation.duplicateSchoolAudit.affectedSchools, 58);
-  assert.equal(validation.duplicateSchoolAudit.extraRows, 59);
-  assert.equal(validation.duplicateSchoolAudit.duplicateSchoolCodes.length, 58);
+  assert.equal(validation.duplicateSchoolAudit.affectedSchools, 47);
+  assert.equal(validation.duplicateSchoolAudit.extraRows, 47);
+  assert.equal(validation.duplicateSchoolAudit.duplicateSchoolCodes.length, 47);
   assert.equal(validation.duplicateSchoolAudit.conflictFields.length, 0);
-  assert.equal(validation.rowConservation.sourceCsvRows, 604);
-  assert.equal(validation.rowConservation.runtimeAdmissionRecords, 604);
+  assert.equal(validation.rowConservation.sourceCsvRows, 495);
+  assert.equal(validation.rowConservation.runtimeAdmissionRecords, 495);
   assert.equal(validation.rowConservation.status, "PASS");
 });
 
@@ -132,9 +158,10 @@ test("school-level field conflicts fail validation instead of silently selecting
   assert.ok(audit.errors.some((error) => error.includes("school-level conflict") && error.includes("公私立")));
 });
 
-test("generated public CSV is an exact 604-row aggregate of available regional CSV rows", async () => {
+test("generated public CSV is an exact aggregate of available regional CSV rows", async () => {
   const publicCsv = parseCsv(await read("public/data/schools.csv"));
   const loaded = loadEnabledRegionalSchools();
+  assert.equal(publicCsv.rows.length, 495);
   assert.equal(publicCsv.rows.length, loaded.rows.length);
   for (const [index, row] of loaded.rows.entries()) {
     for (const column of publicCsv.headers) {
@@ -145,7 +172,7 @@ test("generated public CSV is an exact 604-row aggregate of available regional C
 
 test("generated search index is lightweight and build-time normalized", async () => {
   const index = JSON.parse(await read("content/schools/generated/school-search-index.json"));
-  assert.equal(index.length, 545);
+  assert.equal(index.length, 448);
   assert.ok(index.every((school) => typeof school.normalizedSearchText === "string" && school.normalizedSearchText.length > 0));
   assert.ok(index.every((school) => Array.isArray(school.departmentNames)));
   assert.ok(index.every((school) => !("raw" in school) && !("admissionRecords" in school) && !("sources" in school)));

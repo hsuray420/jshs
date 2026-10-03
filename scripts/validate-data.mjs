@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { ENABLED_SCHOOL_REGIONS, REGION_REGISTRY, UNAVAILABLE_SCHOOL_REGIONS, discoverRegionalSchoolCsvPaths, loadEnabledRegionalSchools } from "../lib/school-data/regional-loader.mjs";
+import { ENABLED_SCHOOL_REGIONS, REGION_REGISTRY, UNAVAILABLE_SCHOOL_REGIONS, VERIFYING_SCHOOL_REGIONS, discoverRegionalSchoolCsvPaths, loadEnabledRegionalSchools } from "../lib/school-data/regional-loader.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const errors = [];
@@ -17,6 +17,9 @@ for (const region of REGION_REGISTRY) {
   if (region.schoolDataStatus === "available") {
     const csv = path.join(root, region.csvPath);
     if (!fs.existsSync(csv)) errors.push(`${region.id}: available CSV does not exist: ${region.csvPath}`);
+  } else if (region.schoolDataStatus === "verifying") {
+    const csv = path.join(root, region.csvPath);
+    if (!region.csvPath || !fs.existsSync(csv)) errors.push(`${region.id}: verifying CSV does not exist: ${region.csvPath || "(missing path)"}`);
   } else if (region.csvPath) {
     errors.push(`${region.id}: unavailable region must not include csvPath`);
   }
@@ -27,6 +30,7 @@ if (fs.existsSync(generatedMetadataPath)) {
   const metadata = JSON.parse(fs.readFileSync(generatedMetadataPath, "utf8"));
   if (metadata.sourceModel !== "regional_csv_registry_available_only") errors.push("generated metadata sourceModel is not registry-only CSV");
   if (metadata.enabledRegionCount !== ENABLED_SCHOOL_REGIONS.length) errors.push(`generated metadata enabledRegionCount expected ${ENABLED_SCHOOL_REGIONS.length}, got ${metadata.enabledRegionCount}`);
+  if (metadata.verifyingRegionCount !== VERIFYING_SCHOOL_REGIONS.length) errors.push(`generated metadata verifyingRegionCount expected ${VERIFYING_SCHOOL_REGIONS.length}, got ${metadata.verifyingRegionCount}`);
   if (metadata.unavailableRegionCount !== UNAVAILABLE_SCHOOL_REGIONS.length) errors.push(`generated metadata unavailableRegionCount expected ${UNAVAILABLE_SCHOOL_REGIONS.length}, got ${metadata.unavailableRegionCount}`);
 }
 
@@ -81,6 +85,7 @@ if (errors.length) {
 console.log(JSON.stringify({
   ok: true,
   schoolDataAvailableRegions: ENABLED_SCHOOL_REGIONS.map((region) => region.code),
+  schoolDataVerifyingRegions: VERIFYING_SCHOOL_REGIONS.map((region) => region.code),
   schoolDataUnavailableRegions: UNAVAILABLE_SCHOOL_REGIONS.map((region) => region.code),
   discoveredRegionalCsvs: discoveredCsvPaths.length,
   sourceRows: loaded.rows.length,

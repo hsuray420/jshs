@@ -16,8 +16,9 @@ function choices(count, prefix = "school") {
   return Array.from({ length: count }, (_, index) => ({ schoolId: `${prefix}-${index + 1}` }));
 }
 
-test("只有有研究 MD/JSON 的區域開放積分試算", () => {
-  for (const district of ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "chiayi", "tainan", "kaohsiung", "pingtung", "hualien", "taitung", "penghu", "kinmen"]) assert.equal(isAdmissionCalculatorAvailable(district), true);
+test("只有通過資料驗證的七個區域開放積分試算", () => {
+  for (const district of ["tp", "ct", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "tainan", "kaohsiung"]) assert.equal(isAdmissionCalculatorAvailable(district), true);
+  for (const district of ["ilan", "yunlin", "chiayi", "pingtung", "hualien", "taitung", "penghu", "kinmen"]) assert.equal(isAdmissionCalculatorAvailable(district), false);
   assert.equal(isAdmissionCalculatorAvailable("unknown"), false);
 });
 
@@ -47,7 +48,7 @@ test("結果明細逐項對應規則分類且不會把已算分數顯示成零�
   assert.ok(result.scoreBreakdown.every((item) => item.max >= item.score));
 });
 
-test("嘉南屏花東澎金七區使用各自的 115 官方規則 JSON 開放試算", () => {
+test("嘉南屏花東澎金七區保留各自的 115 官方規則 JSON", () => {
   const expected = [
     ["chiayi", "嘉義區", 82, "chiayi-115-research-json", "preference_rank"],
     ["tainan", "臺南區", 108, "tainan-115-research-json", "preference_group_rank"],
@@ -59,7 +60,7 @@ test("嘉南屏花東澎金七區使用各自的 115 官方規則 JSON 開放試
   ];
 
   for (const [district, label, totalScore, sourceId, fieldId] of expected) {
-    assert.equal(isAdmissionCalculatorAvailable(district), true, `${district} should be open`);
+    assert.equal(isAdmissionCalculatorAvailable(district), district === "tainan", `${district} availability`);
     const rule = calculateAdmissionScore({ district, ruleValues: {} }).rule;
     assert.equal(rule.label, label);
     assert.equal(rule.totalScore, totalScore);

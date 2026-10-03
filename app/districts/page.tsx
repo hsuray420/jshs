@@ -31,14 +31,15 @@ function normalizeTarget(value?: string): FunctionalTarget | undefined {
     : undefined;
 }
 
-function isSchoolDataAvailable(code: string) {
-  return getRegionById(code)?.schoolDataStatus === "available";
+function getRegionStatus(code: string) {
+  return getRegionById(code);
 }
 
 function resolveDistrictTarget(target: FunctionalTarget | undefined, code: string, district: District): FunctionalTarget {
-  if (target === "schools" && !isSchoolDataAvailable(code)) return "overview";
-  if (target === "calculator" && !district.calculator) return "overview";
-  if (target === "analysis" && !district.analysis) return "overview";
+  const region = getRegionStatus(code);
+  if (target === "schools" && region?.schoolDataStatus !== "available") return "overview";
+  if (target === "calculator" && region?.calculatorStatus !== "available") return "overview";
+  if (target === "analysis" && (region?.calculatorStatus !== "available" || !district.analysis)) return "overview";
   return target || "overview";
 }
 
@@ -50,7 +51,7 @@ function destinationFor(target: FunctionalTarget, code: string) {
 }
 
 function Feature({ enabled, children }: { enabled: boolean; children: string }) {
-  return <span className={`jshs-chip ${enabled ? "" : "opacity-70"}`}>{enabled ? children : `${children}目前不可用`}</span>;
+  return <span className={`jshs-chip ${enabled ? "" : "opacity-70"}`}>{enabled ? children : `${children}資料驗證中`}</span>;
 }
 
 function DataStatus({ value }: { value: string }) {
@@ -58,8 +59,9 @@ function DataStatus({ value }: { value: string }) {
   return <span className={`jshs-data-tag ${value === "ready" ? "is-verified" : value === "reference" ? "is-reference" : "is-pending"}`}>{label}</span>;
 }
 
-function AvailabilityTag({ available }: { available: boolean }) {
-  return <span className={`jshs-data-tag ${available ? "is-verified" : "is-pending"}`}>{available ? "可使用" : "尚未開放"}</span>;
+function AvailabilityTag({ status }: { status: string }) {
+  const available = status === "available";
+  return <span className={`jshs-data-tag ${available ? "is-verified" : "is-pending"}`}>{available ? "可使用" : "資料驗證中"}</span>;
 }
 
 export default async function DistrictsPage({
@@ -87,7 +89,9 @@ export default async function DistrictsPage({
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end"><div><p className="jshs-eyebrow">全國入口</p><h2 id="district-list" className="mt-3 text-4xl font-black tracking-[-.05em]">選擇你的就學區</h2></div><p className="max-w-md leading-7 jshs-muted-copy">不確定適用哪一區時，先詢問就讀國中的升學承辦人，再查閱當年度官方簡章。</p></div>
         <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {districts.map(([code, district]) => {
-            const schoolDataAvailable = isSchoolDataAvailable(code);
+            const region = getRegionStatus(code);
+            const schoolDataAvailable = region?.schoolDataStatus === "available";
+            const calculatorAvailable = region?.calculatorStatus === "available";
             const resolvedTarget = resolveDistrictTarget(target, code, district);
             const destinationLabel = targetLabels[resolvedTarget];
             const fellBackToSchools = Boolean(target && resolvedTarget !== target);
@@ -96,10 +100,10 @@ export default async function DistrictsPage({
               <div className="flex items-start justify-between gap-3"><span className="text-xs font-black tracking-[.13em] text-[var(--jshs-primary)]">{code.toUpperCase()}</span><span className="jshs-chip">{district.academicYear} 學年度</span></div>
               <h2 className="mt-5 text-2xl font-black">{district.label}</h2>
               <p className="mt-2 min-h-12 text-sm leading-6 jshs-muted-copy">{district.areas}</p>
-              <div className="mt-5 flex flex-wrap items-center gap-2"><AvailabilityTag available={schoolDataAvailable} /><DataStatus value={district.dataStatus} /><span className="jshs-chip">{district.academicYear} 學年度</span></div>
-              <div className="mt-3 flex flex-wrap gap-2"><Feature enabled={schoolDataAvailable}>學校查詢</Feature><Feature enabled={district.calculator}>積分試算</Feature><Feature enabled={district.analysis}>落點分析</Feature><Feature enabled={district.calculator}>規則</Feature></div>
+              <div className="mt-5 flex flex-wrap items-center gap-2"><AvailabilityTag status={region?.schoolDataStatus || "unavailable"} /><DataStatus value={schoolDataAvailable ? district.dataStatus : "verifying"} /><span className="jshs-chip">{district.academicYear} 學年度</span></div>
+              <div className="mt-3 flex flex-wrap gap-2"><Feature enabled={schoolDataAvailable}>學校查詢</Feature><Feature enabled={calculatorAvailable}>積分試算</Feature><Feature enabled={calculatorAvailable && district.analysis}>落點分析</Feature><Feature enabled={calculatorAvailable}>規則</Feature></div>
               <small className="mt-5 block text-xs text-slate-400">更新：{district.updatedAt || districtMetadata.updatedAt}</small>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{schoolDataAvailable ? `主要任務：${district.tasks?.[0] || "先確認適用區域與官方公告"}` : "正式簡章資料尚在整理中；完成並通過資料驗證後，才會開放找學校正式資料。"}</p>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{schoolDataAvailable && calculatorAvailable ? `主要任務：${district.tasks?.[0] || "先確認適用區域與官方公告"}` : "本區資料驗證中，學校查詢與成績試算尚未開放；完成驗證後會再開放使用。"}</p>
               <a className="mt-3 inline-block text-xs text-[var(--jshs-primary)]" href={district.sourceUrl} target="_blank" rel="noreferrer">官方委員會／來源 ↗</a>
               <a className="mt-4 flex items-center justify-between text-sm text-[var(--jshs-primary)]" href={destinationFor(resolvedTarget, code)}>{fellBackToSchools ? "查看目前可用入口" : `直接開啟${destinationLabel}`} <span className="transition group-hover:translate-x-1">→</span></a>
             </article>

@@ -1,6 +1,6 @@
-import registry from "../content/schools/region-registry.json";
+import registry from "../content/schools/region-registry.json" with { type: "json" };
 
-export type RegionStatus = "available" | "unavailable";
+export type RegionStatus = "available" | "verifying" | "unavailable";
 export type RegionRegistryEntry = Readonly<{
   id: string;
   name: string;
@@ -33,6 +33,10 @@ export function getAvailableSchoolDataRegions(): readonly RegionRegistryEntry[] 
 
 export function getUnavailableSchoolDataRegions(): readonly RegionRegistryEntry[] {
   return regionRegistry.filter((region) => region.schoolDataStatus === "unavailable");
+}
+
+export function getVerifyingSchoolDataRegions(): readonly RegionRegistryEntry[] {
+  return regionRegistry.filter((region) => region.schoolDataStatus === "verifying");
 }
 
 export function assertSchoolDataAvailable(id: string): RegionRegistryEntry {

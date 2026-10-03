@@ -51,7 +51,7 @@ test("第一批補修不讓資料狀態互相矛盾", async () => {
   assert.match(history, /state === "error"/);
   assert.match(history, /state === "success"/);
   assert.doesNotMatch(calculator, /五個就學區/);
-  assert.match(calculator, /15 個就學區皆可/);
+  assert.match(calculator, /通過資料驗證的就學區/);
 });
 
 test("同分比序以學生看得懂的分組呈現，詳細說明可展開", async () => {

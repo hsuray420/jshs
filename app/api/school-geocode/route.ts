@@ -9,12 +9,12 @@ export async function GET(request: Request) {
   const code = params.get('code')?.trim() || '';
   if (params.has('q')) return Response.json({ ok: false, error: 'live_geocoding_unavailable', message: '請使用 Google 地圖路線試算。' }, { status: 422 });
   const region = getRegionRegistry().find(item => item.id === district || item.name === district);
-  if (region?.schoolDataStatus === "unavailable") {
+  if (region && region.schoolDataStatus !== "available") {
     return Response.json({
       ok: false,
-      status: "unavailable",
+      status: region.schoolDataStatus,
       region: { id: region.id, name: region.name },
-      message: "此區目前尚未開放。我們正在依正式簡章整理此區資料，完成並通過資料驗證後才會開放找學校資料。",
+      message: "此區資料驗證中，學校資料查詢尚未開放。",
     }, { status: 409 });
   }
   const schools = getSchoolSearchIndex().filter(s => (!district || s.admissionDistricts.includes(district)) && (!code || s.code === code));

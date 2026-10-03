@@ -58,6 +58,7 @@ test("school query uses the shared region control while the map owns its locatio
 
 test("verified coordinate coverage is audited for every available region", async () => {
   const audit = await read("SCHOOL_MAP_AUDIT.md");
-  for (const region of ["基北區", "桃連區", "竹苗區", "中投區", "高雄區", "彰化區", "雲林區", "嘉義區", "臺南區", "屏東區", "宜蘭區", "花蓮區", "臺東區", "澎湖區", "金門區"]) assert.match(audit, new RegExp(region));
-  assert.match(audit, /座標可用合計：532／545/);
+  for (const region of ["基北區", "桃連區", "竹苗區", "中投區", "高雄區", "彰化區", "臺南區"]) assert.match(audit, new RegExp(region));
+  for (const region of ["雲林區", "嘉義區", "屏東區", "宜蘭區", "花蓮區", "臺東區", "澎湖區", "金門區"]) assert.doesNotMatch(audit, new RegExp(region));
+  assert.match(audit, /座標可用合計：441／448/);
 });

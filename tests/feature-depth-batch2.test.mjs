@@ -43,7 +43,7 @@ test("map coordinates use a provenance cache and retain schools without coordina
   for (const key of ["getSchoolCoordinate", "verifiedAt"]) assert.match(api + map + geocode, new RegExp(key));
   assert.match(map, /未有可驗證座標的學校/);
   assert.match(discovery, /school-search-index|useSchoolSearchIndex/);
-  assert.match(audit, /13 所學校.*不顯示標記.*仍保留/s);
+  assert.match(audit, /7 所學校.*不顯示標記.*仍保留/s);
 });
 
 test("Batch 2 account and notification channels distinguish unavailable states", async () => {

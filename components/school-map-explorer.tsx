@@ -6,7 +6,7 @@ import type { Map as LeafletMap, LayerGroup } from "leaflet";
 import { useSchoolSearchIndex } from "@/components/school-static-data";
 import { getSchoolCoordinate } from "@/lib/school-geocode";
 import { normalizeDistrict, readStoredDistrict, writeStoredDistrict } from "@/lib/district-context";
-import { getAvailableSchoolDataRegions } from "@/lib/region-registry";
+import { getAvailableSchoolDataRegions, getRegionById } from "@/lib/region-registry";
 import { SCHOOL_MAP_ATTRIBUTION, SCHOOL_MAP_DEFAULT_CENTER, SCHOOL_MAP_DEFAULT_ZOOM, SCHOOL_MAP_MAX_ZOOM, SCHOOL_MAP_TILE_URL } from "@/lib/school-map-config";
 import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
 import "@/components/school-discovery.css";
@@ -64,8 +64,10 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
     window.history.replaceState(null, "", `${window.location.pathname}?${params.toString()}`);
   }, [region, query, city, ownership, schoolType, department, activeSchoolCode]);
 
-  const regionName = regions.find((item) => item.id === region)?.name || "中投區";
-  const scoped = useMemo(() => schools.filter((school) => school.admissionDistricts.some((district) => district.includes(regionName))), [schools, regionName]);
+  const selectedRegion = getRegionById(region);
+  const regionAvailable = selectedRegion?.schoolDataStatus === "available";
+  const regionName = selectedRegion?.name || "中投區";
+  const scoped = useMemo(() => regionAvailable ? schools.filter((school) => school.admissionDistricts.some((district) => district.includes(regionName))) : [], [schools, regionName, regionAvailable]);
   const located = useMemo(() => scoped.flatMap((school) => {
     const coordinate = getSchoolCoordinate(school.code, school.address);
     return coordinate ? [{ school, latitude: coordinate.latitude, longitude: coordinate.longitude }] : [];
@@ -162,8 +164,8 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
   if (error) return <section className="sd-state" role="status"><h1>學校地圖資料暫時無法載入</h1><p>{error}</p></section>;
 
   return <div className="sd-root sm-root">
-    <header className="sm-toolbar sd-container"><div className="sm-toolbar-copy"><p className="sm-eyebrow">學校地圖</p><h1>先在地圖上找到學校</h1><p>{regionName}已核對座標 {coordinateCoverage} 所；未有可驗證座標的學校不會被錯誤標在地圖上。</p>{!located.length ? <p className="mt-3 rounded-xl border border-dashed p-3 text-sm" role="status">目前就學區沒有可定位的學校。請切換到有資料的區域，或先使用學校查詢。</p> : null}</div>
-      <div className="sm-search-grid"><label>查看區域<select value={region} onChange={(event) => changeRegion(event.target.value)} aria-label="選擇要查看的就學區">{regions.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label><label>選擇要在地圖定位的學校<select value={activeSchoolCode} onChange={(event) => event.target.value ? selectSchool(event.target.value) : showWholeRegion()}><option value="">顯示整個{regionName}</option>{located.map(({ school }) => <option key={school.code} value={school.code}>{school.name}</option>)}</select></label><label>搜尋<input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="學校、縣市、行政區或科別" /></label><label>縣市<select value={city} onChange={(event) => setCity(event.target.value)}><option value="">全部</option>{cities.map((value) => <option key={value}>{value}</option>)}</select></label><label>公私立<select value={ownership} onChange={(event) => setOwnership(event.target.value)}><option value="">全部</option>{ownerships.map((value) => <option key={value}>{value}</option>)}</select></label><label>學制<select value={schoolType} onChange={(event) => setSchoolType(event.target.value)}><option value="">全部</option>{schoolTypes.map((value) => <option key={value}>{value}</option>)}</select></label><label>科別<select value={department} onChange={(event) => setDepartment(event.target.value)}><option value="">全部</option>{departments.map((value) => <option key={value}>{value}</option>)}</select></label></div>
+    <header className="sm-toolbar sd-container"><div className="sm-toolbar-copy"><p className="sm-eyebrow">學校地圖</p><h1>先在地圖上找到學校</h1><p>{regionAvailable ? `${regionName}已核對座標 ${coordinateCoverage} 所；未有可驗證座標的學校不會被錯誤標在地圖上。` : `${regionName}資料驗證中，學校查詢與地圖尚未開放。`}</p>{!located.length ? <p className="mt-3 rounded-xl border border-dashed p-3 text-sm" role="status">{regionAvailable ? "目前就學區沒有可定位的學校。請切換到有資料的區域，或先使用學校查詢。" : `${regionName}資料驗證中，請切換到已開放的區域查看學校。`}</p> : null}</div>
+      <div className="sm-search-grid"><label>查看區域<select value={region} onChange={(event) => changeRegion(event.target.value)} aria-label="選擇要查看的就學區">{!regionAvailable ? <option value={region} disabled>{regionName}（資料驗證中）</option> : null}{regions.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label><label>選擇要在地圖定位的學校<select value={activeSchoolCode} onChange={(event) => event.target.value ? selectSchool(event.target.value) : showWholeRegion()}><option value="">顯示整個{regionName}</option>{located.map(({ school }) => <option key={school.code} value={school.code}>{school.name}</option>)}</select></label><label>搜尋<input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="學校、縣市、行政區或科別" /></label><label>縣市<select value={city} onChange={(event) => setCity(event.target.value)}><option value="">全部</option>{cities.map((value) => <option key={value}>{value}</option>)}</select></label><label>公私立<select value={ownership} onChange={(event) => setOwnership(event.target.value)}><option value="">全部</option>{ownerships.map((value) => <option key={value}>{value}</option>)}</select></label><label>學制<select value={schoolType} onChange={(event) => setSchoolType(event.target.value)}><option value="">全部</option>{schoolTypes.map((value) => <option key={value}>{value}</option>)}</select></label><label>科別<select value={department} onChange={(event) => setDepartment(event.target.value)}><option value="">全部</option>{departments.map((value) => <option key={value}>{value}</option>)}</select></label></div>
     </header>
     <section className="sm-layout" aria-label="學校地圖探索器">
       <aside className={`sm-list${sheetExpanded ? " is-expanded" : ""}`}><div className="sm-list-head"><div><strong>{mapSchoolPoints.length} 所學校</strong><span>{regionName}</span></div><button type="button" className="sm-sheet-toggle" aria-expanded={sheetExpanded} onClick={() => setSheetExpanded((value) => !value)}>{sheetExpanded ? "收合清單" : "展開清單"}</button></div>

@@ -54,8 +54,8 @@ test("district selection preserves the requested tool on first-party routes", as
 
   assert.match(districts, /searchParams/);
   assert.match(districts, /target\?: string/);
-  assert.match(districts, /target === "calculator" && !district\.calculator/);
-  assert.match(districts, /target === "analysis" && !district\.analysis/);
+  assert.match(districts, /target === "calculator" && region\?\.calculatorStatus !== "available"/);
+  assert.match(districts, /target === "analysis" && \(region\?\.calculatorStatus !== "available" \|\| !district\.analysis\)/);
   assert.match(districts, /destinationFor\(resolvedTarget, code\)/);
   assert.match(districts, /`\/schools\?district=\$\{code\}`/);
   assert.match(districts, /`\/tools\?district=\$\{code\}`/);
