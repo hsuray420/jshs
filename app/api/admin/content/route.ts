@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import {
   isContentType,
   publishContentEntry,
+  restoreContentRevision,
   saveContentEntry,
   unpublishContentEntry,
 } from "../../../../db/content-store";
@@ -23,6 +24,12 @@ export async function POST(request: Request) {
   if (action === "unpublish" && id) {
     const entry = await unpublishContentEntry(id, admin.user.lineUserId);
     return redirect(`/admin/content?updated=unpublished&sync=${await syncState(entry)}`);
+  }
+  if (action === "restore_revision" && id) {
+    const revisionId = clean(form.get("revision_id"), 80);
+    if (!revisionId) return redirect(`/admin/content?edit=${encodeURIComponent(id)}&updated=invalid`);
+    const entry = await restoreContentRevision(id, revisionId, admin.user.lineUserId);
+    return redirect(`/admin/content?edit=${encodeURIComponent(id)}&updated=${entry ? "restored" : "invalid"}`);
   }
   if (action !== "save") return redirect("/admin/content?updated=invalid");
 

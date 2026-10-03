@@ -200,6 +200,23 @@ export async function listContentRevisions(contentId: string) {
   return result.results ?? [];
 }
 
+export async function restoreContentRevision(contentId: string, revisionId: string, updatedBy: string) {
+  await ensureContentSchema();
+  const revision = await getD1().prepare(`SELECT * FROM content_revisions WHERE id = ? AND content_id = ? LIMIT 1`)
+    .bind(revisionId, contentId).first<ContentRevision>();
+  if (!revision) return null;
+  return saveContentEntry({
+    id: contentId,
+    contentType: revision.content_type,
+    slug: revision.slug,
+    title: revision.title,
+    summary: revision.summary,
+    bodyJson: revision.body_json,
+    status: "draft",
+    updatedBy,
+  });
+}
+
 async function createRevision(entry: ContentEntry, createdBy: string) {
   const latest = await getD1().prepare(`SELECT MAX(revision) AS revision FROM content_revisions WHERE content_id = ?`)
     .bind(entry.id).first<{ revision: number | null }>();

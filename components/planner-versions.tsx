@@ -37,7 +37,8 @@ export function PlannerVersions({ isMember }: { isMember: boolean }) {
     const added = rightOrder.filter((id) => !leftOrder.includes(id));
     const removed = leftOrder.filter((id) => !rightOrder.includes(id));
     const moved = rightOrder.filter((id) => leftOrder.includes(id) && leftOrder.indexOf(id) !== rightOrder.indexOf(id));
-    return { left, right, added, removed, moved };
+    const itemName = (id: string) => right.items?.find((item) => item.id === id)?.school_name || left.items?.find((item) => item.id === id)?.school_name || id;
+    return { left, right, added, removed, moved, itemName };
   }, [selected, versions]);
 
   async function restore(version: Version) {
@@ -60,7 +61,7 @@ export function PlannerVersions({ isMember }: { isMember: boolean }) {
   return <div className="mt-6">
     {status ? <p className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy" role="status">{status}</p> : null}
     {versions.length ? <div className="grid gap-3">{versions.map((version) => <div key={version.id} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><div className="flex flex-wrap items-center gap-3"><input aria-label="選取版本比較" type="checkbox" checked={selected.includes(version.id)} disabled={!selected.includes(version.id) && selected.length >= 2} onChange={() => setSelected((current) => current.includes(version.id) ? current.filter((id) => id !== version.id) : [...current, version.id])} /><span className="min-w-0 flex-1"><strong>{new Date(version.createdAt).toLocaleString("zh-TW")}</strong><span className="ml-2 text-sm text-slate-500">{version.itemCount} 個校科</span></span><button type="button" onClick={() => setViewed((current) => current === version.id ? null : version.id)} className="min-h-11 px-3 text-sm jshs-button-secondary">{viewed === version.id ? "收起版本" : "查看版本"}</button><button type="button" disabled={Boolean(restoring)} onClick={() => restore(version)} className="min-h-11 px-3 text-sm jshs-button-secondary">{restoring === version.id ? "恢復中…" : "恢復此版本"}</button></div>{viewed === version.id ? <VersionContent version={version} /> : null}</div>)}</div> : null}
-    {comparison ? <p className="mt-4 rounded-2xl border border-[var(--jshs-border)] p-4 text-sm leading-6" role="status">兩個版本比較：新增 {comparison.added.length} 筆、移除 {comparison.removed.length} 筆、順序移動 {comparison.moved.length} 筆。{viewedVersion ? "下方會列出兩個版本的完整志願順序。" : "請點擊「查看版本」確認校科與順序。"}</p> : null}
+    {comparison ? <div className="mt-4 rounded-2xl border border-[var(--jshs-border)] p-4 text-sm leading-6" role="status"><p>兩個版本比較：新增 {comparison.added.length} 筆、移除 {comparison.removed.length} 筆、順序移動 {comparison.moved.length} 筆。{viewedVersion ? "下方會列出兩個版本的完整志願順序。" : "請點擊「查看版本」確認校科與順序。"}</p>{comparison.added.length || comparison.removed.length || comparison.moved.length ? <ul className="mt-3 grid gap-1 text-slate-600">{comparison.added.map((id) => <li key={`added-${id}`}>新增：{comparison.itemName(id)}</li>)}{comparison.removed.map((id) => <li key={`removed-${id}`}>移除：{comparison.itemName(id)}</li>)}{comparison.moved.map((id) => <li key={`moved-${id}`}>順序變更：{comparison.itemName(id)}</li>)}</ul> : <p className="mt-2 text-slate-600">兩個版本內容與順序相同。</p>}</div> : null}
   </div>;
 }
 

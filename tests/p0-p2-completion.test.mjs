@@ -41,6 +41,16 @@ test("schedule metadata stays source-traceable from admin to public timeline", a
   assert.match(workspace, /academicYear/);
 });
 
+test("admin content has auditable revision restore", async () => {
+  const store = await source("db/content-store.ts");
+  const route = await source("app/api/admin/content/route.ts");
+  const page = await source("app/admin/content/page.tsx");
+  assert.match(store, /restoreContentRevision/);
+  assert.match(route, /restore_revision/);
+  assert.match(page, /RevisionList/);
+  assert.match(page, /恢復為草稿/);
+});
+
 test("IA keeps mock exams separate from formal score analysis", async () => {
   const home = await source("components/home-next-step.tsx");
   const mock = await source("app/scores/mock/page.tsx");
