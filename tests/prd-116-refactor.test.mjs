@@ -44,6 +44,11 @@ test("志願清單按招生區關聯篩選學校", async () => {
 test("desktop IA exposes the complete primary groups", () => {
   assert.deepEqual(primaryNavigation116.map((item) => item.label), ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"]);
   assert.equal(menuGroups116.some((group) => group.label === "更多"), false);
+  const mockExamGroup = menuGroups116.find((group) => group.label === "模擬考");
+  const scoreAnalysisGroup = menuGroups116.find((group) => group.label === "成績分析");
+  assert.ok(mockExamGroup?.items.some((item) => item.label === "模擬考"));
+  assert.deepEqual(scoreAnalysisGroup?.items.map((item) => item.label), ["會考與免試"]);
+  assert.doesNotMatch(JSON.stringify(scoreAnalysisGroup), /模擬考|模考|對答案/);
 });
 
 test("planner health returns structured checks instead of a prose-only result", () => {

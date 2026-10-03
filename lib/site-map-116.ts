@@ -6,17 +6,20 @@ import scoreFeatureCatalog from "../content/score-features.json" with { type: "j
 // share this typed projection so a legacy menu cannot silently diverge again.
 export const primaryNavigation116 = Object.freeze([...siteMapCatalog.primaryNavigation]) as readonly PrimaryNavigationItem[];
 export const menuGroups116 = Object.freeze(siteMapCatalog.menuGroups.map((group) => {
-  if (group.label !== "成績分析") return group;
+  const areaKey = group.label === "成績分析" ? "admission" : group.label === "模擬考" ? "mock" : null;
+  if (!areaKey) return group;
+  const area = scoreFeatureCatalog.areas.find((candidate) => candidate.key === areaKey);
+  if (!area) return group;
   return {
     ...group,
-    items: scoreFeatureCatalog.areas.map((area) => ({
+    items: [{
       label: area.label,
       href: area.primaryHref,
       description: area.title,
       section: area.label,
       children: scoreFeatureCatalog.features
-        .filter((feature) => feature.area === area.key)
+        .filter((feature) => feature.area === areaKey)
         .map(({ label, href, description }) => ({ label, href, description })),
-    })),
+    }],
   };
 })) as readonly MenuGroup[];
