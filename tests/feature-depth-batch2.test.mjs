@@ -24,12 +24,11 @@ test("Batch 2 tasks distinguish local custom tasks and provide edit/delete persi
   assert.match(page, /jshs_user_tasks/);
 });
 
-test("Batch 2 open-day records include full personal-record fields and no false official label", async () => {
-  const page = await source("components/schedule-workspace.tsx");
-  for (const label of ["活動名稱", "日期", "時間", "地點", "來源網址", "備註", "個人紀錄"]) assert.match(page, new RegExp(label));
-  assert.match(page, /校園開放日紀錄/);
-  assert.match(page, /onEdit/);
-  assert.match(page, /完成/);
+test("校園開放日已從使用者產品移除，舊網址導回日程", async () => {
+  const [schoolsRoute, scheduleRoute, siteMap] = await Promise.all([source("app/schools/open-days/page.tsx"), source("app/schedule/open-days/page.tsx"), source("content/site-map.json")]);
+  assert.match(schoolsRoute, /redirect\("\/schools"\)/);
+  assert.match(scheduleRoute, /redirect\("\/schedule"\)/);
+  assert.doesNotMatch(siteMap, /校園開放日|open-days/);
 });
 
 test("school fields expose per-section source links from the canonical repository", async () => {

@@ -66,7 +66,7 @@ test("canonical school data and historical records remain separate", async () =>
 });
 
 test("找學校工具各自有 canonical route 與可操作頁面", async () => {
-  for (const route of ["history", "map", "compare", "commute", "cost", "alumni", "open-days", "groups"]) {
+  for (const route of ["history", "map", "compare", "commute", "cost", "alumni", "groups"]) {
     await access(new URL(`../app/schools/${route}/page.tsx`, import.meta.url));
   }
   const [alumni, map, mapConfig, cost, commute, comparison] = await Promise.all([

@@ -11,9 +11,9 @@ test("final sitemap defines the user-facing navigation groups", async () => {
   const catalog = JSON.parse(await read("content/site-map.json"));
   assert.deepEqual(catalog.menuGroups.map(({ label }) => label), finalGroups);
 
-  const labels = JSON.stringify(catalog.menuGroups).match(/全國校科查詢|歷年錄取|校園開放日|資料更新狀態|試算與分析方法/g) || [];
+  const labels = JSON.stringify(catalog.menuGroups).match(/全國校科查詢|歷年錄取|資料更新狀態|試算與分析方法/g) || [];
   for (const label of [
-    "全國校科查詢", "歷年錄取", "校園開放日", "資料更新狀態", "試算與分析方法",
+    "全國校科查詢", "歷年錄取", "資料更新狀態", "試算與分析方法",
   ]) assert.ok(labels.includes(label), `missing final sitemap item: ${label}`);
 });
 

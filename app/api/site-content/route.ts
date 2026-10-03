@@ -2,7 +2,7 @@ import { listPublishedContent, parseContentBody, type ContentType } from "../../
 
 export const dynamic = "force-dynamic";
 
-const publicTypes: readonly ContentType[] = ["knowledge_term", "knowledge_card", "schedule_task", "site_notice"];
+const publicTypes: readonly ContentType[] = ["knowledge_term", "knowledge_card", "schedule_task", "site_notice", "mock_exam_source"];
 
 export async function GET(request: Request) {
   const requested = new URL(request.url).searchParams.get("type") as ContentType | null;

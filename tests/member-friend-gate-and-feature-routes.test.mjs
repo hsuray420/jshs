@@ -63,7 +63,7 @@ test("重要日程的 canonical menu routes preserve merged capabilities", async
     await access(new URL(`app/schedule/${path}/page.tsx`, root));
     assert.match(await read(`app/schedule/${path}/page.tsx`), /redirect\(/);
   }
-  assert.match(siteMap, /\/schools\/open-days/);
+  assert.doesNotMatch(siteMap, /\/schools\/open-days/);
   assert.match(schedule, /view/);
   assert.match(schedule, /jshs_schedule_open_days/);
   assert.match(schedule, /新增開放日|加入校園開放日/);

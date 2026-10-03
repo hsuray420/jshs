@@ -21,8 +21,7 @@
         { "label": "通勤比較", "href": "/schools/commute", "description": "比較距離、時間與交通方式", "section": "比較與參考" },
         { "label": "歷年錄取", "href": "/schools/history", "description": "查看年度與來源的錄取參考", "section": "比較與參考" },
         { "label": "費用試算", "href": "/schools/cost", "description": "區分官方金額與 JSHS 估算", "section": "比較與參考" },
-        { "label": "學長姐分享", "href": "/schools/alumni", "description": "參考社群經驗，不代表校方立場", "section": "比較與參考" },
-        { "label": "校園開放日", "href": "/schools/open-days", "description": "整理官方公告的參訪活動", "section": "比較與參考" }
+        { "label": "學長姐分享", "href": "/schools/alumni", "description": "參考社群經驗，不代表校方立場", "section": "比較與參考" }
       ]
     },
     {

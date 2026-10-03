@@ -36,7 +36,7 @@ export function SchoolExplorer({ schools: initialSchools = [], initialFilters = 
   const [schools, setSchools] = useState<readonly SchoolSearchIndexEntry[]>(initialSchools);
   const [loading, setLoading] = useState(initialSchools.length === 0);
   const [loadError, setLoadError] = useState("");
-  const [district, setDistrict] = useState(() => { if (typeof window !== "undefined") { const saved = window.localStorage.getItem("jshs-school-district"); if (saved && regions.some((region) => region.id === saved)) return saved; } return initialFilters.district || defaultDistrict; });
+  const [district, setDistrict] = useState(() => { if (initialFilters.district) return initialFilters.district; if (typeof window !== "undefined") { const saved = window.localStorage.getItem("jshs-school-district"); if (saved && regions.some((region) => region.id === saved)) return saved; } return defaultDistrict; });
   const [queryInput, setQueryInput] = useState(initialFilters.query || "");
   const [filters, setFilters] = useState<SchoolExplorerFilters>({ ...initialFilters, district: initialFilters.district || defaultDistrict });
   const [sort, setSort] = useState("name");
@@ -55,7 +55,7 @@ export function SchoolExplorer({ schools: initialSchools = [], initialFilters = 
 
   const scopedSchools = useMemo(() => {
     const scopeName = regions.find((region) => region.id === district)?.name || district;
-    return schools.filter((school) => school.admissionDistricts.some((admissionDistrict) => admissionDistrict.includes(scopeName)));
+    return filters.query?.trim() ? schools : district === "all" ? schools : schools.filter((school) => school.admissionDistricts.some((admissionDistrict) => admissionDistrict.includes(scopeName)));
   }, [schools, district]);
   const result = useMemo(() => scopedSchools.filter((school) => { const tokens = (filters.query || "").split(/[\s、,;；]+/).map(normalized).filter(Boolean); const queryMatch = tokens.every((token) => school.normalizedSearchText.includes(token) || (token === "餐飲" && /餐旅|烘焙/.test(school.normalizedSearchText))); return queryMatch && (!filters.city || school.city === filters.city) && (!filters.ownership || school.ownership === filters.ownership) && (!filters.program || (school.schoolTypes || [school.schoolType]).includes(filters.program)) && (!filters.department || school.departmentNames.includes(filters.department)); }).sort((a, b) => String(sort === "city" ? a.city : sort === "ownership" ? a.ownership : a.name).localeCompare(String(sort === "city" ? b.city : sort === "ownership" ? b.ownership : b.name), "zh-Hant")), [scopedSchools, filters, sort]);
   const popularSchools = useMemo(() => curatedPopularCodes.map((code) => scopedSchools.find((school) => school.code === code)).filter((school): school is SchoolSearchIndexEntry => Boolean(school)).slice(0, 4), [scopedSchools]);

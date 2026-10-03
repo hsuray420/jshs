@@ -5,9 +5,9 @@ import { SchoolSelection } from "@/components/school-selection";
 import { useSchoolSearchIndex, useSelectedSchoolDetails, type SchoolDetail } from "@/components/school-static-data";
 
 const field = (value: string) => value.trim() || "目前沒有資料";
-export function SchoolComparisonExplorer({ initialDistrict }: { initialDistrict?: string }) {
+export function SchoolComparisonExplorer({ initialDistrict, initialSchools = [] }: { initialDistrict?: string; initialSchools?: readonly string[] }) {
   const { schools, loading, error } = useSchoolSearchIndex();
-  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [selected, setSelected] = useState<readonly string[]>(initialSchools);
   const { details: chosen, loading: detailsLoading } = useSelectedSchoolDetails(selected);
   const toggle = (code: string) => setSelected(current => current.includes(code) ? current.filter(c => c !== code) : current.length < 4 ? [...current, code] : current);
   const rows: readonly [string, (s: SchoolDetail) => string][] = [
