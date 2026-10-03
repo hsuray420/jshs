@@ -8,8 +8,7 @@ const read = (path) => readFile(new URL(path, root), "utf8");
 test("AI policy routes score requests to the existing tools instead of calculating", async () => {
   const source = await read("lib/assistant-policy.ts");
   assert.match(source, /\/tools/);
-  assert.doesNotMatch(source, /\/tools\/placement/);
-  assert.match(source, /不提供模擬考或錄取落點預測/);
+  assert.match(source, /\/tools\/placement/);
   assert.match(source, /成績|積分|分數|落點/);
   assert.match(source, /AssistantAction|action/);
 });

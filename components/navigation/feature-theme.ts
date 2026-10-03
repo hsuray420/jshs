@@ -1,5 +1,6 @@
 export const featureThemes = {
   "找學校": "schools",
+  "模擬考": "mock-exam",
   "成績分析": "analytics",
   "我的志願": "planner",
   "日程": "schedule",

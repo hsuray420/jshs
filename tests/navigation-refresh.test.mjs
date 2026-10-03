@@ -4,7 +4,7 @@ import test from "node:test";
 
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-const primaryLabels = ["找學校", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"];
+const primaryLabels = ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"];
 
 test("one content catalog defines the primary destinations", async () => {
   const catalog = JSON.parse(await source("content/site-map.json"));

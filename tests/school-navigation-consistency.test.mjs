@@ -39,7 +39,7 @@ test("school exploration surfaces use restrained brand texture instead of genera
   assert.match(css, /linear-gradient/);
 });
 
-test("active feature families keep their own visual language and mock routes redirect", async () => {
+test("feature families keep their own visual language including separate mock exams", async () => {
   const [themes, navTheme, mockPage] = await Promise.all([
     read("lib/feature-themes.ts"),
     read("components/navigation/feature-theme.ts"),
@@ -50,6 +50,7 @@ test("active feature families keep their own visual language and mock routes red
     assert.match(themes, new RegExp(`${name}: \\{ primary: "${color}`));
   }
   assert.match(navTheme, /"成績分析": "analytics"/);
+  assert.match(navTheme, /"模擬考": "mock-exam"/);
   assert.match(navTheme, /"升學指南": "guide"/);
-  assert.match(mockPage, /redirect\("\/scores"\)/);
+  assert.match(mockPage, /MockExamWorkspace/);
 });

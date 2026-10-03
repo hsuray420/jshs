@@ -4,9 +4,13 @@ import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("legacy placement route redirects to formal score analysis", async () => {
-  const source = await read("app/tools/placement/page.tsx");
-  assert.match(source, /redirect\("\/scores"\)/);
+test("placement refuses prediction when the verified model contract is absent", async () => {
+  const source = await read("components/score-workspaces.tsx");
+  assert.match(source, /目前資料不足，無法提供可信的落點判斷/);
+  assert.match(source, /可比較年度/);
+  assert.doesNotMatch(source, /PlacementGroup title="挑戰"/);
+  assert.doesNotMatch(source, /PlacementGroup title="適中"/);
+  assert.doesNotMatch(source, /PlacementGroup title="穩定"/);
 });
 
 test("planner recommendation is discovery rather than an admission prediction", async () => {

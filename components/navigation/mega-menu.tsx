@@ -12,6 +12,7 @@ type MenuSection = Readonly<{ label?: string; items: readonly MenuItem[] }>;
 const fallbackIcons: Readonly<Record<string, SiteIconName>> = {
   "全國校科查詢": "search", "學校地圖": "school", "學校比較": "compare", "通勤比較": "route",
   "歷年錄取": "history", "費用試算": "calculator", "學長姐分享": "messages", "校園開放日": "calendar", "群科介紹": "book",
+  "模擬考中心": "calculator", "我的模考": "chart", "成績趨勢": "chart", "模考落點": "target", "對答案": "check",
   "成績積分試算": "calculator", "積分規則": "book", "個人積分摘要": "chart",
   "自己排": "planner", "志願探索": "search", "版本紀錄": "history", "列印／下載": "file", "官方選填平台": "school",
   "升學總覽": "calendar", "重要時程": "calendar", "現在該做什麼": "check", "我的待辦": "check",

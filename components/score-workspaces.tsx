@@ -40,6 +40,18 @@ export function ScoreHistoryWorkspace({ isMember }: { isMember: boolean }) {
 
 function ScoreComparison({ left, right }: { left: SavedScore; right: SavedScore }) { const rows = left.result.rule.categories.map((category) => { const before = left.result.otherItems[category.key] ?? 0; const after = right.result.otherItems[category.key] ?? 0; return { label: category.label, before, after, delta: after - before }; }); const totalDelta = right.result.totalScore - left.result.totalScore; return <section className="mt-6 p-6 jshs-surface-card"><p className="jshs-eyebrow">試算比較</p><h2 className="mt-2 text-2xl">兩次結果差異</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">只比較實際保存的規則項目，不代表錄取機率或排名。</p><div className="mt-4 overflow-x-auto"><table><thead><tr><th>項目</th><th>前次</th><th>本次</th><th>變化</th></tr></thead><tbody>{rows.map((row) => <tr key={row.label}><th>{row.label}</th><td>{row.before}</td><td>{row.after}</td><td>{row.delta > 0 ? "+" : ""}{row.delta}</td></tr>)}<tr><th>總分</th><td>{left.result.totalScore}</td><td>{right.result.totalScore}</td><td>{totalDelta > 0 ? "+" : ""}{totalDelta}</td></tr></tbody></table></div></section>; }
 
+export function ScorePlacementWorkspace({ isMember }: { isMember: boolean }) {
+  const [latest, setLatest] = useState<SavedScore | null>(null);
+  useSavedScore(setLatest, isMember);
+  const district = latest?.district && isAdmissionDistrict(latest.district) ? latest.district : "ct";
+  const rule = getAdmissionRule(district);
+  return <ScoreShell eyebrow="模擬考落點" title="目前不提供落點預測。"><section className="mx-auto w-[min(1120px,calc(100%-32px))] pb-12"><div className="grid gap-5 lg:grid-cols-[.8fr_1.2fr]"><section className="p-6 jshs-surface-card"><p className="jshs-eyebrow">目前資料情境</p><h2 className="mt-2 text-2xl font-black">{rule.label}</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">{latest?.district === district ? "你的積分資料已載入；它可用於整理志願，但不會被轉成錄取預測。" : "可先完成積分試算，再用校科探索整理選項。"}</p><div className="mt-5 flex flex-wrap gap-3"><Link href={`/tools?district=${district}`} className="min-h-11 px-4 py-3 text-sm jshs-button-secondary">回到正式試算</Link><Link href={`/schools/history?district=${district}`} className="min-h-11 px-4 py-3 text-sm jshs-button-primary">查看歷史參考資料</Link></div></section><section className="p-6 jshs-surface-card"><p className="jshs-eyebrow">資料不足</p><h2 className="mt-2 text-2xl font-black">目前資料不足，無法提供可信的落點判斷</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">目前沒有可用來建立或驗證預測模型的完整資料，因此不會顯示任何預測分組或錄取傾向。</p><ul className="mt-5 grid gap-2 text-sm leading-6 text-slate-700"><li>缺少可比較年度與跨年度 normalization。</li><li>缺少可驗證來源與完整校科資料。</li><li>缺少模型版本、confidence 方法與 validation result。</li><li>缺少完整 15 區覆蓋。</li></ul><p className="mt-5 rounded-xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy">歷史資料 ≠ 今年錄取預測。可閱讀已分區標示的歷史參考資料，但不應用它推斷錄取機率。</p></section></div></section></ScoreShell>;
+}
+
+function isAdmissionDistrict(value: string): value is AdmissionDistrict {
+  return ["tp", "ct", "ilan", "taoyuan-lienchiang", "hsinchu-miaoli", "changhua", "yunlin", "chiayi", "tainan", "kaohsiung", "pingtung", "hualien", "taitung", "penghu", "kinmen"].includes(value);
+}
+
 function ScoreShell({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) {
   return <><section className="jshs-hero-section"><div className="mx-auto w-[min(1120px,calc(100%-32px))] py-10 md:py-14"><p className="jshs-eyebrow">成績分析</p><h1 className="mt-3 max-w-4xl">{title}</h1><p className="mt-4 max-w-3xl text-base leading-7 jshs-muted-copy">{eyebrow}會保留年度、就學區與資料來源，方便下一步核對。</p></div></section><div className="mx-auto w-[min(1120px,calc(100%-32px))] py-8"><p className="jshs-eyebrow">{eyebrow}</p>{children}</div></>;
 }

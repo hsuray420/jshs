@@ -1,7 +1,7 @@
 import type { MenuItem } from "./site-map";
 import scoreFeatureCatalog from "../content/score-features.json" with { type: "json" };
 
-export type ScoreFeatureArea = "admission";
+export type ScoreFeatureArea = "mock" | "admission";
 
 export type ScoreFeature = Readonly<{
   key: string;

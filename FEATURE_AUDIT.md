@@ -24,7 +24,7 @@ Column key: `Text` = only explanatory copy; `Fake` = inert/falsely represented a
 
 ### P0 — do not describe these as complete today
 
-1. `/tools/placement` **模擬考落點** — removed from the user-facing feature set; legacy URLs redirect to `/scores`, which contains official admission scoring only.
+1. `/tools/placement` **模擬考落點** — user-facing mock-exam route remains in its separate menu; prediction is disabled until comparable years, verified sources, full school/program data, normalization and model validation are available.
 2. `/planner/recommend` **志願探索** — history-based score ranking has been removed. The page now filters real school-directory records by district, type, ownership, group and commute-city preference, and explains each match. It remains `PARTIAL` because it is discovery, not admission prediction.
 3. `/schools/commute` **通勤比較** — route results now disclose `osrm_route`, `geometric_estimate`, or `unavailable`; a geometry-only fallback shows distance only and never minutes. It remains `PARTIAL` without public-transit or real-time traffic data.
 
@@ -60,7 +60,7 @@ The Header has eight first-level labels and its mobile drawer renders every `con
 | `/schools/groups` | 群科介紹 / content+discovery | PARTIAL / P1 | Searches and filters a technical-group schema; each group links to the real school directory query. | No | No | Uses existing school-directory group labels; program detail fields honestly show pending. | `technicalGroupDirectory` + school directory | E | Official program-level content, courses and progression data have not been ingested. |
 | `/tools` | 成績積分試算 / FUNCTION_PAGE | COMPLETE / P3 | Selects district; renders rule-specific facts form; calls calculation; shows total/breakdown/rule year/tie-breakers/source; saves history. | No | No | Uses 115 rules while clearly labelling 116 as pending. | admission rule JSON + `/api/admission/calculate` | E/L/X | Core calculation engine is real and does not ask for final score. Production validation of all 15 rule implementations remains necessary. |
 | `/tools/rules` | 積分規則 / FUNCTION_PAGE | COMPLETE / P3 | Selects any of 15 districts; expands category/field rules, caps, tie-breakers and official source. | No | No | No | admission rule JSON/research fields | — | Meets stated minimum; data freshness must be maintained once 116 rules publish. |
-| `/tools/placement` | 已移除的模擬考落點入口 | REMOVED | Legacy route redirects to `/scores`. | No | No | No | None | — | Mock-exam and placement features are no longer offered. |
+| `/tools/placement` | 模擬考落點 / FUNCTION_PAGE | PARTIAL / P1 | Shows the current district context and links to score calculation and historical-reference exploration. | No | No | No prediction is calculated or shown. | Official-rule context; no prediction dataset/model | — | Data/model contract is incomplete: comparable years, verified records, full program coverage, normalization, confidence and validation are missing. |
 | `/tools/summary` | 個人積分摘要 / FUNCTION_PAGE | COMPLETE / P3 | Reads latest completed calculation from account API or device and displays breakdown. | No | No | No | `/api/admission/scores` or local storage | E | Correct empty state. It reads real prior calculations, not a fabricated summary. |
 | `/tools/history` | 成績歷史 / FUNCTION_PAGE | COMPLETE / P3 | Reads saved snapshots and lets a device user clear local history. | No | No | No | account API or local storage | E | Persists actual calculation records; needs production check of member API failure feedback. |
 | `/planner` | My planner hub | COMPLETE / P3 | Detects prior score and gates the two planner modes. | No | No | No | score API/local storage | E | A valid routing/gating hub. |
@@ -194,7 +194,7 @@ The audit status above remains a source-level depth judgement. `verificationStat
 | `/schools/groups` | PARTIAL | VERIFIED | Desktop/mobile, search-empty state, and browser back navigation passed; static dataset has no async/persistence requirement. |
 | `/tools` | COMPLETE | SMOKE_TESTED | Eight viewport first-load checks passed. All 15 district calculation/error combinations remain outstanding. |
 | `/tools/rules` | COMPLETE | SMOKE_TESTED | Eight viewport first-load checks passed. District-selector interaction remains outstanding. |
-| `/tools/placement` | REMOVED | SMOKE_TESTED | Legacy URL redirects to `/scores`. |
+| `/tools/placement` | PARTIAL | SMOKE_TESTED | Mobile/desktop and no-prediction state passed; it displays no prediction labels. |
 | `/tools/summary` | COMPLETE | SMOKE_TESTED | Eight viewport first-load checks passed. Account/local-storage success/error persistence remains outstanding. |
 | `/tools/history` | COMPLETE | SMOKE_TESTED | Eight viewport first-load checks passed. Account/local-storage history persistence remains outstanding. |
 | `/planner/custom` | COMPLETE | SMOKE_TESTED | Eight viewport first-load checks passed. Add/sort/save/reload scenario remains outstanding. |

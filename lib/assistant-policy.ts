@@ -37,7 +37,7 @@ export function getAssistantAction(question: string): AssistantAction | null {
   if (!/(算|計算|試算|輸入成績|多少分|幾分|落點)/u.test(normalized)) return null;
   const placement = /落點|穩不穩|能不能上|排名/u.test(normalized);
   return placement
-    ? { label: "前往正式積分試算", href: "/tools", reason: "本站只提供會考與免試的正式規則試算，不提供模擬考或錄取落點預測。" }
+    ? { label: "前往模擬考先估落點", href: "/tools/placement", reason: "落點估算要使用本站的專用工具，避免 AI 代替正式試算。" }
     : { label: "前往積分試算", href: "/tools", reason: "成績與積分請使用本站的專用試算功能，AI 不會代替你計算。" };
 }
 
@@ -50,7 +50,7 @@ export function getAssistantConversationReply(question: string): string | null {
     return "不客氣！如果要查正式日期、校科或規則，我可以繼續陪你一起看本站資料。";
   }
   if (/^(你是誰|你能做什麼|可以問什麼|功能)$/u.test(normalized)) {
-    return "我是本站的小助手，能依本站資料協助你找升學指南、就學區、學校與升學日程；成績與落點請使用成績分析中的專用功能。";
+    return "我是本站的小助手，能依本站資料協助你找升學指南、就學區、學校與升學日程；會考積分請使用成績分析，模擬考請使用獨立的模擬考中心。";
   }
   if (/^(掰掰|再見|bye)$/iu.test(normalized)) {
     return "再見！需要查升學資料時，隨時回到本站找我。";

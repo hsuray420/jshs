@@ -1763,6 +1763,11 @@
       grid-template-columns: repeat(6, minmax(0, 1fr));
     }
   }
+  .lg\:grid-cols-\[\.8fr_1\.2fr\] {
+    @media (width >= 64rem) {
+      grid-template-columns: .8fr 1.2fr;
+    }
+  }
   .lg\:grid-cols-\[\.9fr_1\.1fr\] {
     @media (width >= 64rem) {
       grid-template-columns: .9fr 1.1fr;

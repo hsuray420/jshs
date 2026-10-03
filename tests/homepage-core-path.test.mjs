@@ -8,7 +8,8 @@ test("homepage exposes canonical task routes and the AI workspace", async () => 
   const [home, ai, scoreRegistry] = await Promise.all([readSource("app/page.tsx"), readSource("components/home-ai-panel.tsx"), readSource("content/score-features.json")]);
 
   assert.match(scoreRegistry, /"href": "\/scores\/admission"/);
-  assert.doesNotMatch(scoreRegistry, /模擬考|模考/);
+  assert.match(scoreRegistry, /"area": "mock"/);
+  assert.match(await readSource("app/scores/mock/page.tsx"), /MockExamWorkspace/);
   assert.match(home, /jshs-v2-home/);
   assert.match(home, /\/schools/);
   assert.match(home, /\/planner/);
