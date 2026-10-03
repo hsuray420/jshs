@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 test("志願探索以偏好篩選，而不再產生錄取分層", async () => {
   const source = await readFile(new URL("../components/planner-mode-workspace.tsx", import.meta.url), "utf8");
 
-  for (const label of ["公私立偏好", "群科興趣", "通勤偏好", "位於你的就學區"]) assert.match(source, new RegExp(label));
+  for (const label of ["公私立偏好", "群科興趣", "所在地（縣市）", "位於你的就學區"]) assert.match(source, new RegExp(label));
   assert.doesNotMatch(source, /buildPlannerRecommendations/);
   assert.doesNotMatch(source, /錄取機率/);
 });

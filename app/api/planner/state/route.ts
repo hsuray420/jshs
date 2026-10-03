@@ -18,7 +18,7 @@ export async function GET() {
 export async function PUT(request: Request) {
   const plannerId = await memberPlanner();
   if (!plannerId) return memberRequired();
-  const body = await request.json().catch(() => null) as { state?: unknown } | null;
+  const body = await request.json().catch(() => null) as { state?: unknown; createVersion?: unknown } | null;
   if (!body || !isRecord(body.state)) {
     return Response.json({ ok: false, error: "invalid_state" }, { status: 400 });
   }
@@ -30,7 +30,7 @@ export async function PUT(request: Request) {
 
   await savePlannerState(plannerId, stateJson);
   const items = await listPlannerItems(plannerId);
-  await createPlannerVersion(plannerId, stateJson, items);
+  if (body.createVersion === true) await createPlannerVersion(plannerId, stateJson, items);
   return plannerResponse({ ok: true }, plannerId);
 }
 

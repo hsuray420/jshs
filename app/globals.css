@@ -1678,8 +1678,15 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .jshs-feature-hero.is-analytics h1 { color: #065f46 !important; }
 .jshs-feature-hero.is-analytics .jshs-feature-eyebrow { color: #047857 !important; }
 .jshs-feature-hero.is-planner { background: linear-gradient(120deg, #fff1f2 0%, #fff8f9 68%, #ffe4e6 100%); border-color: #fecdd3; }
+.jshs-feature-hero.is-planner { margin-inline: auto; max-width: calc(100% - 32px); width: min(1180px, calc(100% - 32px)); }
 .jshs-feature-hero.is-planner h1 { color: #881337 !important; }
 .jshs-feature-hero.is-planner .jshs-feature-eyebrow { color: #e11d48 !important; }
+.jshs-feature-planner > .jshs-hero-section { background: linear-gradient(120deg, #fff1f2 0%, #fff8f9 68%, #ffe4e6 100%) !important; border: 1px solid #fecdd3 !important; border-radius: var(--feature-hero-radius); margin: 28px auto 0; max-width: calc(100% - 32px); overflow: hidden; width: min(1180px, calc(100% - 32px)); }
+.jshs-feature-planner .jshs-hero-section .jshs-eyebrow { color: #e11d48 !important; }
+.jshs-feature-planner .jshs-hero-section h1 { color: #881337 !important; }
+.jshs-planner-filters { border-top: 1px solid var(--jshs-border); margin-top: 16px; padding-top: 16px; }
+.jshs-planner-filters summary { color: var(--jshs-primary); cursor: pointer; font-size: 14px; font-weight: 750; }
+@media (max-width: 760px) { .jshs-feature-hero.is-planner, .jshs-feature-planner > .jshs-hero-section { margin-top: 18px; max-width: calc(100% - 24px); width: calc(100% - 24px); } }
 .jshs-feature-hero.is-schedule { background: linear-gradient(120deg, #fffbeb 0%, #fffdf5 68%, #fef3c7 100%); border-color: #fde68a; }
 .jshs-feature-hero.is-schedule h1 { color: #78350f !important; }
 .jshs-feature-hero.is-schedule .jshs-feature-eyebrow { color: #d97706 !important; }

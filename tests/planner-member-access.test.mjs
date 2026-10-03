@@ -23,7 +23,7 @@ test("planner data requires a verified LINE member session", async () => {
   assert.doesNotMatch(stateRoute, /plannerIdentity\(request\)/);
 });
 
-test("planning remains local while national search stays a read-only discovery surface", async () => {
+test("planning storage requires LINE membership while national search stays a read-only discovery surface", async () => {
   const [schoolExplorer, decisionActions, plannerWorkspace, localStore] = await Promise.all([
     readSource("components/school-explorer.tsx"),
     readSource("components/school-decision-actions.tsx"),
@@ -34,7 +34,8 @@ test("planning remains local while national search stays a read-only discovery s
   assert.doesNotMatch(schoolExplorer, /\/api\/planner/);
   assert.match(schoolExplorer, /\/schools\/compare/);
   assert.match(decisionActions, /writeLocalPlanner/);
-  assert.match(plannerWorkspace, /writeLocalPlanner/);
-  assert.match(plannerWorkspace, /if \(!isMember\)/);
+  assert.match(plannerWorkspace, /登入 LINE 後儲存並分析/);
+  assert.doesNotMatch(plannerWorkspace, /writeLocalPlanner/);
+  assert.match(plannerWorkspace, /if \(!isMember\) return false/);
   assert.match(localStore, /localStorage/);
 });

@@ -25,12 +25,13 @@ test("planner exposes manual and non-predictive discovery workspaces with shared
     read("components/planner-mode-workspace.tsx"),
     read("app/planner/page.tsx"),
   ]);
-  for (const label of ["我的志願順序", "志願健檢", "志願探索", "位於你的就學區", "拖曳", "查看學校"]) assert.match(planner, new RegExp(label));
+  for (const label of ["我的志願", "志願健檢", "志願探索", "位於你的就學區", "拖曳", "查看學校"]) assert.match(planner, new RegExp(label));
   assert.doesNotMatch(planner, /Group title="挑戰"/);
   assert.match(planner, /draggable/);
   assert.match(planner, /\/api\/planner\/state/);
   assert.match(page, /PlannerHub/);
-  assert.match(planner, /readLocalPlanner|writeLocalPlanner/);
+  assert.match(planner, /登入 LINE 後儲存並分析/);
+  assert.doesNotMatch(planner, /writeLocalPlanner/);
 });
 
 test("search and trust centers are real routes and discoverable", async () => {
