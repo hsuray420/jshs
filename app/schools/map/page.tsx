@@ -7,5 +7,5 @@ export const metadata: Metadata = { title: "學校地圖｜全國國中升學資
 
 export default async function SchoolRoute({ searchParams }: { searchParams: Promise<{ district?: string }> }) {
   const params = await searchParams;
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/schools" /><SchoolMapExplorer initialDistrict={params.district} /><SiteFooter /></main>;
+  return <main className="min-h-screen jshs-page-shell jshs-feature-school"><SiteHeader activeHref="/schools" /><SchoolMapExplorer initialDistrict={params.district} /><SiteFooter /></main>;
 }

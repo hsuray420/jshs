@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Map as LeafletMap, LayerGroup } from "leaflet";
-import { SchoolRegionControl } from "@/components/school-region-control";
 import { useSchoolSearchIndex } from "@/components/school-static-data";
 import { getSchoolCoordinate } from "@/lib/school-geocode";
 import { normalizeDistrict, readStoredDistrict, writeStoredDistrict } from "@/lib/district-context";
@@ -36,7 +35,6 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
   const mapElement = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<LeafletMap | null>(null);
   const markerLayer = useRef<LayerGroup | null>(null);
-  const listItems = useRef<Record<string, HTMLElement | null>>({});
 
   useEffect(() => {
     const restoreUrlState = () => {
@@ -96,8 +94,12 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
     setSheetExpanded(true);
     const point = mapSchoolPoints.find((item) => item.school.code === code);
     if (point) mapInstance.current?.flyTo([point.latitude, point.longitude], Math.max(mapInstance.current.getZoom(), 14));
-    listItems.current[code]?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [mapSchoolPoints]);
+  const showWholeRegion = useCallback(() => {
+    setQuery(""); setCity(""); setOwnership(""); setSchoolType(""); setDepartment("");
+    setActiveSchoolCode(""); setViewportBounds(null); setSheetExpanded(false);
+    if (located.length) mapInstance.current?.fitBounds(located.map((point) => [point.latitude, point.longitude]), { padding: [34, 34], maxZoom: 13 });
+  }, [located]);
 
   useEffect(() => {
     if (!mapElement.current || mapInstance.current) return;
@@ -160,15 +162,14 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
   if (error) return <section className="sd-state" role="status"><h1>學校地圖資料暫時無法載入</h1><p>{error}</p></section>;
 
   return <div className="sd-root sm-root">
-    <div className="sd-container"><SchoolRegionControl value={region} onChange={changeRegion} /></div>
-    <header className="sm-toolbar sd-container"><div className="sm-toolbar-copy"><p className="sm-eyebrow">學校地圖</p><h1>在地圖與清單間探索學校</h1><p>{regionName}已核對座標 {coordinateCoverage} 所；未有可驗證座標的學校不會被錯誤標在地圖上。</p>{!located.length ? <p className="mt-3 rounded-xl border border-dashed p-3 text-sm" role="status">目前就學區沒有可定位的學校。請從上方「目前就學區」切換到有資料的區域，或先使用學校查詢。</p> : null}</div>
-      <div className="sm-search-grid"><label>搜尋<input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="學校、縣市、行政區或科別" /></label><label>縣市<select value={city} onChange={(event) => setCity(event.target.value)}><option value="">全部</option>{cities.map((value) => <option key={value}>{value}</option>)}</select></label><label>公私立<select value={ownership} onChange={(event) => setOwnership(event.target.value)}><option value="">全部</option>{ownerships.map((value) => <option key={value}>{value}</option>)}</select></label><label>學制<select value={schoolType} onChange={(event) => setSchoolType(event.target.value)}><option value="">全部</option>{schoolTypes.map((value) => <option key={value}>{value}</option>)}</select></label><label>科別<select value={department} onChange={(event) => setDepartment(event.target.value)}><option value="">全部</option>{departments.map((value) => <option key={value}>{value}</option>)}</select></label></div>
+    <header className="sm-toolbar sd-container"><div className="sm-toolbar-copy"><p className="sm-eyebrow">學校地圖</p><h1>先在地圖上找到學校</h1><p>{regionName}已核對座標 {coordinateCoverage} 所；未有可驗證座標的學校不會被錯誤標在地圖上。</p>{!located.length ? <p className="mt-3 rounded-xl border border-dashed p-3 text-sm" role="status">目前就學區沒有可定位的學校。請切換到有資料的區域，或先使用學校查詢。</p> : null}</div>
+      <div className="sm-search-grid"><label>查看區域<select value={region} onChange={(event) => changeRegion(event.target.value)} aria-label="選擇要查看的就學區">{regions.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select></label><label>選擇要在地圖定位的學校<select value={activeSchoolCode} onChange={(event) => event.target.value ? selectSchool(event.target.value) : showWholeRegion()}><option value="">顯示整個{regionName}</option>{located.map(({ school }) => <option key={school.code} value={school.code}>{school.name}</option>)}</select></label><label>搜尋<input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="學校、縣市、行政區或科別" /></label><label>縣市<select value={city} onChange={(event) => setCity(event.target.value)}><option value="">全部</option>{cities.map((value) => <option key={value}>{value}</option>)}</select></label><label>公私立<select value={ownership} onChange={(event) => setOwnership(event.target.value)}><option value="">全部</option>{ownerships.map((value) => <option key={value}>{value}</option>)}</select></label><label>學制<select value={schoolType} onChange={(event) => setSchoolType(event.target.value)}><option value="">全部</option>{schoolTypes.map((value) => <option key={value}>{value}</option>)}</select></label><label>科別<select value={department} onChange={(event) => setDepartment(event.target.value)}><option value="">全部</option>{departments.map((value) => <option key={value}>{value}</option>)}</select></label></div>
     </header>
     <section className="sm-layout" aria-label="學校地圖探索器">
       <aside className={`sm-list${sheetExpanded ? " is-expanded" : ""}`}><div className="sm-list-head"><div><strong>{mapSchoolPoints.length} 所學校</strong><span>{regionName}</span></div><button type="button" className="sm-sheet-toggle" aria-expanded={sheetExpanded} onClick={() => setSheetExpanded((value) => !value)}>{sheetExpanded ? "收合清單" : "展開清單"}</button></div>
-        <div className="sm-list-scroll">{mapSchoolPoints.map(({ school }) => <article ref={(node) => { listItems.current[school.code] = node; }} className={school.code === activeSchoolCode ? "is-active" : ""} key={school.code}><button type="button" onClick={() => selectSchool(school.code)}><strong>{school.name}</strong><span>{school.ownership} · {school.schoolType}</span><span>{school.city}{school.area ? ` · ${school.area}` : ""}</span><span>{school.departmentNames.slice(0, 2).join(" · ") || "科別資料未提供"}</span></button></article>)}</div>
+        <div className="sm-list-scroll">{mapSchoolPoints.map(({ school }) => <article className={school.code === activeSchoolCode ? "is-active" : ""} key={school.code}><button type="button" onClick={() => selectSchool(school.code)}><strong>{school.name}</strong><span>{school.ownership} · {school.schoolType}</span><span>{school.city}{school.area ? ` · ${school.area}` : ""}</span></button></article>)}</div>
       </aside>
-      <div className="sm-map-wrap">{!mapError ? <div ref={mapElement} className="sm-map" aria-label={`${regionName}學校位置地圖`} /> : <div className="sm-map-fallback" role="status"><h2>地圖暫時無法載入</h2><p>仍可使用學校清單與詳情頁；重新整理後可再次嘗試。</p></div>}{mapMoved ? <button className="sm-search-area" type="button" onClick={searchViewport}>搜尋此區域</button> : null}{viewportBounds ? <button className="sm-reset-area" type="button" onClick={() => setViewportBounds(null)}>顯示整個{regionName}</button> : null}
+      <div className="sm-map-wrap">{!mapError ? <div ref={mapElement} className="sm-map" aria-label={`${regionName}學校位置地圖`} /> : <div className="sm-map-fallback" role="status"><h2>地圖暫時無法載入</h2><p>仍可使用學校清單與詳情頁；重新整理後可再次嘗試。</p></div>}{mapMoved ? <button className="sm-search-area" type="button" onClick={searchViewport}>搜尋此區域</button> : null}{viewportBounds ? <button className="sm-reset-area" type="button" onClick={showWholeRegion}>顯示整個{regionName}</button> : null}
         {active ? <aside className="sm-preview" aria-live="polite"><button type="button" aria-label="關閉學校預覽" onClick={() => setActiveSchoolCode("")}>×</button><strong>{active.name}</strong><span>{active.ownership} · {active.schoolType} · {active.city}{active.area ? ` · ${active.area}` : ""}</span><span>{active.departmentNames.slice(0, 3).join(" · ") || "科別資料未提供"}</span><Link href={`/schools/${encodeURIComponent(active.code)}`}>查看學校詳情 →</Link></aside> : null}
       </div>
     </section>

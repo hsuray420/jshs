@@ -39,3 +39,17 @@
 
 .sm-toolbar { background:linear-gradient(120deg,#f7fbff,#eaf4ff); border-bottom:1px solid #dbe9f8; display:grid; grid-template-columns:1fr; gap:22px; padding-bottom:24px; padding-top:30px; position:relative; }
 .sm-toolbar-copy { min-width:0; }
+
+/* The map is the primary view; controls choose a region or focus a school before the list. */
+.sm-root { padding-bottom:56px; }
+.sm-search-grid { grid-template-columns:repeat(7,minmax(0,1fr)); }
+.sm-search-grid label:nth-child(2) { grid-column:span 2; }
+.sm-layout { grid-template-columns:1fr; height:auto; min-height:0; }
+.sm-map-wrap { height:min(680px,70dvh); min-height:460px; order:-1; }
+.sm-list { border:0; background:transparent; margin:0 auto; max-width:1200px; padding:28px 20px 0; width:100%; }
+.sm-list-head { border:0; padding:0 0 14px; }
+.sm-list-scroll { display:grid; gap:10px; grid-template-columns:repeat(3,minmax(0,1fr)); overflow:visible; padding:0; }
+.sm-list article { background:#fff; border-color:#dfe8f2; margin:0; min-width:0; }
+.sm-list article:hover { border-color:#8db9e9; }
+@media (max-width:900px) { .sm-search-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.sm-search-grid label:nth-child(2) { grid-column:auto; }.sm-layout { display:grid; height:auto; min-height:0; }.sm-map-wrap { height:62dvh; min-height:420px; }.sm-list { border:0; border-radius:0; box-shadow:none; height:auto; padding:24px 16px 0; position:relative; }.sm-list.is-expanded { height:auto; }.sm-list-scroll { grid-template-columns:repeat(2,minmax(0,1fr)); }.sm-sheet-toggle { display:none; }.sm-preview { bottom:16px; } }
+@media (max-width:540px) { .sm-search-grid { grid-template-columns:1fr; }.sm-search-grid label:nth-child(2) { grid-column:auto; }.sm-map-wrap { height:58dvh; min-height:360px; }.sm-list-scroll { grid-template-columns:1fr; }.sm-list { padding-inline:16px; } }

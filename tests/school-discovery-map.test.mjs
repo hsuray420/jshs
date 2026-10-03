@@ -43,7 +43,7 @@ test("map explorer is region-scoped, URL-addressable and resilient", async () =>
   assert.doesNotMatch(map, /Google 地圖/);
 });
 
-test("school module shares one persistent region control", async () => {
+test("school query uses the shared region control while the map owns its location controls", async () => {
   const [control, discovery, map] = await Promise.all([
     read("components/school-region-control.tsx"),
     read("components/school-discovery-explorer.tsx"),
@@ -52,7 +52,8 @@ test("school module shares one persistent region control", async () => {
   assert.match(control, /getAvailableSchoolDataRegions/);
   assert.match(control, /writeStoredDistrict/);
   assert.match(discovery, /SchoolRegionControl/);
-  assert.match(map, /SchoolRegionControl/);
+  assert.doesNotMatch(map, /SchoolRegionControl/);
+  assert.match(map, /選擇要在地圖定位的學校/);
 });
 
 test("verified coordinate coverage is audited for every available region", async () => {

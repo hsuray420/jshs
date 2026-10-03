@@ -1899,3 +1899,7 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 @media (prefers-reduced-motion:reduce) {
   .jshs-v2-home .jshs-v2-search,.jshs-v2-home .jshs-v2-search button,.jshs-v2-home .jshs-v2-all-schools span,.jshs-v2-home .jshs-home-section-heading > a span,.jshs-v2-home .jshs-home-school-card { transition:none; }
 }
+
+/* A soft handoff keeps feature pages from ending abruptly at the site footer. */
+.jshs-page-shell.jshs-feature-school > footer { margin-top:64px; position:relative; }
+.jshs-page-shell.jshs-feature-school > footer::before { background:linear-gradient(180deg, transparent, #fff); content:""; height:64px; left:0; pointer-events:none; position:absolute; right:0; top:-64px; }
