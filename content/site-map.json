@@ -20,7 +20,7 @@
         { "label": "學校比較", "href": "/schools/compare", "description": "並排比較 2–4 所學校／校科", "section": "比較與參考", "icon": "planner" },
         { "label": "通勤比較", "href": "/schools/commute", "description": "比較距離、時間與交通方式", "section": "比較與參考" },
         { "label": "歷年錄取", "href": "/schools/history", "description": "查看年度與來源的錄取參考", "section": "比較與參考" },
-        { "label": "費用試算", "href": "/schools/cost", "description": "區分官方金額與 JSHS 估算", "section": "比較與參考" },
+        { "label": "費用試算", "href": "/schools/cost", "description": "區分官方金額與本站估算", "section": "比較與參考" },
         { "label": "學長姐分享", "href": "/schools/alumni", "description": "參考社群經驗，不代表校方立場", "section": "比較與參考" }
       ]
     },
@@ -85,7 +85,7 @@
         { "label": "試算與分析方法", "href": "/trust/methodology", "description": "了解計算與推估限制", "section": "來源與方法" },
         { "label": "資料版本紀錄", "href": "/trust/versions", "description": "查看資料版本與校核事件", "section": "來源與方法" },
         { "label": "錯誤回報", "href": "/trust/report", "description": "回報資料、規則或功能問題", "section": "回報與說明" },
-        { "label": "平台可信度說明", "href": "/trust/credibility", "description": "了解 JSHS 與官方的界線", "section": "回報與說明" },
+        { "label": "平台可信度說明", "href": "/trust/credibility", "description": "了解本站與官方的界線", "section": "回報與說明" },
         { "label": "資料更新紀錄", "href": "/trust/updates", "description": "查看資料與功能的實際更新", "section": "回報與說明" },
         { "label": "平台", "href": "/trust/credibility", "description": "認識本站與取得協助", "children": [
           { "label": "關於本站", "href": "/trust/about", "description": "了解本站定位與資料界線" },

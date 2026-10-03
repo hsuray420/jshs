@@ -73,3 +73,15 @@ test("public notifications, school pages, and legacy guides avoid operations ter
   assert.doesNotMatch(centralGuide, /CSV load failed/);
   assert.doesNotMatch(taipeiGuide, /CSV load failed/);
 });
+
+test("public brand copy uses the formal platform name rather than the domain shorthand", async () => {
+  const [footer, trustHub, trustPage, routeMetadata] = await Promise.all([
+    source("components/site-footer.tsx"),
+    source("app/trust/page.tsx"),
+    source("app/trust/[slug]/page.tsx"),
+    source("content/route-metadata.json"),
+  ]);
+  for (const publicCopy of [footer, trustHub, trustPage, routeMetadata]) {
+    assert.doesNotMatch(publicCopy, /關於 JSHS|JSHS 提供|了解 JSHS|JSHS 是|JSHS 整理|JSHS 推估|JSHS UPDATES/);
+  }
+});

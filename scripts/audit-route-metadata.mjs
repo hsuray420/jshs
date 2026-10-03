@@ -38,7 +38,6 @@ const featureHeroRequired = [
   "/schools/commute",
   "/schools/cost",
   "/schools/alumni",
-  "/schools/open-days",
   "/tools",
   "/tools/rules",
   "/tools/placement",

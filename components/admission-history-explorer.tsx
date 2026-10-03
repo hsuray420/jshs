@@ -7,7 +7,7 @@ type SourceType = "official" | "school_official" | "committee_official" | "commu
 type HistoryRecord = Readonly<{ id: string; district: string; schoolCode: string; schoolName: string; programCode: string; programName: string; schoolYear: string; recordType: string; scoreValue: string; scoreLabel: string; sourceType: SourceType; sourceTitle: string; sourceUrl: string; verifiedAt: string; notes: string }>;
 type Payload = Readonly<{ records?: readonly HistoryRecord[] }>;
 const officialTypes = new Set<SourceType>(["official", "school_official", "committee_official"]);
-const sourceLabels: Record<SourceType, string> = { official: "官方資料", school_official: "學校官方資料", committee_official: "招生委員會官方資料", community: "社群參考資料", jshs_derived: "JSHS 整理資料" };
+const sourceLabels: Record<SourceType, string> = { official: "官方資料", school_official: "學校官方資料", committee_official: "招生委員會官方資料", community: "社群參考資料", jshs_derived: "本站整理資料" };
 
 export function AdmissionHistoryExplorer({ districtOptions, initialDistrict = "all" }: { districtOptions: readonly { code: string; label: string }[]; initialDistrict?: string }) {
   const [records, setRecords] = useState<readonly HistoryRecord[]>([]);

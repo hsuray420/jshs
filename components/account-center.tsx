@@ -15,7 +15,7 @@ export function AccountCenter({ member, error, registered = false }: { member: M
   function exportData() {
     const data = Object.fromEntries(Object.keys(localStorage).filter((key) => key.startsWith("jshs")).map((key) => [key, localStorage.getItem(key)]));
     const url = URL.createObjectURL(new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), data }, null, 2)], { type: "application/json" }));
-    const link = document.createElement("a"); link.href = url; link.download = "jshs-我的資料.json"; link.click(); URL.revokeObjectURL(url); setStatus("已匯出目前裝置上的 JSHS 資料。");
+    const link = document.createElement("a"); link.href = url; link.download = "全國國中升學資訊網-我的資料.json"; link.click(); URL.revokeObjectURL(url); setStatus("已匯出目前裝置上的本站資料。");
   }
 
   const friendRequired = error === "line_friend_required";
