@@ -16,7 +16,6 @@ const visitorSurfaceUrls = [
 
 const expectedNavigation = [
   ["找學校", "/schools"],
-  ["模擬考", "/scores/mock"],
   ["成績分析", "/scores"],
   ["我的志願", "/planner"],
   ["日程", "/schedule"],
@@ -34,10 +33,10 @@ test("the information architecture follows the primary navigation", async () => 
     siteMap.primaryNavigation.map(({ label, href }) => [label, href]),
     expectedNavigation,
   );
-  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 8);
+  assert.equal(new Set(siteMap.primaryNavigation.map(({ href }) => href)).size, 7);
   assert.deepEqual(
     siteMap.primaryNavigation.map(({ activeHref }) => activeHref),
-    ["/schools", "/scores/mock", "/scores", "/planner", "/schedule", "/knowledge", "/trust", "/admission-guides"],
+    ["/schools", "/scores", "/planner", "/schedule", "/knowledge", "/trust", "/admission-guides"],
   );
   assert.equal(siteMap.primaryNavigation.some(({ label }) => label === "就學區"), false);
 });
@@ -104,7 +103,7 @@ test("scores, tools, schools, districts, and private planner each have a real la
   assert.match(planner, /follow:\s*false/);
 });
 
-test("primary navigation lands on an interactive surface instead of an introductory hero", async () => {
+test("primary navigation lands on an interactive surface and retires mock-exam routes", async () => {
   const siteMap = JSON.parse(await readFile(siteMapUrl, "utf8"));
   const schools = await readFile(new URL("../app/schools/page.tsx", import.meta.url), "utf8");
   const scores = await readFile(new URL("../app/scores/page.tsx", import.meta.url), "utf8");
@@ -120,8 +119,7 @@ test("primary navigation lands on an interactive surface instead of an introduct
       assert.match(schools, /<SchoolExplorer/);
       continue;
     }
-    if (url.pathname === "/scores/mock") assert.match(mockScores, /ScoreFeatureList/);
-    else if (url.pathname === "/scores") assert.match(scores, /ScoreFeatureEntry/);
+    if (url.pathname === "/scores") assert.match(scores, /ScoreFeatureEntry/);
     else if (url.pathname === "/tools") assert.match(tools, /AdmissionCalculator/);
     else if (url.pathname === "/planner") assert.match(planner, /PlannerHub/);
     else if (url.pathname === "/schedule") assert.match(schedule, /ScheduleWorkspace/);
@@ -130,6 +128,8 @@ test("primary navigation lands on an interactive surface instead of an introduct
     else if (url.pathname === "/trust/credibility") assert.match(await readFile(new URL("../app/trust/[slug]/page.tsx", import.meta.url), "utf8"), /credibility/);
     else assert.equal(url.pathname, "/trust");
   }
+  assert.doesNotMatch(siteMap.primaryNavigation.map(({ label }) => label).join(" "), /模擬考/);
+  assert.match(mockScores, /redirect\("\/scores"\)/);
 });
 
 test("sitemap exposes canonical hubs and excludes redirect-only legacy homepage", async () => {

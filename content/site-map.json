@@ -2,7 +2,6 @@
   "updatedAt": "2026-08-28",
   "primaryNavigation": [
     { "label": "找學校", "href": "/schools", "activeHref": "/schools", "icon": "school", "tone": "school" },
-    { "label": "模擬考", "href": "/scores/mock", "activeHref": "/scores/mock", "icon": "calculator", "tone": "mock-exam" },
     { "label": "成績分析", "href": "/scores", "activeHref": "/scores", "icon": "calculator", "tone": "analytics" },
     { "label": "我的志願", "href": "/planner", "activeHref": "/planner", "icon": "planner", "tone": "planner" },
     { "label": "日程", "href": "/schedule", "activeHref": "/schedule", "icon": "calendar", "tone": "schedule" },
@@ -22,16 +21,6 @@
         { "label": "歷年錄取", "href": "/schools/history", "description": "查看年度與來源的錄取參考", "section": "比較與參考" },
         { "label": "費用試算", "href": "/schools/cost", "description": "區分官方金額與本站估算", "section": "比較與參考" },
         { "label": "學長姐分享", "href": "/schools/alumni", "description": "參考社群經驗，不代表校方立場", "section": "比較與參考" }
-      ]
-    },
-    {
-      "label": "模擬考", "href": "/scores/mock", "activeHref": "/scores/mock", "eyebrow": "模擬考", "description": "保存模考成績，查看趨勢與歷史參考。", "layout": "compact",
-      "items": [
-        { "label": "模擬考中心", "href": "/scores/mock", "description": "集中查看模考入口、資料狀態與下一步。", "section": "模擬考" },
-        { "label": "對答案", "href": "/scores/mock", "description": "等可驗證答案來源載入後再開放作答。", "section": "模擬考" },
-        { "label": "我的模考", "href": "/scores/history", "description": "查看已保存的模考紀錄；目前不假造紀錄。", "section": "模擬考" },
-        { "label": "成績趨勢", "href": "/scores/trends", "description": "用已保存成績產生趨勢，不以空資料推估。", "section": "模擬考" },
-        { "label": "模考落點", "href": "/scores/placement", "description": "查看資料條件與歷史參考，不提供無依據預測。", "section": "模擬考" }
       ]
     },
     {

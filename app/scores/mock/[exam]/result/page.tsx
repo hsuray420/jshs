@@ -1,1 +1,5 @@
-export { default, metadata } from "../page";
+import { redirect } from "next/navigation";
+
+export default function LegacyMockResultPage() {
+  redirect("/scores");
+}

@@ -80,13 +80,13 @@ await scenario("history_community_separation", async () => {
   return official.includes("目前沒有找到這個年度的官方歷史資料") && community.includes("社群參考資料");
 });
 
-await scenario("placement_no_prediction", async () => {
+await scenario("retired_placement_route_redirects_to_score_analysis", async () => {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await page.goto(`${baseURL}/tools/placement`, { waitUntil: "networkidle" });
   const text = await page.locator("main").innerText();
-  const overflow = await page.evaluate(() => document.body.scrollWidth > window.innerWidth + 1);
+  const pathname = new URL(page.url()).pathname;
   await page.close();
-  return text.includes("目前資料不足，無法提供可信的落點判斷") && !text.includes("你的落點") && !text.includes("穩定") && !overflow;
+  return pathname === "/scores" && text.includes("成績分析");
 });
 
 await scenario("recommend_discovery_not_prediction", async () => {

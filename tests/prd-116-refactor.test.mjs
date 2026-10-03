@@ -42,7 +42,7 @@ test("志願清單按招生區關聯篩選學校", async () => {
 });
 
 test("desktop IA exposes the complete primary groups", () => {
-  assert.deepEqual(primaryNavigation116.map((item) => item.label), ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"]);
+  assert.deepEqual(primaryNavigation116.map((item) => item.label), ["找學校", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"]);
   assert.equal(menuGroups116.some((group) => group.label === "更多"), false);
 });
 

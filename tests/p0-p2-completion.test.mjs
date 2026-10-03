@@ -51,11 +51,12 @@ test("admin content has auditable revision restore", async () => {
   assert.match(page, /恢復為草稿/);
 });
 
-test("IA keeps mock exams separate from formal score analysis", async () => {
-  const home = await source("components/home-next-step.tsx");
+test("score analysis keeps admission scoring and retires mock-exam routes", async () => {
+  const scores = await source("app/scores/page.tsx");
+  const featureCatalog = JSON.parse(await source("content/score-features.json"));
   const mock = await source("app/scores/mock/page.tsx");
-  assert.doesNotMatch(home, /模擬考與免試積分入口/);
-  assert.match(home, /正式會考與免試入學積分/);
-  assert.match(mock, /建立、編輯與保存/);
-  assert.match(mock, /不捏造答案、排名或錄取預測/);
+  assert.deepEqual(featureCatalog.areas.map(({ key }) => key), ["admission"]);
+  assert.match(scores, /ScoreFeatureList area="admission"/);
+  assert.doesNotMatch(scores, /模擬考|模考/);
+  assert.match(mock, /redirect\("\/scores"\)/);
 });

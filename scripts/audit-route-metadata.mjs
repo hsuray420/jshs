@@ -40,7 +40,6 @@ const featureHeroRequired = [
   "/schools/alumni",
   "/tools",
   "/tools/rules",
-  "/tools/placement",
   "/tools/summary",
   "/tools/history",
   "/planner",

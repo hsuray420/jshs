@@ -21,7 +21,7 @@ test("the desktop header uses the shared primary navigation and full brand", asy
   assert.match(header, /mobileNavigation\.map/);
   assert.match(header, /SITE_NAME/);
   assert.match(header, /<SiteIcon name="school"/);
-  assert.deepEqual(JSON.parse(catalog).primaryNavigation.map(({ label }) => label), ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"]);
+  assert.deepEqual(JSON.parse(catalog).primaryNavigation.map(({ label }) => label), ["找學校", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"]);
   assert.match(header, /memberName \|\| "登入"/);
 });
 
