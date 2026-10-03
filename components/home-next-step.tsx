@@ -37,7 +37,7 @@ function ChoiceGroup({ value, onChange, options, labels }: { value: string; onCh
 
 const quickActions: ReadonlyArray<{ title: string; description: string; href: string; tone: "school" | "score" | "planner" | "guide"; icon: SiteIconName }> = [
   { title: "找學校", description: "搜尋全國高中職與科系", href: "/schools", tone: "school", icon: "school" },
-  { title: "成績分析", description: "模擬考與免試積分入口", href: "/scores", tone: "score", icon: "calculator" },
+  { title: "成績分析", description: "正式會考與免試入學積分", href: "/scores", tone: "score", icon: "calculator" },
   { title: "我的志願", description: "建立與整理志願清單", href: "/planner", tone: "planner", icon: "planner" },
   { title: "升學指南", description: "看懂制度與升學方向", href: "/knowledge", tone: "guide", icon: "knowledge" },
 ];

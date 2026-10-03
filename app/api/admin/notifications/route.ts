@@ -44,10 +44,17 @@ export async function POST(request: Request) {
     const description = clean(form.get("description"), 1000);
     const eventDate = clean(form.get("event_date"), 10);
     const sendAtInput = clean(form.get("send_at"), 30);
+    const academicYear = clean(form.get("academic_year"), 4) || "116";
+    const district = clean(form.get("district"), 40) || "all";
+    const status = clean(form.get("status"), 30) as "confirmed" | "pending" | "previous_year_reference" | "provisional";
+    const sourceUrl = clean(form.get("source_url"), 500);
+    const sourcePages = clean(form.get("source_pages"), 40);
+    const verifiedAt = clean(form.get("verified_at"), 30);
     if (!title || !isDate(eventDate)) return redirect("/admin/notifications?updated=important_date_invalid");
     const sendAt = parseTaipeiDateTime(sendAtInput, eventDate);
     if (!sendAt) return redirect("/admin/notifications?updated=important_date_invalid");
-    const input = { id, title, description, eventDate, sendAt, enabled: form.get("enabled") === "on", updatedBy: admin.user.lineUserId };
+    if (!/^[0-9]{3,4}$/.test(academicYear) || !["confirmed", "pending", "previous_year_reference", "provisional"].includes(status || "pending") || !isSafeHttpUrl(sourceUrl) || (verifiedAt && !isDate(verifiedAt))) return redirect("/admin/notifications?updated=important_date_invalid");
+    const input = { id, title, description, eventDate, sendAt, enabled: form.get("enabled") === "on", updatedBy: admin.user.lineUserId, academicYear, district, status: status || "pending", sourceUrl, sourcePages, verifiedAt };
     if (action === "create_date") await createImportantDate(input);
     else await updateImportantDate(input);
     return redirect("/admin/notifications?updated=important_date");
@@ -62,6 +69,16 @@ function clean(value: FormDataEntryValue | null, maxLength: number) {
 
 function isDate(value: string) {
   return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+function isSafeHttpUrl(value: string) {
+  if (!value) return true;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:";
+  } catch {
+    return false;
+  }
 }
 
 function parseTaipeiDateTime(value: string, eventDate: string) {

@@ -7,12 +7,21 @@ export async function GET() {
   const [dates, taskEntries] = await Promise.all([listImportantDates(), listPublishedContent("schedule_task")]);
   return Response.json({
     ok: true,
-    dates: dates.map(({ id, title, description, event_date, send_at }) => ({
+    dates: dates.map(({ id, title, description, event_date, send_at, enabled, sent_at, academic_year, district, status, source_url, source_pages, version, verified_at }) => ({
       id,
       title,
       description,
       eventDate: event_date,
       sendAt: send_at,
+      enabled,
+      sentAt: sent_at,
+      academicYear: academic_year,
+      district,
+      status,
+      sourceUrl: source_url || undefined,
+      sourcePages: source_pages || undefined,
+      version,
+      verifiedAt: verified_at,
     })),
     tasks: taskEntries.map((entry) => ({
       id: entry.slug,

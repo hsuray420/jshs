@@ -32,7 +32,12 @@ export function PlannerVersions({ isMember }: { isMember: boolean }) {
     const selectedVersions = versions.filter((version) => selected.includes(version.id));
     if (selectedVersions.length !== 2) return null;
     const [left, right] = selectedVersions;
-    return { left, right, added: (right.state.order || []).filter((id) => !(left.state.order || []).includes(id)).length, removed: (left.state.order || []).filter((id) => !(right.state.order || []).includes(id)).length };
+    const leftOrder = left.state.order || [];
+    const rightOrder = right.state.order || [];
+    const added = rightOrder.filter((id) => !leftOrder.includes(id));
+    const removed = leftOrder.filter((id) => !rightOrder.includes(id));
+    const moved = rightOrder.filter((id) => leftOrder.includes(id) && leftOrder.indexOf(id) !== rightOrder.indexOf(id));
+    return { left, right, added, removed, moved };
   }, [selected, versions]);
 
   async function restore(version: Version) {
@@ -55,8 +60,7 @@ export function PlannerVersions({ isMember }: { isMember: boolean }) {
   return <div className="mt-6">
     {status ? <p className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy" role="status">{status}</p> : null}
     {versions.length ? <div className="grid gap-3">{versions.map((version) => <div key={version.id} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><div className="flex flex-wrap items-center gap-3"><input aria-label="選取版本比較" type="checkbox" checked={selected.includes(version.id)} disabled={!selected.includes(version.id) && selected.length >= 2} onChange={() => setSelected((current) => current.includes(version.id) ? current.filter((id) => id !== version.id) : [...current, version.id])} /><span className="min-w-0 flex-1"><strong>{new Date(version.createdAt).toLocaleString("zh-TW")}</strong><span className="ml-2 text-sm text-slate-500">{version.itemCount} 個校科</span></span><button type="button" onClick={() => setViewed((current) => current === version.id ? null : version.id)} className="min-h-11 px-3 text-sm jshs-button-secondary">{viewed === version.id ? "收起版本" : "查看版本"}</button><button type="button" disabled={Boolean(restoring)} onClick={() => restore(version)} className="min-h-11 px-3 text-sm jshs-button-secondary">{restoring === version.id ? "恢復中…" : "恢復此版本"}</button></div>{viewed === version.id ? <VersionContent version={version} /> : null}</div>)}</div> : null}
-    {viewedVersion && comparison ? <p className="mt-4 rounded-2xl border border-[var(--jshs-border)] p-4 text-sm leading-6" role="status">兩個版本比較：後一個版本新增 {comparison.added} 筆、移除 {comparison.removed} 筆；順序差異請查看兩個版本內容。</p> : null}
-    {comparison && !viewedVersion ? <p className="mt-4 rounded-2xl border border-[var(--jshs-border)] p-4 text-sm leading-6" role="status">兩個版本比較：後一個版本新增 {comparison.added} 筆、移除 {comparison.removed} 筆；請點擊「查看版本」確認順序。</p> : null}
+    {comparison ? <p className="mt-4 rounded-2xl border border-[var(--jshs-border)] p-4 text-sm leading-6" role="status">兩個版本比較：新增 {comparison.added.length} 筆、移除 {comparison.removed.length} 筆、順序移動 {comparison.moved.length} 筆。{viewedVersion ? "下方會列出兩個版本的完整志願順序。" : "請點擊「查看版本」確認校科與順序。"}</p> : null}
   </div>;
 }
 

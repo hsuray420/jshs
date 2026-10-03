@@ -5,6 +5,7 @@ export const CONTENT_TYPES = [
   "knowledge_term",
   "knowledge_card",
   "schedule_task",
+  "mock_exam_source",
   "site_notice",
 ] as const;
 

@@ -39,6 +39,13 @@ export type ImportantDate = {
   updated_by: string;
   created_at: string;
   updated_at: string;
+  academic_year: string;
+  district: string;
+  status: "confirmed" | "pending" | "previous_year_reference" | "provisional";
+  source_url: string;
+  source_pages: string;
+  version: number;
+  verified_at: string | null;
 };
 
 export const DEFAULT_NOTIFICATION_SETTINGS: Readonly<Record<NotificationEventKey, Omit<NotificationSetting, "event_key" | "updated_by" | "updated_at">>> = {
@@ -98,6 +105,13 @@ export async function ensureNotificationSchema() {
       updated_by TEXT NOT NULL,
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL
+      ,academic_year TEXT NOT NULL DEFAULT '116'
+      ,district TEXT NOT NULL DEFAULT 'all'
+      ,status TEXT NOT NULL DEFAULT 'pending'
+      ,source_url TEXT NOT NULL DEFAULT ''
+      ,source_pages TEXT NOT NULL DEFAULT ''
+      ,version INTEGER NOT NULL DEFAULT 1
+      ,verified_at TEXT
     )`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_important_dates_dispatch
       ON important_dates(enabled, send_at, sent_at)`),
@@ -106,6 +120,18 @@ export async function ensureNotificationSchema() {
   if (!(preferenceColumns.results ?? []).some((column) => column.name === "weekly_report_enabled")) {
     await db.prepare("ALTER TABLE member_notification_preferences ADD COLUMN weekly_report_enabled INTEGER NOT NULL DEFAULT 0").run();
   }
+  const dateColumns = await db.prepare("PRAGMA table_info(important_dates)").all<{ name: string }>();
+  const existingDateColumns = new Set((dateColumns.results ?? []).map((column) => column.name));
+  const migrations = [
+    ["academic_year", "ALTER TABLE important_dates ADD COLUMN academic_year TEXT NOT NULL DEFAULT '116'"],
+    ["district", "ALTER TABLE important_dates ADD COLUMN district TEXT NOT NULL DEFAULT 'all'"],
+    ["status", "ALTER TABLE important_dates ADD COLUMN status TEXT NOT NULL DEFAULT 'pending'"],
+    ["source_url", "ALTER TABLE important_dates ADD COLUMN source_url TEXT NOT NULL DEFAULT ''"],
+    ["source_pages", "ALTER TABLE important_dates ADD COLUMN source_pages TEXT NOT NULL DEFAULT ''"],
+    ["version", "ALTER TABLE important_dates ADD COLUMN version INTEGER NOT NULL DEFAULT 1"],
+    ["verified_at", "ALTER TABLE important_dates ADD COLUMN verified_at TEXT"],
+  ] as const;
+  for (const [column, sql] of migrations) if (!existingDateColumns.has(column)) await db.prepare(sql).run();
 
   const now = new Date().toISOString();
   await db.batch(NOTIFICATION_EVENT_KEYS.map((eventKey) => {
@@ -232,14 +258,20 @@ export async function createImportantDate(input: {
   sendAt: string;
   enabled: boolean;
   updatedBy: string;
+  academicYear?: string;
+  district?: string;
+  status?: ImportantDate["status"];
+  sourceUrl?: string;
+  sourcePages?: string;
+  verifiedAt?: string;
 }) {
   await ensureNotificationSchema();
   const now = new Date().toISOString();
   await getD1().prepare(`INSERT INTO important_dates
-    (id, title, description, event_date, send_at, enabled, sent_at, created_by, updated_by, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?)`)
+    (id, title, description, event_date, send_at, enabled, sent_at, created_by, updated_by, created_at, updated_at, academic_year, district, status, source_url, source_pages, version, verified_at)
+    VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)`)
     .bind(input.id, input.title, input.description, input.eventDate, input.sendAt, input.enabled ? 1 : 0,
-      input.updatedBy, input.updatedBy, now, now).run();
+      input.updatedBy, input.updatedBy, now, now, input.academicYear || "116", input.district || "all", input.status || "pending", input.sourceUrl || "", input.sourcePages || "", input.verifiedAt || null).run();
 }
 
 export async function updateImportantDate(input: {
@@ -250,13 +282,19 @@ export async function updateImportantDate(input: {
   sendAt: string;
   enabled: boolean;
   updatedBy: string;
+  academicYear?: string;
+  district?: string;
+  status?: ImportantDate["status"];
+  sourceUrl?: string;
+  sourcePages?: string;
+  verifiedAt?: string;
 }) {
   await ensureNotificationSchema();
   await getD1().prepare(`UPDATE important_dates SET
-    title = ?, description = ?, event_date = ?, send_at = ?, enabled = ?,
+    title = ?, description = ?, event_date = ?, send_at = ?, enabled = ?, academic_year = ?, district = ?, status = ?, source_url = ?, source_pages = ?, version = version + 1, verified_at = ?,
     sent_at = NULL, updated_by = ?, updated_at = ? WHERE id = ?`)
     .bind(input.title, input.description, input.eventDate, input.sendAt, input.enabled ? 1 : 0,
-      input.updatedBy, new Date().toISOString(), input.id).run();
+      input.academicYear || "116", input.district || "all", input.status || "pending", input.sourceUrl || "", input.sourcePages || "", input.verifiedAt || null, input.updatedBy, new Date().toISOString(), input.id).run();
 }
 
 export async function deleteImportantDate(id: string) {

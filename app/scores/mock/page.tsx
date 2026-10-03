@@ -8,8 +8,8 @@ import { SiteHeader } from "@/components/site-header";
 import { getMemberSession } from "@/lib/member-auth";
 
 export const metadata: Metadata = {
-  title: "模擬考中心｜成績分析｜全國國中升學資訊網",
-  description: "集中查看模擬考入口、資料狀態與下一步。",
+  title: "模擬考中心｜全國國中升學資訊網",
+  description: "建立、保存與分析自己的模擬考紀錄。",
   alternates: { canonical: "/scores/mock" },
 };
 
@@ -18,7 +18,7 @@ export default async function MockScoresPage() {
   return (
     <main className="min-h-screen jshs-page-shell jshs-feature-mock-exam">
       <SiteHeader activeHref="/scores/mock" />
-      <FeatureHero theme="mock-exam" eyebrow="模擬考" title="模擬考中心" description="對答案、我的模考、成績趨勢與落點參考會集中在這裡；目前只顯示已建立的入口與資料狀態。" illustration="score-history" />
+      <FeatureHero theme="mock-exam" eyebrow="模擬考" title="模擬考中心" description="建立、編輯與保存模擬考成績，再查看科目趨勢；本站不捏造答案、排名或錄取預測。" illustration="score-history" />
       <MockScoreEmptyState />
       <MockExamWorkspace isMember={isMember} />
       <ScoreFeatureList area="mock" />

@@ -12,6 +12,7 @@ const typeLabels: Record<ContentType, string> = {
   knowledge_term: "知識名詞",
   knowledge_card: "知識卡片",
   schedule_task: "日程待辦",
+  mock_exam_source: "模擬考來源／試卷",
   site_notice: "站內公告",
 };
 
@@ -38,7 +39,7 @@ export default async function AdminContentPage({ searchParams }: { searchParams:
 }
 
 function isContentType(value?: string): value is ContentType { return CONTENT_TYPES.includes(value as ContentType); }
-function defaultBody(type: ContentType) { if (type === "knowledge_article") return '{\n  "category": "制度入門",\n  "tags": [],\n  "districts": ["全國"],\n  "academicYear": "116",\n  "publishedAt": "",\n  "updatedAt": "",\n  "lastCheckedAt": "",\n  "body": "",\n  "sections": [],\n  "relatedTools": [],\n  "sources": []\n}'; if (type === "knowledge_term") return '{\n  "body": ""\n}'; if (type === "knowledge_card") return '{\n  "eyebrow": "知識主題",\n  "href": "/knowledge"\n}'; if (type === "schedule_task") return '{\n  "detail": ""\n}'; return '{\n  "severity": "info"\n}'; }
+function defaultBody(type: ContentType) { if (type === "knowledge_article") return '{\n  "category": "制度入門",\n  "tags": [],\n  "districts": ["全國"],\n  "academicYear": "116",\n  "publishedAt": "",\n  "updatedAt": "",\n  "lastCheckedAt": "",\n  "body": "",\n  "sections": [],\n  "relatedTools": [],\n  "sources": []\n}'; if (type === "knowledge_term") return '{\n  "body": ""\n}'; if (type === "knowledge_card") return '{\n  "eyebrow": "知識主題",\n  "href": "/knowledge"\n}'; if (type === "schedule_task") return '{\n  "detail": ""\n}'; if (type === "mock_exam_source") return '{\n  "academicYear": "116",\n  "applicableDistricts": ["全國"],\n  "sourceUrl": "",\n  "sourceType": "官方試卷或使用者來源",\n  "subjects": [],\n  "answerSource": "",\n  "status": "draft",\n  "lastCheckedAt": ""\n}'; return '{\n  "severity": "info"\n}'; }
 function readStyle(entry?: ContentEntry) { try { const body = entry ? JSON.parse(entry.body_json) as { style?: { fontSize?: string; color?: string } } : null; return { fontSize: ["14", "16", "18", "20", "24", "28", "32"].includes(body?.style?.fontSize || "") ? body?.style?.fontSize || "16" : "16", color: /^#[0-9a-f]{6}$/i.test(body?.style?.color || "") ? body?.style?.color || "#1C1C1E" : "#1C1C1E" }; } catch { return { fontSize: "16", color: "#1C1C1E" }; } }
 function formatDate(value: string) { return new Intl.DateTimeFormat("zh-TW", { dateStyle: "medium", timeZone: "Asia/Taipei" }).format(new Date(value)); }
 function Preview({ entry }: { entry?: ContentEntry }) { return <section className="admin-panel"><div className="admin-section-head"><div><p className="admin-eyebrow">Preview</p><h2>內容預覽</h2></div></div>{entry ? <><h3>{entry.title}</h3><p className="admin-muted">{entry.summary}</p><pre className="admin-preview-json">{entry.body_json}</pre></> : <p className="admin-muted">找不到要預覽的內容。</p>}</section>; }
