@@ -47,6 +47,13 @@ body {
 body.jshs-nav-open { overflow: hidden; overscroll-behavior: none; }
 body.jshs-intro-modal-open { overflow: hidden; overscroll-behavior: none; }
 
+@media (min-width: 1024px) {
+  body.jshs-ai-open .jshs-page-shell > section,
+  body.jshs-ai-open .jshs-page-shell > footer {
+    padding-right: min(400px, 30vw);
+  }
+}
+
 @media (max-width: 1023px) {
   body { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
 }
@@ -810,10 +817,10 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
   bottom: calc(92px + var(--safe-bottom));
   box-shadow: 0 20px 64px rgb(29 29 31 / 16%);
   flex-direction: column;
-  height: min(720px, calc(100dvh - 48px));
+  height: min(600px, calc(100dvh - 124px - var(--safe-bottom)));
   position: fixed;
   right: 24px;
-  width: min(440px, calc(100vw - 32px));
+  width: min(400px, calc(100vw - 32px));
   z-index: 94;
 }
 

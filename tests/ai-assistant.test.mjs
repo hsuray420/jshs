@@ -53,6 +53,15 @@ test("assistant handles basic greetings locally without requiring site retrieval
   assert.match(ui, /aria-expanded/);
 });
 
+test("assistant reserves page space while open so the floating panel does not cover content", async () => {
+  const css = await read("app/globals.css");
+  const ui = await read("components/ai-assistant.tsx");
+  assert.match(ui, /jshs-ai-open/);
+  assert.match(css, /body\.jshs-ai-open \.jshs-page-shell > section/);
+  assert.match(css, /height: min\(600px/);
+  assert.match(css, /width: min\(400px/);
+});
+
 test("assistant handles English greetings locally so they receive a complete reply", async () => {
   const policy = await read("lib/assistant-policy.ts");
   assert.match(policy, /hello\|hallo\|hi/);
