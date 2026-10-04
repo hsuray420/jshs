@@ -2386,3 +2386,39 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .ai-chat-dots i { background: var(--ai-blue); }
 .ai-chat-cursor { background: transparent; border-color: var(--ai-blue); }
 @media (max-width: 640px) { .ai-chat-floating { right: 16px; width: calc(100vw - 32px); } .ai-chat-window { border-radius: 20px; } }
+
+/* Mobile navigation and AI are designed as text-first surfaces, not scaled desktop cards. */
+.jshs-mobile-drawer-backdrop { align-items: stretch; background: rgb(15 23 42 / 28%); display: flex; inset: 0; position: fixed; z-index: 80; }
+.jshs-mobile-drawer { animation: jshs-mobile-drawer-in 240ms cubic-bezier(.2,.85,.25,1) both; background: #fff; box-shadow: -18px 0 48px rgb(15 23 42 / 16%); display: flex; flex-direction: column; margin-left: auto; max-width: 420px; width: min(100%, 420px); }
+.jshs-mobile-drawer-head { align-items: center; border-bottom: 1px solid #e5ebf2; display: flex; flex: 0 0 auto; justify-content: space-between; min-height: 76px; padding: 14px 20px; }
+.jshs-mobile-drawer-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 20px 20px calc(96px + env(safe-area-inset-bottom)); }
+.jshs-mobile-district-card { align-items: center; background: #f5f8fc; border: 1px solid #dce6f0; border-radius: 16px; color: #172033; display: flex; justify-content: space-between; padding: 15px 16px; text-decoration: none; }
+.jshs-mobile-drawer .jshs-mobile-group { border-color: #e5ebf2; padding-top: 20px; }
+.jshs-mobile-drawer .jshs-nav-mobile-accordion:first-child { border-top: 0; padding-top: 0; }
+.jshs-mobile-drawer .jshs-mobile-group-heading { min-height: 52px; }
+.jshs-mobile-drawer .jshs-nav-mobile-body { padding-bottom: 20px; }
+.jshs-mobile-drawer .jshs-nav-mega-item { border: 1px solid #e3eaf2; border-radius: 12px; margin: 0; min-height: 58px; padding: 10px 12px; }
+.jshs-mobile-drawer .jshs-nav-mega-item + .jshs-nav-mega-item { margin-top: 8px; }
+.jshs-mobile-drawer .jshs-nav-mega-item-copy b { font-size: 14px; }
+.jshs-mobile-drawer .jshs-nav-mega-item-copy span { font-size: 12px; }
+@keyframes jshs-mobile-drawer-in { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+
+@media (max-width: 640px) {
+  .ai-chat-root { --ai-mobile-nav-space: calc(64px + env(safe-area-inset-bottom)); }
+  .ai-chat-floating-button { align-items: center; background: #fff; border: 1px solid #c5d9eb; border-radius: 12px; bottom: var(--ai-mobile-nav-space); box-shadow: 0 8px 20px rgb(32 69 108 / 14%); color: var(--ai-blue); display: inline-flex; gap: 7px; height: 42px; min-width: 0; padding: 0 13px; right: 16px; }
+  .ai-chat-floating-button::before { color: var(--ai-blue); content: "✦"; font-size: 15px; }
+  .ai-chat-floating-button:hover, .ai-chat-floating-button:focus-visible { background: #f1f8ff; box-shadow: 0 8px 22px rgb(32 69 108 / 18%); }
+  .ai-chat-floating-label { color: var(--ai-blue); font-size: 13px; }
+  .ai-chat-floating-hint, .ai-chat-bot { display: none; }
+  .ai-chat-floating { animation: ai-chat-window-in-mobile 260ms ease-out both; bottom: var(--ai-mobile-nav-space); height: calc(100dvh - var(--ai-mobile-nav-space)); left: 0; right: 0; width: 100%; border-radius: 0; border-left: 0; border-right: 0; box-shadow: 0 -8px 28px rgb(32 69 108 / 10%); }
+  .ai-chat-floating::before { display: none; }
+  .ai-chat-floating .ai-chat-header { min-height: 64px; padding-inline: 16px; }
+  .ai-chat-floating .ai-chat-scope { font-size: 12px; padding: 10px 16px; }
+  .ai-chat-floating .ai-chat-messages { background-image: none; padding: 20px 16px 12px; }
+  .ai-chat-floating .ai-chat-message-column { max-width: 760px; }
+  .ai-chat-floating .ai-chat-composer { padding: 12px 12px 14px; }
+  .ai-chat-floating .ai-chat-composer textarea { border-radius: 14px !important; min-height: 48px; padding-left: 13px; }
+  .ai-chat-floating .ai-chat-composer > button { right: 29px; top: 18px; }
+  .ai-chat-floating .ai-chat-message.is-user .ai-chat-message-body { max-width: 88%; }
+}
+@keyframes ai-chat-window-in-mobile { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
