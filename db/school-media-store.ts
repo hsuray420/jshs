@@ -1,16 +1,24 @@
 import { getCommunityDatabase } from "./bindings";
-import {
-  deleteSchoolMediaOverride as deleteLegacySchoolMediaOverride,
-  getSchoolMediaOverride as getLegacySchoolMediaOverride,
-  listSchoolMediaOverrides as listLegacySchoolMediaOverrides,
-  upsertSchoolMediaOverride as upsertLegacySchoolMediaOverride,
-  type SchoolMediaOverride,
-} from "./admin-store";
 
-export type SchoolMediaMetadata = SchoolMediaOverride & { sort_order: number; is_cover: boolean };
+export type SchoolMediaMetadata = {
+  school_code: string;
+  file_id: string;
+  storage_provider: "imagekit";
+  image_url: string;
+  thumbnail_url: string;
+  source: "jshs-owned" | "official-school-site" | "licensed-public" | "admin-provided";
+  source_url: string;
+  license: string;
+  credit: string;
+  alt: string;
+  updated_by: string;
+  updated_at: string;
+  sort_order: number;
+  is_cover: boolean;
+};
 
 async function ensureSchema() {
-  const { db } = getCommunityDatabase();
+  const db = getCommunityDatabase();
   await db.prepare(`CREATE TABLE IF NOT EXISTS school_media_metadata (
     school_code TEXT PRIMARY KEY,
     file_id TEXT NOT NULL,
@@ -36,8 +44,7 @@ async function ensureSchema() {
 }
 
 export async function listSchoolMediaMetadata(): Promise<SchoolMediaMetadata[]> {
-  const { db, mode } = getCommunityDatabase();
-  if (mode === "legacy") return (await listLegacySchoolMediaOverrides()).map((item) => ({ ...item, sort_order: 0, is_cover: true }));
+  const db = getCommunityDatabase();
   await ensureSchema();
   const result = await db.prepare(`SELECT school_code, file_id, storage_provider, image_url, thumbnail_url,
     source, source_url, license, credit, alt, updated_by, updated_at, sort_order, is_cover
@@ -46,11 +53,7 @@ export async function listSchoolMediaMetadata(): Promise<SchoolMediaMetadata[]> 
 }
 
 export async function getSchoolMediaMetadata(schoolCode: string): Promise<SchoolMediaMetadata | null> {
-  const { db, mode } = getCommunityDatabase();
-  if (mode === "legacy") {
-    const item = await getLegacySchoolMediaOverride(schoolCode);
-    return item ? { ...item, sort_order: 0, is_cover: true } : null;
-  }
+  const db = getCommunityDatabase();
   await ensureSchema();
   const item = await db.prepare(`SELECT school_code, file_id, storage_provider, image_url, thumbnail_url,
     source, source_url, license, credit, alt, updated_by, updated_at, sort_order, is_cover
@@ -60,12 +63,11 @@ export async function getSchoolMediaMetadata(schoolCode: string): Promise<School
 }
 
 export async function saveSchoolMediaMetadata(input: SchoolMediaMetadata) {
-  const { db, mode } = getCommunityDatabase();
-  if (mode === "legacy") {
-    await upsertLegacySchoolMediaOverride(input);
-    return;
+  if (input.storage_provider !== "imagekit" || !input.file_id || !/^https:\/\//.test(input.image_url)) {
+    throw new Error("school_media_requires_imagekit_metadata");
   }
   await ensureSchema();
+  const db = getCommunityDatabase();
   await db.prepare(`INSERT INTO school_media_metadata (
     school_code, file_id, storage_provider, image_url, thumbnail_url, alt, source, source_url, license, credit,
     sort_order, is_cover, updated_by, updated_at
@@ -81,9 +83,8 @@ export async function saveSchoolMediaMetadata(input: SchoolMediaMetadata) {
 }
 
 export async function deleteSchoolMediaMetadata(schoolCode: string) {
-  const { db, mode } = getCommunityDatabase();
-  if (mode === "legacy") return deleteLegacySchoolMediaOverride(schoolCode);
   await ensureSchema();
+  const db = getCommunityDatabase();
   const result = await db.prepare("DELETE FROM school_media_metadata WHERE school_code = ?").bind(schoolCode).run();
   return (result.meta.changes ?? 0) > 0;
 }

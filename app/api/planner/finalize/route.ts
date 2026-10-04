@@ -8,7 +8,7 @@ export async function POST() {
   const member = await getMemberSession();
   if (!member) return memberRequired();
 
-  const plannerId = await getOrCreateMemberPlanner(await getMemberUserId(member), member.lineUserId);
+  const plannerId = await getOrCreateMemberPlanner(await getMemberUserId(member));
   const items = await listPlannerItems(plannerId);
   if (!items.length) {
     return Response.json({ ok: false, error: "planner_empty" }, { status: 400 });
@@ -18,6 +18,7 @@ export async function POST() {
   const confirmedAt = await confirmPlanner(plannerId, items.length, stateJson);
   const notification = await notifyMember({
     eventKey: "planner_finalized",
+    userId: await getMemberUserId(member),
     lineUserId: member.lineUserId,
     referenceId: confirmedAt,
     values: { count: items.length },

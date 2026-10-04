@@ -70,7 +70,7 @@ export async function POST(request: Request) {
   let plannerId: string | null = null;
   let existingPlannerItems: PlannerItem[] = [];
   if (uniquePlannerItems.length || plannerSnapshots.length || body.plannerState !== undefined) {
-    plannerId = await getOrCreateMemberPlanner(userId, member.lineUserId);
+    plannerId = await getOrCreateMemberPlanner(userId);
     existingPlannerItems = await listPlannerItems(plannerId);
     const districtCounts = new Map<string, number>();
     for (const item of existingPlannerItems) districtCounts.set(item.district, (districtCounts.get(item.district) || 0) + 1);
@@ -88,7 +88,6 @@ export async function POST(request: Request) {
     await createMemberScoreSnapshot({
       id,
       user_id: userId,
-      line_user_id: member.lineUserId,
       district: score.district,
       academic_year: score.academicYear,
       total_score: score.totalScore,
@@ -101,7 +100,6 @@ export async function POST(request: Request) {
     await saveMockExam({
       id: exam.id,
       user_id: userId,
-      line_user_id: member.lineUserId,
       name: exam.name,
       exam_date: exam.date,
       subjects_json: JSON.stringify(exam.subjects),
@@ -138,8 +136,8 @@ export async function POST(request: Request) {
 
   for (const code of new Set(favoriteCodes as string[])) await addFavorite(userId, code);
 
-  const savedScores = await Promise.all(scoreIds.map((hash) => hasMemberScoreSnapshot(userId, `guest-${hash}`, member.lineUserId)));
-  const savedMockExams = await Promise.all((exams as NonNullable<(typeof exams)[number]>[]).map((exam) => hasMockExam(userId, exam.id, member.lineUserId)));
+  const savedScores = await Promise.all(scoreIds.map((hash) => hasMemberScoreSnapshot(userId, `guest-${hash}`)));
+  const savedMockExams = await Promise.all((exams as NonNullable<(typeof exams)[number]>[]).map((exam) => hasMockExam(userId, exam.id)));
   const savedPlannerItems = await Promise.all(plannerWrittenIds.map((id) => plannerId ? hasPlannerItem(plannerId, id) : false));
   const savedPlannerSnapshots = await Promise.all(plannerSnapshotIds.map((id) => plannerId ? hasPlannerVersion(plannerId, id) : false));
   const savedFavorites = favoriteCodes.length ? await listFavorites(userId) : [];

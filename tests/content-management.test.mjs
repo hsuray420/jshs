@@ -94,11 +94,13 @@ test("school image administration is provenance-bound and public output is appro
   assert.match(adminRoute, /isHttpsUrl/);
   assert.match(adminRoute, /saveSchoolMediaMetadata/);
   assert.match(publicRoute, /getSchoolMediaMetadata/);
-  assert.match(publicRoute, /visibility !== "public"/);
+  assert.match(publicRoute, /storage_provider !== "imagekit"/);
+  assert.match(publicRoute, /Response\.redirect\(override\.image_url, 302\)/);
+  assert.doesNotMatch(publicRoute, /getAdminFileBlob|fileBlobToBytes/);
   assert.match(imageApi, /adminMedia/);
-  assert.match(store, /school_media_overrides/);
+  assert.doesNotMatch(store, /school_media_overrides/);
   assert.match(store, /fileBlobToBytes/);
-  assert.match(store, /hex\(file_blob\)/);
+  assert.match(store, /image_file_requires_imagekit_without_d1_blob/);
   assert.match(mediaStore, /getCommunityDatabase/);
   assert.match(fileRoute, /fileBlobToBytes/);
   assert.match(component, /api\/school-image/);

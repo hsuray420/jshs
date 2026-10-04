@@ -27,9 +27,19 @@
   },
   "d1_databases": [
     {
-      "binding": "DB",
-      "database_name": "jshs-db",
-      "database_id": "dfc77943-f336-46a1-9aec-3c3e29107748"
+      "binding": "CORE_DB",
+      "database_name": "jshs-core",
+      "database_id": "534a20dd-0797-4a86-bdea-c83cff4c567f"
+    },
+    {
+      "binding": "LEARNING_DB",
+      "database_name": "jshs-learning",
+      "database_id": "b9e54eaa-eb70-44ce-b770-a555b2e30198"
+    },
+    {
+      "binding": "COMMUNITY_DB",
+      "database_name": "jshs-community",
+      "database_id": "6ba329ac-cb11-43f8-9d42-ebb50ea0772c"
     }
   ]
 }

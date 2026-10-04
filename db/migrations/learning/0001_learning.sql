@@ -1,9 +1,7 @@
 -- LEARNING_DB: member-owned learning records. user_id is the stable JSHS UUID.
--- A nullable line_user_id exists only for imported legacy rows.
 CREATE TABLE IF NOT EXISTS member_mock_exams (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL,
-  line_user_id TEXT,
   name TEXT NOT NULL,
   exam_date TEXT NOT NULL,
   subjects_json TEXT NOT NULL,
@@ -16,7 +14,6 @@ CREATE INDEX IF NOT EXISTS idx_member_mock_exams_user_date ON member_mock_exams(
 CREATE TABLE IF NOT EXISTS member_score_history (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL,
-  line_user_id TEXT,
   district TEXT NOT NULL,
   academic_year TEXT NOT NULL,
   total_score REAL NOT NULL,

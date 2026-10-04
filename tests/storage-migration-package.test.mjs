@@ -194,7 +194,7 @@ test("legacy LINE-owned learning rows resolve to the existing internal UUID", as
     `);
     const transformed = transformTableRows(legacy, target, "member_mock_exams", "member_mock_exams").rows;
     assert.equal(transformed[0].user_id, "existing-uuid");
-    assert.equal(transformed[0].line_user_id, "line-user-1");
+    assert.equal("line_user_id" in transformed[0], false);
   } finally {
     legacy.close();
     target.close();

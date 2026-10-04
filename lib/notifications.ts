@@ -24,12 +24,13 @@ export function renderNotificationTemplate(template: string, values: TemplateVal
 
 export async function notifyMember(input: {
   eventKey: MemberNotificationEventKey;
+  userId: string;
   lineUserId: string;
   values: TemplateValues;
   referenceId?: string;
 }) {
   try {
-    if (!(await isMemberNotificationEnabled(input.lineUserId, input.eventKey))) {
+    if (!(await isMemberNotificationEnabled(input.userId, input.eventKey))) {
       return { ok: false, skipped: true, reason: "member_not_opted_in", sent: 0 } as const;
     }
     const setting = await getNotificationSetting(input.eventKey);

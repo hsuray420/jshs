@@ -50,3 +50,42 @@ CREATE TABLE IF NOT EXISTS favorites (
   PRIMARY KEY(user_id, school_code)
 );
 CREATE INDEX IF NOT EXISTS idx_favorites_user_created ON favorites(user_id, created_at);
+
+CREATE TABLE IF NOT EXISTS site_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL DEFAULT '',
+  updated_by TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS notification_settings (
+  event_key TEXT PRIMARY KEY,
+  enabled INTEGER NOT NULL DEFAULT 1,
+  title TEXT NOT NULL,
+  body_template TEXT NOT NULL,
+  updated_by TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS important_dates (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  event_date TEXT NOT NULL,
+  send_at TEXT NOT NULL,
+  enabled INTEGER NOT NULL DEFAULT 1,
+  sent_at TEXT,
+  created_by TEXT NOT NULL,
+  updated_by TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  academic_year TEXT NOT NULL DEFAULT '116',
+  district TEXT NOT NULL DEFAULT 'all',
+  status TEXT NOT NULL DEFAULT 'pending',
+  source_url TEXT NOT NULL DEFAULT '',
+  source_pages TEXT NOT NULL DEFAULT '',
+  version INTEGER NOT NULL DEFAULT 1,
+  verified_at TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_important_dates_dispatch
+  ON important_dates(enabled, send_at, sent_at);

@@ -19,8 +19,11 @@ test("defines the three independent D1 schemas with stable member UUID ownership
   assert.match(bindings, /CORE_DB/);
   assert.match(bindings, /LEARNING_DB/);
   assert.match(bindings, /COMMUNITY_DB/);
-  assert.match(bindings, /runtime\.DB/);
-  assert.doesNotMatch(config, /CORE_DB|LEARNING_DB|COMMUNITY_DB/);
+  assert.doesNotMatch(bindings, /runtime\.DB|getLegacyDatabase|legacy/);
+  assert.match(config, /"binding": "CORE_DB"/);
+  assert.match(config, /"binding": "LEARNING_DB"/);
+  assert.match(config, /"binding": "COMMUNITY_DB"/);
+  assert.doesNotMatch(config, /"binding": "DB"|jshs-db/);
 });
 
 test("routes community stores independently and keeps guest submissions identity-free", async () => {
@@ -58,13 +61,15 @@ test("keeps member data tied to the signed internal identity and offers explicit
   assert.doesNotMatch(memberLoadEffect, /method: "POST"/);
 });
 
-test("blocks new school-image uploads without ImageKit and preserves legacy BLOB reading", async () => {
-  const [imagekit, route, editor, resources, adminStore] = await Promise.all([
+test("routes all new images to ImageKit and removes D1 image BLOB fallback", async () => {
+  const [imagekit, route, editor, adminStore, uploadRoute, readRoute, smokeRoute] = await Promise.all([
     read("lib/imagekit-server.ts"),
     read("app/api/admin/school-media/route.ts"),
     read("components/admin-school-media-editor.tsx"),
-    read("app/admin/system/resources/page.tsx"),
     read("db/admin-store.ts"),
+    read("app/api/admin/files/route.ts"),
+    read("app/api/files/[id]/route.ts"),
+    read("app/api/admin/system/imagekit-smoke/route.ts"),
   ]);
   assert.match(imagekit, /IMAGEKIT_PRIVATE_KEY/);
   assert.match(imagekit, /checkImageKitHealth/);
@@ -72,7 +77,33 @@ test("blocks new school-image uploads without ImageKit and preserves legacy BLOB
   assert.doesNotMatch(route, /createAdminFile/);
   assert.match(editor, /圖片服務尚未設定/);
   assert.match(editor, /disabled={!imageKitConfigured}/);
+  assert.match(adminStore, /image_file_requires_imagekit_without_d1_blob/);
   assert.match(adminStore, /file_blob/);
+  assert.match(uploadRoute, /uploadAdminImageToImageKit/);
+  assert.match(uploadRoute, /storage_provider: external \? "imagekit" : "d1"/);
+  assert.match(readRoute, /Response\.redirect\(file\.external_url, 302\)/);
+  assert.match(smokeRoute, /requireAdminRole\("editor"\)/);
+  assert.match(smokeRoute, /assertSameOrigin/);
+  assert.match(smokeRoute, /runImageKitStorageSmokeTest/);
+  assert.match(await read("app/api/school-media/route.ts"), /Response\.redirect\(override\.image_url, 302\)/);
+  assert.doesNotMatch(await read("app/api/school-media/route.ts"), /getAdminFileBlob|fileBlobToBytes/);
+});
+
+test("keeps guest usage out of D1 and removes webhook-created LINE identities", async () => {
+  const [quota, assistant, webhook, login, migrationDocs, resources] = await Promise.all([
+    read("lib/assistant-quota.ts"),
+    read("app/api/assistant/route.ts"),
+    read("app/api/line/webhook/route.ts"),
+    read("app/api/line/login/callback/route.ts"),
+    read("scripts/storage-migration/README.md"),
+    read("app/admin/system/resources/page.tsx"),
+  ]);
+  assert.doesNotMatch(quota, /getD1|prepare\(|CREATE TABLE|assistant_guest_usage/);
+  assert.match(quota, /crypto\.subtle\.verify/);
+  assert.match(assistant, /set-cookie/);
+  assert.doesNotMatch(webhook, /upsertLineUser|ensureJshsMemberForLine/);
+  assert.match(login, /ensureJshsMemberForLine/);
+  assert.match(migrationDocs, /Do not run `bash scripts\/storage-migration\/run\.sh`/);
   assert.match(resources, /SELECT 1/);
 });
 

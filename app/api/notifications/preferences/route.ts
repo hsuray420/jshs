@@ -1,5 +1,5 @@
 import { getMemberNotificationPreferences, updateMemberNotificationPreferences, type NotificationPreferenceKey } from "../../../../db/notification-store";
-import { getMemberSession } from "../../../../lib/member-auth";
+import { getMemberSession, getMemberUserId } from "../../../../lib/member-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +13,7 @@ const preferenceKeys: readonly NotificationPreferenceKey[] = [
 export async function GET() {
   const member = await getMemberSession();
   if (!member) return memberRequired();
-  const preferences = await getMemberNotificationPreferences(member.lineUserId);
+  const preferences = await getMemberNotificationPreferences(await getMemberUserId(member));
   return Response.json({ ok: true, preferences }, { headers: { "cache-control": "no-store" } });
 }
 
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
   }
   if (!Object.keys(patch).length) return Response.json({ ok: false, error: "preference_required" }, { status: 400 });
 
-  const preferences = await updateMemberNotificationPreferences(member.lineUserId, patch);
+  const preferences = await updateMemberNotificationPreferences(await getMemberUserId(member), patch);
   return Response.json({ ok: true, preferences }, { headers: { "cache-control": "no-store" } });
 }
 

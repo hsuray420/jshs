@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import { createMemberSessionCookie } from "../../../../../lib/member-auth";
 import { exchangeLineCode, getLineFriendStatus, hasLineLoginConfigured, verifyLineIdToken } from "../../../../../lib/line";
-import { upsertLineUser } from "../../../../../db/admin-store";
 import { ensureJshsMemberForLine } from "../../../../../db/member-identity-store";
 
 export const dynamic = "force-dynamic";
@@ -29,11 +28,7 @@ export async function GET(request: Request) {
       pictureUrl: profile.pictureUrl,
       isFriend,
     });
-    if (!isFriend) {
-      await upsertLineUser({ lineUserId: profile.userId, displayName: profile.displayName, pictureUrl: profile.pictureUrl, status: "seen" });
-      return redirectTo(url, "/account?error=line_friend_required");
-    }
-    await upsertLineUser({ lineUserId: profile.userId, displayName: profile.displayName, pictureUrl: profile.pictureUrl, status: "friend" });
+    if (!isFriend) return redirectTo(url, "/account?error=line_friend_required");
     await createMemberSessionCookie({ userId: member.userId, lineUserId: profile.userId, displayName: profile.displayName, pictureUrl: profile.pictureUrl, friendVerifiedAt: Date.now() });
     return redirectTo(url, "/account?registered=1");
   } catch (callbackError) {

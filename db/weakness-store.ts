@@ -12,7 +12,7 @@ export type WeaknessProfile = Readonly<{
 }>;
 
 async function ensureWeaknessSchema() {
-  const { db } = getLearningDatabase();
+  const db = getLearningDatabase();
   await db.prepare(`CREATE TABLE IF NOT EXISTS weakness_profiles (
     id TEXT PRIMARY KEY,
     user_id TEXT NOT NULL,
@@ -29,7 +29,7 @@ async function ensureWeaknessSchema() {
 
 export async function listWeaknessProfiles(userId: string) {
   await ensureWeaknessSchema();
-  const { db } = getLearningDatabase();
+  const db = getLearningDatabase();
   const rows = await db.prepare(`SELECT id, user_id, topic_id, mastery_score, wrong_count,
     attempt_count, confidence, updated_at FROM weakness_profiles
     WHERE user_id = ? ORDER BY updated_at DESC LIMIT 500`).bind(userId).all<WeaknessProfile>();
@@ -38,7 +38,7 @@ export async function listWeaknessProfiles(userId: string) {
 
 export async function saveWeaknessProfile(input: Omit<WeaknessProfile, "id" | "updated_at">) {
   await ensureWeaknessSchema();
-  const { db } = getLearningDatabase();
+  const db = getLearningDatabase();
   const now = new Date().toISOString();
   const id = crypto.randomUUID();
   await db.prepare(`INSERT INTO weakness_profiles

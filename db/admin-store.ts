@@ -1,4 +1,4 @@
-import { getCommunityDatabase, getLegacyDatabase } from "./bindings";
+import { getCommunityDatabase, getCoreDatabase } from "./bindings";
 
 export type AdminFile = {
   id: string;
@@ -11,6 +11,9 @@ export type AdminFile = {
   description: string;
   uploaded_by: string;
   created_at: string;
+  storage_provider: "d1" | "imagekit";
+  external_file_id: string | null;
+  external_url: string | null;
 };
 
 export type AdminFileWithBlob = AdminFile & {
@@ -35,21 +38,6 @@ export function fileBlobToBytes(blob: unknown) {
   }
   return new Uint8Array(blob as ArrayBuffer).slice().buffer;
 }
-
-export type SchoolMediaOverride = {
-  school_code: string;
-  file_id: string;
-  storage_provider: "d1" | "imagekit";
-  image_url: string;
-  thumbnail_url: string;
-  source: "jshs-owned" | "official-school-site" | "licensed-public" | "admin-provided";
-  source_url: string;
-  license: string;
-  credit: string;
-  alt: string;
-  updated_by: string;
-  updated_at: string;
-};
 
 export type DeploymentEvent = {
   id: string;
@@ -111,12 +99,25 @@ export type SchoolDataAudit = {
   error_message: string;
 };
 
-export function getD1() {
-  return getLegacyDatabase();
+export function getCommunityD1() {
+  return getCommunityDatabase();
+}
+
+export function getCoreD1() {
+  return getCoreDatabase();
+}
+
+export async function ensureSiteSettingsSchema() {
+  await getCoreD1().prepare(`CREATE TABLE IF NOT EXISTS site_settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL DEFAULT '',
+    updated_by TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  )`).run();
 }
 
 export async function ensureAdminSchema() {
-  const db = getD1();
+  const db = getCommunityD1();
   await db.batch([
     db.prepare(`CREATE TABLE IF NOT EXISTS admin_files (
       id TEXT PRIMARY KEY,
@@ -129,44 +130,15 @@ export async function ensureAdminSchema() {
       description TEXT NOT NULL DEFAULT '',
       uploaded_by TEXT NOT NULL,
       created_at TEXT NOT NULL,
+      storage_provider TEXT NOT NULL DEFAULT 'd1',
+      external_file_id TEXT,
+      external_url TEXT,
       file_blob BLOB
-    )`),
-    db.prepare(`CREATE TABLE IF NOT EXISTS site_settings (
-      key TEXT PRIMARY KEY,
-      value TEXT NOT NULL DEFAULT '',
-      updated_by TEXT NOT NULL,
-      updated_at TEXT NOT NULL
-    )`),
-    db.prepare(`CREATE TABLE IF NOT EXISTS line_users (
-      line_user_id TEXT PRIMARY KEY,
-      display_name TEXT NOT NULL DEFAULT '',
-      picture_url TEXT NOT NULL DEFAULT '',
-      status TEXT NOT NULL DEFAULT 'seen',
-      first_seen_at TEXT NOT NULL,
-      last_seen_at TEXT NOT NULL
     )`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_admin_files_created_at
       ON admin_files(created_at)`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_admin_files_visibility
       ON admin_files(visibility)`),
-    db.prepare(`CREATE INDEX IF NOT EXISTS idx_line_users_last_seen_at
-      ON line_users(last_seen_at)`),
-    db.prepare(`CREATE TABLE IF NOT EXISTS school_media_overrides (
-      school_code TEXT PRIMARY KEY,
-      file_id TEXT NOT NULL,
-      storage_provider TEXT NOT NULL DEFAULT 'd1',
-      image_url TEXT NOT NULL DEFAULT '',
-      thumbnail_url TEXT NOT NULL DEFAULT '',
-      source TEXT NOT NULL,
-      source_url TEXT NOT NULL DEFAULT '',
-      license TEXT NOT NULL DEFAULT '',
-      credit TEXT NOT NULL DEFAULT '',
-      alt TEXT NOT NULL DEFAULT '',
-      updated_by TEXT NOT NULL,
-      updated_at TEXT NOT NULL
-    )`),
-    db.prepare(`CREATE INDEX IF NOT EXISTS idx_school_media_overrides_updated_at
-      ON school_media_overrides(updated_at)`),
     db.prepare(`CREATE TABLE IF NOT EXISTS deployment_events (
       id TEXT PRIMARY KEY,
       file_id TEXT NOT NULL,
@@ -231,22 +203,19 @@ export async function ensureAdminSchema() {
       UNIQUE(provider, file_id)
     )`),
   ]);
-  const columns = await db.prepare(`PRAGMA table_info(admin_files)`).all<{ name: string }>();
-  if (!(columns.results ?? []).some((column) => column.name === "file_blob")) {
-    await db.prepare(`ALTER TABLE admin_files ADD COLUMN file_blob BLOB`).run();
-  }
-  const mediaColumns = await db.prepare(`PRAGMA table_info(school_media_overrides)`).all<{ name: string }>();
-  const mediaNames = new Set((mediaColumns.results ?? []).map((column) => column.name));
-  if (!mediaNames.has("storage_provider")) await db.prepare(`ALTER TABLE school_media_overrides ADD COLUMN storage_provider TEXT NOT NULL DEFAULT 'd1'`).run();
-  if (!mediaNames.has("image_url")) await db.prepare(`ALTER TABLE school_media_overrides ADD COLUMN image_url TEXT NOT NULL DEFAULT ''`).run();
-  if (!mediaNames.has("thumbnail_url")) await db.prepare(`ALTER TABLE school_media_overrides ADD COLUMN thumbnail_url TEXT NOT NULL DEFAULT ''`).run();
+  await ensureSiteSettingsSchema();
+  const columns = await db.prepare("PRAGMA table_info(admin_files)").all<{ name: string }>();
+  const names = new Set((columns.results ?? []).map((column) => column.name));
+  if (!names.has("storage_provider")) await db.prepare("ALTER TABLE admin_files ADD COLUMN storage_provider TEXT NOT NULL DEFAULT 'd1'").run();
+  if (!names.has("external_file_id")) await db.prepare("ALTER TABLE admin_files ADD COLUMN external_file_id TEXT").run();
+  if (!names.has("external_url")) await db.prepare("ALTER TABLE admin_files ADD COLUMN external_url TEXT").run();
 }
 
 export async function consumeAdminRateLimit(input: { key: string; limit: number; windowSeconds: number }) {
   await ensureAdminSchema();
   const now = Math.floor(Date.now() / 1000);
   const cutoff = now - input.windowSeconds;
-  const row = await getD1().prepare(`INSERT INTO admin_rate_limits (key, window_started_at, request_count)
+  const row = await getCommunityD1().prepare(`INSERT INTO admin_rate_limits (key, window_started_at, request_count)
     VALUES (?, ?, 1)
     ON CONFLICT(key) DO UPDATE SET
       window_started_at = CASE WHEN window_started_at <= ? THEN excluded.window_started_at ELSE window_started_at END,
@@ -329,16 +298,15 @@ export async function listSchoolDataAudit(filters: { query?: string; admin?: str
 }
 
 async function getCommunityAdminDatabase() {
-  const connection = getCommunityDatabase();
-  if (connection.mode === "legacy") await ensureAdminSchema();
-  return connection.db;
+  await ensureAdminSchema();
+  return getCommunityD1();
 }
 
 export async function listAdminFiles() {
   await ensureAdminSchema();
-  const result = await getD1()
+  const result = await getCommunityD1()
     .prepare(`SELECT id, object_key, file_name, content_type, size, category,
-      visibility, description, uploaded_by, created_at
+      visibility, description, uploaded_by, created_at, storage_provider, external_file_id, external_url
       FROM admin_files ORDER BY created_at DESC LIMIT 100`)
     .all<AdminFile>();
   return result.results ?? [];
@@ -346,9 +314,9 @@ export async function listAdminFiles() {
 
 export async function listDeploymentFiles() {
   await ensureAdminSchema();
-  const result = await getD1()
+  const result = await getCommunityD1()
     .prepare(`SELECT id, object_key, file_name, content_type, size, category,
-      visibility, description, uploaded_by, created_at
+      visibility, description, uploaded_by, created_at, storage_provider, external_file_id, external_url
       FROM admin_files WHERE category = 'code-deploy' ORDER BY created_at DESC LIMIT 50`)
     .all<AdminFile>();
   return result.results ?? [];
@@ -356,7 +324,7 @@ export async function listDeploymentFiles() {
 
 export async function listDeploymentEvents() {
   await ensureAdminSchema();
-  const result = await getD1()
+  const result = await getCommunityD1()
     .prepare(`SELECT id, file_id, action, status, note, created_by, created_at
       FROM deployment_events ORDER BY created_at DESC LIMIT 100`)
     .all<DeploymentEvent>();
@@ -365,7 +333,7 @@ export async function listDeploymentEvents() {
 
 export async function createDeploymentEvent(input: Omit<DeploymentEvent, "created_at">) {
   await ensureAdminSchema();
-  await getD1().prepare(`INSERT INTO deployment_events
+  await getCommunityD1().prepare(`INSERT INTO deployment_events
     (id, file_id, action, status, note, created_by, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?)`)
     .bind(input.id, input.file_id, input.action, input.status, input.note, input.created_by, new Date().toISOString())
@@ -374,9 +342,9 @@ export async function createDeploymentEvent(input: Omit<DeploymentEvent, "create
 
 export async function getAdminFile(id: string) {
   await ensureAdminSchema();
-  return getD1()
+  return getCommunityD1()
     .prepare(`SELECT id, object_key, file_name, content_type, size, category,
-      visibility, description, uploaded_by, created_at
+      visibility, description, uploaded_by, created_at, storage_provider, external_file_id, external_url
       FROM admin_files WHERE id = ? LIMIT 1`)
     .bind(id)
     .first<AdminFile>();
@@ -384,18 +352,26 @@ export async function getAdminFile(id: string) {
 
 export async function getAdminFileBlob(id: string) {
   await ensureAdminSchema();
-  return getD1().prepare(`SELECT id, object_key, file_name, content_type, size,
-    category, visibility, description, uploaded_by, created_at, hex(file_blob) AS file_blob_hex
+  return getCommunityD1().prepare(`SELECT id, object_key, file_name, content_type, size,
+    category, visibility, description, uploaded_by, created_at, storage_provider, external_file_id, external_url,
+    hex(file_blob) AS file_blob_hex
     FROM admin_files WHERE id = ? LIMIT 1`).bind(id).first<AdminFileWithBlob>();
 }
 
 export async function createAdminFile(input: AdminFileWithBlob) {
   await ensureAdminSchema();
-  await getD1()
+  const isImage = isImageFile(input);
+  if (isImage && (input.storage_provider !== "imagekit" || !input.external_file_id || !isHttps(input.external_url) || input.file_blob)) {
+    throw new Error("image_file_requires_imagekit_without_d1_blob");
+  }
+  if (input.storage_provider === "imagekit" && (!input.external_file_id || !isHttps(input.external_url) || input.file_blob)) {
+    throw new Error("imagekit_file_requires_valid_metadata_without_d1_blob");
+  }
+  await getCommunityD1()
     .prepare(`INSERT INTO admin_files (
       id, object_key, file_name, content_type, size, category, visibility,
-      description, uploaded_by, created_at, file_blob
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+      description, uploaded_by, created_at, storage_provider, external_file_id, external_url, file_blob
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
     .bind(
       input.id,
       input.object_key,
@@ -407,72 +383,46 @@ export async function createAdminFile(input: AdminFileWithBlob) {
       input.description,
       input.uploaded_by,
       input.created_at,
+      input.storage_provider ?? "d1",
+      input.external_file_id ?? null,
+      input.external_url ?? null,
       input.file_blob,
     )
     .run();
 }
 
+function isImageFile(input: AdminFileWithBlob) {
+  if (input.content_type.toLowerCase().startsWith("image/") || /\.(?:avif|bmp|gif|jpe?g|png|svg|tiff?|webp)$/i.test(input.file_name)) return true;
+  const bytes = fileBlobToBytes(input.file_blob);
+  if (!bytes) return false;
+  const data = new Uint8Array(bytes);
+  return data[0] === 0x89 && data[1] === 0x50 && data[2] === 0x4e && data[3] === 0x47
+    || data[0] === 0xff && data[1] === 0xd8 && data[2] === 0xff
+    || data[0] === 0x47 && data[1] === 0x49 && data[2] === 0x46 && data[3] === 0x38
+    || data[0] === 0x52 && data[1] === 0x49 && data[2] === 0x46 && data[3] === 0x46
+      && data[8] === 0x57 && data[9] === 0x45 && data[10] === 0x42 && data[11] === 0x50
+    || data[0] === 0x42 && data[1] === 0x4d
+    || data[0] === 0x49 && data[1] === 0x49 && data[2] === 0x2a && data[3] === 0x00
+    || data[0] === 0x4d && data[1] === 0x4d && data[2] === 0x00 && data[3] === 0x2a
+    || data[4] === 0x66 && data[5] === 0x74 && data[6] === 0x79 && data[7] === 0x70
+    || new TextDecoder().decode(data.subarray(0, 512)).trimStart().toLowerCase().includes("<svg");
+}
+
+function isHttps(value: string | null | undefined): value is string {
+  try { return typeof value === "string" && new URL(value).protocol === "https:"; }
+  catch { return false; }
+}
+
 export async function deleteAdminFile(id: string) {
   await ensureAdminSchema();
-  const result = await getD1().prepare(`DELETE FROM admin_files WHERE id = ?`).bind(id).run();
-  return (result.meta.changes ?? 0) > 0;
-}
-
-export async function listSchoolMediaOverrides() {
-  await ensureAdminSchema();
-  const result = await getD1()
-    .prepare(`SELECT school_code, file_id, storage_provider, image_url, thumbnail_url, source, source_url, license, credit, alt,
-      updated_by, updated_at FROM school_media_overrides ORDER BY updated_at DESC`)
-    .all<SchoolMediaOverride>();
-  return result.results ?? [];
-}
-
-export async function getSchoolMediaOverride(schoolCode: string) {
-  await ensureAdminSchema();
-  return getD1()
-    .prepare(`SELECT school_code, file_id, storage_provider, image_url, thumbnail_url, source, source_url, license, credit, alt,
-      updated_by, updated_at FROM school_media_overrides WHERE school_code = ? LIMIT 1`)
-    .bind(schoolCode)
-    .first<SchoolMediaOverride>();
-}
-
-export async function upsertSchoolMediaOverride(input: SchoolMediaOverride) {
-  await ensureAdminSchema();
-  await getD1().prepare(`INSERT INTO school_media_overrides (
-    school_code, file_id, storage_provider, image_url, thumbnail_url, source, source_url, license, credit, alt, updated_by, updated_at
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  ON CONFLICT(school_code) DO UPDATE SET
-    file_id = excluded.file_id,
-    storage_provider = excluded.storage_provider,
-    image_url = excluded.image_url,
-    thumbnail_url = excluded.thumbnail_url,
-    source = excluded.source,
-    source_url = excluded.source_url,
-    license = excluded.license,
-    credit = excluded.credit,
-    alt = excluded.alt,
-    updated_by = excluded.updated_by,
-    updated_at = excluded.updated_at`)
-    .bind(
-      input.school_code, input.file_id, input.storage_provider, input.image_url, input.thumbnail_url,
-      input.source, input.source_url, input.license, input.credit, input.alt, input.updated_by, input.updated_at,
-    )
-    .run();
-}
-
-export async function deleteSchoolMediaOverride(schoolCode: string) {
-  await ensureAdminSchema();
-  const result = await getD1()
-    .prepare(`DELETE FROM school_media_overrides WHERE school_code = ?`)
-    .bind(schoolCode)
-    .run();
+  const result = await getCommunityD1().prepare("DELETE FROM admin_files WHERE id = ?").bind(id).run();
   return (result.meta.changes ?? 0) > 0;
 }
 
 export async function enqueueExternalMediaCleanup(input: { provider: "imagekit"; fileId: string; error: string }) {
   await ensureAdminSchema();
   const now = new Date().toISOString();
-  await getD1().prepare(`INSERT INTO external_media_cleanup (id, provider, file_id, last_error, attempts, created_at, updated_at)
+  await getCommunityD1().prepare(`INSERT INTO external_media_cleanup (id, provider, file_id, last_error, attempts, created_at, updated_at)
     VALUES (?, ?, ?, ?, 1, ?, ?)
     ON CONFLICT(provider, file_id) DO UPDATE SET last_error = excluded.last_error, attempts = attempts + 1, updated_at = excluded.updated_at`)
     .bind(crypto.randomUUID(), input.provider, input.fileId, input.error.slice(0, 200), now, now).run();
@@ -480,7 +430,7 @@ export async function enqueueExternalMediaCleanup(input: { provider: "imagekit";
 
 export async function listExternalMediaCleanup(limit = 20) {
   await ensureAdminSchema();
-  const result = await getD1().prepare(`SELECT id, provider, file_id, last_error, attempts, created_at, updated_at
+  const result = await getCommunityD1().prepare(`SELECT id, provider, file_id, last_error, attempts, created_at, updated_at
     FROM external_media_cleanup ORDER BY updated_at ASC LIMIT ?`).bind(Math.max(1, Math.min(limit, 100))).all<{
       id: string; provider: "imagekit"; file_id: string; last_error: string; attempts: number; created_at: string; updated_at: string;
     }>();
@@ -489,20 +439,20 @@ export async function listExternalMediaCleanup(limit = 20) {
 
 export async function resolveExternalMediaCleanup(id: string) {
   await ensureAdminSchema();
-  await getD1().prepare(`DELETE FROM external_media_cleanup WHERE id = ?`).bind(id).run();
+  await getCommunityD1().prepare("DELETE FROM external_media_cleanup WHERE id = ?").bind(id).run();
 }
 
 export async function listSiteSettings() {
-  await ensureAdminSchema();
-  const result = await getD1()
+  await ensureSiteSettingsSchema();
+  const result = await getCoreD1()
     .prepare(`SELECT * FROM site_settings ORDER BY key ASC`)
     .all<SiteSetting>();
   return result.results ?? [];
 }
 
 export async function getSiteSetting(key: string) {
-  await ensureAdminSchema();
-  return getD1()
+  await ensureSiteSettingsSchema();
+  return getCoreD1()
     .prepare(`SELECT * FROM site_settings WHERE key = ? LIMIT 1`)
     .bind(key)
     .first<SiteSetting>();
@@ -513,8 +463,8 @@ export async function upsertSiteSetting(
   value: string,
   updatedBy: string,
 ) {
-  await ensureAdminSchema();
-  await getD1()
+  await ensureSiteSettingsSchema();
+  await getCoreD1()
     .prepare(`INSERT INTO site_settings (key, value, updated_by, updated_at)
       VALUES (?, ?, ?, ?)
       ON CONFLICT(key) DO UPDATE SET
@@ -526,45 +476,16 @@ export async function upsertSiteSetting(
 }
 
 export async function listLineUsers() {
-  await ensureAdminSchema();
-  const result = await getD1()
-    .prepare(`SELECT * FROM line_users ORDER BY last_seen_at DESC LIMIT 200`)
-    .all<LineUser>();
+  const result = await getCoreD1().prepare(`SELECT identities.provider_user_id AS line_user_id,
+    users.display_name, users.picture_url,
+    CASE WHEN friendships.is_friend = 1 THEN 'friend' ELSE 'seen' END AS status,
+    identities.created_at AS first_seen_at, identities.updated_at AS last_seen_at
+    FROM user_identities identities
+    JOIN users ON users.id = identities.user_id
+    LEFT JOIN line_friendships friendships ON friendships.user_id = users.id
+    WHERE identities.provider = 'line'
+    ORDER BY identities.updated_at DESC LIMIT 200`).all<LineUser>();
   return result.results ?? [];
-}
-
-export async function upsertLineUser(input: {
-  lineUserId: string;
-  displayName?: string;
-  pictureUrl?: string;
-  status?: LineUser["status"];
-}) {
-  await ensureAdminSchema();
-  const now = new Date().toISOString();
-  await getD1()
-    .prepare(`INSERT INTO line_users (
-      line_user_id, display_name, picture_url, status, first_seen_at, last_seen_at
-    ) VALUES (?, ?, ?, ?, ?, ?)
-      ON CONFLICT(line_user_id) DO UPDATE SET
-        display_name = CASE
-          WHEN excluded.display_name != '' THEN excluded.display_name
-          ELSE line_users.display_name
-        END,
-        picture_url = CASE
-          WHEN excluded.picture_url != '' THEN excluded.picture_url
-          ELSE line_users.picture_url
-        END,
-        status = excluded.status,
-        last_seen_at = excluded.last_seen_at`)
-    .bind(
-      input.lineUserId,
-      input.displayName || "",
-      input.pictureUrl || "",
-      input.status || "seen",
-      now,
-      now,
-    )
-    .run();
 }
 
 export function parseCsvIds(value?: string | null) {

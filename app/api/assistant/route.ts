@@ -27,16 +27,14 @@ export async function POST(request: Request) {
   const intent = routeAssistantIntent(question, history);
 
   const cookieStore = await cookies();
-  let guestId = cookieStore.get(ASSISTANT_GUEST_COOKIE)?.value;
-  let shouldSetGuestCookie = false;
+  let guestCookie: string | undefined;
   let usage = getQuestionAllowance(Boolean(member), 0);
   if (!member) {
-    if (!guestId || !/^[0-9a-f-]{36}$/i.test(guestId)) {
-      guestId = crypto.randomUUID();
-      shouldSetGuestCookie = true;
-    }
-    usage = await consumeGuestQuestion(guestId);
-    if (!usage.allowed) return json({ ok: false, error: "guest_limit_reached", remaining: 0, loginPath: "/api/line/login/start" }, 429);
+    const guestUsage = await consumeGuestQuestion(cookieStore.get(ASSISTANT_GUEST_COOKIE)?.value);
+    const { cookieValue, ...publicUsage } = guestUsage;
+    usage = publicUsage;
+    guestCookie = cookieValue;
+    if (!usage.allowed) return json({ ok: false, error: "guest_limit_reached", remaining: 0, loginPath: "/api/line/login/start" }, 429, guestCookie);
   }
 
   let sources: readonly Source[] = [];
@@ -50,10 +48,10 @@ export async function POST(request: Request) {
     }
   }
 
-  if (intent === "OFFICIAL_SOURCE_REQUIRED" && !sources.length) return json({ ok: true, intent, answer: "目前本站沒有足夠的官方資料可以確認這項規定。請前往官方簡章與規則頁，依你的就學區與學年度查看原始來源。", sources: [], schoolYear: null, usage }, 200, shouldSetGuestCookie ? guestId : undefined);
+  if (intent === "OFFICIAL_SOURCE_REQUIRED" && !sources.length) return json({ ok: true, intent, answer: "目前本站沒有足夠的官方資料可以確認這項規定。請前往官方簡章與規則頁，依你的就學區與學年度查看原始來源。", sources: [], schoolYear: null, usage }, 200, guestCookie);
 
   const ai = runtimeEnv.AI;
-  if (!ai) return json({ ok: false, error: "assistant_not_configured" }, 503, shouldSetGuestCookie ? guestId : undefined);
+  if (!ai) return json({ ok: false, error: "assistant_not_configured" }, 503, guestCookie);
   const model = runtimeEnv.WORKERS_AI_MODEL || "@cf/meta/llama-3.1-8b-instruct-fast";
   const prompt = `ROUTING_INTENT: ${intent}\nSITE_RETRIEVAL_STATUS: ${retrievalError ? "failed" : intent === "GENERAL" ? "not_needed" : sources.length ? "found" : "empty"}\nSITE_CONTEXT:\n${formatAssistantContext(sources) || "（沒有提供本站檢索資料）"}\n\nUSER QUESTION:\n${question}`;
   const payload = await ai.run(model, {
@@ -69,8 +67,8 @@ export async function POST(request: Request) {
     return null;
   });
   const answer = extractWorkersAnswer(payload);
-  if (!answer) return json({ ok: false, error: "assistant_empty_response" }, 503, shouldSetGuestCookie ? guestId : undefined);
-  return json({ ok: true, answer, sources: intent === "GENERAL" ? [] : sources, intent, schoolYear: intent === "GENERAL" ? null : "115", usage }, 200, shouldSetGuestCookie ? guestId : undefined);
+  if (!answer) return json({ ok: false, error: "assistant_empty_response" }, 503, guestCookie);
+  return json({ ok: true, answer, sources: intent === "GENERAL" ? [] : sources, intent, schoolYear: intent === "GENERAL" ? null : "115", usage }, 200, guestCookie);
 }
 
 function extractWorkersAnswer(payload: unknown): string {
@@ -93,8 +91,8 @@ function sanitizeHistory(value: unknown): readonly AssistantHistoryItem[] {
     .slice(-6);
 }
 
-function json(body: unknown, status = 200, guestId?: string) {
+function json(body: unknown, status = 200, guestCookie?: string) {
   const headers = new Headers({ "cache-control": "no-store", "content-type": "application/json; charset=utf-8" });
-  if (guestId) headers.append("set-cookie", `${ASSISTANT_GUEST_COOKIE}=${guestId}; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax`);
+  if (guestCookie) headers.append("set-cookie", `${ASSISTANT_GUEST_COOKIE}=${guestCookie}; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax`);
   return new Response(JSON.stringify(body), { status, headers });
 }

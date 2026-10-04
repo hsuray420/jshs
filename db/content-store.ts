@@ -1,4 +1,4 @@
-import { ensureAdminSchema, getD1 } from "./admin-store";
+import { ensureAdminSchema, getCommunityD1 } from "./admin-store";
 
 export const CONTENT_TYPES = [
   "knowledge_article",
@@ -66,7 +66,7 @@ const DEFAULT_CONTENT: ReadonlyArray<{
 
 export async function ensureContentSchema() {
   await ensureAdminSchema();
-  const db = getD1();
+  const db = getCommunityD1();
   await db.batch([
     db.prepare(`CREATE TABLE IF NOT EXISTS content_entries (
       id TEXT PRIMARY KEY,
@@ -113,7 +113,7 @@ export async function listContentEntries(options: { type?: ContentType; status?:
   const values: string[] = [];
   if (options.type) { conditions.push("content_type = ?"); values.push(options.type); }
   if (options.status) { conditions.push("status = ?"); values.push(options.status); }
-  const result = await getD1()
+  const result = await getCommunityD1()
     .prepare(`SELECT * FROM content_entries WHERE ${conditions.join(" AND ")} ORDER BY content_type, updated_at DESC`)
     .bind(...values)
     .all<ContentEntry>();
@@ -126,7 +126,7 @@ export async function listPublishedContent(type: ContentType) {
 
 export async function getContentEntry(id: string) {
   await ensureContentSchema();
-  return getD1().prepare("SELECT * FROM content_entries WHERE id = ? LIMIT 1").bind(id).first<ContentEntry>();
+  return getCommunityD1().prepare("SELECT * FROM content_entries WHERE id = ? LIMIT 1").bind(id).first<ContentEntry>();
 }
 
 export async function saveContentEntry(input: {
@@ -143,7 +143,7 @@ export async function saveContentEntry(input: {
   const now = new Date().toISOString();
   const id = input.id || crypto.randomUUID();
   const publishedAt = input.status === "published" ? now : null;
-  await getD1().prepare(`INSERT INTO content_entries
+  await getCommunityD1().prepare(`INSERT INTO content_entries
     (id, content_type, slug, title, summary, body_json, status, published_at, updated_by, created_at, updated_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(content_type, slug) DO UPDATE SET
@@ -156,7 +156,7 @@ export async function saveContentEntry(input: {
       updated_at = excluded.updated_at`)
     .bind(id, input.contentType, input.slug, input.title, input.summary, input.bodyJson, input.status, publishedAt, input.updatedBy, now, now)
     .run();
-  const entry = await getD1().prepare("SELECT * FROM content_entries WHERE content_type = ? AND slug = ? LIMIT 1")
+  const entry = await getCommunityD1().prepare("SELECT * FROM content_entries WHERE content_type = ? AND slug = ? LIMIT 1")
     .bind(input.contentType, input.slug).first<ContentEntry>();
   if (!entry) throw new Error("content_entry_save_failed");
   await createRevision(entry, input.updatedBy);
@@ -195,14 +195,14 @@ export async function unpublishContentEntry(id: string, updatedBy: string) {
 
 export async function listContentRevisions(contentId: string) {
   await ensureContentSchema();
-  const result = await getD1().prepare(`SELECT * FROM content_revisions
+  const result = await getCommunityD1().prepare(`SELECT * FROM content_revisions
     WHERE content_id = ? ORDER BY revision DESC LIMIT 30`).bind(contentId).all<ContentRevision>();
   return result.results ?? [];
 }
 
 export async function restoreContentRevision(contentId: string, revisionId: string, updatedBy: string) {
   await ensureContentSchema();
-  const revision = await getD1().prepare(`SELECT * FROM content_revisions WHERE id = ? AND content_id = ? LIMIT 1`)
+  const revision = await getCommunityD1().prepare(`SELECT * FROM content_revisions WHERE id = ? AND content_id = ? LIMIT 1`)
     .bind(revisionId, contentId).first<ContentRevision>();
   if (!revision) return null;
   return saveContentEntry({
@@ -218,9 +218,9 @@ export async function restoreContentRevision(contentId: string, revisionId: stri
 }
 
 async function createRevision(entry: ContentEntry, createdBy: string) {
-  const latest = await getD1().prepare(`SELECT MAX(revision) AS revision FROM content_revisions WHERE content_id = ?`)
+  const latest = await getCommunityD1().prepare(`SELECT MAX(revision) AS revision FROM content_revisions WHERE content_id = ?`)
     .bind(entry.id).first<{ revision: number | null }>();
-  await getD1().prepare(`INSERT INTO content_revisions
+  await getCommunityD1().prepare(`INSERT INTO content_revisions
     (id, content_id, content_type, slug, title, summary, body_json, status, revision, created_by, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
     .bind(crypto.randomUUID(), entry.id, entry.content_type, entry.slug, entry.title, entry.summary, entry.body_json, entry.status, (latest?.revision || 0) + 1, createdBy, new Date().toISOString())

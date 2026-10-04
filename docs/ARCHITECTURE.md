@@ -4,7 +4,7 @@
 >
 > 確認日期：2026-08-24
 >
-> 資料庫分拆目前是過渡狀態：Repository 已加入三域 schema/store，但 `wrangler.jsonc` 仍只設定舊 `DB`。新 D1 未在 Cloudflare 建立或套用 schema 前，不可宣稱正式切換完成。細節見 [資料庫分拆與遷移界線](./architecture/storage-upgrade.md)。
+> Runtime 使用 `CORE_DB`、`LEARNING_DB`、`COMMUNITY_DB` 三個明確 D1 bindings，缺少任何 binding 都會 fail closed。此架構為 clean initialization，不讀取舊 D1，也不搬移 legacy rows。細節見 [D1 clean initialization](./architecture/storage-upgrade.md)。
 
 ## 1. 一句話總覽
 
@@ -31,7 +31,9 @@ Cloudflare Worker: worker/index.ts
        ├─ app/api/**/route.ts    API Route Handlers
        ├─ db/*-store.ts          D1 SQL / repository-like access
        ├─ lib/*.ts               領域規則與資料轉換
-       └─ env.DB                 Cloudflare D1
+       ├─ env.CORE_DB            Cloudflare D1
+       ├─ env.LEARNING_DB        Cloudflare D1
+       └─ env.COMMUNITY_DB       Cloudflare D1
 
 External services: LINE Login / Messaging API、OSM Nominatim / Overpass、官方就學區資料來源
 ```
@@ -146,40 +148,19 @@ Guest 的候選校科、狀態與版本留在 Browser localStorage；Guest API �
 
 ## 8. D1 資料庫
 
-目前正式設定仍是 `wrangler.jsonc` 的舊 binding `DB` / `jshs-db`。程式可解析 `CORE_DB`、`LEARNING_DB`、`COMMUNITY_DB`；未設定新 binding 時，各 domain 仍暫用舊 DB。新資料庫 schema 見 `db/migrations/`，但尚未取得 Cloudflare database IDs，故設定檔未加入猜測值。
+`wrangler.jsonc` 設定三個固定的 production bindings；`db/bindings.ts` 不含舊 `DB` fallback。各 binding 缺失時會明確丟出錯誤。三份初始 schema 位於 `db/migrations/{core,learning,community}/0001_*.sql`。
 
-### 已知舊 D1 資料表與規劃歸屬
+| Database | Ownership | Schema source |
+|---|---|---|
+| `jshs-core` / `CORE_DB` | `users`, `user_identities`, `line_friendships`, favorites, account/site settings, notification preferences | `db/migrations/core/` |
+| `jshs-learning` / `LEARNING_DB` | Member score history, mock exams, planner records, weakness profiles, AI history | `db/migrations/learning/` |
+| `jshs-community` / `COMMUNITY_DB` | Reviews, reports, votes, school media metadata, moderation, admin/content records | `db/migrations/community/` |
 
-| 舊 D1 表（Repository runtime schema） | 目標／目前狀態 |
-|---|---|
-| `jshs_users`, `user_identities`, `line_friendships` | CORE；以既有 UUID 保留映射 |
-| `member_mock_exams`, `member_score_history`, `member_planners`, `planner_items`, `planner_states`, `planner_confirmations`, `planner_versions`, `member_ai_conversations` | LEARNING；目前 store 可依 binding 路由，切換前必須先回填 |
-| `school_reviews`, `school_review_rate_limits`, `data_reports`, `data_report_rate_limits`, `community_vote_topics`, `community_votes`, `school_data_drafts`, `school_data_audit` | COMMUNITY；review/report/vote/draft/audit store 已改為明確 Community binding 路由 |
-| `school_media_overrides` | 舊 DB 的圖片 metadata；Community 新表為 `school_media_metadata`。舊資料未搬移，既有 D1 BLOB 仍可讀 |
-| `line_users`, `notification_settings`, `member_notification_preferences`, `important_dates` | 仍由既有管理／通知 store 使用舊 DB；尚未完成歸屬切換 |
-| `admin_files`, `site_settings`, `deployment_events`, `admin_rate_limits`, `external_media_cleanup`, `content_entries`, `content_revisions` | 尚留在舊 DB；不得因三域遷移而遺失。通用檔案 BLOB 仍是舊管理檔案能力，不再作新校園圖片上傳 fallback |
-| `anonymous_submissions`, `admin_audit_logs`, `exam_sessions`, `exam_results`, `subject_scores`, `analysis_snapshots`, `weakness_profiles`, `account_settings` | 已有目標 schema；其中部分尚無完整既有資料流／遷移，不能當作 production 已啟用 |
+Schema migrations are applied to each newly created database without copying rows from an old database. The canonical member key is `users.id` (JSHS UUID), and `user_identities` maps LINE provider IDs to it. LINE webhook events alone do not create member identities. `line_friendships` is updated only from a live LINE friendship check.
 
-以上是從 Repository 的 runtime DDL 得到的表清單，不是對遠端 D1 即時查詢的 row inventory；本輪沒有 Cloudflare 資料庫連線，沒有讀取或搬移 production rows。
+`admin_files` stores non-image file blobs for existing CSV/code workflows. Image uploads use ImageKit only; D1 stores ImageKit `fileId`/URL metadata. The public school-media route redirects to the ImageKit URL and has no D1 BLOB fallback.
 
-| Table | 用途 | 建立位置 | 關鍵欄位/索引 |
-|---|---|---|---|
-| `admin_files` | 後台檔案 metadata + 小型 blob | `db/admin-store.ts` | `object_key` unique；`created_at`, `visibility` index |
-| `site_settings` | 公開設定、CSV metadata、額外管理員 | `db/admin-store.ts` | `key` primary key |
-| `line_users` | LINE webhook 使用者 | `db/admin-store.ts` | `line_user_id` primary key；`last_seen_at` index |
-| `planner_items` | 匿名候選校科 | `db/planner-store.ts` | `(planner_id, created_at)` index |
-| `planner_states` | 匿名規劃器 JSON | `db/planner-store.ts` | `planner_id` primary key |
-| `school_reviews` | 學長姐分享 | `db/school-review-store.ts` | `(district, school_code, status, created_at)` index |
-| `school_review_rate_limits` | 分享 API 的 rate limit | `db/school-review-store.ts` | `fingerprint` primary key |
-
-### Schema 管理現況：兩種 source
-
-目前不能只看 Drizzle migration：
-
-1. `db/schema.ts` + `drizzle/0000_fine_the_initiative.sql` 主要描述 `admin_files`、`site_settings`。
-2. 各 store 的 `ensure*Schema()` 在 runtime 用 raw SQL `CREATE TABLE IF NOT EXISTS` 建立 planner、review、line_users 與 `file_blob` 欄位。
-
-所以資料庫變更必須同步檢查 `db/schema.ts`、`drizzle/`、對應 `ensure*Schema()` 與 tests。長期應收斂成單一 migration source，避免新環境只套 migration 時缺表或缺欄位。
+Guest personal records remain in browser storage; guest quota state is a signed HttpOnly cookie and does not write to D1. Member API routes derive `user_id` from the signed member session.
 
 ### 後台 CSV 的責任邊界
 
@@ -203,9 +184,9 @@ Admin upload → D1 admin_files → 目前未接回 public school API
 | Planner | `/api/planner`, `/api/planner/state` | D1 + anonymous cookie |
 | Reviews | `/api/school-reviews` | D1 + same-origin + rate limit |
 | Config | `/api/site-config` | D1 public settings + env fallback |
-| Files | `/api/files/[id]` | D1 `admin_files.file_blob` |
+| Files | `/api/files/[id]` | ImageKit URL for images; D1 blob for non-image admin files |
 | Admin | `/api/admin/*` | LINE session + D1 |
-| LINE | `/api/line/webhook` | HMAC signature + D1 `line_users` |
+| LINE | `/api/line/webhook` | HMAC signature validation; does not create member records |
 | Monitor | `/api/monitor/alert` | shared secret + LINE push |
 
 SQL 使用 prepared statements / `.bind()`；各 route 依功能做長度、格式、same-origin、權限或 rate limit 驗證。
@@ -256,8 +237,8 @@ local change → verification → commit → push main to GitHub remote github
 
 ## 12. 目前風險與交接注意事項
 
-1. `docs/backend-storage-map.md` 仍寫 R2 與舊網域；現行 `wrangler.jsonc` 是 D1 + Assets，admin file 也是 D1 blob，舊文件不能當部署真相。
-2. D1 schema 有 Drizzle migration 與 runtime raw SQL 雙軌。
+1. `docs/backend-storage-map.md` 仍寫 R2 與舊網域；現行 `wrangler.jsonc` 是三個 D1 bindings + Assets，該舊文件不能當部署真相。
+2. D1 initial schema 與部分 store 的 idempotent runtime `ensure*Schema()` 仍需保持一致。
 3. 後台 CSV 上傳目前沒有接回公開學校 API。
 4. 新版 React 與舊版 `/it_hs` 是兩套 runtime surface。
 5. 招生資料目前是 115 學年度脈絡；修改名額、分數或時程要保留官方來源與更新日期。

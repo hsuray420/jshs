@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import {
   addExtraAdminLineUserId,
   removeExtraAdminLineUserId,
-  upsertLineUser,
 } from "../../../../db/admin-store";
 import { requireAdmin } from "../../../admin/auth";
 
@@ -16,12 +15,6 @@ export async function POST(request: Request) {
   if (!/^U[0-9a-f]{32}$/i.test(lineUserId)) {
     redirect("/admin?updated=line_users_invalid");
   }
-
-  await upsertLineUser({
-    lineUserId,
-    displayName: String(formData.get("display_name") || "").trim(),
-    status: "seen",
-  });
 
   if (action === "remove") {
     await removeExtraAdminLineUserId(lineUserId, admin.user.displayName);

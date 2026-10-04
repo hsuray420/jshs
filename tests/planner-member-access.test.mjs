@@ -17,7 +17,8 @@ test("planner data requires a verified LINE member session", async () => {
     assert.match(source, /status: 401/);
   }
   assert.match(plannerStore, /member_planners/);
-  assert.match(plannerStore, /line_user_id/);
+  assert.match(plannerStore, /user_id TEXT PRIMARY KEY/);
+  assert.doesNotMatch(plannerStore, /line_user_id/);
   assert.match(plannerStore, /getOrCreateMemberPlanner/);
   assert.doesNotMatch(plannerRoute, /plannerIdentity\(request\)/);
   assert.doesNotMatch(stateRoute, /plannerIdentity\(request\)/);

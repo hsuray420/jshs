@@ -1,4 +1,3 @@
-import { fileBlobToBytes, getAdminFileBlob } from "../../../db/admin-store";
 import { getSchoolMediaMetadata } from "../../../db/school-media-store";
 
 export const dynamic = "force-dynamic";
@@ -8,19 +7,6 @@ export async function GET(request: Request) {
   if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return new Response("Not found", { status: 404 });
   const override = await getSchoolMediaMetadata(code);
   if (!override) return new Response("Not found", { status: 404 });
-  if (override.storage_provider === "imagekit" && /^https:\/\//.test(override.image_url)) {
-    return Response.redirect(override.image_url, 302);
-  }
-  const file = await getAdminFileBlob(override.file_id);
-  const bytes = fileBlobToBytes(file?.file_blob_hex ?? file?.file_blob);
-  if (!file || file.visibility !== "public" || !file.content_type.startsWith("image/") || !bytes?.byteLength) {
-    return new Response("Not found", { status: 404 });
-  }
-  return new Response(bytes, {
-    headers: {
-      "content-type": file.content_type,
-      "cache-control": "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
-      "x-content-type-options": "nosniff",
-    },
-  });
+  if (override.storage_provider !== "imagekit" || !/^https:\/\//.test(override.image_url)) return new Response("Not found", { status: 404 });
+  return Response.redirect(override.image_url, 302);
 }

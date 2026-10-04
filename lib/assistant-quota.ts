@@ -1,27 +1,48 @@
-import { getD1 } from "../db/admin-store";
+import { env } from "cloudflare:workers";
 import { ANONYMOUS_QUESTION_LIMIT, getQuestionAllowance } from "./assistant-policy";
 
 export const ASSISTANT_GUEST_COOKIE = "jshs_ai_guest";
 
-export async function consumeGuestQuestion(guestId: string) {
-  const db = getD1();
-  await db.prepare(`CREATE TABLE IF NOT EXISTS assistant_guest_usage (
-    guest_id TEXT PRIMARY KEY,
-    question_count INTEGER NOT NULL DEFAULT 0,
-    updated_at TEXT NOT NULL
-  )`).run();
-  const result = await db.prepare(`INSERT INTO assistant_guest_usage (guest_id, question_count, updated_at)
-    VALUES (?, 1, ?)
-    ON CONFLICT(guest_id) DO UPDATE SET
-      question_count = question_count + 1,
-      updated_at = excluded.updated_at
-    WHERE question_count < ?
-    RETURNING question_count`).bind(guestId, new Date().toISOString(), ANONYMOUS_QUESTION_LIMIT).first<{ question_count: number }>();
-  if (result) {
-    const allowance = getQuestionAllowance(false, result.question_count);
-    return Object.freeze({ ...allowance, used: result.question_count });
-  }
-  const current = await db.prepare(`SELECT question_count FROM assistant_guest_usage WHERE guest_id = ?`).bind(guestId).first<{ question_count: number }>();
-  const used = current?.question_count ?? ANONYMOUS_QUESTION_LIMIT;
-  return Object.freeze({ ...getQuestionAllowance(false, used), used });
+type GuestUsage = ReturnType<typeof getQuestionAllowance> & { used: number; cookieValue: string };
+
+export async function consumeGuestQuestion(cookieValue?: string): Promise<GuestUsage> {
+  const secret = getQuotaSigningSecret();
+  const count = await readSignedCount(cookieValue, secret);
+  const used = Math.min(count + 1, ANONYMOUS_QUESTION_LIMIT);
+  const allowance = getQuestionAllowance(false, used);
+  return Object.freeze({ ...allowance, used, cookieValue: await signCount(used, secret) });
+}
+
+function getQuotaSigningSecret() {
+  const runtime = env as unknown as Record<string, unknown>;
+  const secret = typeof runtime.ADMIN_SESSION_SECRET === "string"
+    ? runtime.ADMIN_SESSION_SECRET
+    : typeof runtime.LINE_LOGIN_CHANNEL_SECRET === "string"
+      ? runtime.LINE_LOGIN_CHANNEL_SECRET
+      : "";
+  if (!secret) throw new Error("assistant_guest_quota_signing_secret_unavailable");
+  return secret;
+}
+
+async function readSignedCount(value: string | undefined, secret: string) {
+  if (!value) return 0;
+  const match = /^(0|[1-9]\d{0,3})\.([a-f0-9]{64})$/.exec(value);
+  if (!match) return 0;
+  const count = Number(match[1]);
+  if (count > ANONYMOUS_QUESTION_LIMIT) return 0;
+  const key = await importSigningKey(secret);
+  const signature = Uint8Array.from(match[2].match(/.{2}/g)!, (byte) => Number.parseInt(byte, 16));
+  const valid = await crypto.subtle.verify("HMAC", key, signature, new TextEncoder().encode(match[1]));
+  return valid ? count : 0;
+}
+
+async function signCount(count: number, secret: string) {
+  const value = String(count);
+  const signature = await crypto.subtle.sign("HMAC", await importSigningKey(secret), new TextEncoder().encode(value));
+  const hex = Array.from(new Uint8Array(signature), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  return `${value}.${hex}`;
+}
+
+function importSigningKey(secret: string) {
+  return crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign", "verify"]);
 }

@@ -28,12 +28,20 @@ export type ImageKitUpload = Readonly<{ fileId: string; url: string; thumbnailUr
 
 /** A Worker-side proxy prevents ImageKit credentials reaching the browser. */
 export async function uploadSchoolImageToImageKit(input: { file: File; schoolCode: string }): Promise<ImageKitUpload> {
+  return uploadImageKitFile(input.file, `/jshs/schools/${input.schoolCode}`);
+}
+
+export async function uploadAdminImageToImageKit(file: File): Promise<ImageKitUpload> {
+  return uploadImageKitFile(file, "/jshs/admin");
+}
+
+async function uploadImageKitFile(file: File, folder: string): Promise<ImageKitUpload> {
   const config = getImageKitConfig();
   if (!config) throw new Error("imagekit_not_configured");
   const form = new FormData();
-  form.set("file", input.file, input.file.name);
-  form.set("fileName", `${crypto.randomUUID()}-${safeFileName(input.file.name)}`);
-  form.set("folder", `/jshs/schools/${input.schoolCode}`);
+  form.set("file", file, file.name);
+  form.set("fileName", `${crypto.randomUUID()}-${safeFileName(file.name)}`);
+  form.set("folder", folder);
   form.set("useUniqueFileName", "false");
   const response = await fetch("https://upload.imagekit.io/api/v1/files/upload", {
     method: "POST",

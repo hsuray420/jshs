@@ -75,7 +75,7 @@ export default async function AdminSystemResourcesPage() {
           ]} href={ADMIN_EXTERNAL_LINKS.hosting || undefined} linkLabel="開啟 Cloudflare 管理頁" />;
         })}
       </div>
-      <p className="mt-3 text-sm text-amber-800">目前三個新 D1 binding 尚未確認設定前，仍需保留舊 DB 相容路徑；切換正式資料前必須完成遷移與 readback 驗證。</p>
+      <p className="mt-3 text-sm text-slate-600">此環境採用乾淨初始化的三域資料庫；不使用舊 D1 fallback，也不會執行 legacy data migration。</p>
     </section>
 
     <section aria-labelledby="services-title" className="mt-8">

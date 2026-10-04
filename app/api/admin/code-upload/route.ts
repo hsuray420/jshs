@@ -49,6 +49,9 @@ export async function POST(request: Request) {
     description,
     uploaded_by: admin.user.displayName,
     created_at: createdAt,
+    storage_provider: "d1",
+    external_file_id: null,
+    external_url: null,
     file_blob: await upload.arrayBuffer(),
   });
 

@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null) as { topicId?: unknown; optionId?: unknown } | null;
   if (typeof body?.topicId !== "string" || typeof body.optionId !== "string") return Response.json({ ok: false, error: "vote_required" }, { status: 400 });
   try {
-    await castVote(body.topicId.slice(0, 100), await getMemberUserId(member), member.lineUserId, body.optionId.slice(0, 100));
+    await castVote(body.topicId.slice(0, 100), await getMemberUserId(member), body.optionId.slice(0, 100));
     return Response.json({ ok: true, results: await getVoteResults(body.topicId) }, { headers: { "cache-control": "no-store" } });
   } catch (error) {
     const message = error instanceof Error ? error.message : "vote_failed";

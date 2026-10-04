@@ -43,6 +43,9 @@ export async function POST(request: Request) {
     description: "後台上傳的學校 CSV（Cloudflare D1）",
     uploaded_by: admin.user.displayName,
     created_at: now,
+    storage_provider: "d1",
+    external_file_id: null,
+    external_url: null,
     file_blob: new TextEncoder().encode(csvText).buffer,
   });
 

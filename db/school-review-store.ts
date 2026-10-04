@@ -1,6 +1,6 @@
 import { getCommunityDatabase } from "./bindings";
 
-const getCommunityDb = () => getCommunityDatabase().db;
+const getCommunityDb = () => getCommunityDatabase();
 
 export type SchoolReview = Readonly<{
   id: string;

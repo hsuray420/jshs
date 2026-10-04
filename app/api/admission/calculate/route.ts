@@ -36,7 +36,6 @@ export async function POST(request: Request) {
       await createMemberScoreSnapshot({
         id: crypto.randomUUID(),
         user_id: userId,
-        line_user_id: member.lineUserId,
         district,
         academic_year: result.rule.academicYear,
         total_score: result.totalScore,
@@ -46,6 +45,7 @@ export async function POST(request: Request) {
     }
     const notification = member ? await notifyMember({
       eventKey: "score_calculated",
+      userId: await getMemberUserId(member),
       lineUserId: member.lineUserId,
       values: {
         district: result.rule.label,

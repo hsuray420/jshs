@@ -1,6 +1,6 @@
 import { getCommunityDatabase } from "./bindings";
 
-const getCommunityDb = () => getCommunityDatabase().db;
+const getCommunityDb = () => getCommunityDatabase();
 
 export type DataReportStatus = "pending" | "accepted" | "fixed" | "rejected";
 export type DataReport = Readonly<{

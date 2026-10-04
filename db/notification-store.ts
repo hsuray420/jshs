@@ -1,4 +1,4 @@
-import { ensureAdminSchema, getD1, listLineUsers } from "./admin-store";
+import { ensureSiteSettingsSchema, getCoreD1 } from "./admin-store";
 
 export const NOTIFICATION_EVENT_KEYS = [
   "planner_finalized",
@@ -19,7 +19,7 @@ export type NotificationSetting = {
 };
 
 export type MemberNotificationPreferences = {
-  line_user_id: string;
+  user_id: string;
   planner_finalized_enabled: number;
   score_calculated_enabled: number;
   important_date_enabled: number;
@@ -74,8 +74,8 @@ const DEFAULT_IMPORTANT_DATES = [
 ] as const;
 
 export async function ensureNotificationSchema() {
-  await ensureAdminSchema();
-  const db = getD1();
+  await ensureSiteSettingsSchema();
+  const db = getCoreD1();
   await db.batch([
     db.prepare(`CREATE TABLE IF NOT EXISTS notification_settings (
       event_key TEXT PRIMARY KEY,
@@ -86,7 +86,7 @@ export async function ensureNotificationSchema() {
       updated_at TEXT NOT NULL
     )`),
     db.prepare(`CREATE TABLE IF NOT EXISTS member_notification_preferences (
-      line_user_id TEXT PRIMARY KEY,
+      user_id TEXT PRIMARY KEY,
       planner_finalized_enabled INTEGER NOT NULL DEFAULT 0,
       score_calculated_enabled INTEGER NOT NULL DEFAULT 0,
       important_date_enabled INTEGER NOT NULL DEFAULT 0,
@@ -149,13 +149,13 @@ export async function ensureNotificationSchema() {
 
 export async function listNotificationSettings() {
   await ensureNotificationSchema();
-  const result = await getD1().prepare(`SELECT * FROM notification_settings ORDER BY event_key`).all<NotificationSetting>();
+  const result = await getCoreD1().prepare("SELECT * FROM notification_settings ORDER BY event_key").all<NotificationSetting>();
   return result.results ?? [];
 }
 
 export async function getNotificationSetting(eventKey: NotificationEventKey) {
   await ensureNotificationSchema();
-  return getD1().prepare(`SELECT * FROM notification_settings WHERE event_key = ? LIMIT 1`)
+  return getCoreD1().prepare("SELECT * FROM notification_settings WHERE event_key = ? LIMIT 1")
     .bind(eventKey).first<NotificationSetting>();
 }
 
@@ -168,7 +168,7 @@ export async function upsertNotificationSetting(input: {
 }) {
   await ensureNotificationSchema();
   const now = new Date().toISOString();
-  await getD1().prepare(`INSERT INTO notification_settings
+  await getCoreD1().prepare(`INSERT INTO notification_settings
     (event_key, enabled, title, body_template, updated_by, updated_at)
     VALUES (?, ?, ?, ?, ?, ?)
     ON CONFLICT(event_key) DO UPDATE SET
@@ -181,12 +181,12 @@ export async function upsertNotificationSetting(input: {
     .run();
 }
 
-export async function getMemberNotificationPreferences(lineUserId: string): Promise<MemberNotificationPreferences> {
+export async function getMemberNotificationPreferences(userId: string): Promise<MemberNotificationPreferences> {
   await ensureNotificationSchema();
-  const preferences = await getD1().prepare(`SELECT * FROM member_notification_preferences
-    WHERE line_user_id = ? LIMIT 1`).bind(lineUserId).first<MemberNotificationPreferences>();
+  const preferences = await getCoreD1().prepare("SELECT * FROM member_notification_preferences WHERE user_id = ? LIMIT 1")
+    .bind(userId).first<MemberNotificationPreferences>();
   return preferences ?? {
-    line_user_id: lineUserId,
+    user_id: userId,
     planner_finalized_enabled: 0,
     score_calculated_enabled: 0,
     important_date_enabled: 0,
@@ -196,48 +196,53 @@ export async function getMemberNotificationPreferences(lineUserId: string): Prom
 }
 
 export async function updateMemberNotificationPreferences(
-  lineUserId: string,
+  userId: string,
   patch: Partial<Record<NotificationPreferenceKey, boolean>>,
 ) {
-  const current = await getMemberNotificationPreferences(lineUserId);
+  const current = await getMemberNotificationPreferences(userId);
   const next = {
     planner_finalized_enabled: patch.planner_finalized_enabled ?? Boolean(current.planner_finalized_enabled),
     score_calculated_enabled: patch.score_calculated_enabled ?? Boolean(current.score_calculated_enabled),
     important_date_enabled: patch.important_date_enabled ?? Boolean(current.important_date_enabled),
     weekly_report_enabled: patch.weekly_report_enabled ?? Boolean(current.weekly_report_enabled),
   };
-  await getD1().prepare(`INSERT INTO member_notification_preferences
-    (line_user_id, planner_finalized_enabled, score_calculated_enabled, important_date_enabled, weekly_report_enabled, updated_at)
+  await getCoreD1().prepare(`INSERT INTO member_notification_preferences
+    (user_id, planner_finalized_enabled, score_calculated_enabled, important_date_enabled, weekly_report_enabled, updated_at)
     VALUES (?, ?, ?, ?, ?, ?)
-    ON CONFLICT(line_user_id) DO UPDATE SET
+    ON CONFLICT(user_id) DO UPDATE SET
       planner_finalized_enabled = excluded.planner_finalized_enabled,
       score_calculated_enabled = excluded.score_calculated_enabled,
       important_date_enabled = excluded.important_date_enabled,
       weekly_report_enabled = excluded.weekly_report_enabled,
       updated_at = excluded.updated_at`)
-    .bind(lineUserId, next.planner_finalized_enabled ? 1 : 0, next.score_calculated_enabled ? 1 : 0,
+    .bind(userId, next.planner_finalized_enabled ? 1 : 0, next.score_calculated_enabled ? 1 : 0,
       next.important_date_enabled ? 1 : 0, next.weekly_report_enabled ? 1 : 0, new Date().toISOString()).run();
-  return getMemberNotificationPreferences(lineUserId);
+  return getMemberNotificationPreferences(userId);
 }
 
-export async function isMemberNotificationEnabled(lineUserId: string, eventKey: NotificationEventKey) {
-  const preferences = await getMemberNotificationPreferences(lineUserId);
+export async function isMemberNotificationEnabled(userId: string, eventKey: NotificationEventKey) {
+  const preferences = await getMemberNotificationPreferences(userId);
   return Boolean(preferences[`${eventKey}_enabled`]);
 }
 
 export async function listOptedInLineUserIds(eventKey: NotificationEventKey) {
   await ensureNotificationSchema();
   const preferenceColumn = `${eventKey}_enabled`;
-  const users = await listLineUsers();
-  const optedIn = await getD1().prepare(`SELECT line_user_id FROM member_notification_preferences
-    WHERE ${preferenceColumn} = 1`).all<{ line_user_id: string }>();
-  const optedInIds = new Set((optedIn.results ?? []).map((item) => item.line_user_id));
-  return users.filter((user) => user.status !== "blocked" && optedInIds.has(user.line_user_id)).map((user) => user.line_user_id);
+  const optedIn = await getCoreD1().prepare(`SELECT identities.provider_user_id AS line_user_id
+    FROM member_notification_preferences preferences
+    JOIN user_identities identities ON identities.user_id = preferences.user_id AND identities.provider = 'line'
+    JOIN line_friendships friendships ON friendships.user_id = preferences.user_id AND friendships.is_friend = 1
+    WHERE preferences.${preferenceColumn} = 1`).all<{ line_user_id: string }>();
+  return (optedIn.results ?? []).map((item) => item.line_user_id);
 }
 
 export async function listWeeklyReportLineUserIds() {
   await ensureNotificationSchema();
-  const result = await getD1().prepare(`SELECT line_user_id FROM member_notification_preferences WHERE weekly_report_enabled = 1`).all<{ line_user_id: string }>();
+  const result = await getCoreD1().prepare(`SELECT identities.provider_user_id AS line_user_id
+    FROM member_notification_preferences preferences
+    JOIN user_identities identities ON identities.user_id = preferences.user_id AND identities.provider = 'line'
+    JOIN line_friendships friendships ON friendships.user_id = preferences.user_id AND friendships.is_friend = 1
+    WHERE preferences.weekly_report_enabled = 1`).all<{ line_user_id: string }>();
   return (result.results ?? []).map((item) => item.line_user_id);
 }
 
@@ -246,7 +251,7 @@ export async function listImportantDates(includeDisabled = false) {
   const query = includeDisabled
     ? `SELECT * FROM important_dates ORDER BY event_date ASC, send_at ASC`
     : `SELECT * FROM important_dates WHERE enabled = 1 ORDER BY event_date ASC, send_at ASC`;
-  const result = await getD1().prepare(query).all<ImportantDate>();
+  const result = await getCoreD1().prepare(query).all<ImportantDate>();
   return result.results ?? [];
 }
 
@@ -267,7 +272,7 @@ export async function createImportantDate(input: {
 }) {
   await ensureNotificationSchema();
   const now = new Date().toISOString();
-  await getD1().prepare(`INSERT INTO important_dates
+  await getCoreD1().prepare(`INSERT INTO important_dates
     (id, title, description, event_date, send_at, enabled, sent_at, created_by, updated_by, created_at, updated_at, academic_year, district, status, source_url, source_pages, version, verified_at)
     VALUES (?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)`)
     .bind(input.id, input.title, input.description, input.eventDate, input.sendAt, input.enabled ? 1 : 0,
@@ -290,7 +295,7 @@ export async function updateImportantDate(input: {
   verifiedAt?: string;
 }) {
   await ensureNotificationSchema();
-  await getD1().prepare(`UPDATE important_dates SET
+  await getCoreD1().prepare(`UPDATE important_dates SET
     title = ?, description = ?, event_date = ?, send_at = ?, enabled = ?, academic_year = ?, district = ?, status = ?, source_url = ?, source_pages = ?, version = version + 1, verified_at = ?,
     sent_at = NULL, updated_by = ?, updated_at = ? WHERE id = ?`)
     .bind(input.title, input.description, input.eventDate, input.sendAt, input.enabled ? 1 : 0,
@@ -299,12 +304,12 @@ export async function updateImportantDate(input: {
 
 export async function deleteImportantDate(id: string) {
   await ensureNotificationSchema();
-  await getD1().prepare(`DELETE FROM important_dates WHERE id = ?`).bind(id).run();
+  await getCoreD1().prepare("DELETE FROM important_dates WHERE id = ?").bind(id).run();
 }
 
 export async function listDueImportantDates(now = new Date().toISOString()) {
   await ensureNotificationSchema();
-  const result = await getD1().prepare(`SELECT * FROM important_dates
+  const result = await getCoreD1().prepare(`SELECT * FROM important_dates
     WHERE enabled = 1 AND sent_at IS NULL AND send_at <= ? ORDER BY send_at ASC LIMIT 50`)
     .bind(now).all<ImportantDate>();
   return result.results ?? [];
@@ -312,6 +317,6 @@ export async function listDueImportantDates(now = new Date().toISOString()) {
 
 export async function markImportantDateSent(id: string, sentAt = new Date().toISOString()) {
   await ensureNotificationSchema();
-  await getD1().prepare(`UPDATE important_dates SET sent_at = ?, updated_at = ?
+  await getCoreD1().prepare(`UPDATE important_dates SET sent_at = ?, updated_at = ?
     WHERE id = ? AND sent_at IS NULL`).bind(sentAt, sentAt, id).run();
 }

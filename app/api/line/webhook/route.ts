@@ -1,5 +1,3 @@
-import { upsertLineUser } from "../../../../db/admin-store";
-
 const textEncoder = new TextEncoder();
 
 type LineWebhookEvent = {
@@ -52,8 +50,6 @@ export async function POST(request: Request) {
   }
 
   const events = parseLineEvents(body);
-  await Promise.all(events.map(recordLineEvent));
-
   return Response.json({
     ok: true,
     status: "received",
@@ -72,13 +68,4 @@ function parseLineEvents(body: string) {
   } catch {
     return [];
   }
-}
-
-async function recordLineEvent(event: LineWebhookEvent) {
-  const lineUserId = event.source?.userId;
-  if (!lineUserId) return;
-  await upsertLineUser({
-    lineUserId,
-    status: event.type === "unfollow" ? "blocked" : "friend",
-  });
 }

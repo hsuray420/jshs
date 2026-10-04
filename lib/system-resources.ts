@@ -3,7 +3,7 @@ import { DATABASE_NAMES } from "../db/bindings";
 
 export type ResourceStatus = "ready" | "attention" | "unconfigured";
 export type D1Health = Readonly<{ configured: boolean; connected: boolean; sizeBytes: number | null }>;
-type RuntimeDatabases = typeof env & { CORE_DB?: D1Database; LEARNING_DB?: D1Database; COMMUNITY_DB?: D1Database; DB?: D1Database };
+type RuntimeDatabases = typeof env & { CORE_DB?: D1Database; LEARNING_DB?: D1Database; COMMUNITY_DB?: D1Database };
 
 function safeExternalUrl(value: string | undefined) {
   if (!value) return "";

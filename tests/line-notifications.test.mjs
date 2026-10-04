@@ -56,7 +56,8 @@ test("會員試算結果會寫入 D1，未登入不寫入會員資料庫", async
   assert.match(scoreRoute, /getMemberSession/);
   assert.match(scoreRoute, /createMemberScoreSnapshot/);
   assert.match(scoreStore, /CREATE TABLE IF NOT EXISTS member_score_history/);
-  assert.match(scoreStore, /line_user_id/);
+  assert.match(scoreStore, /user_id TEXT NOT NULL/);
+  assert.doesNotMatch(scoreStore, /line_user_id/);
   assert.match(scoreApi, /getMemberSession/);
   assert.match(scoreApi, /member_required/);
 });

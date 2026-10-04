@@ -7,7 +7,7 @@ export async function GET() {
   const member = await getMemberSession();
   if (!member) return Response.json({ ok: false, error: "member_required", loginPath: "/api/line/login/start" }, { status: 401 });
   const userId = await getMemberUserId(member);
-  return Response.json({ ok: true, conversations: await listMemberAiConversations(userId, member.lineUserId) }, { headers: { "cache-control": "no-store" } });
+  return Response.json({ ok: true, conversations: await listMemberAiConversations(userId) }, { headers: { "cache-control": "no-store" } });
 }
 
 export async function PUT(request: Request) {
@@ -19,7 +19,7 @@ export async function PUT(request: Request) {
     return Response.json({ ok: false, error: "invalid_conversation" }, { status: 400 });
   }
   try {
-    await saveMemberAiConversation(userId, body.conversation as Record<string, unknown>, member.lineUserId);
+    await saveMemberAiConversation(userId, body.conversation as Record<string, unknown>);
     return Response.json({ ok: true }, { headers: { "cache-control": "no-store" } });
   } catch {
     return Response.json({ ok: false, error: "invalid_conversation" }, { status: 400 });

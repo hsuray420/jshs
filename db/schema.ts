@@ -1,32 +1,56 @@
-import { index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { index, integer, sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
 
-export const adminFiles = sqliteTable("admin_files", {
+export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
-  objectKey: text("object_key").notNull().unique(),
-  fileName: text("file_name").notNull(),
-  contentType: text("content_type").notNull(),
-  size: integer("size").notNull(),
-  category: text("category").notNull().default("general"),
-  visibility: text("visibility").notNull().default("public"),
-  description: text("description").notNull().default(""),
-  uploadedBy: text("uploaded_by").notNull(),
+  displayName: text("display_name").notNull().default(""),
+  pictureUrl: text("picture_url").notNull().default(""),
   createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+  lastLoginAt: text("last_login_at").notNull(),
 });
 
-export const schoolMediaOverrides = sqliteTable("school_media_overrides", {
-  schoolCode: text("school_code").primaryKey(),
-  fileId: text("file_id").notNull(),
-  storageProvider: text("storage_provider").notNull().default("d1"),
-  imageUrl: text("image_url").notNull().default(""),
-  thumbnailUrl: text("thumbnail_url").notNull().default(""),
-  source: text("source").notNull(),
-  sourceUrl: text("source_url").notNull().default(""),
-  license: text("license").notNull().default(""),
-  credit: text("credit").notNull().default(""),
-  alt: text("alt").notNull().default(""),
-  updatedBy: text("updated_by").notNull(),
+export const userIdentities = sqliteTable("user_identities", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  provider: text("provider").notNull(),
+  providerUserId: text("provider_user_id").notNull(),
+  createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
-}, (table) => [index("idx_school_media_overrides_updated_at").on(table.updatedAt)]);
+}, (table) => [
+  unique("user_identities_provider_user_unique").on(table.provider, table.providerUserId),
+  index("idx_user_identities_user").on(table.userId),
+]);
+
+export const lineFriendships = sqliteTable("line_friendships", {
+  userId: text("user_id").primaryKey(),
+  isFriend: integer("is_friend").notNull().default(0),
+  checkedAt: text("checked_at").notNull(),
+});
+
+export const accountSettings = sqliteTable("account_settings", {
+  userId: text("user_id").notNull(),
+  settingKey: text("setting_key").notNull(),
+  settingValue: text("setting_value").notNull().default(""),
+  updatedAt: text("updated_at").notNull(),
+}, (table) => [unique("account_settings_user_key_unique").on(table.userId, table.settingKey)]);
+
+export const favorites = sqliteTable("favorites", {
+  userId: text("user_id").notNull(),
+  schoolCode: text("school_code").notNull(),
+  createdAt: text("created_at").notNull(),
+}, (table) => [
+  unique("favorites_user_school_unique").on(table.userId, table.schoolCode),
+  index("idx_favorites_user_created").on(table.userId, table.createdAt),
+]);
+
+export const memberNotificationPreferences = sqliteTable("member_notification_preferences", {
+  userId: text("user_id").primaryKey(),
+  plannerFinalizedEnabled: integer("planner_finalized_enabled").notNull().default(1),
+  scoreCalculatedEnabled: integer("score_calculated_enabled").notNull().default(1),
+  importantDateEnabled: integer("important_date_enabled").notNull().default(1),
+  weeklyReportEnabled: integer("weekly_report_enabled").notNull().default(0),
+  updatedAt: text("updated_at").notNull(),
+});
 
 export const siteSettings = sqliteTable("site_settings", {
   key: text("key").primaryKey(),
@@ -35,61 +59,12 @@ export const siteSettings = sqliteTable("site_settings", {
   updatedAt: text("updated_at").notNull(),
 });
 
-export const schoolDataDrafts = sqliteTable("school_data_drafts", {
-  id: text("id").primaryKey(),
-  schoolCode: text("school_code").notNull(),
-  schoolName: text("school_name").notNull(),
-  regionCode: text("region_code").notNull(),
-  sourceFile: text("source_file").notNull(),
-  baseSha: text("base_sha").notNull().default(""),
-  baseValuesJson: text("base_values_json").notNull(),
-  updatesJson: text("updates_json").notNull(),
-  status: text("status").notNull().default("draft"),
-  createdBy: text("created_by").notNull(),
-  updatedBy: text("updated_by").notNull(),
-  createdAt: text("created_at").notNull(),
-  updatedAt: text("updated_at").notNull(),
-}, (table) => [index("idx_school_data_drafts_status").on(table.status, table.updatedAt)]);
-
-export const schoolDataAudit = sqliteTable("school_data_audit", {
-  id: text("id").primaryKey(),
-  occurredAt: text("occurred_at").notNull(),
-  adminId: text("admin_id").notNull(),
-  adminName: text("admin_name").notNull(),
-  action: text("action").notNull(),
-  status: text("status").notNull(),
-  schoolCode: text("school_code").notNull(),
-  schoolName: text("school_name").notNull(),
-  regionCode: text("region_code").notNull(),
-  sourceFile: text("source_file").notNull(),
-  field: text("field").notNull().default(""),
-  oldValue: text("old_value").notNull().default(""),
-  newValue: text("new_value").notNull().default(""),
-  commitSha: text("commit_sha").notNull().default(""),
-  errorMessage: text("error_message").notNull().default(""),
-}, (table) => [index("idx_school_data_audit_lookup").on(table.schoolCode, table.occurredAt)]);
-
-export const adminRateLimits = sqliteTable("admin_rate_limits", {
-  key: text("key").primaryKey(),
-  windowStartedAt: integer("window_started_at").notNull(),
-  requestCount: integer("request_count").notNull().default(0),
-});
-
 export const notificationSettings = sqliteTable("notification_settings", {
   eventKey: text("event_key").primaryKey(),
   enabled: integer("enabled").notNull().default(1),
   title: text("title").notNull(),
   bodyTemplate: text("body_template").notNull(),
   updatedBy: text("updated_by").notNull(),
-  updatedAt: text("updated_at").notNull(),
-});
-
-export const memberNotificationPreferences = sqliteTable("member_notification_preferences", {
-  lineUserId: text("line_user_id").primaryKey(),
-  plannerFinalizedEnabled: integer("planner_finalized_enabled").notNull().default(0),
-  scoreCalculatedEnabled: integer("score_calculated_enabled").notNull().default(0),
-  importantDateEnabled: integer("important_date_enabled").notNull().default(0),
-  weeklyReportEnabled: integer("weekly_report_enabled").notNull().default(0),
   updatedAt: text("updated_at").notNull(),
 });
 
@@ -105,29 +80,11 @@ export const importantDates = sqliteTable("important_dates", {
   updatedBy: text("updated_by").notNull(),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
-}, (table) => [index("idx_important_dates_dispatch").on(table.enabled, table.sendAt, table.sentAt)]);
-
-export const plannerConfirmations = sqliteTable("planner_confirmations", {
-  plannerId: text("planner_id").primaryKey(),
-  itemCount: integer("item_count").notNull(),
-  stateJson: text("state_json").notNull(),
-  confirmedAt: text("confirmed_at").notNull(),
-});
-
-export const dataReports = sqliteTable("data_reports", {
-  id: text("id").primaryKey(),
-  pageUrl: text("page_url").notNull(),
-  category: text("category").notNull(),
-  dataset: text("dataset").notNull().default(""),
-  academicYear: text("academic_year").notNull().default(""),
-  field: text("field").notNull().default(""),
-  currentValue: text("current_value").notNull().default(""),
-  suggestedValue: text("suggested_value").notNull(),
-  sourceUrl: text("source_url").notNull().default(""),
-  note: text("note").notNull().default(""),
-  contact: text("contact").notNull().default(""),
+  academicYear: text("academic_year").notNull().default("116"),
+  district: text("district").notNull().default("all"),
   status: text("status").notNull().default("pending"),
-  reviewNote: text("review_note").notNull().default(""),
-  createdAt: text("created_at").notNull(),
-  updatedAt: text("updated_at").notNull(),
-}, (table) => [index("idx_data_reports_status_created").on(table.status, table.createdAt)]);
+  sourceUrl: text("source_url").notNull().default(""),
+  sourcePages: text("source_pages").notNull().default(""),
+  version: integer("version").notNull().default(1),
+  verifiedAt: text("verified_at"),
+}, (table) => [index("idx_important_dates_dispatch").on(table.enabled, table.sendAt, table.sentAt)]);

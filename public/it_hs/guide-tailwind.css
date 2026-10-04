@@ -930,6 +930,9 @@
   .bg-slate-400 {
     background-color: var(--color-slate-400);
   }
+  .bg-slate-900 {
+    background-color: var(--color-slate-900);
+  }
   .bg-transparent {
     background-color: transparent;
   }

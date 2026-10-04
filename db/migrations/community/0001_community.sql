@@ -108,6 +108,8 @@ CREATE TABLE IF NOT EXISTS school_data_drafts (
   updated_at TEXT NOT NULL,
   UNIQUE(school_code, region_code, created_by)
 );
+CREATE INDEX IF NOT EXISTS idx_school_data_drafts_status
+  ON school_data_drafts(status, updated_at);
 CREATE TABLE IF NOT EXISTS school_data_audit (
   id TEXT PRIMARY KEY,
   occurred_at TEXT NOT NULL,
@@ -136,3 +138,83 @@ CREATE TABLE IF NOT EXISTS admin_audit_logs (
   diff_json TEXT NOT NULL DEFAULT '{}',
   created_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS admin_files (
+  id TEXT PRIMARY KEY,
+  object_key TEXT NOT NULL UNIQUE,
+  file_name TEXT NOT NULL,
+  content_type TEXT NOT NULL,
+  size INTEGER NOT NULL,
+  category TEXT NOT NULL DEFAULT 'general',
+  visibility TEXT NOT NULL DEFAULT 'public',
+  description TEXT NOT NULL DEFAULT '',
+  uploaded_by TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  storage_provider TEXT NOT NULL DEFAULT 'd1',
+  external_file_id TEXT,
+  external_url TEXT,
+  file_blob BLOB
+);
+CREATE INDEX IF NOT EXISTS idx_admin_files_created_at ON admin_files(created_at);
+CREATE INDEX IF NOT EXISTS idx_admin_files_visibility ON admin_files(visibility);
+
+CREATE TABLE IF NOT EXISTS deployment_events (
+  id TEXT PRIMARY KEY,
+  file_id TEXT NOT NULL,
+  action TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending',
+  note TEXT NOT NULL DEFAULT '',
+  created_by TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_deployment_events_created_at ON deployment_events(created_at);
+
+CREATE TABLE IF NOT EXISTS external_media_cleanup (
+  id TEXT PRIMARY KEY,
+  provider TEXT NOT NULL,
+  file_id TEXT NOT NULL,
+  last_error TEXT NOT NULL DEFAULT '',
+  attempts INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  UNIQUE(provider, file_id)
+);
+
+CREATE TABLE IF NOT EXISTS admin_rate_limits (
+  key TEXT PRIMARY KEY,
+  window_started_at INTEGER NOT NULL,
+  request_count INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS content_entries (
+  id TEXT PRIMARY KEY,
+  content_type TEXT NOT NULL,
+  slug TEXT NOT NULL,
+  title TEXT NOT NULL,
+  summary TEXT NOT NULL DEFAULT '',
+  body_json TEXT NOT NULL DEFAULT '{}',
+  status TEXT NOT NULL DEFAULT 'draft',
+  published_at TEXT,
+  updated_by TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  UNIQUE(content_type, slug)
+);
+CREATE INDEX IF NOT EXISTS idx_content_entries_public
+  ON content_entries(content_type, status, updated_at);
+
+CREATE TABLE IF NOT EXISTS content_revisions (
+  id TEXT PRIMARY KEY,
+  content_id TEXT NOT NULL,
+  content_type TEXT NOT NULL,
+  slug TEXT NOT NULL,
+  title TEXT NOT NULL,
+  summary TEXT NOT NULL DEFAULT '',
+  body_json TEXT NOT NULL DEFAULT '{}',
+  status TEXT NOT NULL,
+  revision INTEGER NOT NULL,
+  created_by TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_content_revisions_entry
+  ON content_revisions(content_id, revision DESC);

@@ -18,6 +18,11 @@ export async function GET(
     }
   }
 
+  if (file.storage_provider === "imagekit") {
+    if (!file.external_url || !/^https:\/\//.test(file.external_url)) return new Response("Not found", { status: 404 });
+    return Response.redirect(file.external_url, 302);
+  }
+
   const bytes = fileBlobToBytes(file.file_blob_hex ?? file.file_blob);
   if (!bytes?.byteLength) return new Response("Not found", { status: 404 });
 

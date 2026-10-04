@@ -55,7 +55,7 @@ function parseState(stateJson: string | null) {
 
 async function memberPlanner() {
   const member = await getMemberSession();
-  return member ? getOrCreateMemberPlanner(await getMemberUserId(member), member.lineUserId) : null;
+  return member ? getOrCreateMemberPlanner(await getMemberUserId(member)) : null;
 }
 
 function memberRequired() {
