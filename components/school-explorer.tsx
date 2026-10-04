@@ -35,7 +35,7 @@ export function SchoolExplorer({ schools: initialSchools = [], initialFilters = 
   const [schools, setSchools] = useState<readonly SchoolSearchIndexEntry[]>(initialSchools);
   const [loading, setLoading] = useState(initialSchools.length === 0);
   const [loadError, setLoadError] = useState("");
-  const [district, setDistrict] = useState(() => initialFilters.district || defaultDistrict);
+  const [district, setDistrict] = useState(() => { if (initialFilters.district) return initialFilters.district; if (typeof window !== "undefined") { const saved = window.localStorage.getItem("jshs-school-district"); if (saved && regions.some((region) => region.id === saved)) return saved; } return defaultDistrict; });
   const [queryInput, setQueryInput] = useState(initialFilters.query || "");
   const [filters, setFilters] = useState<SchoolExplorerFilters>({ ...initialFilters, district: initialFilters.district || defaultDistrict });
   const [sort, setSort] = useState("name");
@@ -49,6 +49,7 @@ export function SchoolExplorer({ schools: initialSchools = [], initialFilters = 
       return () => controller.abort();
     }
   }, [initialSchools]);
+  useEffect(() => { window.localStorage.setItem("jshs-school-district", district); }, [district]);
   useEffect(() => { const timer = window.setTimeout(() => setFilters((current) => ({ ...current, query: queryInput })), 180); return () => window.clearTimeout(timer); }, [queryInput]);
 
   const scopedSchools = useMemo(() => {

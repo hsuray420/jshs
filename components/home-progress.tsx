@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { defaultProgress, readProgress, type ProgressState } from "@/lib/progress";
+import { defaultProgress, PROGRESS_STORAGE_KEY, readProgress, type ProgressState } from "@/lib/progress";
 import { SERVICE_YEAR } from "@/lib/trust";
 
 const steps = [
@@ -22,10 +22,12 @@ export function HomeProgress() {
   const [progress, setProgress] = useState<ProgressState>(defaultProgress);
 
   useEffect(() => {
-    const sync = () => setProgress(readProgress(null));
+    const sync = () => setProgress(readProgress(window.localStorage.getItem(PROGRESS_STORAGE_KEY)));
     sync();
+    window.addEventListener("storage", sync);
     window.addEventListener("jshs-progress", sync);
     return () => {
+      window.removeEventListener("storage", sync);
       window.removeEventListener("jshs-progress", sync);
     };
   }, []);

@@ -17,7 +17,7 @@
 - `app/search/page.tsx` 全站搜尋結果與快捷入口。
 - `content/site-map.json`、`lib/site-map-116.ts`、`lib/site-map.ts` 的 IA 資料來源。
 - 學校、試算、志願、日程、官方資料、知識、資格與信任相關 components 的操作入口。
-- 進度、志願、版本、待辦、規則導引與校園開放日：未登入只保留頁面記憶體；需要跨裝置保存時必須經 LINE 會員 API 寫入對應 D1。
+- `localStorage`／會員 API 使用的進度、志願、版本、待辦、規則導引與校園開放日狀態。
 
 ### 目前確認的主要 Gap
 

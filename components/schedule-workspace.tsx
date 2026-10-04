@@ -5,7 +5,7 @@ import { FormEvent, useEffect, useMemo, useState, useSyncExternalStore } from "r
 import districtMetadata from "../public/it_hs/district-metadata.json";
 import { readStoredDistrict, subscribeToDistrict, type DistrictCode } from "@/lib/district-context";
 import { getDistrictAdmissionSchedule, nationalAdmissionSchedule, type AdmissionScheduleStatus } from "@/lib/admission-schedules";
-import { defaultProgress, readProgress, type ProgressState } from "@/lib/progress";
+import { defaultProgress, PROGRESS_STORAGE_KEY, readProgress, type ProgressState } from "@/lib/progress";
 import { SERVICE_YEAR, SOURCE_ACADEMIC_YEAR } from "@/lib/trust";
 import scheduleTasksContent from "@/content/schedule/tasks.json";
 
@@ -38,8 +38,9 @@ export function ScheduleWorkspace({ view = "overview" }: { view?: ScheduleView }
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(new Date()), 60_000);
-    const syncProgress = () => setProgress(readProgress(null));
+    const syncProgress = () => setProgress(readProgress(window.localStorage.getItem(PROGRESS_STORAGE_KEY)));
     syncProgress();
+    window.addEventListener("storage", syncProgress);
     window.addEventListener("jshs-progress", syncProgress);
     fetch("/api/schedule", { headers: { accept: "application/json" } }).then(async (response) => {
       if (!response.ok) return null;
@@ -50,6 +51,7 @@ export function ScheduleWorkspace({ view = "overview" }: { view?: ScheduleView }
     }).catch(() => setMessage("官方時程暫時無法載入，請稍後重新整理。"));
     return () => {
       window.clearInterval(timer);
+      window.removeEventListener("storage", syncProgress);
       window.removeEventListener("jshs-progress", syncProgress);
     };
   }, []);
@@ -69,6 +71,7 @@ export function ScheduleWorkspace({ view = "overview" }: { view?: ScheduleView }
   function toggleUserTask(id: string) {
     const next = userTasks.map((task) => task.id === id ? { ...task, done: !task.done } : task);
     setUserTasks(next);
+    window.localStorage.setItem("jshs_user_tasks", JSON.stringify(next));
   }
 
   function addUserTask(event: FormEvent<HTMLFormElement>) {
@@ -77,17 +80,20 @@ export function ScheduleWorkspace({ view = "overview" }: { view?: ScheduleView }
     if (!title) return;
     const next = [...userTasks, { id: crypto.randomUUID(), title, done: false }];
     setUserTasks(next);
+    window.localStorage.setItem("jshs_user_tasks", JSON.stringify(next));
     setNewTask("");
   }
 
   function editUserTask(id: string, title: string) {
     const next = userTasks.map((task) => task.id === id ? { ...task, title } : task);
     setUserTasks(next);
+    window.localStorage.setItem("jshs_user_tasks", JSON.stringify(next));
   }
 
   function removeUserTask(id: string) {
     const next = userTasks.filter((task) => task.id !== id);
     setUserTasks(next);
+    window.localStorage.setItem("jshs_user_tasks", JSON.stringify(next));
   }
 
   function addOpenDay(event: FormEvent<HTMLFormElement>) {
@@ -99,6 +105,7 @@ export function ScheduleWorkspace({ view = "overview" }: { view?: ScheduleView }
     }
     const next = [...openDays, { id: crypto.randomUUID(), school, title: newOpenDay.title.trim() || "校園開放日", eventDate: newOpenDay.eventDate, eventTime: newOpenDay.eventTime.trim(), location: newOpenDay.location.trim(), sourceUrl: newOpenDay.sourceUrl.trim(), notes: newOpenDay.notes.trim(), done: false }].sort((a, b) => a.eventDate.localeCompare(b.eventDate));
     setOpenDays(next);
+    window.localStorage.setItem("jshs_schedule_open_days", JSON.stringify(next));
     setNewOpenDay({ school: "", title: "", eventDate: "", eventTime: "", location: "", sourceUrl: "", notes: "" });
     setMessage("已加入個人校園開放日紀錄。來源與日期請自行持續核對。 ");
   }
@@ -106,12 +113,14 @@ export function ScheduleWorkspace({ view = "overview" }: { view?: ScheduleView }
   function removeOpenDay(id: string) {
     const next = openDays.filter((item) => item.id !== id);
     setOpenDays(next);
+    window.localStorage.setItem("jshs_schedule_open_days", JSON.stringify(next));
     setMessage("已移除這筆校園開放日。");
   }
 
   function updateOpenDay(id: string, patch: Partial<OpenDay>) {
     const next = openDays.map((item) => item.id === id ? { ...item, ...patch } : item).sort((a, b) => a.eventDate.localeCompare(b.eventDate));
     setOpenDays(next);
+    window.localStorage.setItem("jshs_schedule_open_days", JSON.stringify(next));
   }
 
   function exportCalendar(selectedDates = displayedDates) {
@@ -189,11 +198,19 @@ function OpenDays({ now, openDays, newOpenDay, onNewOpenDay, onAdd, onRemove, on
   return <section className="mx-auto w-[min(1120px,calc(100%-32px))] py-8"><div className="grid gap-5 lg:grid-cols-[.9fr_1.1fr]"><article className="p-6 jshs-surface-card"><p className="jshs-eyebrow">找學校 · 個人規劃</p><h2 className="mt-2 text-2xl">校園開放日紀錄</h2><p className="mt-3 text-sm leading-7 jshs-muted-copy">這不是官方活動資料庫；每一筆都是使用者提供的個人紀錄，請自行依學校官方公告核對活動來源。</p><form className="mt-5 grid gap-3" onSubmit={onAdd}>{([['school','學校名稱','text'],['title','活動名稱','text'],['eventDate','日期','date'],['eventTime','時間','time'],['location','地點','text'],['sourceUrl','來源網址','url'],['notes','備註','text']] as const).map(([key,label,type]) => <label key={key} className="grid gap-1 text-sm font-black">{label}<input type={type} value={newOpenDay[key]} onChange={(event) => onNewOpenDay({ ...newOpenDay, [key]: event.target.value })} required={key === "school" || key === "eventDate"} /></label>)}<button type="submit" className="min-h-11 px-4 py-3 text-sm jshs-button-primary">新增開放日個人紀錄</button></form></article><article className="p-6 jshs-surface-card"><div className="flex items-center justify-between gap-3"><h2 className="text-2xl">我的開放日</h2><span className="jshs-chip">{openDays.length} 筆</span></div><div className="mt-5 grid gap-3">{openDays.map((item) => <article key={item.id} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><div className="flex items-start justify-between gap-3"><div><strong>{item.school} · {item.title}</strong><span className="mt-1 block text-sm text-[var(--jshs-primary)]">{item.eventDate}{item.eventTime ? ` ${item.eventTime}` : ""} · {item.done ? "已完成" : new Date(`${item.eventDate}T23:59:59`).getTime() < now.getTime() ? "已過期" : "待參加"}</span></div><div className="flex gap-2"><button type="button" onClick={() => setEditing(editing === item.id ? "" : item.id)} className="text-sm font-black text-[var(--jshs-primary)]">編輯</button><button type="button" onClick={() => onRemove(item.id)} className="text-sm font-black text-[var(--jshs-danger)]">刪除</button></div></div>{editing === item.id ? <div className="mt-3 grid gap-2">{([['school','學校名稱'],['title','活動名稱'],['eventTime','時間'],['location','地點'],['sourceUrl','來源網址'],['notes','備註']] as const).map(([key,label]) => <label key={key} className="grid gap-1 text-sm">{label}<input defaultValue={item[key]} onBlur={(event) => onUpdate(item.id, { [key]: event.target.value })} /></label>)}</div> : <><p className="mt-2 text-sm leading-6 jshs-muted-copy">{[item.location, item.notes].filter(Boolean).join(" · ") || "個人紀錄"}</p>{item.sourceUrl ? <a href={item.sourceUrl} target="_blank" rel="noreferrer" className="mt-2 inline-block text-sm font-black text-[var(--jshs-primary)]">查看來源 ↗</a> : <span className="mt-2 inline-block text-sm text-slate-500">個人紀錄</span>}<button type="button" onClick={() => onUpdate(item.id, { done: !item.done })} className="ml-4 text-sm font-black text-[var(--jshs-primary)]">{item.done ? "取消完成" : "完成"}</button></>}</article>)}{!openDays.length ? <p className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4 text-sm leading-6 jshs-muted-copy">目前沒有已加入的活動。</p> : null}</div>{message ? <p className="mt-4 text-sm font-bold text-[var(--jshs-primary)]" role="status">{message}</p> : null}</article></div></section>;
 }
 
-function readJson<T>(_key: string, fallback: T): T { return fallback; }
+function readJson<T>(key: string, fallback: T): T {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(key) || "null");
+    return parsed === null ? fallback : parsed as T;
+  } catch {
+    return fallback;
+  }
+}
 
-function hasStoredValue(_key: string, _expected?: string) {
+function hasStoredValue(key: string, expected?: string) {
   if (typeof window === "undefined") return false;
-  return false;
+  const value = window.localStorage.getItem(key);
+  return expected === undefined ? Boolean(value) : value === expected;
 }
 
 function calendarEvent(date: string, summary: string, description: string) {

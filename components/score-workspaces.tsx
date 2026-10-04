@@ -30,8 +30,8 @@ export function ScoreHistoryWorkspace({ isMember }: { isMember: boolean }) {
   const [selected, setSelected] = useState<string[]>([]);
   useScoreHistory(setHistory, isMember);
   function clearHistory() {
-    if (!isMember) return;
-    void fetch("/api/admission/scores", { method: "DELETE" });
+    window.localStorage.removeItem("jshs_score_history");
+    window.localStorage.removeItem("jshs_score_latest");
     setHistory([]);
   }
   const comparison = selected.length === 2 ? history.filter((item) => selected.includes(`${item.savedAt}-${item.district}`)) : [];
@@ -73,7 +73,10 @@ function useSavedScore(setValue: (value: SavedScore | null) => void, isMember: b
         .catch(() => setValue(null));
       return;
     }
-    setValue(null);
+    try {
+      const history = JSON.parse(window.localStorage.getItem("jshs_score_history") || "[]") as SavedScore[];
+      setValue(history[0] || JSON.parse(window.localStorage.getItem("jshs_score_latest") || "null"));
+    } catch { setValue(null); }
   }, [isMember, setValue]);
 }
 
@@ -86,7 +89,10 @@ function useScoreHistory(setValue: (value: SavedScore[]) => void, isMember: bool
         .catch(() => setValue([]));
       return;
     }
-    setValue([]);
+    try {
+      const history = JSON.parse(window.localStorage.getItem("jshs_score_history") || "[]") as SavedScore[];
+      setValue(Array.isArray(history) ? history : []);
+    } catch { setValue([]); }
   }, [isMember, setValue]);
 }
 

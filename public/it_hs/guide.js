@@ -85,7 +85,7 @@ function getSelectedDistrict() {
         : (DISTRICT_CODES.includes(queryDistrict) ? queryDistrict : '');
     if (explicitDistrict) return explicitDistrict;
     try {
-        const storedDistrict = window.__jshsDistrict || '';
+        const storedDistrict = localStorage.getItem('jshs_district');
         return DISTRICT_CODES.includes(storedDistrict) ? storedDistrict : '';
     } catch {
         return '';
@@ -128,7 +128,8 @@ function initDistrictPicker() {
         choice.addEventListener('click', () => {
             const district = choice.dataset.districtChoice;
             if (!DISTRICT_CODES.includes(district)) return;
-            window.__jshsDistrict = district;
+            localStorage.setItem('jshs_district', district);
+            sessionStorage.setItem('jshs_district_skip_once', 'true');
             const targetPage = requestedPage === 'home' ? 'overview' : requestedPage;
             window.location.replace(`/it_hs/guide.htm?district=${encodeURIComponent(district)}#${encodeURIComponent(targetPage)}`);
         });
@@ -212,7 +213,7 @@ let plannerCloudSaveTimer = null;
 
 async function loadPlannerStore() {
     try {
-            const saved = window.__jshsPlannerStore || {};
+        const saved = JSON.parse(localStorage.getItem(PLANNER_STORAGE_KEY) || '{}');
         if (saved && saved.version === 1 && saved.plans && typeof saved.plans === 'object') plannerStore = saved;
     } catch {
         plannerStore = { version: 1, plans: {} };
@@ -223,7 +224,7 @@ async function loadPlannerStore() {
         const state = payload?.state;
         if (response.ok && state?.version === 1 && state.plans && typeof state.plans === 'object') {
             plannerStore = state;
-            window.__jshsPlannerStore = plannerStore;
+            localStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify(plannerStore));
         }
     } catch {
         // Cloudflare 暫時無法連線時，保留本機快取，恢復連線後再同步。
@@ -241,7 +242,7 @@ function currentPlan() {
 function persistPlanner() {
     const plan = currentPlan();
     plan.updatedAt = new Date().toISOString();
-    window.__jshsPlannerStore = plannerStore;
+    try { localStorage.setItem(PLANNER_STORAGE_KEY, JSON.stringify(plannerStore)); } catch {}
     clearTimeout(plannerCloudSaveTimer);
     plannerCloudSaveTimer = setTimeout(() => {
         fetch('/api/planner/state', {

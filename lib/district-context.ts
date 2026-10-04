@@ -1,7 +1,7 @@
 import districtMetadata from "../public/it_hs/district-metadata.json";
 
+export const DISTRICT_STORAGE_KEY = "jshs_district";
 export const DISTRICT_CHANGED_EVENT = "jshs-district-changed";
-let currentDistrict: DistrictCode | "" = "";
 
 export type DistrictCode = keyof typeof districtMetadata.districts;
 
@@ -18,21 +18,24 @@ export function getDistrictLabel(value: string | null | undefined): string {
 }
 
 export function readStoredDistrict(): DistrictCode | "" {
-  return currentDistrict;
+  if (typeof window === "undefined") return "";
+  return normalizeDistrict(window.localStorage.getItem(DISTRICT_STORAGE_KEY));
 }
 
 export function writeStoredDistrict(value: string): DistrictCode | "" {
+  if (typeof window === "undefined") return "";
   const district = normalizeDistrict(value);
   if (!district) return "";
-  currentDistrict = district;
-  if (typeof window !== "undefined") window.dispatchEvent(new Event(DISTRICT_CHANGED_EVENT));
+  window.localStorage.setItem(DISTRICT_STORAGE_KEY, district);
+  window.dispatchEvent(new Event(DISTRICT_CHANGED_EVENT));
   return district;
 }
 
 export function subscribeToDistrict(callback: () => void): () => void {
-  if (typeof window === "undefined") return () => {};
+  window.addEventListener("storage", callback);
   window.addEventListener(DISTRICT_CHANGED_EVENT, callback);
   return () => {
+    window.removeEventListener("storage", callback);
     window.removeEventListener(DISTRICT_CHANGED_EVENT, callback);
   };
 }

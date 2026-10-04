@@ -18,10 +18,12 @@ export function HomeDistrictPicker({ options }: { options: readonly DistrictOpti
   const [district, setDistrict] = useState("");
 
   useEffect(() => {
-    const sync = () => setDistrict("");
+    const sync = () => setDistrict(window.localStorage.getItem("jshs_district") || "");
     sync();
+    window.addEventListener("storage", sync);
     window.addEventListener("jshs-progress", sync);
     return () => {
+      window.removeEventListener("storage", sync);
       window.removeEventListener("jshs-progress", sync);
     };
   }, []);

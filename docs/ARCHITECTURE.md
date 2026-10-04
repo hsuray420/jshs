@@ -153,7 +153,7 @@ POST /api/school-reviews
 
 ### Planner：Guest local-only、Member D1
 
-訪客的候選校科、狀態與版本只存在目前頁面的暫時記憶體；Guest API 不建立 planner row，也不寫入瀏覽器儲存。登入會員使用 `jshs_member_session` 導出的內部 UUID 對應 Learning D1 `member_planners`，再以 planner ID 管理候選校科、狀態與版本。
+Guest 的候選校科、狀態與版本留在 Browser localStorage；Guest API 不建立 planner row。登入會員使用 `jshs_member_session` 導出的內部 UUID 對應 D1 `member_planners`，再以 planner ID 管理候選校科、狀態與版本。登入後本機資料只在使用者明確按下匯入時上傳。
 
 ## 8. D1 資料庫
 

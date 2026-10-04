@@ -32,7 +32,7 @@ function bindDistrictButtons(container) {
 }
 
 function updateSelectionStatus() {
-    const selected = districtMap[window.__jshsDistrict || ''];
+    const selected = districtMap[localStorage.getItem('jshs_district')];
     const status = document.getElementById('selectionStatus');
     if (status) status.textContent = selected ? `目前選擇：${selected.label}，可隨時重新選擇。` : '尚未選擇就學區';
 }
@@ -58,7 +58,7 @@ function closeDistrictModal() {
 
 function chooseDistrict(code) {
     if (!districtMap[code]) return;
-    window.__jshsDistrict = code;
+    localStorage.setItem('jshs_district', code);
     const hash = requestedTarget === 'schools' ? 'schools' : requestedTarget;
     const destination = hash === 'calculator' ? '/tools' : hash === 'analysis' ? '/planner' : '/schools';
     window.location.assign(`${destination}?district=${encodeURIComponent(code)}`);

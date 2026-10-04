@@ -34,7 +34,15 @@ export function PlannerModeWorkspace({ mode, schools, isMember, initialScore, in
         .catch(() => undefined);
       return;
     }
-    const timer = window.setTimeout(() => setScore(null), 0);
+    const timer = window.setTimeout(() => {
+      try {
+        const latest = JSON.parse(window.localStorage.getItem("jshs_score_latest") || "null") as { district?: string; result?: { totalScore?: number } } | null;
+        if (typeof latest?.result?.totalScore === "number") setScore(latest.result.totalScore);
+        if (typeof latest?.district === "string") setDistrict(latest.district);
+      } catch {
+        // The query-string handoff remains available when local storage is unavailable.
+      }
+    }, 0);
     return () => window.clearTimeout(timer);
   }, [initialDistrict, initialScore, isMember]);
 
