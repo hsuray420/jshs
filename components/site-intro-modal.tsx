@@ -20,7 +20,7 @@ export function SiteIntroModal() {
   const lastFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setOpen(window.localStorage.getItem("jshs_intro_acknowledged") !== "1"), 0);
+    const timer = window.setTimeout(() => setOpen(true), 0);
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -38,7 +38,6 @@ export function SiteIntroModal() {
   if (!open) return null;
 
   function close() {
-    window.localStorage.setItem("jshs_intro_acknowledged", "1");
     setOpen(false);
   }
 
@@ -71,6 +70,5 @@ export function SiteIntroModal() {
       <div className="mt-5 grid gap-3 md:grid-cols-3">{introCards.map((card) => <article key={card.eyebrow} className="rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><span className="jshs-icon-tile h-10 w-10 text-[var(--jshs-primary)]" aria-hidden="true"><SiteIcon name={card.icon} size={19} /></span><p className="mt-4 text-xs font-black text-[var(--jshs-primary)]">{card.eyebrow}</p><h3 className="mt-1 text-lg">{card.title}</h3><p className="mt-2 text-sm leading-6 jshs-muted-copy">{card.body}</p>{card.action ? <Link href={card.action.href} className="mt-4 inline-flex min-h-10 items-center justify-center px-4 py-2 text-sm jshs-button-primary">{card.action.label} →</Link> : null}</article>)}</div>
       <div className="mt-6 flex flex-col-reverse items-stretch justify-between gap-3 border-t border-[var(--jshs-border)] pt-5 sm:flex-row sm:items-center"><p className="text-xs leading-5 jshs-muted-copy">你可以隨時從資料與信任查看來源、年度與校核狀態。</p><button ref={acknowledgeRef} type="button" onClick={close} data-jshs-intro-close className="px-5 py-3 text-sm jshs-button-primary">我已了解，開始使用</button></div>
     </div>
-    <script dangerouslySetInnerHTML={{ __html: `(function(){var key="jshs_intro_acknowledged";var root=document.getElementById("jshs-intro-modal");if(!root)return;var last=document.activeElement;function ok(){try{return localStorage.getItem(key)==="1"}catch(e){return false}}function close(){try{localStorage.setItem(key,"1")}catch(e){}root.hidden=true;document.body.classList.remove("jshs-intro-modal-open");if(last&&last.focus)last.focus()}function focusables(){return Array.prototype.slice.call(root.querySelectorAll('a[href],button:not([disabled]),textarea,input,select,[tabindex]:not([tabindex="-1"])')).filter(function(el){return !el.hasAttribute("disabled")&&el.getAttribute("aria-hidden")!=="true"})}if(ok()){root.hidden=true;return}document.body.classList.add("jshs-intro-modal-open");var button=root.querySelector("[data-jshs-intro-close]");if(button)window.setTimeout(function(){button.focus()},0);if(button)button.addEventListener("click",close);root.addEventListener("keydown",function(event){if(event.key==="Escape"){event.preventDefault();close();return}if(event.key!=="Tab")return;var items=focusables();var first=items[0];var lastItem=items[items.length-1];if(!first||!lastItem)return;if(event.shiftKey&&document.activeElement===first){event.preventDefault();lastItem.focus()}else if(!event.shiftKey&&document.activeElement===lastItem){event.preventDefault();first.focus()}})})();` }} />
   </div>;
 }

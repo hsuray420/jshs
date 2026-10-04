@@ -28,10 +28,9 @@ const documentLabels: Record<DocumentKey, string> = {
   special: "特殊身分申請表、安置或相關核定文件",
 };
 
-const storageKey = "jshs_special_qualification_workspace";
 
 export function SpecialQualificationWorkspace() {
-  const stored = loadStoredQualificationState();
+  const stored = { district: "ct" as AdmissionDistrict, identity: "none" as Identity, documents: { identity: false, school: false, proof: false, special: false }, confirmedWithSchool: false };
   const [district, setDistrict] = useState<AdmissionDistrict>(stored.district);
   const [identity, setIdentity] = useState<Identity>(stored.identity);
   const [documents, setDocuments] = useState<Record<DocumentKey, boolean>>(stored.documents);
@@ -57,7 +56,7 @@ export function SpecialQualificationWorkspace() {
   function updateState(next: Partial<{ district: AdmissionDistrict; identity: Identity; documents: Record<DocumentKey, boolean>; confirmedWithSchool: boolean }>) {
     const snapshot = { district: next.district ?? district, identity: next.identity ?? identity, documents: next.documents ?? documents, confirmedWithSchool: next.confirmedWithSchool ?? confirmedWithSchool };
     setDistrict(snapshot.district); setIdentity(snapshot.identity); setDocuments(snapshot.documents); setConfirmedWithSchool(snapshot.confirmedWithSchool);
-    window.localStorage.setItem(storageKey, JSON.stringify(snapshot)); setSaved(true); window.setTimeout(() => setSaved(false), 1600);
+    setSaved(true); window.setTimeout(() => setSaved(false), 1600);
   }
 
   function exportSummary() {
@@ -73,23 +72,9 @@ export function SpecialQualificationWorkspace() {
         <div className="mt-6 grid gap-4 sm:grid-cols-2"><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">適用就學區<select value={district} onChange={(event) => updateState({ district: event.target.value as AdmissionDistrict })}>{districts.map((item) => <option key={item.code} value={item.code}>{item.label}</option>)}</select><small className="font-normal jshs-muted-copy">目前套用 {rule.label} 的 115 學年度資料。</small></label><label className="grid gap-2 text-sm font-black text-[var(--jshs-primary)]">你的身分類型<select value={identity} onChange={(event) => updateState({ identity: event.target.value as Identity })}>{identityOptions.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select><small className="font-normal jshs-muted-copy">{selectedIdentity.short}</small></label></div>
         <div className="mt-7 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-7 text-amber-950"><strong>重要：特殊身分不會自動加到一般總分。</strong><p className="mt-1">原住民、身心障礙及其他依法優待身分，通常要依專屬法規、外加名額或招生簡章附錄辦理。</p></div>
         <div className="mt-7"><div className="flex items-end justify-between gap-3"><div><p className="jshs-eyebrow">文件準備</p><h3 className="mt-1">逐項確認，不再漏帶資料</h3></div><span className="jshs-chip">{completedDocuments} / {requiredDocuments.length} 已準備</span></div><div className="mt-4 grid gap-3">{requiredDocuments.map((key) => <label key={key} className="flex cursor-pointer items-start gap-3 rounded-2xl bg-[var(--jshs-muted-surface)] p-4"><input type="checkbox" checked={documents[key]} onChange={(event) => updateState({ documents: { ...documents, [key]: event.target.checked } })} className="mt-1 h-5 w-5" /><span><strong>{documentLabels[key]}</strong><small className="mt-1 block leading-5 jshs-muted-copy">請以學校承辦人提供的當年度文件名稱與有效期限為準。</small></span></label>)}</div>{identity !== "none" ? <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-2xl border border-[var(--jshs-border)] p-4"><input type="checkbox" checked={confirmedWithSchool} onChange={(event) => updateState({ confirmedWithSchool: event.target.checked })} className="mt-1 h-5 w-5" /><span><strong>我已向就讀國中承辦人確認適用管道</strong><small className="mt-1 block leading-5 jshs-muted-copy">網站結果只能整理問題；正式資格由學校與招生單位核定。</small></span></label> : null}</div>
-        {saved ? <p className="mt-4 text-sm font-bold text-[var(--jshs-success)]" role="status">已儲存在這台裝置。</p> : null}
+        {saved ? <p className="mt-4 text-sm font-bold text-[var(--jshs-success)]" role="status">已更新目前頁面內容；登入 LINE 會員後才能保存。</p> : null}
       </article>
       <aside className="p-6 md:p-8 jshs-surface-card"><p className="jshs-eyebrow">你的目前狀態</p><div className={`mt-3 rounded-2xl p-5 ${isReady ? "bg-emerald-50 text-emerald-950" : "bg-[var(--jshs-muted-surface)]"}`}><span className="text-sm font-bold">{status}</span><h3 className="mt-2 text-2xl">{identity === "none" ? "可走一般試算" : isReady ? "可以帶著資料去確認" : "還差最後幾步"}</h3></div><div className="mt-6"><p className="font-black text-[var(--jshs-primary)]">建議下一步</p><ul className="mt-3 grid gap-3 text-sm leading-6 text-slate-600">{guidance.map((item) => <li key={item} className="rounded-xl bg-[var(--jshs-muted-surface)] p-3">{item}</li>)}</ul></div>{reviewDate ? <p className="mt-5 rounded-xl border border-[var(--jshs-border)] p-3 text-sm leading-6 text-slate-600">近期相關節點：{reviewDate.eventDate} · {reviewDate.title}<br /><small>{reviewDate.description}</small></p> : null}<div className="mt-6 grid gap-2"><Link href={`/tools/rules?district=${district}`} className="px-4 py-3 text-center text-sm jshs-button-primary">查看 {rule.label} 規則</Link><Link href={`/tools/summary?district=${district}`} className="px-4 py-3 text-center text-sm jshs-button-secondary">回到 {rule.label} 試算</Link><button type="button" onClick={exportSummary} className="px-4 py-3 text-sm jshs-button-secondary">匯出準備摘要</button></div></aside>
     </div>
   </section>;
-}
-
-function loadStoredQualificationState() {
-  const fallback = { district: "ct" as AdmissionDistrict, identity: "none" as Identity, documents: { identity: false, school: false, proof: false, special: false }, confirmedWithSchool: false };
-  if (typeof window === "undefined") return fallback;
-  try {
-    const stored = JSON.parse(window.localStorage.getItem(storageKey) || "null") as Partial<typeof fallback> | null;
-    return {
-      district: stored?.district && districts.some((item) => item.code === stored.district) ? stored.district : fallback.district,
-      identity: stored?.identity && identityOptions.some((item) => item.value === stored.identity) ? stored.identity : fallback.identity,
-      documents: { ...fallback.documents, ...(stored?.documents || {}) },
-      confirmedWithSchool: stored?.confirmedWithSchool === true,
-    };
-  } catch { return fallback; }
 }

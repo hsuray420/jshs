@@ -7,7 +7,7 @@ const read = (path) => readFile(new URL(path, root), "utf8");
 
 test("AI privacy copy separates message processing from conversation storage", async () => {
   const [assistant, privacy, aiPage] = await Promise.all([
-    read("components/ai-assistant.tsx"),
+    read("components/ai-assistant-v2.tsx"),
     read("content/trust/privacy.txt"),
     read("app/ai/page.tsx"),
   ]);

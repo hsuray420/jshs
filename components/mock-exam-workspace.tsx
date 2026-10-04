@@ -3,13 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 
 type MockRecord = { id: string; name: string; date: string; subjects: Record<string, number | null>; essay: string; createdAt: string; updatedAt?: string };
-const KEY = "jshs_mock_exam_records";
 const subjects = ["國文", "數學", "英文", "社會", "自然"] as const;
 type FormState = { name: string; date: string; subjects: Record<string, string>; essay: string };
 
 function newForm(): FormState { return { name: "", date: new Date().toISOString().slice(0, 10), subjects: Object.fromEntries(subjects.map((subject) => [subject, ""])), essay: "" }; }
 function formFromRecord(record: MockRecord): FormState { return { name: record.name, date: record.date, subjects: Object.fromEntries(subjects.map((subject) => [subject, record.subjects[subject] == null ? "" : String(record.subjects[subject])])), essay: record.essay }; }
-function parseLocal(): MockRecord[] { try { const value = JSON.parse(localStorage.getItem(KEY) || "[]"); return Array.isArray(value) ? value : []; } catch { return []; } }
 
 export function MockExamWorkspace({ mode = "manage", isMember = false }: { mode?: "manage" | "trends"; isMember?: boolean }) {
   const [records, setRecords] = useState<MockRecord[]>([]);
@@ -22,9 +20,8 @@ export function MockExamWorkspace({ mode = "manage", isMember = false }: { mode?
 
   useEffect(() => {
     const timer = window.setTimeout(async () => {
-      const localRecords = parseLocal();
       try {
-        if (!isMember) setRecords(localRecords);
+        if (!isMember) setRecords([]);
         else {
           const response = await fetch("/api/mock-exams", { headers: { accept: "application/json" } });
           if (!response.ok) throw new Error("sync");
@@ -32,7 +29,7 @@ export function MockExamWorkspace({ mode = "manage", isMember = false }: { mode?
           const cloudRecords = payload.records || [];
           setRecords(cloudRecords.sort((a, b) => b.date.localeCompare(a.date)));
         }
-      } catch { setRecords(localRecords); setError(isMember ? "會員模考紀錄同步失敗，仍顯示本機資料；請重試。" : "讀取本機模考紀錄失敗，請重試。"); }
+      } catch { setRecords([]); setError(isMember ? "會員模考紀錄同步失敗，請重試。" : "請先登入 LINE 會員，才能讀取與保存模考紀錄。"); }
       finally { setLoaded(true); }
     }, 0);
     return () => window.clearTimeout(timer);
@@ -40,26 +37,24 @@ export function MockExamWorkspace({ mode = "manage", isMember = false }: { mode?
 
   async function saveRecord(record: MockRecord) {
     const next = [record, ...records.filter((item) => item.id !== record.id)].sort((a, b) => b.date.localeCompare(a.date));
-    setRecords(next); localStorage.setItem(KEY, JSON.stringify(next));
-    if (isMember) {
-      const response = await fetch("/api/mock-exams", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(record) });
-      if (!response.ok) throw new Error("sync");
-    }
+    if (!isMember) throw new Error("member_required");
+    setRecords(next);
+    const response = await fetch("/api/mock-exams", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(record) });
+    if (!response.ok) throw new Error("sync");
   }
 
   async function removeRecord(id: string) {
     const previous = records;
     const next = previous.filter((record) => record.id !== id);
-    setRecords(next); localStorage.setItem(KEY, JSON.stringify(next));
-    if (isMember) {
-      const response = await fetch("/api/mock-exams", { method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ id }) });
-      if (!response.ok) { setRecords(previous); localStorage.setItem(KEY, JSON.stringify(previous)); throw new Error("delete"); }
-    }
+    if (!isMember) throw new Error("member_required");
+    setRecords(next);
+    const response = await fetch("/api/mock-exams", { method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ id }) });
+    if (!response.ok) { setRecords(previous); throw new Error("delete"); }
   }
 
   async function clearRecords() {
-    const previous = records; setRecords([]); localStorage.setItem(KEY, "[]");
-    if (isMember) { const response = await fetch("/api/mock-exams", { method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ all: true }) }); if (!response.ok) { setRecords(previous); localStorage.setItem(KEY, JSON.stringify(previous)); throw new Error("clear"); } }
+    const previous = records; if (!isMember) throw new Error("member_required"); setRecords([]);
+    const response = await fetch("/api/mock-exams", { method: "DELETE", headers: { "content-type": "application/json" }, body: JSON.stringify({ all: true }) }); if (!response.ok) { setRecords(previous); throw new Error("clear"); }
   }
 
   async function submit(event: React.FormEvent) {

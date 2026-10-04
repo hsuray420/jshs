@@ -5,10 +5,8 @@ import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
 import { districtCode } from "@/lib/school-districts";
 import districtMetadata from "../public/it_hs/district-metadata.json" with { type: "json" };
 import eligibilityFinderContent from "@/content/features/eligibility-finder.json";
-import { readStoredDistrict } from "@/lib/district-context";
 import { evaluateAdmissionEligibility, type AdmissionPathInput, type AdmissionPathResult, type AdmissionPathRoute, type Identity, type SpecialNeed, type StudentType } from "@/lib/admission-path-engine";
 
-const STORAGE_KEY = "jshs_admission_path_finder";
 const academicYears = eligibilityFinderContent.academicYears as readonly { value: string; label: string }[];
 
 const studentTypes = eligibilityFinderContent.studentTypes as readonly { value: StudentType; label: string; description: string }[];
@@ -38,7 +36,7 @@ const defaultState: FinderState = { academicYear: "115", zone: "", studentType: 
 
 export function AdmissionPathFinder() {
   const [state, setState] = useState<FinderState>(defaultState);
-  const [hydrated, setHydrated] = useState(false);
+  const hydrated = true;
   const [result, setResult] = useState<AdmissionPathResult | null>(null);
   const [schools, setSchools] = useState<readonly SchoolSearchIndexEntry[]>([]);
   const [schoolQuery, setSchoolQuery] = useState("");
@@ -57,22 +55,7 @@ export function AdmissionPathFinder() {
   const filteredSchools = schools.filter((school) => !state.zone || school.admissionDistricts.some((label) => districtCode(label) === districtCode(state.zone))).filter((school) => !schoolQuery || school.name.includes(schoolQuery)).slice(0, 80);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      try {
-        const saved = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "null") as Partial<FinderState> | null;
-        const storedZone = readStoredDistrict();
-        if (saved) setState({ ...defaultState, ...saved, zone: saved.zone || storedZone, started: saved.started ?? Boolean(saved.currentStep), identities: saved.identities || [], specialNeeds: saved.specialNeeds || [], answers: saved.answers || {} });
-        else if (storedZone) setState((current) => ({ ...current, zone: storedZone }));
-      } catch { setDataError("目前無法讀取上次的檢測進度，已從新檢測開始。"); }
-      setHydrated(true);
-    }, 0);
-    return () => window.clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  }, [hydrated, state]);
 
   useEffect(() => {
     if (!hydrated || !state.completed || result) return;
@@ -122,11 +105,10 @@ export function AdmissionPathFinder() {
     setState((current) => ({ ...current, currentStep: currentStep + 1 }));
   }
   function back() { setState((current) => ({ ...current, currentStep: Math.max(0, currentStep - 1), completed: false })); setResult(null); }
-  function reset() { setState(defaultState); setResult(null); setSchoolQuery(""); window.localStorage.removeItem(STORAGE_KEY); }
+  function reset() { setState(defaultState); setResult(null); setSchoolQuery(""); }
   function start() { setState((current) => ({ ...current, started: true })); }
   function canContinue() { if (steps[currentStep] === "student") return Boolean(state.studentType); if (steps[currentStep] === "school") return Boolean(state.schoolCounty); if (steps[currentStep] === "zone") return Boolean(state.zone); return true; }
 
-  // localStorage is only available after hydration. Render the actionable empty state first.
   if (!hydrated) return <WelcomeView onStart={start} />;
   if (state.completed && result) return <ResultView result={result} zone={selectedZone?.label || state.zone} onReset={reset} />;
   if (!state.started) return <WelcomeView onStart={start} />;

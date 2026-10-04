@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { calculateAdmissionScore, getAdmissionRule, isAdmissionCalculatorAvailable, isAdmissionDistrict, resolveAdmissionMissingFieldLabels, type AdmissionDistrict, type AdmissionRule } from "@/lib/admission-score";
-import { readStoredDistrict } from "@/lib/district-context";
 import { markProgress } from "@/lib/progress";
 import { SourceBadge } from "@/components/source-badge";
 import { SERVICE_YEAR, SOURCE_ACADEMIC_YEAR, serviceYearNotice } from "@/lib/trust";
@@ -71,7 +70,6 @@ type AdmissionOption = NonNullable<AdmissionFormField["options"]>[number];
 
 const emptyExam: ExamState = Object.fromEntries(subjects.map(([key]) => [key, ""])) as ExamState;
 const emptyExamMarks: ExamMarkState = Object.fromEntries(subjects.map(([key]) => [key, ""])) as ExamMarkState;
-const CALCULATOR_DRAFT_KEY = "jshs_admission_calculator_draft_v1";
 const defaultCriteria: CriteriaState = {
   choiceText: "", nearbyEligible: false, remoteAreaEligible: false, economicStatus: "NONE",
   balanced: { healthAndPE: false, arts: false, integrativeActivities: false, technology: false },
@@ -95,50 +93,11 @@ export function AdmissionCalculator({ initialDistrict, isMember }: { initialDist
   const [ruleValues, setRuleValues] = useState<Record<string, unknown>>({});
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [status, setStatus] = useState("");
-  const [showRuleIntro, setShowRuleIntro] = useState(false);
-  const draftHydrated = useRef(false);
+  const [showRuleIntro, setShowRuleIntro] = useState(true);
   const rule = getAdmissionRule(district);
   const calculatorAvailable = academicYear === SERVICE_YEAR && isAdmissionCalculatorAvailable(district);
   const invalidExamKeys = subjects.filter(([key]) => !exam[key] || (rule.sourceId && district !== "tp" && !examMarks[key])).map(([key]) => key);
   const examHasError = invalidExamKeys.length > 0 || writingLevel === "" || Number(writingLevel) < 0 || Number(writingLevel) > 6;
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      try {
-        const draft = JSON.parse(window.localStorage.getItem(CALCULATOR_DRAFT_KEY) || "null") as Partial<{ district: AdmissionDistrict; academicYear: string; step: StepId; exam: ExamState; examMarks: ExamMarkState; writingLevel: string; criteria: CriteriaState; ruleValues: Record<string, unknown>; result: ScoreResult | null }> | null;
-        const draftDistrict = draft?.district && isAdmissionDistrict(draft.district) ? draft.district : requestedDistrict || "ct";
-        if (draft?.district && isAdmissionDistrict(draft.district)) setDistrict(draft.district);
-        if (draft?.academicYear) setAcademicYear(draft.academicYear);
-        if (isAdmissionCalculatorAvailable(draftDistrict) && draft?.step && steps.some(([id]) => id === draft.step)) setStep(draft.step);
-        if (draft?.exam) setExam({ ...emptyExam, ...draft.exam });
-        if (draft?.examMarks) setExamMarks({ ...emptyExamMarks, ...draft.examMarks });
-        if (typeof draft?.writingLevel === "string") setWritingLevel(draft.writingLevel);
-        if (draft?.criteria) setCriteria({ ...defaultCriteria, ...draft.criteria, balanced: { ...defaultCriteria.balanced, ...draft.criteria.balanced } });
-        if (draft?.ruleValues) setRuleValues(draft.ruleValues);
-        if (isAdmissionCalculatorAvailable(draftDistrict) && draft?.result) setResult(draft.result);
-      } catch {
-        window.localStorage.removeItem(CALCULATOR_DRAFT_KEY);
-      } finally {
-        draftHydrated.current = true;
-      }
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [requestedDistrict]);
-
-  useEffect(() => {
-    if (!draftHydrated.current) return;
-    try {
-      window.localStorage.setItem(CALCULATOR_DRAFT_KEY, JSON.stringify({ district, academicYear, step, exam, examMarks, writingLevel, criteria, ruleValues, result }));
-    } catch {
-      // Storage may be unavailable in private browsing; the calculator remains usable.
-    }
-  }, [district, academicYear, step, exam, examMarks, writingLevel, criteria, ruleValues, result]);
-
-  useEffect(() => {
-    const key = `jshs_rule_intro_seen:${district}`;
-    const timer = window.setTimeout(() => setShowRuleIntro(window.localStorage.getItem(key) !== "1"), 0);
-    return () => window.clearTimeout(timer);
-  }, [district]);
 
   useEffect(() => {
     if (requestedDistrict && requestedDistrict !== district) {
@@ -154,17 +113,6 @@ export function AdmissionCalculator({ initialDistrict, isMember }: { initialDist
     }
     if (!districtInitialized.current) {
       districtInitialized.current = true;
-      const storedDistrict = readStoredDistrict();
-      if (isAdmissionDistrict(storedDistrict)) {
-        const timer = window.setTimeout(() => {
-          setDistrict(storedDistrict);
-          if (!isAdmissionCalculatorAvailable(storedDistrict)) {
-            setStep("context");
-            setResult(null);
-          }
-        }, 0);
-        return () => window.clearTimeout(timer);
-      }
     }
     markProgress("district", district);
   }, [district, requestedDistrict]);
@@ -228,12 +176,7 @@ export function AdmissionCalculator({ initialDistrict, isMember }: { initialDist
     setResult(payload.result || null);
     setStatus(response?.ok ? `已依 ${SERVICE_YEAR} 學年度服務流程（${SOURCE_ACADEMIC_YEAR} 學年度規則來源）完成${rule.label}試算。` : payload.error || "試算失敗，請稍後重試。");
     if (response?.ok && payload.result) {
-      const snapshot = { savedAt: new Date().toISOString(), district, academicYear: SERVICE_YEAR, sourceAcademicYear: SOURCE_ACADEMIC_YEAR, result: payload.result };
-      const history = readScoreHistory();
-      if (!isMember) {
-        window.localStorage.setItem("jshs_score_latest", JSON.stringify(snapshot));
-        window.localStorage.setItem("jshs_score_history", JSON.stringify([snapshot, ...history].slice(0, 20)));
-      }
+      if (isMember) void fetch("/api/admission/scores", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ district, academicYear: SERVICE_YEAR, result: payload.result }) });
       markProgress("calculator", district);
       setStep("result");
     }
@@ -244,7 +187,6 @@ export function AdmissionCalculator({ initialDistrict, isMember }: { initialDist
   const stepNumber = steps.findIndex(([id]) => id === step) + 1;
 
   function acknowledgeRuleIntro() {
-    window.localStorage.setItem(`jshs_rule_intro_seen:${district}`, "1");
     setShowRuleIntro(false);
   }
 
@@ -271,7 +213,6 @@ export function AdmissionCalculator({ initialDistrict, isMember }: { initialDist
   }
 
   function clearDraft() {
-    window.localStorage.removeItem(CALCULATOR_DRAFT_KEY);
     setExam(emptyExam); setExamMarks(emptyExamMarks); setWritingLevel(""); setCriteria(defaultCriteria); setRuleValues({}); setResult(null); setStep("context"); setStatus("已清除試算資料；尚未保存任何結果。");
   }
 
@@ -288,15 +229,6 @@ export function AdmissionCalculator({ initialDistrict, isMember }: { initialDist
       <div className="mt-7 flex flex-wrap justify-between gap-3"><button type="button" disabled={step === "context"} onClick={() => setStep(steps[Math.max(steps.findIndex(([id]) => id === step) - 1, 0)][0])} className="px-4 py-3 text-sm jshs-button-secondary">← 上一步</button><button type="button" onClick={() => step === "result" ? setStep("criteria") : nextStep()} className="px-5 py-3 text-sm jshs-button-primary">{step === "criteria" ? "產生個人積分摘要" : step === "result" ? "重新檢查資料" : "下一步 →"}</button></div>
     </div><RuleAside rule={{ ...rule, academicYear: SERVICE_YEAR }} result={result} missing={result?.missingFields ?? missing} /></section>
   </>;
-}
-
-function readScoreHistory() {
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem("jshs_score_history") || "[]");
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
 }
 
 function ContextStep({ district, academicYear, rule, calculatorAvailable, onDistrictChange, onYearChange, onLoadExample }: { district: AdmissionDistrict; academicYear: string; rule: AdmissionRule; calculatorAvailable: boolean; onDistrictChange: (value: AdmissionDistrict) => void; onYearChange: (value: string) => void; onLoadExample: () => void }) {

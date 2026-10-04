@@ -35,7 +35,7 @@ test("assistant API authenticates members, uses the guest cookie, and calls Work
 });
 
 test("assistant UI submits questions and renders source links and feature actions", async () => {
-  const source = await read("components/ai-assistant.tsx");
+  const source = await read("components/ai-assistant-v2.tsx");
   assert.match(source, /api\/assistant/);
   assert.match(source, /sources/);
   assert.match(source, /action/);
@@ -45,17 +45,17 @@ test("assistant UI submits questions and renders source links and feature action
 test("assistant handles basic greetings locally without requiring site retrieval", async () => {
   const policy = await read("lib/assistant-policy.ts");
   const route = await read("app/api/assistant/route.ts");
-  const ui = await read("components/ai-assistant.tsx");
+  const ui = await read("components/ai-assistant-v2.tsx");
   assert.match(policy, /getAssistantConversationReply/);
   assert.match(policy, /你好|嗨/);
   assert.match(route, /getAssistantConversationReply/);
-  assert.match(ui, /fixed.*bottom|fixed.*right/s);
+  assert.match(ui, /fixed.*bottom|fixed.*right|launcher/s);
   assert.match(ui, /aria-expanded/);
 });
 
 test("assistant reserves page space while open so the floating panel does not cover content", async () => {
   const css = await read("app/globals.css");
-  const ui = await read("components/ai-assistant.tsx");
+  const ui = await read("components/ai-assistant-v2.tsx");
   assert.match(ui, /jshs-ai-open/);
   assert.match(css, /body\.jshs-ai-open \.jshs-page-shell > section/);
   assert.match(css, /height: min\(600px/);
@@ -63,7 +63,7 @@ test("assistant reserves page space while open so the floating panel does not co
 });
 
 test("floating assistant exposes a visible close action and Escape fallback", async () => {
-  const ui = await read("components/ai-assistant.tsx");
+  const ui = await read("components/ai-assistant-v2.tsx");
   const css = await read("app/globals.css");
   assert.match(ui, /className="ai-chat-close"/);
   assert.match(ui, /關閉 AI 小助手/);
@@ -72,7 +72,7 @@ test("floating assistant exposes a visible close action and Escape fallback", as
 });
 
 test("assistant launcher hides Beta, supports pointer dragging, and has a restrained bot cue", async () => {
-  const ui = await read("components/ai-assistant.tsx");
+  const ui = await read("components/ai-assistant-v2.tsx");
   const css = await read("app/globals.css");
   assert.match(ui, /className="ai-chat-bot"/);
   assert.match(ui, /onPointerMove={handlePointerMove}/);
@@ -108,7 +108,7 @@ test("assistant routes general questions separately from site education data and
 
 test("assistant prompt keeps general model knowledge available and treats site data as context", async () => {
   const policy = await read("lib/assistant-policy.ts");
-  const ui = await read("components/ai-assistant.tsx");
+  const ui = await read("components/ai-assistant-v2.tsx");
   assert.match(policy, /一般知識/);
   assert.match(policy, /額外上下文/);
   assert.doesNotMatch(policy, /只能根據 CONTEXT/);
@@ -118,25 +118,63 @@ test("assistant prompt keeps general model knowledge available and treats site d
 
 test("assistant sends the current question once and isolates general replies from prior site context", async () => {
   const policy = await read("lib/assistant-policy.ts");
-  const ui = await read("components/ai-assistant.tsx");
+  const ui = await read("components/ai-assistant-v2.tsx");
   assert.match(policy, /只針對本次 USER QUESTION/);
   assert.match(ui, /historySource = isRetry/);
-  assert.match(ui, /current question out of history/);
+  assert.match(ui, /current question (?:stays )?out of history/);
 });
 
-test("assistant provider returns one complete Workers AI answer instead of a fragile provider stream", async () => {
+test("assistant provider keeps unary validation while adding the Workers AI stream path", async () => {
   const route = await read("app/api/assistant/route.ts");
   assert.match(route, /await ai\.run/);
-  assert.match(route, /extractWorkersAnswer/);
+  assert.match(route, /streamAssistantResponse/);
   assert.doesNotMatch(route, /proxyGeminiStream/);
+});
+
+test("assistant supports server SSE streaming and keeps unary fallback available", async () => {
+  const route = await read("app/api/assistant/route.ts");
+  const ui = await read("components/ai-assistant-v2.tsx");
+  assert.match(route, /streamAssistantResponse|text\/event-stream/);
+  assert.match(route, /stream\s*:\s*true/);
+  assert.match(route, /ai\.run\(model, input\)/);
+  assert.match(ui, /requestBody\(question, history, true\)/);
+  assert.match(ui, /requestFallback|simulateTyping/);
+  assert.match(ui, /requestAnimationFrame/);
+});
+
+test("assistant stop button and IME composition protect the composer", async () => {
+  const ui = await read("components/ai-assistant-v2.tsx");
+  assert.match(ui, /isComposing/);
+  assert.match(ui, /停止生成/);
+  assert.match(ui, /AbortController/);
+});
+
+test("assistant renders safe markdown through CDN helpers with code tools", async () => {
+  const markdown = await read("components/ai-chat-markdown-v2.tsx");
+  const ui = await read("components/ai-assistant-v2.tsx");
+  assert.match(markdown, /marked|DOMPurify|highlight\.js|highlight/);
+  assert.match(markdown, /已複製/);
+  assert.match(markdown, /dangerouslySetInnerHTML/);
+  assert.match(ui, /複製|重新產生/);
+});
+
+test("assistant has smart scroll, live updates, dark tokens, and reduced motion", async () => {
+  const ui = await read("components/ai-assistant-v2.tsx");
+  const css = await read("app/globals.css");
+  assert.match(ui, /aria-live="polite"/);
+  assert.match(ui, /回到最新/);
+  assert.match(ui, /onScroll/);
+  assert.match(css, /prefers-color-scheme: dark/);
+  assert.match(css, /prefers-reduced-motion: reduce/);
+  assert.match(css, /--ai-/);
 });
 
 test("assistant keeps the composer at the bottom and limits general request context", async () => {
   const css = await read("app/globals.css");
-  const ui = await read("components/ai-assistant.tsx");
+  const ui = await read("components/ai-assistant-v2.tsx");
   const route = await read("app/api/assistant/route.ts");
   assert.match(css, /\.ai-chat-window > form \{[^}]*order: 3/);
-  assert.match(ui, /history\.slice\(-6\)/);
+  assert.match(ui, /slice\(-6\)/);
   assert.match(route, /max_tokens: 2048/);
 });
 
@@ -146,14 +184,15 @@ test("assistant rejects an empty Workers AI answer before it reaches the UI", as
   assert.match(route, /!answer/);
 });
 
-test("assistant client uses the unary provider path so completed replies are validated before display", async () => {
-  const ui = await read("components/ai-assistant.tsx");
-  assert.match(ui, /question, stream: false, history/);
+test("assistant client retains a unary fallback so completed replies are validated before display", async () => {
+  const ui = await read("components/ai-assistant-v2.tsx");
+  assert.match(ui, /requestUnary/);
+  assert.match(ui, /requestBody\(question, history, false\)/);
 });
 
 test("會員 AI 對話寫入 D1，訪客對話留在本機", async () => {
   const [layout, client, api, store] = await Promise.all([
-    read("app/layout.tsx"), read("components/ai-assistant.tsx"), read("app/api/assistant/conversations/route.ts"), read("db/ai-conversation-store.ts"),
+    read("app/layout.tsx"), read("components/ai-assistant-v2.tsx"), read("app/api/assistant/conversations/route.ts"), read("db/ai-conversation-store.ts"),
   ]);
   assert.match(layout, /getMemberSession/);
   assert.match(client, /\/api\/assistant\/conversations/);
@@ -164,7 +203,7 @@ test("會員 AI 對話寫入 D1，訪客對話留在本機", async () => {
 });
 
 test("assistant shows rotating thinking states while waiting for a complete reply", async () => {
-  const ui = await read("components/ai-assistant.tsx");
+  const ui = await read("components/ai-assistant-v2.tsx");
   const css = await read("app/globals.css");
   assert.match(ui, /正在思考|正在整理|正在檢查/);
   assert.match(ui, /setInterval/);

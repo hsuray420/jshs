@@ -7,7 +7,7 @@ const headerUrl = new URL("../components/site-header.tsx", import.meta.url);
 const megaMenuUrl = new URL("../components/navigation/mega-menu.tsx", import.meta.url);
 const footerUrl = new URL("../components/site-footer.tsx", import.meta.url);
 const globalsUrl = new URL("../app/globals.css", import.meta.url);
-const assistantUrl = new URL("../components/ai-assistant.tsx", import.meta.url);
+const assistantUrl = new URL("../components/ai-assistant-v2.tsx", import.meta.url);
 const expectedGroups = ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"];
 const requiredLabels = [
   "全國校科查詢", "歷年錄取", "學長姐分享", "學校地圖", "費用試算", "通勤比較", "群科介紹",

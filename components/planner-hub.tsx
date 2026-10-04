@@ -18,12 +18,7 @@ export function PlannerHub({ isMember }: { isMember: boolean }) {
         .catch(() => setScore(null));
       return;
     }
-    const timer = window.setTimeout(() => {
-      try {
-        const latest = JSON.parse(window.localStorage.getItem("jshs_score_latest") || "null") as { result?: { totalScore?: number } } | null;
-        setScore(typeof latest?.result?.totalScore === "number" ? latest.result.totalScore : null);
-      } catch { setScore(null); }
-    }, 0);
+    const timer = window.setTimeout(() => setScore(null), 0);
     return () => window.clearTimeout(timer);
   }, [isMember]);
   const hasScore = score !== null;

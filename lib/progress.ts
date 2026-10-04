@@ -9,16 +9,17 @@ export type ProgressState = Readonly<{
   planner: boolean;
 }>;
 
-export const PROGRESS_STORAGE_KEY = "jshs_progress";
+export const PROGRESS_STORAGE_KEY = "member_progress";
 export const defaultProgress: ProgressState = Object.freeze({
   district: "",
   schoolSearch: false,
   calculator: false,
   planner: false,
 });
+let progressState: ProgressState = defaultProgress;
 
 export function readProgress(value: string | null): ProgressState {
-  if (!value) return defaultProgress;
+  if (value === null) return progressState;
   try {
     const parsed = JSON.parse(value) as Partial<ProgressState>;
     return Object.freeze({
@@ -33,13 +34,12 @@ export function readProgress(value: string | null): ProgressState {
 }
 
 export function markProgress(key: ProgressKey | "district", value = "") {
-  if (typeof window === "undefined") return;
-  const current = readProgress(window.localStorage.getItem(PROGRESS_STORAGE_KEY));
+  const current = progressState;
   const next = Object.freeze({
     ...current,
     ...(key === "district" ? { district: value } : { [key]: true }),
   });
-  window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(next));
+  progressState = next;
   if (key === "district" && value) writeStoredDistrict(value);
-  window.dispatchEvent(new Event("jshs-progress"));
+  if (typeof window !== "undefined") window.dispatchEvent(new Event("jshs-progress"));
 }
