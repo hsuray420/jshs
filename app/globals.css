@@ -979,10 +979,34 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
   width: 34px;
 }
 
+.ai-chat-header-actions .ai-chat-close {
+  border: 1px solid var(--ai-border);
+  border-radius: 10px;
+  color: var(--ai-text);
+  font-size: 12px;
+  font-weight: 800;
+  gap: 3px;
+  padding: 0 8px;
+  width: auto;
+}
+
+.ai-chat-header-actions .ai-chat-close span:first-child {
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+}
+
 .ai-chat-header-actions a:hover,
 .ai-chat-header-actions button:hover {
   background: var(--ai-user);
   color: var(--ai-blue);
+}
+
+.ai-chat-header-actions .ai-chat-close:focus-visible,
+.ai-chat-header-actions a:focus-visible {
+  box-shadow: 0 0 0 3px rgb(0 122 255 / 18%);
+  outline: 2px solid var(--ai-blue);
+  outline-offset: 1px;
 }
 
 .ai-chat-scope {
@@ -1309,6 +1333,8 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
   .ai-chat-messages { padding-inline: 16px; }
   .ai-chat-composer { padding-inline: 12px; }
   .ai-chat-message.is-user .ai-chat-message-body { max-width: 82%; }
+  .ai-chat-header { padding-inline: 12px; }
+  .ai-chat-header-actions .ai-chat-close { min-height: 40px; }
 }
 
 .jshs-intro-backdrop {

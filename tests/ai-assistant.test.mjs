@@ -62,6 +62,15 @@ test("assistant reserves page space while open so the floating panel does not co
   assert.match(css, /width: min\(400px/);
 });
 
+test("floating assistant exposes a visible close action and Escape fallback", async () => {
+  const ui = await read("components/ai-assistant.tsx");
+  const css = await read("app/globals.css");
+  assert.match(ui, /className="ai-chat-close"/);
+  assert.match(ui, /關閉 AI 小助手/);
+  assert.match(ui, /event\.key === "Escape"/);
+  assert.match(css, /\.ai-chat-header-actions \.ai-chat-close/);
+});
+
 test("assistant handles English greetings locally so they receive a complete reply", async () => {
   const policy = await read("lib/assistant-policy.ts");
   assert.match(policy, /hello\|hallo\|hi/);
