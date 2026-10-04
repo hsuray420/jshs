@@ -26,6 +26,7 @@ export default async function AdminSchoolDetailPage({ params, searchParams }: { 
   let sourceFile = sourceRecord.sourceCsv || "regional CSV";
   let repository = "";
   let branch = "main";
+  let saved: Awaited<ReturnType<typeof getSchoolDataDraft>> = null;
   try {
     const snapshot = await getCanonicalSchoolFileSnapshot(selected.regionCode!);
     if ("content" in snapshot) {
@@ -41,12 +42,12 @@ export default async function AdminSchoolDetailPage({ params, searchParams }: { 
   let initialDraft = raw;
   let initialDraftBase = raw;
   try {
-    const saved = await getSchoolDataDraft(school.code, selected.regionCode!, admin.user.lineUserId);
+    saved = await getSchoolDataDraft(school.code, selected.regionCode!, admin.user.lineUserId);
     if (saved) {
       initialDraft = { ...raw, ...(JSON.parse(saved.updates_json) as Record<string, string>) };
       initialDraftBase = { ...raw, ...(JSON.parse(saved.base_values_json) as Record<string, string>) };
     }
   } catch { /* A D1 outage must not prevent read-only access to canonical data. */ }
   const canPublish = admin.user.role === "owner" || admin.user.role === "administrator";
-  return <><section className="admin-page-heading admin-detail-heading"><div><Link className="admin-back-link" href="/admin/schools">← 返回學校資料管理</Link><p className="admin-eyebrow">Canonical School / {selected.regionCode}</p><h1>{raw["學校名稱"] || school.name}</h1><p className="admin-muted">{school.code} · {raw["縣市"]} {raw["區"]} · {raw["公私立"]} · {raw["學制分類"]}</p></div><span className="admin-badge">{admin.user.role}</span></section><section className="admin-source-strip"><span><strong>{syncConfigured ? "GitHub 已連線" : "GitHub 尚未連線"}</strong><small>{syncConfigured ? `${repository} · ${branch} · ${expectedSha.slice(0, 12)}` : "草稿仍可保存；發布需要 server-side token"}</small></span><span><strong>Canonical source</strong><small>{sourceFile}</small></span></section><AdminSchoolDetailEditor schoolCode={school.code} regionCode={selected.regionCode!} raw={raw} initialDraft={initialDraft} initialDraftBase={initialDraftBase} expectedSha={expectedSha} sourceFile={sourceFile} syncConfigured={syncConfigured} canPublish={canPublish} /></>;
+  return <><section className="admin-page-heading admin-detail-heading"><div><Link className="admin-back-link" href="/admin/schools">← 返回學校資料管理</Link><p className="admin-eyebrow">Canonical School / {selected.regionCode}</p><h1>{raw["學校名稱"] || school.name}</h1><p className="admin-muted">{school.code} · {raw["縣市"]} {raw["區"]} · {raw["公私立"]} · {raw["學制分類"]}</p></div><span className="admin-badge">{admin.user.role}</span></section><section className="admin-source-strip"><span><strong>{syncConfigured ? "GitHub 已連線" : "GitHub 尚未連線"}</strong><small>{syncConfigured ? `${repository} · ${branch} · ${expectedSha.slice(0, 12)}` : "草稿仍可保存；發布需要 server-side token"}</small></span><span><strong>Canonical source</strong><small>{sourceFile}</small></span></section><AdminSchoolDetailEditor schoolCode={school.code} regionCode={selected.regionCode!} raw={raw} initialDraft={initialDraft} initialDraftBase={initialDraftBase} expectedSha={expectedSha} sourceFile={sourceFile} syncConfigured={syncConfigured} canEdit={["editor", "administrator", "owner"].includes(admin.user.role)} canPublish={canPublish} initialCommitSha={saved?.commit_sha || ""} initialCommitUrl={saved?.commit_url || ""} /></>;
 }

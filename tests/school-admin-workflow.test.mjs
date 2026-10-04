@@ -10,6 +10,7 @@ import {
   buildSchoolCommitMessage,
   createSchoolFieldDiff,
   detectSchoolFieldConflicts,
+  summarizeGitHubWorkflowRun,
 } from "../lib/school-admin-workflow.mjs";
 import { SCHOOL_COLUMNS } from "../lib/school-data/pipeline.mjs";
 import { updateCanonicalSchoolCsv } from "../lib/school-admin-csv.mjs";
@@ -73,3 +74,16 @@ test("diff and commit message are readable and list only changed fields", () => 
   ].join("\n"));
 });
 
+test("deployment tracking requires a workflow run for the exact source commit", () => {
+  const sha = "a".repeat(40);
+  assert.deepEqual(summarizeGitHubWorkflowRun([], sha), {
+    status: "not_found",
+    reason: "workflow_not_found",
+  });
+  assert.equal(summarizeGitHubWorkflowRun([{ head_sha: "b".repeat(40), status: "completed", conclusion: "success" }], sha).status, "not_found");
+  assert.equal(summarizeGitHubWorkflowRun([{ head_sha: sha, status: "queued" }], sha).status, "queued");
+  assert.equal(summarizeGitHubWorkflowRun([{ head_sha: sha, status: "in_progress" }], sha).status, "in_progress");
+  assert.equal(summarizeGitHubWorkflowRun([{ head_sha: sha, status: "completed", conclusion: "success" }], sha).status, "success");
+  assert.equal(summarizeGitHubWorkflowRun([{ head_sha: sha, status: "completed", conclusion: "failure" }], sha).status, "failure");
+  assert.equal(summarizeGitHubWorkflowRun([{ head_sha: sha, status: "completed", conclusion: "cancelled" }], sha).status, "cancelled");
+});

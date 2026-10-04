@@ -15,7 +15,7 @@ const sourceLabels: Record<string, string> = { course: "課程資料", project: 
 function Sources({ links }: { links: readonly SourceLink[] }) { return <div className="sv-source-links">{links.map((link, index) => <a key={`${link.url}-${index}`} href={link.url} target="_blank" rel="noopener noreferrer">{link.label || `查看資料來源${links.length > 1 ? ` ${index + 1}` : ""}`} ↗</a>)}</div>; }
 function DetailGroup({ id, icon, title, summary, children }: { id: string; icon: "school" | "knowledge" | "planner" | "shield" | "compare"; title: string; summary: string; children: React.ReactNode }) { return <details className="sv-accordion" id={id}><summary><span className="sv-accordion-icon"><SiteIcon name={icon} size={25} /></span><span className="sv-accordion-copy"><strong>{title}</strong><small>{summary}</small></span><span className="sv-accordion-chevron"><SiteIcon name="chevron-down" size={18} /></span></summary><div className="sv-accordion-content">{children}</div></details>; }
 
-export function SchoolDetailClient({ code }: { code: string }) {
+export function SchoolDetailClient({ code, previewRaw }: { code: string; previewRaw?: Record<string, string> }) {
   const [school, setSchool] = useState<SchoolDetail | null>(null);
   const [error, setError] = useState("");
   const [isMember, setIsMember] = useState(false);
@@ -23,6 +23,7 @@ export function SchoolDetailClient({ code }: { code: string }) {
   const [favoriteMessage, setFavoriteMessage] = useState("");
   useEffect(() => { const controller = new AbortController(); fetch(`/data/schools/by-code/${encodeURIComponent(code)}.json`, { headers: { accept: "application/json" }, signal: controller.signal }).then((response) => response.ok ? response.json() as Promise<{ school?: SchoolDetail }> : Promise.reject(new Error("school unavailable"))).then((payload) => { setSchool(payload.school || null); setError(payload.school ? "" : "找不到這所學校。"); }).catch((caught) => { if (caught.name !== "AbortError") setError("目前無法載入學校詳細資料。"); }); return () => controller.abort(); }, [code]);
   useEffect(() => {
+    if (previewRaw) return;
     let cancelled = false;
     void (async () => {
       const localCodes = readLocalFavoriteCodes();
@@ -42,7 +43,7 @@ export function SchoolDetailClient({ code }: { code: string }) {
       }
     })();
     return () => { cancelled = true; };
-  }, [code]);
+  }, [code, previewRaw]);
   async function toggleFavorite() {
     const next = !isFavorite;
     setFavoriteMessage("");
@@ -61,12 +62,12 @@ export function SchoolDetailClient({ code }: { code: string }) {
   }
   if (error) return <section className="sv-container sv-empty"><h1>學校資料暫時無法載入</h1><p>{error}</p><Link className="sv-primary-link" href="/schools">返回找學校</Link></section>;
   if (!school) return <section className="sv-container sv-loading-shell"><div className="sv-skeleton sv-skeleton-detail" /></section>;
-  const s = school;
+  const s = previewRaw ? applyCsvPreview(school, previewRaw) : school;
   const website = external(s.website);
   const mapUrl = external(s.mapUrl);
   const phone = phoneLink(s.phone);
   const sources = Object.entries(s.sources).filter(([, links]) => links.length);
-  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schoolJsonLd(s, website)).replace(/</g, "\\u003c") }} /><header className="sv-detail-hero"><div className="sv-container"><nav aria-label="麵包屑" className="sv-breadcrumb"><Link href="/">首頁</Link><span>›</span><Link href="/schools">找學校</Link><span>›</span><span>{s.name}</span></nav><div className="sv-detail-hero-media"><SchoolMedia code={s.code} name={s.name} address={`${s.city}${s.area}${s.address}`} className="sv-detail-media" /><div className="sv-detail-overlay"><h1>{s.name}</h1><div className="sv-detail-tags">{[s.ownership, s.schoolType, s.gender, s.admissionDistricts[0]].filter(Boolean).map((value) => <span key={value}>{value}</span>)}</div><p><SiteIcon name="school" size={18} />{s.city}{s.area ? `${s.area} · ` : ""}{field(s.address)}</p><div className="sv-detail-actions">{website ? <a href={website} target="_blank" rel="noopener noreferrer">官方網站 ↗</a> : null}{mapUrl ? <a href={mapUrl} target="_blank" rel="noopener noreferrer">在地圖中查看 ↗</a> : null}{phone ? <a href={phone}>撥打電話</a> : null}<button type="button" onClick={() => void toggleFavorite()} aria-pressed={isFavorite}>{isFavorite ? "★ 已收藏" : "☆ 收藏學校"}</button></div>{favoriteMessage ? <p role="status">{favoriteMessage}</p> : null}</div></div></div></header><section className="sv-container sv-detail-content" aria-label="學校詳細資料"><DetailGroup id="overview" icon="school" title="學校基本資料" summary="學校代碼、公私立、學校類型、縣市、地址、聯絡方式等。"><div className="sv-detail-grid"><p><strong>學校代碼</strong>{field(s.code)}</p><p><strong>公私立</strong>{field(s.ownership)}</p><p><strong>學校類型</strong>{field(s.schoolType)}</p><p><strong>招生區</strong>{field(s.admissionDistricts.join("、"))}</p><p><strong>性別</strong>{field(s.gender)}</p><p><strong>電話</strong>{phone ? <a href={phone}>{s.phone}</a> : field(s.phone)}</p><p className="sv-detail-wide"><strong>地址</strong>{field(s.address)}</p><p className="sv-detail-wide"><strong>學校網站</strong>{website ? <a href={website} target="_blank" rel="noopener noreferrer">前往官方網站 ↗</a> : "官方資料未提供"}</p></div></DetailGroup><DetailGroup id="admission" icon="planner" title="招生資訊" summary="科別名稱、簡章招生名額、招生名額。">{s.admissionRecords.length ? <div className="sv-record-list">{s.admissionRecords.map((record) => <article key={record.id}><h3>{record.sourceDistrict}</h3><p><strong>科別與名額</strong>{field(record.departmentRaw)}</p><p><strong>招生名額</strong>{field(record.admissionQuota || record.brochureQuota)}</p><p><strong>招生區</strong>{field(record.admissionDistrict)}</p></article>)}</div> : <p className="sv-unavailable">招生資料目前尚未提供，學校基本資料仍可瀏覽。</p>}</DetailGroup><DetailGroup id="learning" icon="knowledge" title="課程特色" summary="資優班／特色班、課程方向、實習／專題。"><div className="sv-detail-copy"><p><strong>課程方向</strong>{field(s.courseDirection)}</p><p><strong>實習／專題</strong>{field(s.project)}</p><p><strong>其他特色</strong>{field(s.features)}</p></div></DetailGroup><DetailGroup id="transport" icon="compare" title="交通生活" summary="校車／專車、通勤資訊、住宿資訊。"><div className="sv-detail-copy"><p><strong>交通</strong>{field(s.transport)}</p><p><strong>通勤</strong>{field(s.commute)}</p><p><strong>住宿</strong>{field(s.lodging)}</p></div>{mapUrl ? <a className="sv-inline-link" href={mapUrl} target="_blank" rel="noopener noreferrer">在地圖中查看位置 ↗</a> : null}</DetailGroup><DetailGroup id="sources" icon="shield" title="資料來源" summary="各項資料的來源文件、更新時間與公開連結。"><p className="sv-source-intro">各欄位依原始資料與公開來源顯示；尚未提供不代表學校不存在。</p>{sources.length ? sources.map(([key, links]) => <div className="sv-source-row" key={key}><strong>{sourceLabels[key] || key}</strong><Sources links={links} /></div>) : <p className="sv-unavailable">目前尚未提供可公開連結的資料來源。</p>}</DetailGroup></section></>;
+  return <><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schoolJsonLd(s, website)).replace(/</g, "\\u003c") }} /><header className="sv-detail-hero"><div className="sv-container"><nav aria-label="麵包屑" className="sv-breadcrumb"><Link href="/">首頁</Link><span>›</span><Link href="/schools">找學校</Link><span>›</span><span>{s.name}</span></nav><div className="sv-detail-hero-media"><SchoolMedia code={s.code} name={s.name} address={`${s.city}${s.area}${s.address}`} className="sv-detail-media" /><div className="sv-detail-overlay"><h1>{s.name}</h1><div className="sv-detail-tags">{[s.ownership, s.schoolType, s.gender, s.admissionDistricts[0]].filter(Boolean).map((value) => <span key={value}>{value}</span>)}</div><p><SiteIcon name="school" size={18} />{s.city}{s.area ? `${s.area} · ` : ""}{field(s.address)}</p><div className="sv-detail-actions">{website ? <a href={website} target="_blank" rel="noopener noreferrer">官方網站 ↗</a> : null}{mapUrl ? <a href={mapUrl} target="_blank" rel="noopener noreferrer">在地圖中查看 ↗</a> : null}{phone ? <a href={phone}>撥打電話</a> : null}{!previewRaw ? <button type="button" onClick={() => void toggleFavorite()} aria-pressed={isFavorite}>{isFavorite ? "★ 已收藏" : "☆ 收藏學校"}</button> : <span className="sv-preview-label">管理員預覽</span>}</div>{favoriteMessage ? <p role="status">{favoriteMessage}</p> : null}</div></div></div></header><section className="sv-container sv-detail-content" aria-label="學校詳細資料"><DetailGroup id="overview" icon="school" title="學校基本資料" summary="學校代碼、公私立、學校類型、縣市、地址、聯絡方式等。"><div className="sv-detail-grid"><p><strong>學校代碼</strong>{field(s.code)}</p><p><strong>公私立</strong>{field(s.ownership)}</p><p><strong>學校類型</strong>{field(s.schoolType)}</p><p><strong>招生區</strong>{field(s.admissionDistricts.join("、"))}</p><p><strong>性別</strong>{field(s.gender)}</p><p><strong>電話</strong>{phone ? <a href={phone}>{s.phone}</a> : field(s.phone)}</p><p className="sv-detail-wide"><strong>地址</strong>{field(s.address)}</p><p className="sv-detail-wide"><strong>學校網站</strong>{website ? <a href={website} target="_blank" rel="noopener noreferrer">前往官方網站 ↗</a> : "官方資料未提供"}</p></div></DetailGroup><DetailGroup id="admission" icon="planner" title="招生資訊" summary="科別名稱、簡章招生名額、招生名額。">{s.admissionRecords.length ? <div className="sv-record-list">{s.admissionRecords.map((record) => <article key={record.id}><h3>{record.sourceDistrict}</h3><p><strong>科別與名額</strong>{field(record.departmentRaw)}</p><p><strong>招生名額</strong>{field(record.admissionQuota || record.brochureQuota)}</p><p><strong>招生區</strong>{field(record.admissionDistrict)}</p></article>)}</div> : <p className="sv-unavailable">招生資料目前尚未提供，學校基本資料仍可瀏覽。</p>}</DetailGroup><DetailGroup id="learning" icon="knowledge" title="課程特色" summary="資優班／特色班、課程方向、實習／專題。"><div className="sv-detail-copy"><p><strong>課程方向</strong>{field(s.courseDirection)}</p><p><strong>實習／專題</strong>{field(s.project)}</p><p><strong>其他特色</strong>{field(s.features)}</p></div></DetailGroup><DetailGroup id="transport" icon="compare" title="交通生活" summary="校車／專車、通勤資訊、住宿資訊。"><div className="sv-detail-copy"><p><strong>交通</strong>{field(s.transport)}</p><p><strong>通勤</strong>{field(s.commute)}</p><p><strong>住宿</strong>{field(s.lodging)}</p></div>{mapUrl ? <a className="sv-inline-link" href={mapUrl} target="_blank" rel="noopener noreferrer">在地圖中查看位置 ↗</a> : null}</DetailGroup><DetailGroup id="sources" icon="shield" title="資料來源" summary="各項資料的來源文件、更新時間與公開連結。"><p className="sv-source-intro">各欄位依原始資料與公開來源顯示；尚未提供不代表學校不存在。</p>{sources.length ? sources.map(([key, links]) => <div className="sv-source-row" key={key}><strong>{sourceLabels[key] || key}</strong><Sources links={links} /></div>) : <p className="sv-unavailable">目前尚未提供可公開連結的資料來源。</p>}</DetailGroup></section></>;
 }
 
 function readLocalFavoriteCodes() {
@@ -79,3 +80,50 @@ function readLocalFavoriteCodes() {
 }
 
 function schoolJsonLd(s: SchoolDetail, website: string) { return [{ "@context": "https://schema.org", "@type": "School", name: s.name, identifier: s.code, url: `https://jshs.cc/schools/${s.code}`, ...(website ? { sameAs: website } : {}), address: { "@type": "PostalAddress", addressCountry: "TW", addressRegion: s.city, addressLocality: s.area, streetAddress: s.address } }, { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "首頁", item: "https://jshs.cc" }, { "@type": "ListItem", position: 2, name: "找學校", item: "https://jshs.cc/schools" }, { "@type": "ListItem", position: 3, name: s.name, item: `https://jshs.cc/schools/${s.code}` }] }]; }
+
+function applyCsvPreview(school: SchoolDetail, raw: Record<string, string>): SchoolDetail {
+  const get = (column: string, original: string) => raw[column]?.trim() ?? original;
+  const region = get("招生區", "");
+  const admissionRecords = school.admissionRecords.map((record) => {
+    if (region && record.raw["招生區"] !== region) return record;
+    return {
+      ...record,
+      departmentRaw: get("科系與名額", record.departmentRaw),
+      brochureQuota: get("簡章招生名額", record.brochureQuota),
+      admissionQuota: get("招生名額", record.admissionQuota),
+      admissionDistrict: get("招生區", record.admissionDistrict),
+      raw: { ...record.raw, ...raw },
+    };
+  });
+  const sourceColumns: Record<string, string> = {
+    course: "課程資料來源", project: "實習專題資料來源", transport: "校車／專車資料來源",
+    commute: "通勤資料來源", lodging: "住宿資料來源", address: "地址資料來源", life: "生活資料來源",
+  };
+  const sources = { ...school.sources };
+  for (const [key, column] of Object.entries(sourceColumns)) {
+    if (raw[column] !== undefined) sources[key] = raw[column].trim() ? [{ label: sourceLabels[key] || key, url: raw[column].trim() }] : [];
+  }
+  return {
+    ...school,
+    name: get("學校名稱", school.name),
+    ownership: get("公私立", school.ownership),
+    schoolType: get("學制分類", school.schoolType),
+    gender: get("男女校", school.gender),
+    city: get("縣市", school.city),
+    area: get("區", school.area),
+    address: get("地址", school.address),
+    phone: get("電話", school.phone),
+    website: get("官網", school.website),
+    mapUrl: get("Google地圖", school.mapUrl),
+    admissionDistricts: [...new Set(admissionRecords.map((record) => record.admissionDistrict).filter(Boolean))],
+    admissionRecords,
+    features: get("資優班/特色班", school.features),
+    courseDirection: get("課程方向", school.courseDirection),
+    project: get("實習／專題", school.project),
+    transport: get("校車／專車資訊", school.transport),
+    commute: get("通勤資訊", school.commute),
+    lodging: get("住宿資訊", school.lodging),
+    sourceMetadata: { ...school.sourceMetadata, updatedAt: get("資料更新日期", school.sourceMetadata.updatedAt || "") },
+    sources,
+  };
+}

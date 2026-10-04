@@ -72,6 +72,8 @@ export type SchoolDataDraft = {
   region_code: string;
   source_file: string;
   base_sha: string;
+  commit_sha: string;
+  commit_url: string;
   base_values_json: string;
   updates_json: string;
   status: "draft" | "published" | "conflict";
@@ -87,7 +89,7 @@ export type SchoolDataAudit = {
   admin_id: string;
   admin_name: string;
   action: "draft" | "preview" | "publish" | "rollback";
-  status: "success" | "failed" | "conflict";
+  status: "success" | "failed" | "conflict" | "pending";
   school_code: string;
   school_name: string;
   region_code: string;
@@ -157,6 +159,8 @@ export async function ensureAdminSchema() {
       region_code TEXT NOT NULL,
       source_file TEXT NOT NULL,
       base_sha TEXT NOT NULL DEFAULT '',
+      commit_sha TEXT NOT NULL DEFAULT '',
+      commit_url TEXT NOT NULL DEFAULT '',
       base_values_json TEXT NOT NULL,
       updates_json TEXT NOT NULL,
       status TEXT NOT NULL DEFAULT 'draft',
@@ -209,6 +213,10 @@ export async function ensureAdminSchema() {
   if (!names.has("storage_provider")) await db.prepare("ALTER TABLE admin_files ADD COLUMN storage_provider TEXT NOT NULL DEFAULT 'd1'").run();
   if (!names.has("external_file_id")) await db.prepare("ALTER TABLE admin_files ADD COLUMN external_file_id TEXT").run();
   if (!names.has("external_url")) await db.prepare("ALTER TABLE admin_files ADD COLUMN external_url TEXT").run();
+  const draftColumns = await db.prepare("PRAGMA table_info(school_data_drafts)").all<{ name: string }>();
+  const draftNames = new Set((draftColumns.results ?? []).map((column) => column.name));
+  if (!draftNames.has("commit_sha")) await db.prepare("ALTER TABLE school_data_drafts ADD COLUMN commit_sha TEXT NOT NULL DEFAULT ''").run();
+  if (!draftNames.has("commit_url")) await db.prepare("ALTER TABLE school_data_drafts ADD COLUMN commit_url TEXT NOT NULL DEFAULT ''").run();
 }
 
 export async function consumeAdminRateLimit(input: { key: string; limit: number; windowSeconds: number }) {
@@ -233,20 +241,22 @@ export async function getSchoolDataDraft(schoolCode: string, regionCode: string,
     .bind(schoolCode, regionCode, adminId).first<SchoolDataDraft>();
 }
 
-export async function upsertSchoolDataDraft(input: Omit<SchoolDataDraft, "id" | "status" | "created_at" | "updated_at">) {
+export async function upsertSchoolDataDraft(input: Omit<SchoolDataDraft, "id" | "status" | "created_at" | "updated_at" | "commit_sha" | "commit_url">) {
   const db = await getCommunityAdminDatabase();
   const now = new Date().toISOString();
   const id = crypto.randomUUID();
   await db.prepare(`INSERT INTO school_data_drafts (
     id, school_code, school_name, region_code, source_file, base_sha, base_values_json,
-    updates_json, status, created_by, updated_by, created_at, updated_at
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?, ?, ?)
+    updates_json, status, created_by, updated_by, created_at, updated_at, commit_sha, commit_url
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?, ?, ?, '', '')
   ON CONFLICT(school_code, region_code, created_by) DO UPDATE SET
     school_name = excluded.school_name,
     source_file = excluded.source_file,
     base_sha = excluded.base_sha,
     base_values_json = excluded.base_values_json,
     updates_json = excluded.updates_json,
+    commit_sha = '',
+    commit_url = '',
     status = 'draft',
     updated_by = excluded.updated_by,
     updated_at = excluded.updated_at`)
@@ -256,11 +266,42 @@ export async function upsertSchoolDataDraft(input: Omit<SchoolDataDraft, "id" | 
   return getSchoolDataDraft(input.school_code, input.region_code, input.created_by);
 }
 
+export async function recordSchoolDraftCommit(schoolCode: string, regionCode: string, adminId: string, commitSha: string, commitUrl: string) {
+  const db = await getCommunityAdminDatabase();
+  const result = await db.prepare(`UPDATE school_data_drafts SET commit_sha = ?, commit_url = ?, updated_at = ?
+    WHERE school_code = ? AND region_code = ? AND created_by = ? AND status = 'draft'`)
+    .bind(commitSha, commitUrl, new Date().toISOString(), schoolCode, regionCode, adminId).run();
+  return (result.meta.changes ?? 0) > 0;
+}
+
 export async function markSchoolDataDraftPublished(schoolCode: string, regionCode: string, adminId: string) {
   const db = await getCommunityAdminDatabase();
-  await db.prepare(`UPDATE school_data_drafts SET status = 'published', updated_at = ?
+  const result = await db.prepare(`UPDATE school_data_drafts SET status = 'published', updated_at = ?
     WHERE school_code = ? AND region_code = ? AND created_by = ? AND status = 'draft'`)
     .bind(new Date().toISOString(), schoolCode, regionCode, adminId).run();
+  return (result.meta.changes ?? 0) > 0;
+}
+
+export async function createSchoolDeploymentAudit(input: Omit<SchoolDataAudit, "id" | "occurred_at" | "action" | "field" | "old_value" | "new_value">) {
+  const db = await getCommunityAdminDatabase();
+  await db.prepare(`INSERT INTO school_data_audit (
+    id, occurred_at, admin_id, admin_name, action, status, school_code, school_name,
+    region_code, source_file, field, old_value, new_value, commit_sha, error_message
+  )
+  SELECT ?, ?, ?, ?, 'deploy', ?, ?, ?, ?, ?, '', '', '', ?, ?
+  WHERE NOT EXISTS (
+    SELECT 1 FROM school_data_audit WHERE action = 'deploy' AND status = ? AND commit_sha = ?
+  )`)
+    .bind(crypto.randomUUID(), new Date().toISOString(), input.admin_id, input.admin_name,
+      input.status, input.school_code, input.school_name, input.region_code, input.source_file,
+      input.commit_sha, input.error_message, input.status, input.commit_sha).run();
+}
+
+export async function updateSchoolPublishAuditStatus(commitSha: string, status: "success" | "failed", errorMessage = "") {
+  const db = await getCommunityAdminDatabase();
+  await db.prepare(`UPDATE school_data_audit SET status = ?, error_message = ?
+    WHERE action = 'publish' AND status = 'pending' AND commit_sha = ?`)
+    .bind(status, errorMessage, commitSha).run();
 }
 
 export async function countPendingSchoolDataDrafts() {

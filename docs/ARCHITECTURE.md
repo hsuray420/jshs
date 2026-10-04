@@ -125,6 +125,15 @@ POST /api/school-reviews
 → HMAC signed jshs_admin_session（8 小時）→ /admin
 ```
 
+### Admin CMS 學校資料與圖片發布
+
+- `/admin/editor?schoolCode=...` 以正式 `SchoolDetailClient` 呈現前台鏡像；不同 viewport 寬度共用同一份前台元件，不透過 iframe。
+- 學校欄位的儲存／預覽只更新 COMMUNITY_DB `school_data_drafts`。預覽前會先保存草稿，再以 GitHub canonical CSV 最新版本檢查欄位衝突。
+- 只有 Administrator／Owner 可確認發布。GitHub commit 建立後，後台依 commit SHA 查詢 GitHub Actions；只有部署成功才把草稿標記為 published。失敗或狀態無法讀取時保留草稿，且不能顯示為部署成功。
+- 學校圖片先上傳 ImageKit，再把 metadata 存在 COMMUNITY_DB `school_media_drafts`；D1 不保存圖片 BLOB。Administrator／Owner 確認發布後才更新正式圖片 metadata，並在替換完成後清理舊 ImageKit 檔案。
+- `/admin/media?mode=missing` 依正式圖片 metadata 顯示缺圖學校，並帶入學校 context；目前圖片管理與發布以單校為單位，資料 schema 每校仍只有一張管理員設定的正式圖片。
+- Reviewer 可讀取前台鏡像與草稿，但編輯、草稿儲存與發布仍受 server-side role checks 保護。
+
 ## 7. 內容與資料流
 
 ### 學校資料：靜態 Assets 為主

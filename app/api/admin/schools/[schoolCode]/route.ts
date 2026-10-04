@@ -4,7 +4,7 @@ import { assertAvailableSchoolRegion } from "../../../../../lib/school-data/regi
 import { validateSchoolAdminUpdates } from "../../../../../lib/school-admin-csv.mjs";
 import { previewCanonicalSchoolRow, syncCanonicalSchoolRow } from "../../../../../lib/school-github-sync";
 import { assertSameOrigin } from "../../../../../lib/admin-security";
-import { consumeAdminRateLimit, createSchoolDataAuditEntries, markSchoolDataDraftPublished, upsertSchoolDataDraft } from "../../../../../db/admin-store";
+import { consumeAdminRateLimit, createSchoolDataAuditEntries, recordSchoolDraftCommit, upsertSchoolDataDraft } from "../../../../../db/admin-store";
 
 export const dynamic = "force-dynamic";
 
@@ -66,6 +66,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ sch
       return Response.json({ ok: true, status: "preview", diff: result.diff, changedFields: result.changedFields, latestSha: result.sha, sourceFile: result.filePath, rowCount: result.rowCount });
     }
 
+    await upsertSchoolDataDraft({
+      school_code: schoolCode, school_name: school.name, region_code: body.regionCode,
+      source_file: sourceFile, base_sha: body.expectedSha,
+      base_values_json: JSON.stringify(baseValues), updates_json: JSON.stringify(updates),
+      created_by: admin.user.lineUserId, updated_by: admin.user.lineUserId,
+    });
     const result = await syncCanonicalSchoolRow(context);
     if (result.reason === "field_conflict") {
       await writeAudit(admin.user, "publish", "conflict", context, "", "field_conflict");
@@ -79,14 +85,18 @@ export async function POST(request: Request, { params }: { params: Promise<{ sch
       await writeAudit(admin.user, "publish", "failed", context, "", result.reason);
       return Response.json({ ok: false, error: "github_not_configured" }, { status: 503 });
     }
-    if (result.reason === "unchanged") return Response.json({ ok: true, status: "unchanged", changedFields: [] });
+    if (result.reason === "unchanged") {
+      await writeAudit(admin.user, "publish", "success", context, "", "");
+      return Response.json({ ok: true, status: "unchanged", changedFields: [] });
+    }
     if (!("synced" in result) || !result.synced) {
       const reason = "reason" in result && result.reason ? result.reason : "github_sync_failed";
       await writeAudit(admin.user, "publish", "failed", context, "", reason);
       return Response.json({ ok: false, error: "github_sync_failed" }, { status: 502 });
     }
-    await markSchoolDataDraftPublished(schoolCode, body.regionCode, admin.user.lineUserId);
-    await writeAudit(admin.user, "publish", "success", context, result.commitSha, "");
+    const tracked = await recordSchoolDraftCommit(schoolCode, body.regionCode, admin.user.lineUserId, result.commitSha, result.commitUrl || "");
+    if (!tracked) return Response.json({ ok: false, error: "draft_tracking_failed", commitSha: result.commitSha, commitUrl: result.commitUrl }, { status: 503 });
+    await writeAudit(admin.user, "publish", "pending", context, result.commitSha, "");
     return Response.json({ ok: true, status: "synced", changedFields: result.changedFields, commitSha: result.commitSha, commitUrl: result.commitUrl, syncedAt: result.syncedAt });
   } catch (error) {
     const message = error instanceof Error ? error.message : "validation_failed";
@@ -110,7 +120,7 @@ function validateBaseValues(value: unknown, fields: string[]) {
 async function writeAudit(
   admin: { lineUserId: string; displayName: string },
   action: "draft" | "preview" | "publish",
-  status: "success" | "failed" | "conflict",
+  status: "success" | "failed" | "conflict" | "pending",
   context: { schoolCode: string; schoolName: string; regionCode: string; updates: Record<string, string>; baseValues: Record<string, string> },
   commitSha: string,
   errorMessage: string,

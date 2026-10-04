@@ -2,7 +2,7 @@ import { env } from "cloudflare:workers";
 import { assertAvailableSchoolRegion, regionalCsvPath } from "./school-data/regional-loader.mjs";
 import { parseCsv } from "./school-data/pipeline.mjs";
 import { updateCanonicalSchoolCsv, validateSchoolAdminUpdates } from "./school-admin-csv.mjs";
-import { buildSchoolCommitMessage, createSchoolFieldDiff, detectSchoolFieldConflicts } from "./school-admin-workflow.mjs";
+import { buildSchoolCommitMessage, createSchoolFieldDiff, detectSchoolFieldConflicts, summarizeGitHubWorkflowRun } from "./school-admin-workflow.mjs";
 
 type RuntimeEnv = typeof env & { GITHUB_TOKEN?: string; GITHUB_REPOSITORY?: string; GITHUB_BRANCH?: string; ADMIN_GITHUB_SYNC_MODE?: string };
 type GithubFile = { content?: string; sha?: string; html_url?: string };
@@ -98,6 +98,21 @@ export async function getLatestCanonicalSchoolCommit(regionCode: string): Promis
   };
 }
 
+export async function getGitHubDeploymentStatus(commitSha: string) {
+  const github = config();
+  if (!github) return { status: "unavailable" as const, reason: "github_token_missing" };
+  const response = await fetch(`${API}/repos/${github.repository}/actions/runs?head_sha=${encodeURIComponent(commitSha)}&per_page=10`, {
+    headers: headers(github.token),
+    cache: "no-store",
+  }).catch(() => null);
+  if (!response?.ok) return { status: "unavailable" as const, reason: "workflow_status_unavailable" };
+  const payload = await response.json().catch(() => null) as {
+    workflow_runs?: Array<{ head_sha?: unknown; status?: unknown; conclusion?: unknown; html_url?: unknown; name?: unknown }>;
+  } | null;
+  if (!Array.isArray(payload?.workflow_runs)) return { status: "unavailable" as const, reason: "workflow_response_invalid" };
+  return summarizeGitHubWorkflowRun(payload.workflow_runs, commitSha);
+}
+
 function prepareChange(input: SchoolSyncInput, content: string, sha: string) {
   const updates = validateSchoolAdminUpdates(input.updates) as Record<string, string>;
   const latest = (parseCsv(content).rows as Record<string, string>[]).find((row) => row["學校代碼"] === input.schoolCode);
@@ -130,7 +145,10 @@ export async function syncCanonicalSchoolRow(input: SchoolSyncInput) {
   const response = await fetch(url, { method: "PUT", headers: { ...headers(file.github.token), "content-type": "application/json" }, body: JSON.stringify({ message: buildSchoolCommitMessage({ schoolCode: input.schoolCode, schoolName: input.schoolName, fields: changed.changedFields }), content: encode(changed.csvText), branch: file.github.branch, sha: file.sha }) }).catch(() => null);
   if (!response?.ok) return { configured: true as const, synced: false as const, reason: response?.status === 409 ? "sha_conflict" as const : "github_write_failed" as const };
   const payload = await response.json().catch(() => null) as { commit?: { sha?: string; html_url?: string } } | null;
-  return { configured: true as const, synced: true as const, changedFields: changed.changedFields, commitSha: payload?.commit?.sha || "unknown", commitUrl: payload?.commit?.html_url, syncedAt: new Date().toISOString(), filePath };
+  if (!payload?.commit?.sha || !/^[a-f0-9]{40}$/i.test(payload.commit.sha)) {
+    return { configured: true as const, synced: false as const, reason: "github_write_response_invalid" as const };
+  }
+  return { configured: true as const, synced: true as const, changedFields: changed.changedFields, commitSha: payload.commit.sha, commitUrl: payload.commit.html_url, syncedAt: new Date().toISOString(), filePath };
 }
 
 export function localCanonicalCsvPath(regionCode: string) { return regionalCsvPath(regionCode); }

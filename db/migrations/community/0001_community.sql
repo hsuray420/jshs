@@ -91,6 +91,29 @@ CREATE TABLE IF NOT EXISTS school_media_metadata (
   updated_by TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS school_media_drafts (
+  id TEXT PRIMARY KEY,
+  school_code TEXT NOT NULL,
+  file_id TEXT NOT NULL,
+  storage_provider TEXT NOT NULL,
+  image_url TEXT NOT NULL,
+  thumbnail_url TEXT NOT NULL,
+  source TEXT NOT NULL,
+  source_url TEXT NOT NULL DEFAULT '',
+  license TEXT NOT NULL,
+  credit TEXT NOT NULL DEFAULT '',
+  alt TEXT NOT NULL DEFAULT '',
+  created_by TEXT NOT NULL,
+  updated_by TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'draft',
+  UNIQUE(school_code, created_by)
+);
+CREATE INDEX IF NOT EXISTS idx_school_media_drafts_status
+  ON school_media_drafts(status, updated_at);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_school_media_drafts_one_pending_per_school
+  ON school_media_drafts(school_code) WHERE status = 'draft';
 
 CREATE TABLE IF NOT EXISTS school_data_drafts (
   id TEXT PRIMARY KEY,
@@ -99,6 +122,8 @@ CREATE TABLE IF NOT EXISTS school_data_drafts (
   region_code TEXT NOT NULL,
   source_file TEXT NOT NULL,
   base_sha TEXT NOT NULL DEFAULT '',
+  commit_sha TEXT NOT NULL DEFAULT '',
+  commit_url TEXT NOT NULL DEFAULT '',
   base_values_json TEXT NOT NULL,
   updates_json TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'draft',
