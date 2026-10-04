@@ -1,23 +1,29 @@
 import { redirect } from "next/navigation";
 import {
   createAdminFile,
+  consumeAdminRateLimit,
   deleteAdminFile,
   deleteSchoolMediaOverride,
   getSchoolMediaOverride,
+  enqueueExternalMediaCleanup,
   upsertSchoolMediaOverride,
 } from "../../../../db/admin-store";
-import { requireAdmin } from "../../../admin/auth";
+import { requireAdminRole } from "../../../admin/auth";
 import { getSchoolSearchIndex } from "../../../../lib/school-search-index";
+import { deleteImageKitFile, getImageKitConfig, uploadSchoolImageToImageKit } from "../../../../lib/imagekit-server";
+import { assertSameOrigin } from "../../../../lib/admin-security";
 
 export const dynamic = "force-dynamic";
 
-const MAX_IMAGE_BYTES = 700_000;
-const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]);
 const SOURCES = new Set(["jshs-owned", "official-school-site", "licensed-public", "admin-provided"]);
 
 export async function POST(request: Request) {
-  const admin = await requireAdmin();
-  if (!admin.allowed) return Response.json({ ok: false, error: "forbidden" }, { status: 403 });
+  try { assertSameOrigin(request); } catch { return Response.json({ ok: false, error: "cross_origin_request" }, { status: 403 }); }
+  const admin = await requireAdminRole("editor");
+  const limit = await consumeAdminRateLimit({ key: `school-media:${admin.user.lineUserId}`, limit: 12, windowSeconds: 60 });
+  if (!limit.allowed) return Response.json({ ok: false, error: "rate_limited" }, { status: 429, headers: { "retry-after": String(limit.retryAfterSeconds) } });
 
   const form = await request.formData();
   const schoolCode = clean(form.get("school_code"), 12);
@@ -26,8 +32,12 @@ export async function POST(request: Request) {
 
   if (form.get("action") === "remove") {
     const current = await getSchoolMediaOverride(schoolCode);
+    if (current?.storage_provider === "imagekit") {
+      try { await deleteImageKitFile(current.file_id); }
+      catch { return redirect("/admin/media?updated=school_image_delete_failed"); }
+    }
     await deleteSchoolMediaOverride(schoolCode);
-    if (current) await deleteAdminFile(current.file_id);
+    if (current?.storage_provider !== "imagekit" && current) await deleteAdminFile(current.file_id);
     return redirect("/admin/media?updated=school_image_removed");
   }
 
@@ -44,28 +54,41 @@ export async function POST(request: Request) {
     return redirect("/admin/media?updated=school_image_invalid_provenance");
   }
 
-  const id = crypto.randomUUID();
-  const safeName = upload.name.replace(/[^\w.\-\u4e00-\u9fff]/g, "_");
   const createdAt = new Date().toISOString();
-  const objectKey = `public/school-images/${schoolCode}/${id}-${safeName}`;
-  await createAdminFile({
-    id,
-    object_key: objectKey,
-    file_name: upload.name,
-    content_type: upload.type,
-    size: upload.size,
-    category: "school-image",
-    visibility: "public",
-    description: `${schoolCode} ${school.name} 校園圖片`,
-    uploaded_by: admin.user.displayName,
-    created_at: createdAt,
-    file_blob: await upload.arrayBuffer(),
-  });
-
   const current = await getSchoolMediaOverride(schoolCode);
+  const imageKitConfigured = Boolean(getImageKitConfig());
+  let fileId = crypto.randomUUID();
+  let imageUrl = "";
+  let thumbnailUrl = "";
+  if (imageKitConfigured) {
+    try {
+      const image = await uploadSchoolImageToImageKit({ file: upload, schoolCode });
+      fileId = image.fileId;
+      imageUrl = image.url;
+      thumbnailUrl = image.thumbnailUrl;
+    } catch { return redirect("/admin/media?updated=school_image_upload_failed"); }
+  } else {
+    const safeName = upload.name.replace(/[^\w.\-\u4e00-\u9fff]/g, "_");
+    await createAdminFile({
+      id: fileId,
+      object_key: `public/school-images/${schoolCode}/${fileId}-${safeName}`,
+      file_name: upload.name,
+      content_type: upload.type,
+      size: upload.size,
+      category: "school-image",
+      visibility: "public",
+      description: `${schoolCode} ${school.name} 校園圖片（等待 ImageKit 遷移）`,
+      uploaded_by: admin.user.displayName,
+      created_at: createdAt,
+      file_blob: await upload.arrayBuffer(),
+    });
+  }
   await upsertSchoolMediaOverride({
     school_code: schoolCode,
-    file_id: id,
+    file_id: fileId,
+    storage_provider: imageKitConfigured ? "imagekit" : "d1",
+    image_url: imageUrl,
+    thumbnail_url: thumbnailUrl,
     source: source as "jshs-owned" | "official-school-site" | "licensed-public" | "admin-provided",
     source_url: sourceUrl,
     license,
@@ -74,7 +97,12 @@ export async function POST(request: Request) {
     updated_by: admin.user.displayName,
     updated_at: createdAt,
   });
-  if (current && current.file_id !== id) await deleteAdminFile(current.file_id);
+  if (current && current.file_id !== fileId) {
+    if (current.storage_provider === "imagekit") {
+      try { await deleteImageKitFile(current.file_id); }
+      catch { await enqueueExternalMediaCleanup({ provider: "imagekit", fileId: current.file_id, error: "replace_cleanup_failed" }); }
+    } else await deleteAdminFile(current.file_id);
+  }
   return redirect("/admin/media?updated=school_image_saved");
 }
 

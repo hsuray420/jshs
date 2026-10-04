@@ -25,8 +25,8 @@ test("provides a server-only Supabase schema with RLS and no browser service rol
     read("lib/supabase-server.ts"),
   ]);
   for (const table of ["users", "user_identities", "line_friendships", "exam_sessions", "exam_results", "subject_scores", "weakness_profiles", "wishes", "favorites", "anonymous_submissions", "admin_drafts", "audit_logs"]) {
-    assert.match(schema, new RegExp(`CREATE TABLE.*${table}`, "s"));
-    assert.match(schema, new RegExp(`ALTER TABLE.*${table} ENABLE ROW LEVEL SECURITY`, "s"));
+    assert.match(schema, new RegExp(`CREATE TABLE.*${table}`, "is"));
+    assert.match(schema, new RegExp(`ALTER TABLE.*${table} ENABLE ROW LEVEL SECURITY`, "is"));
   }
   assert.match(server, /SUPABASE_SERVICE_ROLE_KEY/);
   assert.doesNotMatch(server, /NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY/);
@@ -50,13 +50,16 @@ test("centralizes provider links and renders the system resources control plane"
 });
 
 test("keeps ImageKit signing and upload credentials on the server", async () => {
-  const [imagekit, route] = await Promise.all([
+  const [imagekit, route, mediaRoute] = await Promise.all([
     read("lib/imagekit-server.ts"),
     read("app/api/admin/imagekit/auth/route.ts"),
+    read("app/api/admin/school-media/route.ts"),
   ]);
   assert.match(imagekit, /IMAGEKIT_PRIVATE_KEY/);
   assert.match(imagekit, /createImageKitUploadSignature/);
   assert.match(route, /requireAdminRole/);
   assert.match(route, /assertSameOrigin/);
+  assert.match(mediaRoute, /assertSameOrigin/);
+  assert.match(mediaRoute, /consumeAdminRateLimit/);
   assert.doesNotMatch(route, /IMAGEKIT_PRIVATE_KEY/);
 });

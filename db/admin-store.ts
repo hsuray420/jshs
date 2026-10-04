@@ -39,6 +39,9 @@ export function fileBlobToBytes(blob: unknown) {
 export type SchoolMediaOverride = {
   school_code: string;
   file_id: string;
+  storage_provider: "d1" | "imagekit";
+  image_url: string;
+  thumbnail_url: string;
   source: "jshs-owned" | "official-school-site" | "licensed-public" | "admin-provided";
   source_url: string;
   license: string;
@@ -152,6 +155,9 @@ export async function ensureAdminSchema() {
     db.prepare(`CREATE TABLE IF NOT EXISTS school_media_overrides (
       school_code TEXT PRIMARY KEY,
       file_id TEXT NOT NULL,
+      storage_provider TEXT NOT NULL DEFAULT 'd1',
+      image_url TEXT NOT NULL DEFAULT '',
+      thumbnail_url TEXT NOT NULL DEFAULT '',
       source TEXT NOT NULL,
       source_url TEXT NOT NULL DEFAULT '',
       license TEXT NOT NULL DEFAULT '',
@@ -215,11 +221,26 @@ export async function ensureAdminSchema() {
       window_started_at INTEGER NOT NULL,
       request_count INTEGER NOT NULL DEFAULT 0
     )`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS external_media_cleanup (
+      id TEXT PRIMARY KEY,
+      provider TEXT NOT NULL,
+      file_id TEXT NOT NULL,
+      last_error TEXT NOT NULL DEFAULT '',
+      attempts INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      UNIQUE(provider, file_id)
+    )`),
   ]);
   const columns = await db.prepare(`PRAGMA table_info(admin_files)`).all<{ name: string }>();
   if (!(columns.results ?? []).some((column) => column.name === "file_blob")) {
     await db.prepare(`ALTER TABLE admin_files ADD COLUMN file_blob BLOB`).run();
   }
+  const mediaColumns = await db.prepare(`PRAGMA table_info(school_media_overrides)`).all<{ name: string }>();
+  const mediaNames = new Set((mediaColumns.results ?? []).map((column) => column.name));
+  if (!mediaNames.has("storage_provider")) await db.prepare(`ALTER TABLE school_media_overrides ADD COLUMN storage_provider TEXT NOT NULL DEFAULT 'd1'`).run();
+  if (!mediaNames.has("image_url")) await db.prepare(`ALTER TABLE school_media_overrides ADD COLUMN image_url TEXT NOT NULL DEFAULT ''`).run();
+  if (!mediaNames.has("thumbnail_url")) await db.prepare(`ALTER TABLE school_media_overrides ADD COLUMN thumbnail_url TEXT NOT NULL DEFAULT ''`).run();
 }
 
 export async function consumeAdminRateLimit(input: { key: string; limit: number; windowSeconds: number }) {
@@ -395,7 +416,7 @@ export async function deleteAdminFile(id: string) {
 export async function listSchoolMediaOverrides() {
   await ensureAdminSchema();
   const result = await getD1()
-    .prepare(`SELECT school_code, file_id, source, source_url, license, credit, alt,
+    .prepare(`SELECT school_code, file_id, storage_provider, image_url, thumbnail_url, source, source_url, license, credit, alt,
       updated_by, updated_at FROM school_media_overrides ORDER BY updated_at DESC`)
     .all<SchoolMediaOverride>();
   return result.results ?? [];
@@ -404,7 +425,7 @@ export async function listSchoolMediaOverrides() {
 export async function getSchoolMediaOverride(schoolCode: string) {
   await ensureAdminSchema();
   return getD1()
-    .prepare(`SELECT school_code, file_id, source, source_url, license, credit, alt,
+    .prepare(`SELECT school_code, file_id, storage_provider, image_url, thumbnail_url, source, source_url, license, credit, alt,
       updated_by, updated_at FROM school_media_overrides WHERE school_code = ? LIMIT 1`)
     .bind(schoolCode)
     .first<SchoolMediaOverride>();
@@ -413,10 +434,13 @@ export async function getSchoolMediaOverride(schoolCode: string) {
 export async function upsertSchoolMediaOverride(input: SchoolMediaOverride) {
   await ensureAdminSchema();
   await getD1().prepare(`INSERT INTO school_media_overrides (
-    school_code, file_id, source, source_url, license, credit, alt, updated_by, updated_at
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    school_code, file_id, storage_provider, image_url, thumbnail_url, source, source_url, license, credit, alt, updated_by, updated_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   ON CONFLICT(school_code) DO UPDATE SET
     file_id = excluded.file_id,
+    storage_provider = excluded.storage_provider,
+    image_url = excluded.image_url,
+    thumbnail_url = excluded.thumbnail_url,
     source = excluded.source,
     source_url = excluded.source_url,
     license = excluded.license,
@@ -425,8 +449,8 @@ export async function upsertSchoolMediaOverride(input: SchoolMediaOverride) {
     updated_by = excluded.updated_by,
     updated_at = excluded.updated_at`)
     .bind(
-      input.school_code, input.file_id, input.source, input.source_url, input.license,
-      input.credit, input.alt, input.updated_by, input.updated_at,
+      input.school_code, input.file_id, input.storage_provider, input.image_url, input.thumbnail_url,
+      input.source, input.source_url, input.license, input.credit, input.alt, input.updated_by, input.updated_at,
     )
     .run();
 }
@@ -438,6 +462,29 @@ export async function deleteSchoolMediaOverride(schoolCode: string) {
     .bind(schoolCode)
     .run();
   return (result.meta.changes ?? 0) > 0;
+}
+
+export async function enqueueExternalMediaCleanup(input: { provider: "imagekit"; fileId: string; error: string }) {
+  await ensureAdminSchema();
+  const now = new Date().toISOString();
+  await getD1().prepare(`INSERT INTO external_media_cleanup (id, provider, file_id, last_error, attempts, created_at, updated_at)
+    VALUES (?, ?, ?, ?, 1, ?, ?)
+    ON CONFLICT(provider, file_id) DO UPDATE SET last_error = excluded.last_error, attempts = attempts + 1, updated_at = excluded.updated_at`)
+    .bind(crypto.randomUUID(), input.provider, input.fileId, input.error.slice(0, 200), now, now).run();
+}
+
+export async function listExternalMediaCleanup(limit = 20) {
+  await ensureAdminSchema();
+  const result = await getD1().prepare(`SELECT id, provider, file_id, last_error, attempts, created_at, updated_at
+    FROM external_media_cleanup ORDER BY updated_at ASC LIMIT ?`).bind(Math.max(1, Math.min(limit, 100))).all<{
+      id: string; provider: "imagekit"; file_id: string; last_error: string; attempts: number; created_at: string; updated_at: string;
+    }>();
+  return result.results ?? [];
+}
+
+export async function resolveExternalMediaCleanup(id: string) {
+  await ensureAdminSchema();
+  await getD1().prepare(`DELETE FROM external_media_cleanup WHERE id = ?`).bind(id).run();
 }
 
 export async function listSiteSettings() {

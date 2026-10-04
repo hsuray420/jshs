@@ -16,6 +16,9 @@ export const adminFiles = sqliteTable("admin_files", {
 export const schoolMediaOverrides = sqliteTable("school_media_overrides", {
   schoolCode: text("school_code").primaryKey(),
   fileId: text("file_id").notNull(),
+  storageProvider: text("storage_provider").notNull().default("d1"),
+  imageUrl: text("image_url").notNull().default(""),
+  thumbnailUrl: text("thumbnail_url").notNull().default(""),
   source: text("source").notNull(),
   sourceUrl: text("source_url").notNull().default(""),
   license: text("license").notNull().default(""),

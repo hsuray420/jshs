@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     schoolCode: code,
     image: record,
     adminMedia: override ? {
-      coverImage: `/api/school-media?code=${encodeURIComponent(code)}`,
+      coverImage: override.storage_provider === "imagekit" && /^https:\/\//.test(override.image_url) ? override.image_url : `/api/school-media?code=${encodeURIComponent(code)}`,
       source: override.source,
       sourceUrl: override.source_url,
       alt: override.alt,

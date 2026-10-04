@@ -7,6 +7,9 @@ export async function GET(request: Request) {
   if (!/^[A-Za-z0-9]{4,12}$/.test(code)) return new Response("Not found", { status: 404 });
   const override = await getSchoolMediaOverride(code);
   if (!override) return new Response("Not found", { status: 404 });
+  if (override.storage_provider === "imagekit" && /^https:\/\//.test(override.image_url)) {
+    return Response.redirect(override.image_url, 302);
+  }
   const file = await getAdminFileBlob(override.file_id);
   const bytes = fileBlobToBytes(file?.file_blob_hex ?? file?.file_blob);
   if (!file || file.visibility !== "public" || !file.content_type.startsWith("image/") || !bytes?.byteLength) {

@@ -4,6 +4,7 @@ const MEMBER_COOKIE = "jshs_member_session";
 const SESSION_DAYS = 30;
 
 export type MemberSession = Readonly<{
+  userId?: string;
   lineUserId: string;
   displayName: string;
   pictureUrl?: string;
@@ -17,7 +18,7 @@ export async function getMemberSession(): Promise<MemberSession | null> {
   if (!payload || !signature || !constantTimeEqual(signature, await signSession(payload))) return null;
   const data = parsePayload(payload);
   if (!data || data.expires < Date.now()) return null;
-  return { lineUserId: data.lineUserId, displayName: data.displayName || "LINE 使用者", pictureUrl: data.pictureUrl, friendVerifiedAt: data.friendVerifiedAt };
+  return { userId: typeof data.userId === "string" ? data.userId : undefined, lineUserId: data.lineUserId, displayName: data.displayName || "LINE 使用者", pictureUrl: data.pictureUrl, friendVerifiedAt: data.friendVerifiedAt };
 }
 
 export async function createMemberSessionCookie(member: MemberSession) {
