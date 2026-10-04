@@ -148,7 +148,46 @@ test("assistant rejects an empty Workers AI answer before it reaches the UI", as
 
 test("assistant client uses the unary provider path so completed replies are validated before display", async () => {
   const ui = await read("components/ai-assistant.tsx");
-  assert.match(ui, /question, stream: false, history/);
+  assert.match(ui, /question, stream: true, history/);
+  assert.match(ui, /requestAnimationFrame/);
+  assert.match(ui, /模擬打字|simulateTyping/);
+});
+
+test("assistant API exposes a server-side SSE stream and keeps the JSON fallback", async () => {
+  const route = await read("app/api/assistant/route.ts");
+  assert.match(route, /stream === true/);
+  assert.match(route, /stream: true/);
+  assert.match(route, /text\/event-stream/);
+  assert.match(route, /ReadableStream/);
+  assert.match(route, /assistant_stream_failed/);
+  assert.doesNotMatch(route, /OPENAI_API_KEY|GEMINI_API_KEY|ANTHROPIC_API_KEY/);
+});
+
+test("assistant composer handles IME, stop, and preserves partial output", async () => {
+  const ui = await read("components/ai-assistant.tsx");
+  assert.match(ui, /event\.isComposing/);
+  assert.match(ui, /停止/);
+  assert.match(ui, /status: "complete"/);
+  assert.match(ui, /保留|preserve|partial/i);
+});
+
+test("assistant markdown uses CDN marked, DOMPurify, and highlight.js with copy controls", async () => {
+  const markdown = await read("components/ai-chat-markdown.tsx");
+  assert.match(markdown, /marked/);
+  assert.match(markdown, /DOMPurify/);
+  assert.match(markdown, /highlight\.js|hljs/);
+  assert.match(markdown, /複製|copy/);
+  assert.match(markdown, /sanitize/);
+});
+
+test("assistant workspace provides smart scroll, response tools, and a two-column welcome grid", async () => {
+  const ui = await read("components/ai-assistant.tsx");
+  const css = await read("app/globals.css");
+  assert.match(ui, /回到最新/);
+  assert.match(ui, /重新產生/);
+  assert.match(ui, /複製/);
+  assert.match(css, /grid-template-columns:\s*repeat\(2/);
+  assert.match(css, /max-height:\s*200px/);
 });
 
 test("會員 AI 對話寫入 D1，訪客對話留在本機", async () => {
