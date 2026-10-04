@@ -4,6 +4,7 @@ import { DatabaseSync } from "node:sqlite";
 import { DOMAINS, LEGACY_NAME, ROOT, ensurePrivateDir, parseJsonOutput, readJson, sqlIdentifier, writeJson, wrangler } from "./common.mjs";
 import { loadTargetSchema, openSnapshot, readRows, tableFingerprint, transformTableRows, validateMigratedTable } from "./data.mjs";
 import { inspectIdentity } from "./mapping.mjs";
+import { filterPlannerOrphans } from "./identity-backfill.mjs";
 
 const dir = await ensurePrivateDir();
 const metadataPath = path.join(dir, "metadata.json");
@@ -30,11 +31,29 @@ try {
     const targetSchema = await loadTargetSchema(domain);
     try {
       for (const table of metadata.migrationTables.filter((item) => item.domain === domain)) {
-        const expected = transformTableRows(source, targetSchema, table.sourceTable, table.targetTable).rows;
+        const transformed = transformTableRows(source, targetSchema, table.sourceTable, table.targetTable, metadata.identityBackfillMap);
+        const filtered = filterPlannerOrphans(table.sourceTable, transformed.rows, inventory.plannerDrops ?? []);
+        const expected = filtered.rows;
         const actual = readRows(target, table.targetTable);
         const check = validateMigratedTable(expected, actual, table.sourceTable, table.targetTable, targetSchema);
+        const actualDropped = (inventory.plannerDrops ?? [])
+          .filter((drop) => drop.sourceTable === table.sourceTable)
+          .reduce((total, drop) => total + drop.rowCount, 0);
+        const unexpectedMissingCount = transformed.sourceRowCount - actual.length - actualDropped;
+        const authorizedDropCountMatch = actualDropped === table.droppedRowCount && filtered.droppedCount === actualDropped;
+        check.oldCount = transformed.sourceRowCount;
+        check.newCount = actual.length;
+        check.migratedCount = expected.length;
+        check.droppedByAuthorization = actualDropped;
+        check.unexpectedMissing = unexpectedMissingCount;
+        check.rowConservation = check.rowConservation === "PASS"
+          && transformed.sourceRowCount === expected.length + actualDropped
+          && actual.length === expected.length
+          ? "PASS" : "FAIL";
         const allChecks = [
           check.rowConservation,
+          authorizedDropCountMatch ? "PASS" : "FAIL",
+          unexpectedMissingCount === 0 ? "PASS" : "FAIL",
           check.uniqueCheck,
           check.randomReadback,
           check.oldestNewestReadback,
@@ -57,9 +76,11 @@ try {
   const community = new DatabaseSync(targetDatabaseFiles.community, { readOnly: true });
   let destinationIdentity;
   let crossDbOrphans;
+  let backfillClean;
   try {
     destinationIdentity = inspectIdentity(core);
     crossDbOrphans = countCrossDatabaseOrphans(core, learning, community);
+    backfillClean = validateBackfillReadback(core, metadata.identityBackfillMap);
   } finally {
     core.close(); learning.close(); community.close();
   }
@@ -78,8 +99,11 @@ try {
   metadata.tableVerification = results;
   metadata.destinationIdentity = destinationIdentity;
   metadata.crossDatabaseOrphans = crossDbOrphans;
-  if (!tableClean || !identityClean || !orphanClean) {
-    const failed = { tableClean, identityClean, orphanClean, failedTables: results.filter((item) => item.result !== "PASS").length };
+  metadata.identityBackfillVerification = backfillClean;
+  metadata.unexpectedMissingCount = results.reduce((total, item) => total + item.unexpectedMissing, 0);
+  const noUnexpectedMissing = results.every((item) => item.unexpectedMissing === 0);
+  if (!tableClean || !identityClean || !orphanClean || !backfillClean.passed || !noUnexpectedMissing) {
+    const failed = { tableClean, identityClean, orphanClean, backfillClean: backfillClean.passed, noUnexpectedMissing, failedTables: results.filter((item) => item.result !== "PASS").length };
     metadata.verification = { status: "FAIL", completedAt: new Date().toISOString(), failed };
     await writeJson(metadataPath, metadata);
     throw new Error(`Migration readback validation failed: ${JSON.stringify(failed)}; production bindings remain unchanged`);
@@ -87,7 +111,7 @@ try {
 
   metadata.verification = { status: "PASS", completedAt: new Date().toISOString() };
   await writeJson(metadataPath, metadata);
-  console.log("Row conservation, unique keys, sampled readback, and identity/orphan checks PASS.");
+  console.log("Row conservation (migrated + authorized drops), unique keys, sampled readback, and identity/orphan checks PASS.");
   await runBrowserImageKitSmoke();
   metadata.imageKitSmoke = { status: "PASS", verifiedAt: new Date().toISOString(), temporaryFileDeleted: true, d1BinaryFallbackUsed: false };
   await verifyLegacyMappedTablesUnchanged(metadata, inventory);
@@ -118,6 +142,31 @@ async function loadExport(sqlPath, dbName) {
   db.close();
   await chmod(dbPath, 0o600);
   return dbPath;
+}
+
+function validateBackfillReadback(core, identityBackfillMap) {
+  const byUser = new Map();
+  let missingUsers = 0;
+  let missingMappings = 0;
+  let conflictingMappings = 0;
+  for (const [lineUserId, mapping] of Object.entries(identityBackfillMap ?? {})) {
+    const user = core.prepare("SELECT id FROM users WHERE id = ? LIMIT 1").get(mapping.userId);
+    const identity = core.prepare(`SELECT id, user_id FROM user_identities
+      WHERE provider = 'line' AND provider_user_id = ? LIMIT 1`).get(lineUserId);
+    if (!user) missingUsers += 1;
+    if (!identity || identity.user_id !== mapping.userId || identity.id !== mapping.identityId) missingMappings += 1;
+    const previous = byUser.get(mapping.userId);
+    if (previous && previous !== lineUserId) conflictingMappings += 1;
+    byUser.set(mapping.userId, lineUserId);
+  }
+  const result = {
+    candidateIdentityCount: Object.keys(identityBackfillMap ?? {}).length,
+    missingUsers,
+    missingMappings,
+    conflictingMappings,
+    passed: missingUsers === 0 && missingMappings === 0 && conflictingMappings === 0,
+  };
+  return result;
 }
 
 function countCrossDatabaseOrphans(core, learning, community) {
@@ -240,8 +289,12 @@ function containsNonce(value, nonce) {
 }
 
 async function writeReport(currentMetadata, inventoryTables, tables, identity, orphans) {
-  const tableLines = tables.map((item) => `| ${item.sourceTable} → ${item.database}.${item.targetTable} | ${item.oldCount} | ${item.newCount} | ${item.uniqueCheck} | ${item.randomReadback} | ${item.oldestNewestReadback} | ${item.contentHashMatch ? "PASS" : "FAIL"} | ${item.result} |`).join("\n");
+  const tableLines = tables.map((item) => `| ${item.sourceTable} → ${item.database}.${item.targetTable} | ${item.oldCount} | ${item.migratedCount} | ${item.droppedByAuthorization} | ${item.unexpectedMissing} | ${item.newCount} | ${item.result} |`).join("\n");
   const inventoryLines = inventoryTables.map((item) => `| ${item.name} | ${item.rowCount} | ${item.domain} |`).join("\n");
+  const identityLines = (currentMetadata.identityBackfillAudit ?? []).map((item) =>
+    `| ${item.alias} | ${item.tables.map((table) => `${table.table} (${table.rowCount})`).join(", ")} | ${item.plannerIds.length} | ${item.backfillRequired ? "new UUID backfill" : "existing mapping"} |`).join("\n");
+  const dropLines = (currentMetadata.dropAudit ?? []).map((item) =>
+    `| ${item.sourceTable} | ${item.plannerAlias} | ${item.rowCount} | ${item.reason} | ${item.action} |`).join("\n");
   const report = `# Storage migration report
 
 Run: ${currentMetadata.runId}
@@ -272,9 +325,28 @@ ${inventoryLines || "| No tables | 0 | — |"}
 
 ## Table row conservation
 
-| Table mapping | Old rows | New rows | Primary/unique | Random readback | Oldest/newest | Content hash | Result |
-|---|---:|---:|---|---|---|---|---|
-${tableLines || "| No populated mapped tables | 0 | 0 | PASS |"}
+| Table mapping | Old rows | Migrated | Dropped by authorization | Unexpected missing | New rows | Result |
+|---|---:|---:|---:|---:|---:|---|
+${tableLines || "| No populated mapped tables | 0 | 0 | 0 | 0 | 0 | PASS |"}
+
+## Member identity backfill
+
+- Member-referenced LINE identities: ${currentMetadata.legacyOwnershipSummary?.candidateIdentityCount ?? 0}
+- New deterministic UUID backfills: ${currentMetadata.legacyOwnershipSummary?.generatedBackfillCount ?? 0}
+- LINE-only records not promoted: ${currentMetadata.legacyOwnershipSummary?.lineUsersNotPromoted ?? 0}
+
+| Anonymous identity | Member tables | Planner IDs | Identity handling |
+|---|---|---:|---|
+${identityLines.join("\n") || "| None | — | 0 | — |"}
+
+## Authorized planner exclusions
+
+| Source table | Planner alias | Rows | Reason | Action |
+|---|---|---:|---|---|
+${dropLines.join("\n") || "| None | — | 0 | — | —"}
+
+- Unexpected missing rows: ${currentMetadata.unexpectedMissingCount ?? 0}
+- Backfill identity readback: ${currentMetadata.identityBackfillVerification?.passed ? "PASS" : "FAIL"}
 
 ## Integrity
 

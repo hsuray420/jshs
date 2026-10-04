@@ -111,6 +111,13 @@ export function userDataErrorCount(report) {
   return Object.entries(report).filter(([key, value]) => key.endsWith("Count") && typeof value === "number" && value > 0);
 }
 
+export function hasStagedChanges(status) {
+  return String(status).split(/\r?\n/).filter(Boolean).some((line) => {
+    const indexStatus = line.slice(0, 2)[0];
+    return indexStatus !== " " && indexStatus !== "?";
+  });
+}
+
 export function newRunId() {
   return `${new Date().toISOString().replace(/[-:.TZ]/g, "").slice(0, 12)}-${randomUUID().slice(0, 8)}`;
 }

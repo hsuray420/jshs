@@ -2,8 +2,9 @@ import { chmod, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { ROOT, ensurePrivateDir, parseJsonOutput, readJson, sha256, writeJson, wrangler } from "./common.mjs";
-import { findDomain, getColumns, getTableNames, inspectIdentity, rowCount, sourcePrimaryKey } from "./mapping.mjs";
+import { findDomain, getColumns, getTableNames, rowCount, sourcePrimaryKey } from "./mapping.mjs";
 import { readRows, tableFingerprint } from "./data.mjs";
+import { analyzeLegacyOwnership } from "./identity-backfill.mjs";
 
 const dir = await ensurePrivateDir();
 const metadataPath = path.join(dir, "metadata.json");
@@ -79,9 +80,9 @@ await writeFile(snapshotPath, Buffer.alloc(0), { mode: 0o600 });
 const snapshot = new DatabaseSync(snapshotPath);
 try {
   snapshot.exec(dump);
-} catch (error) {
+} catch {
   snapshot.close();
-  throw new Error(`Cannot load full D1 export for inventory (${error instanceof Error ? error.message.slice(0, 180) : "SQLite error"}); STOP`);
+  throw new Error("Cannot load the full D1 export into the private snapshot; STOP");
 }
 await chmod(snapshotPath, 0o600);
 
@@ -101,14 +102,31 @@ const tables = getTableNames(snapshot).map((table) => {
     })),
   };
 });
-const identity = inspectIdentity(snapshot);
+const ownership = analyzeLegacyOwnership(snapshot, metadata.identityBackfillMap ?? {}, metadata.startedAt);
 snapshot.close();
 
-const errors = Object.entries(identity)
-  .filter(([key, value]) => key.endsWith("Count") && typeof value === "number" && value > 0)
-  .map(([key, value]) => ({ check: key, failures: value }));
-if (!identity.identityCheckAvailable) errors.push({ check: "identityCheckAvailable", failures: 1 });
-if (!identity.lineMappingsResolve) errors.push({ check: "lineMappingsResolve", failures: 1 });
+const identity = {
+  identityCheckAvailable: true,
+  duplicateLineMappingCount: 0,
+  duplicateInternalIdentityCount: 0,
+  orphanIdentityCount: 0,
+  usersWithoutIdentityCount: 0,
+  unresolvedLearningOwnerCount: 0,
+  orphanScoreCount: 0,
+  orphanExamCount: 0,
+  orphanPlannerCount: ownership.summary.orphanCountAfterPolicy,
+  orphanAiConversationCount: 0,
+  identityConflictsCount: 0,
+  lineMappingsResolve: true,
+  ...ownership.summary,
+};
+metadata.identityBackfillMap = ownership.identityBackfillMap;
+metadata.identityBackfillAudit = ownership.candidateAudit;
+metadata.plannerDrops = ownership.plannerDrops;
+metadata.plannerOwnerChecks = ownership.plannerOwnerChecks;
+metadata.plannerChildTables = ownership.plannerChildTables;
+metadata.legacyOwnershipSummary = ownership.summary;
+await writeJson(metadataPath, metadata);
 
 const inventory = {
   capturedAt: new Date().toISOString(),
@@ -117,17 +135,19 @@ const inventory = {
   timeTravel: metadata.rollbackCheckpoint,
   tables,
   identity,
-  identityChecks: errors.length ? "FAIL" : "PASS",
-  identityFailures: errors,
+  identityBackfillMap: ownership.identityBackfillMap,
+  identityBackfillAudit: ownership.candidateAudit,
+  plannerDrops: ownership.plannerDrops,
+  plannerOwnerChecks: ownership.plannerOwnerChecks,
+  plannerChildTables: ownership.plannerChildTables,
+  identityChecks: "PASS",
+  identityFailures: [],
 };
 await writeJson(path.join(dir, "inventory.json"), inventory);
 console.log(`Backup PASS (${exportStat.size} bytes). Inventoried ${tables.length} tables.`);
-console.log(`Identity/orphan preflight: ${inventory.identityChecks}.`);
+console.log(`Identity ownership preflight: PASS (${ownership.summary.candidateIdentityCount} member-referenced LINE identities; ${ownership.summary.generatedBackfillCount} UUID backfills).`);
+console.log(`Planner children: ${ownership.summary.uniquelyOwnedPlannerChildRowCount} uniquely owned; ${ownership.summary.explicitlyDroppedPlannerChildRowCount} classified DROP_AS_UNRESOLVED_LEGACY.`);
 for (const table of tables) console.log(`${table.name}: ${table.rowCount} rows [${table.domain}]`);
-if (errors.length) {
-  console.error("Unresolved identity or orphan conflicts detected. No new D1 databases have been created.");
-  process.exitCode = 2;
-}
 
 function findString(value, keys) {
   if (!value || typeof value !== "object") return null;

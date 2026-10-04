@@ -24,6 +24,14 @@ const git = run("git", ["status", "--porcelain=v1", "--untracked-files=all"]);
 const branch = run("git", ["branch", "--show-current"]).stdout.trim();
 const head = run("git", ["rev-parse", "HEAD"]).stdout.trim();
 if (branch !== "main") throw new Error(`Expected branch main, found ${branch || "(detached)"}`);
+const sourceStatus = run("git", [
+  "status", "--porcelain=v1", "--untracked-files=all", "--",
+  "scripts/storage-migration", "db/migrations",
+]).stdout.trim();
+if (sourceStatus) throw new Error("Storage migration scripts or schemas are not committed; publish the tested package before accessing production");
+run("git", ["remote", "get-url", "github"]);
+const remoteHead = run("git", ["ls-remote", "github", "refs/heads/main"], { timeout: 60_000 }).stdout.trim().split(/\s+/)[0];
+if (!remoteHead || remoteHead !== head) throw new Error("Local main is not published at github/main; refusing to access production with unpublished migration code");
 
 for (const spec of Object.values(DOMAINS)) {
   const dirPath = path.join(ROOT, "db", "migrations", spec.migrationDir);

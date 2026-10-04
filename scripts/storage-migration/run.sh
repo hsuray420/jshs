@@ -39,19 +39,26 @@ if [[ ! -x "$ROOT/node_modules/.bin/wrangler" ]]; then
 fi
 
 MIGRATION_ROOT="$HOME/.jshs-storage-migration"
-MIGRATION_DIR="$MIGRATION_ROOT/active"
-if [[ -L "$MIGRATION_ROOT" || -L "$MIGRATION_DIR" ]]; then
+RUNS_DIR="$MIGRATION_ROOT/runs"
+if [[ -L "$MIGRATION_ROOT" || -L "$RUNS_DIR" ]]; then
   echo "Migration backup directory must not be a symbolic link; refusing to continue."
   exit 1
 fi
-mkdir -p "$MIGRATION_DIR"
-chmod 700 "$MIGRATION_ROOT" "$MIGRATION_DIR"
+mkdir -p "$RUNS_DIR"
+chmod 700 "$MIGRATION_ROOT" "$RUNS_DIR"
+RUN_ID="$(date -u '+%Y%m%dT%H%M%SZ')-$$"
+MIGRATION_DIR="$RUNS_DIR/$RUN_ID"
+if ! mkdir "$MIGRATION_DIR"; then
+  echo "Could not create a unique private migration run directory; refusing to overwrite any existing checkpoint."
+  exit 1
+fi
+chmod 700 "$MIGRATION_DIR"
 export JSHS_MIGRATION_DIR="$MIGRATION_DIR"
 export WRANGLER_WRITE_LOGS=false
 export WRANGLER_LOG_PATH=/dev/null
 
-if ! mkdir "$MIGRATION_DIR/.lock" 2>/dev/null; then
-  echo "Another migration run holds the lock at $MIGRATION_DIR/.lock; refusing to continue."
+if ! mkdir "$MIGRATION_ROOT/.lock" 2>/dev/null; then
+  echo "Another migration run holds the lock at $MIGRATION_ROOT/.lock; refusing to continue."
   exit 1
 fi
 cleanup() {
@@ -59,7 +66,7 @@ cleanup() {
   if [[ -f "$MIGRATION_DIR/metadata.json" ]]; then
     node --experimental-sqlite scripts/storage-migration/report.mjs || echo "Could not update the migration report; inspect the private metadata directory."
   fi
-  rmdir "$MIGRATION_DIR/.lock" 2>/dev/null || true
+  rmdir "$MIGRATION_ROOT/.lock" 2>/dev/null || true
   return "$exit_code"
 }
 trap cleanup EXIT

@@ -1,6 +1,6 @@
 import { chmod, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { DOMAINS, LEGACY_NAME, MIGRATION_KEY, ROOT, ensurePrivateDir, parseJsonOutput, readJson, run, sha256, writeJson, wrangler } from "./common.mjs";
+import { DOMAINS, LEGACY_NAME, MIGRATION_KEY, ROOT, ensurePrivateDir, hasStagedChanges, parseJsonOutput, readJson, run, sha256, writeJson, wrangler } from "./common.mjs";
 
 const dir = await ensurePrivateDir();
 const metadataPath = path.join(dir, "metadata.json");
@@ -34,7 +34,7 @@ const branch = run("git", ["branch", "--show-current"]).stdout.trim();
 if (branch !== "main") throw new Error(`Expected branch main at cutover, found ${branch || "(detached)"}`);
 const status = run("git", ["status", "--porcelain=v1", "--untracked-files=all"]).stdout.trim();
 console.log(`Pre-deploy git status: ${status ? `${status.split(/\r?\n/).length} changed path(s)` : "clean"}`);
-if (status.split(/\r?\n/).filter(Boolean).some((line) => line.slice(0, 2).trim())) {
+if (hasStagedChanges(status)) {
   throw new Error("Staged changes already exist; refusing to include unrelated staged files in the production binding commit");
 }
 run("git", ["remote", "get-url", "github"]);

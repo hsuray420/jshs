@@ -34,6 +34,15 @@ CREATE TABLE IF NOT EXISTS account_settings (
   PRIMARY KEY(user_id, setting_key)
 );
 
+CREATE TABLE IF NOT EXISTS member_notification_preferences (
+  user_id TEXT PRIMARY KEY,
+  planner_finalized_enabled INTEGER NOT NULL DEFAULT 1,
+  score_calculated_enabled INTEGER NOT NULL DEFAULT 1,
+  important_date_enabled INTEGER NOT NULL DEFAULT 1,
+  weekly_report_enabled INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS favorites (
   user_id TEXT NOT NULL,
   school_code TEXT NOT NULL,

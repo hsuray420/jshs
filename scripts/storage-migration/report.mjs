@@ -9,13 +9,22 @@ const pathToReport = path.join(ROOT, "storage-migration-report.md");
 const inventoryRows = (inventory?.tables ?? []).map((table) =>
   `| ${table.name} | ${table.rowCount} | ${table.domain} |`).join("\n") || "| Not completed | — | — |";
 const copiedRows = (metadata.tableVerification ?? []).map((table) =>
-  `| ${table.sourceTable} → ${table.database}.${table.targetTable} | ${table.oldCount} | ${table.newCount} | ${table.uniqueCheck} | ${table.randomReadback} | ${table.oldestNewestReadback} | ${table.contentHashMatch ? "PASS" : "FAIL"} | ${table.result} |`).join("\n")
+  `| ${table.sourceTable} → ${table.database}.${table.targetTable} | ${table.oldCount} | ${table.migratedCount} | ${table.droppedByAuthorization} | ${table.unexpectedMissing} | ${table.newCount} | ${table.uniqueCheck} | ${table.randomReadback} | ${table.oldestNewestReadback} | ${table.contentHashMatch ? "PASS" : "FAIL"} | ${table.result} |`).join("\n")
   || (metadata.migrationTables ?? []).map((table) =>
-    `| ${table.sourceTable} → ${table.database}.${table.targetTable} | ${table.insertedSourceRows} | Not verified | PENDING | PENDING | PENDING | PENDING | PENDING |`).join("\n")
-  || "| No copied tables recorded | — | — | PENDING | PENDING | PENDING | PENDING | PENDING |";
+    `| ${table.sourceTable} → ${table.database}.${table.targetTable} | ${table.oldCount} | ${table.migratedRowCount} | ${table.droppedRowCount} | ${table.unexpectedMissingCount} | Not verified | PENDING | PENDING | PENDING | PENDING | PENDING |`).join("\n")
+  || "| No copied tables recorded | — | — | — | — | — | PENDING | PENDING | PENDING | PENDING | PENDING |";
 const identity = metadata.destinationIdentity ?? inventory?.identity;
 const orphanChecks = metadata.crossDatabaseOrphans;
 const checks = metadata.checks ?? {};
+const identityAuditRows = (metadata.identityBackfillAudit ?? inventory?.identityBackfillAudit ?? []).map((item) =>
+  `| ${item.alias} | ${item.tables.map((table) => `${table.table} (${table.rowCount})`).join(", ") || "planner ownership"} | ${item.plannerIds.length} | ${item.backfillRequired ? "new UUID backfill" : "existing mapping"} |`).join("\n")
+  || "| No member-referenced LINE identity | — | 0 | — |";
+const dropAuditRows = (metadata.dropAudit ?? inventory?.plannerDrops ?? []).map((item) =>
+  `| ${item.sourceTable} | ${item.plannerAlias} | ${item.rowCount} | ${item.reason} | ${item.action} |`).join("\n")
+  || "| None | — | 0 | — | — |";
+const plannerOwnerRows = (inventory?.plannerOwnerChecks ?? []).map((item) =>
+  `| ${item.sourceTable} | ${item.plannerAlias} | ${item.ownerAlias} | ${item.rowCount} | PASS |`).join("\n")
+  || "| None | — | — | 0 | PASS |";
 const domainRows = Object.entries(DOMAINS).map(([domain, spec]) =>
   `| ${domain.toUpperCase()} | ${spec.database} | ${metadata.databaseIds?.[domain] ?? "Not created"} |`).join("\n");
 const lines = [
@@ -47,9 +56,32 @@ const lines = [
   "",
   "## Table mapping and row conservation",
   "",
-  "| Mapping | Old rows | New rows | Primary/unique | Random readback | Oldest/newest | Content hash | Result |",
-  "|---|---:|---:|---|---|---|---|---|",
+  "| Mapping | Old rows | Migrated | Dropped by authorization | Unexpected missing | New rows | Primary/unique | Random readback | Oldest/newest | Content hash | Result |",
+  "|---|---:|---:|---:|---:|---:|---|---|---|---|---|",
   copiedRows,
+  "",
+  "## Legacy member identity ownership",
+  "",
+  `- Member-referenced LINE identities: ${metadata.legacyOwnershipSummary?.candidateIdentityCount ?? inventory?.identity?.candidateIdentityCount ?? "PENDING"}`,
+  `- New internal UUID backfills: ${metadata.legacyOwnershipSummary?.generatedBackfillCount ?? inventory?.identity?.generatedBackfillCount ?? "PENDING"}`,
+  `- LINE-only records not promoted to members: ${metadata.legacyOwnershipSummary?.lineUsersNotPromoted ?? inventory?.identity?.lineUsersNotPromoted ?? "PENDING"}`,
+  "",
+  "| Anonymous identity | Member data tables | Planner IDs | Identity handling |",
+  "|---|---|---:|---|",
+  identityAuditRows,
+  "",
+  "## Planner ownership and authorized exclusions",
+  "",
+  "| Retained child table | Planner alias | Owner alias | Rows | Owner check |",
+  "|---|---|---|---:|---|",
+  plannerOwnerRows,
+  "",
+  "| Source table | Orphan planner alias | Rows | Reason | Action |",
+  "|---|---|---:|---|---|",
+  dropAuditRows,
+  "",
+  `- Total explicitly dropped from migration: ${metadata.legacyOwnershipSummary?.explicitlyDroppedPlannerChildRowCount ?? inventory?.identity?.explicitlyDroppedPlannerChildRowCount ?? "PENDING"}`,
+  `- Unexpected missing rows: ${metadata.unexpectedMissingCount ?? (metadata.migrationTables ? metadata.migrationTables.reduce((total, table) => total + table.unexpectedMissingCount, 0) : "PENDING")}`,
   "",
   "## Identity and orphan validation",
   "",
@@ -70,6 +102,7 @@ const lines = [
   `- Exam result/session orphans: ${orphanChecks?.examResultSessionOrphans ?? "PENDING"}`,
   `- Subject score/result orphans: ${orphanChecks?.subjectScoreOrphans ?? "PENDING"}`,
   `- Identity status: ${metadata.verification?.status ?? inventory?.identityChecks ?? "PENDING"}`,
+  `- Backfill readback: ${metadata.identityBackfillVerification?.passed === true ? "PASS" : metadata.identityBackfillVerification?.passed === false ? "FAIL" : "PENDING"}`,
   "",
   "## ImageKit validation",
   "",

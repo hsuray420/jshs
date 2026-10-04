@@ -8,6 +8,7 @@ export const TABLE_MAP = Object.freeze({
     line_friendships: "line_friendships",
     favorites: "favorites",
     account_settings: "account_settings",
+    member_notification_preferences: "member_notification_preferences",
   },
   learning: {
     member_mock_exams: "member_mock_exams",
@@ -137,7 +138,7 @@ export function inspectIdentity(db) {
   const lineMap = db.prepare(`SELECT provider_user_id, user_id FROM user_identities WHERE provider = 'line'`).all();
   const userMap = new Map(lineMap.map((row) => [row.provider_user_id, row.user_id]));
 
-  for (const table of ["member_score_history", "member_mock_exams", "member_ai_conversations", "member_planners", "favorites", "community_votes"]) {
+  for (const table of ["member_score_history", "member_mock_exams", "member_ai_conversations", "member_planners", "member_notification_preferences", "favorites", "community_votes"]) {
     if (!names.has(table)) continue;
     result.checkedLearningTables.push(table);
     result.unresolvedLearningOwnerCount += ownerOrphanCount(db, table, { usersTable });
@@ -148,7 +149,7 @@ export function inspectIdentity(db) {
   }
   for (const table of ["member_ai_conversations"]) if (names.has(table)) result.orphanAiConversationCount += ownerOrphanCount(db, table, { usersTable });
 
-  for (const table of ["member_score_history", "member_mock_exams", "member_ai_conversations", "member_planners", "favorites", "community_votes"]) {
+  for (const table of ["member_score_history", "member_mock_exams", "member_ai_conversations", "member_planners", "member_notification_preferences", "favorites", "community_votes"]) {
     if (!names.has(table)) continue;
     const columns = columnSet(db, table);
     if (columns.has("user_id") && columns.has("line_user_id")) {

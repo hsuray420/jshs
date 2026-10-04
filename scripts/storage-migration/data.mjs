@@ -133,25 +133,36 @@ export function readRows(db, table) {
   return db.prepare(`SELECT * FROM ${sqlIdentifier(table)}${order}`).all();
 }
 
-export function makeIdentityMap(db) {
+export function makeIdentityMap(db, backfillMap = {}) {
   const names = new Set(getTableNames(db));
   const map = new Map();
-  if (!names.has("user_identities")) return map;
-  for (const identity of db.prepare("SELECT user_id, provider_user_id FROM user_identities WHERE provider = 'line'").all()) {
-    if (typeof identity.provider_user_id === "string" && typeof identity.user_id === "string") map.set(identity.provider_user_id, identity.user_id);
+  if (names.has("user_identities")) {
+    for (const identity of db.prepare("SELECT user_id, provider_user_id FROM user_identities WHERE provider = 'line'").all()) {
+      if (typeof identity.provider_user_id !== "string" || typeof identity.user_id !== "string") continue;
+      if (map.has(identity.provider_user_id) && map.get(identity.provider_user_id) !== identity.user_id) {
+        throw new Error("Conflicting legacy LINE identity mapping");
+      }
+      map.set(identity.provider_user_id, identity.user_id);
+    }
+  }
+  for (const [lineId, mapping] of Object.entries(backfillMap)) {
+    if (map.has(lineId) && map.get(lineId) !== mapping.userId) {
+      throw new Error("Persisted identity backfill conflicts with an existing LINE mapping");
+    }
+    map.set(lineId, mapping.userId);
   }
   return map;
 }
 
-export function transformTableRows(sourceDb, targetDb, sourceTable, targetTable) {
+export function transformTableRows(sourceDb, targetDb, sourceTable, targetTable, backfillMap = {}) {
   const targetColumns = getColumns(targetDb, targetTable);
   if (!targetColumns.length) throw new Error(`Target table ${targetTable} does not exist`);
   const sourceColumns = getColumns(sourceDb, sourceTable).map((column) => column.name);
   const targetNames = new Set(targetColumns.map((column) => column.name));
-  const mapping = makeIdentityMap(sourceDb);
+  const mapping = makeIdentityMap(sourceDb, backfillMap);
   const rows = readRows(sourceDb, sourceTable);
   const transformed = rows.map((original) => transformRow(original, sourceTable, targetTable, targetColumns, targetNames, mapping));
-  return { rows: transformed, columns: targetColumns, identityMap: mapping, sourceColumns };
+  return { rows: transformed, columns: targetColumns, identityMap: mapping, sourceColumns, sourceRowCount: rows.length };
 }
 
 export function transformRow(original, sourceTable, targetTable, targetColumns, targetNames, identityMap) {
