@@ -210,11 +210,31 @@ export async function ensureAdminSchema() {
     )`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_school_data_audit_lookup
       ON school_data_audit(school_code, occurred_at)`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS admin_rate_limits (
+      key TEXT PRIMARY KEY,
+      window_started_at INTEGER NOT NULL,
+      request_count INTEGER NOT NULL DEFAULT 0
+    )`),
   ]);
   const columns = await db.prepare(`PRAGMA table_info(admin_files)`).all<{ name: string }>();
   if (!(columns.results ?? []).some((column) => column.name === "file_blob")) {
     await db.prepare(`ALTER TABLE admin_files ADD COLUMN file_blob BLOB`).run();
   }
+}
+
+export async function consumeAdminRateLimit(input: { key: string; limit: number; windowSeconds: number }) {
+  await ensureAdminSchema();
+  const now = Math.floor(Date.now() / 1000);
+  const cutoff = now - input.windowSeconds;
+  const row = await getD1().prepare(`INSERT INTO admin_rate_limits (key, window_started_at, request_count)
+    VALUES (?, ?, 1)
+    ON CONFLICT(key) DO UPDATE SET
+      window_started_at = CASE WHEN window_started_at <= ? THEN excluded.window_started_at ELSE window_started_at END,
+      request_count = CASE WHEN window_started_at <= ? THEN 1 ELSE request_count + 1 END
+    RETURNING window_started_at, request_count`)
+    .bind(input.key, now, cutoff, cutoff).first<{ window_started_at: number; request_count: number }>();
+  const count = Number(row?.request_count || 1);
+  return { allowed: count <= input.limit, count, retryAfterSeconds: Math.max(1, Number(row?.window_started_at || now) + input.windowSeconds - now) };
 }
 
 export async function getSchoolDataDraft(schoolCode: string, regionCode: string, adminId: string) {

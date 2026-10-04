@@ -66,6 +66,12 @@ export const schoolDataAudit = sqliteTable("school_data_audit", {
   errorMessage: text("error_message").notNull().default(""),
 }, (table) => [index("idx_school_data_audit_lookup").on(table.schoolCode, table.occurredAt)]);
 
+export const adminRateLimits = sqliteTable("admin_rate_limits", {
+  key: text("key").primaryKey(),
+  windowStartedAt: integer("window_started_at").notNull(),
+  requestCount: integer("request_count").notNull().default(0),
+});
+
 export const notificationSettings = sqliteTable("notification_settings", {
   eventKey: text("event_key").primaryKey(),
   enabled: integer("enabled").notNull().default(1),

@@ -4,7 +4,7 @@ import { assertAvailableSchoolRegion } from "../../../../../lib/school-data/regi
 import { validateSchoolAdminUpdates } from "../../../../../lib/school-admin-csv.mjs";
 import { previewCanonicalSchoolRow, syncCanonicalSchoolRow } from "../../../../../lib/school-github-sync";
 import { assertSameOrigin } from "../../../../../lib/admin-security";
-import { createSchoolDataAuditEntries, markSchoolDataDraftPublished, upsertSchoolDataDraft } from "../../../../../db/admin-store";
+import { consumeAdminRateLimit, createSchoolDataAuditEntries, markSchoolDataDraftPublished, upsertSchoolDataDraft } from "../../../../../db/admin-store";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +20,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ sch
       return Response.json({ ok: false, error: "invalid_request" }, { status: 400 });
     }
     const admin = await requireAdminRole(action === "publish" ? "administrator" : "editor");
+    const limit = await consumeAdminRateLimit({
+      key: `school-data:${admin.user.lineUserId}:${action}`,
+      limit: action === "publish" ? 6 : action === "preview" ? 20 : 60,
+      windowSeconds: 60,
+    });
+    if (!limit.allowed) return Response.json({ ok: false, error: "rate_limited" }, { status: 429, headers: { "retry-after": String(limit.retryAfterSeconds) } });
     const { schoolCode } = await params;
     const school = getSchoolByCode(schoolCode);
     if (!school) return Response.json({ ok: false, error: "school_not_found" }, { status: 404 });

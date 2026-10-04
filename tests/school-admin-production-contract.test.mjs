@@ -30,13 +30,19 @@ test("admin exposes audit and data health pages without placeholder navigation",
   assert.match(audit, /listSchoolDataAudit/);
   assert.match(data, /資料健康中心/);
   assert.match(data, /validation/);
+  assert.match(data, /GitHub Sync/);
+  assert.match(data, /getCanonicalSchoolFileSnapshot/);
 });
 
 test("school publish route checks same-origin requests and publish role", async () => {
-  const route = await read("app/api/admin/schools/[schoolCode]/route.ts");
+  const [route, store] = await Promise.all([
+    read("app/api/admin/schools/[schoolCode]/route.ts"),
+    read("db/admin-store.ts"),
+  ]);
   assert.match(route, /assertSameOrigin/);
   assert.match(route, /requireAdminRole/);
+  assert.match(route, /consumeAdminRateLimit/);
+  assert.match(store, /CREATE TABLE IF NOT EXISTS admin_rate_limits/);
   assert.match(route, /preview/);
   assert.match(route, /publish/);
 });
-
