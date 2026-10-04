@@ -71,6 +71,25 @@ test("floating assistant exposes a visible close action and Escape fallback", as
   assert.match(css, /\.ai-chat-header-actions \.ai-chat-close/);
 });
 
+test("assistant launcher hides Beta, supports pointer dragging, and has a restrained bot cue", async () => {
+  const ui = await read("components/ai-assistant.tsx");
+  const css = await read("app/globals.css");
+  assert.match(ui, /className="ai-chat-bot"/);
+  assert.match(ui, /onPointerMove={handlePointerMove}/);
+  assert.match(ui, /jshs-ai-launcher-position/);
+  assert.match(ui, /className="ai-chat-floating-label">AI 小助手/);
+  assert.doesNotMatch(ui, /ai-chat-floating-label">AI 小助手 <span className="ai-chat-beta">Beta/);
+  assert.match(css, /@keyframes ai-chat-bot-float/);
+  assert.match(css, /touch-action: none/);
+});
+
+test("full assistant page uses a bounded workspace on desktop and mobile", async () => {
+  const css = await read("app/globals.css");
+  assert.match(css, /\.ai-chat-full \{[^}]*max-width: 1320px/s);
+  assert.match(css, /\.ai-chat-full \.ai-chat-sidebar/);
+  assert.match(css, /\.ai-chat-full \{ border-radius: 18px; max-height: 100%/);
+});
+
 test("assistant handles English greetings locally so they receive a complete reply", async () => {
   const policy = await read("lib/assistant-policy.ts");
   assert.match(policy, /hello\|hallo\|hi/);

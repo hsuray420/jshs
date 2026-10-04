@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
+import { FormEvent, KeyboardEvent, PointerEvent as ReactPointerEvent, useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AiChatMarkdown } from "./ai-chat-markdown";
 import { appendMessage, ChatConversation, ChatMessage, createConversation, getAllConversations, getConversation, getCurrentConversationId, removeMessage, replaceMessage, setCurrentConversationId, updateConversation } from "../lib/ai-chat-storage";
@@ -62,5 +62,55 @@ function ChatWorkspace({ mode, onClose, initialConversationId = "", initialQuest
 }
 function toUserError(error: ChatError) { if (error.code === "guest_limit_reached") return "訪客免費提問次數已用完，登入 LINE 會員後即可繼續使用。"; if (error.status === 429 || error.code === "assistant_rate_limited") return "目前 AI 使用量較高，請稍後再試。"; if (error.code === "assistant_timeout") return "AI 回應時間較久，請再試一次。"; if (error.code === "assistant_stream_failed" || error.code === "assistant_invalid_stream" || error.code === "assistant_stream_empty" || error.code === "assistant_stream_incomplete") return "AI 回覆尚未完整收到，請重新產生。"; if (error.status && error.status >= 400 && error.status < 500) return "這個問題目前無法送出，請稍微修改後再試。"; return "AI 暫時沒有成功回應，請再試一次。"; }
 // The floating shell itself is position: fixed near the bottom/right; its internal chat layout stays in normal flex flow.
-export function AiAssistant({ isMember }: { isMember: boolean }) { const pathname = usePathname(); const [open, setOpen] = useState(false); const [contextQuestion, setContextQuestion] = useState(""); const openAssistant = (question = "") => { document.dispatchEvent(new Event("jshs:ai-open")); setContextQuestion(question); setOpen(true); }; useEffect(() => { document.body.classList.toggle("jshs-ai-open", open); return () => document.body.classList.remove("jshs-ai-open"); }, [open]); useEffect(() => { if (!open) return; const closeOnEscape = (event: globalThis.KeyboardEvent) => { if (event.key === "Escape") setOpen(false); }; document.addEventListener("keydown", closeOnEscape); return () => document.removeEventListener("keydown", closeOnEscape); }, [open]); useEffect(() => { const closeForNavigation = () => setOpen(false); const openWithContext = (event: Event) => { const detail = (event as CustomEvent<{ question?: string }>).detail; openAssistant(detail?.question || ""); }; document.addEventListener("jshs:nav-open", closeForNavigation); document.addEventListener("jshs:ai-context", openWithContext); return () => { document.removeEventListener("jshs:nav-open", closeForNavigation); document.removeEventListener("jshs:ai-context", openWithContext); }; }, []); if (pathname === "/" || pathname === "/ai" || pathname === "/admin" || pathname.startsWith("/admin/")) return null; return <div className="ai-chat-root">{open ? <ChatWorkspace mode="floating" initialQuestion={contextQuestion} onClose={() => setOpen(false)} isMember={isMember} /> : null}{!open ? <button type="button" className="ai-chat-floating-button" aria-label="開啟 AI 小助手 Beta" aria-expanded={false} onClick={() => openAssistant()}><span aria-hidden="true">✦</span><span className="ai-chat-floating-label">AI 小助手 <span className="ai-chat-beta">Beta</span></span></button> : null}</div>; }
+type FloatingButtonOffset = { x: number; y: number };
+
+function FloatingAssistantButton({ onOpen }: { onOpen: () => void }) {
+  const [offset, setOffset] = useState<FloatingButtonOffset>(() => {
+    if (typeof window === "undefined") return { x: 0, y: 0 };
+    try {
+      const saved = window.localStorage.getItem("jshs-ai-launcher-position");
+      return saved ? JSON.parse(saved) as FloatingButtonOffset : { x: 0, y: 0 };
+    } catch { return { x: 0, y: 0 }; }
+    });
+    const dragRef = useRef<{ pointerId: number; startX: number; startY: number; offset: FloatingButtonOffset; moved: boolean } | null>(null);
+    const offsetRef = useRef(offset);
+    const suppressClickRef = useRef(false);
+  function clamp(next: FloatingButtonOffset): FloatingButtonOffset {
+    const width = 190;
+    const height = 64;
+    return { x: Math.max(-(window.innerWidth - width - 16), Math.min(24, next.x)), y: Math.max(-(window.innerHeight - height - 96), Math.min(0, next.y)) };
+  }
+  function handlePointerDown(event: ReactPointerEvent<HTMLButtonElement>) {
+    if (event.button !== 0) return;
+    dragRef.current = { pointerId: event.pointerId, startX: event.clientX, startY: event.clientY, offset, moved: false };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+  function handlePointerMove(event: ReactPointerEvent<HTMLButtonElement>) {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+      const next = clamp({ x: drag.offset.x + event.clientX - drag.startX, y: drag.offset.y + event.clientY - drag.startY });
+      if (Math.abs(next.x - drag.offset.x) > 3 || Math.abs(next.y - drag.offset.y) > 3) drag.moved = true;
+      offsetRef.current = next;
+      setOffset(next);
+  }
+  function handlePointerUp(event: ReactPointerEvent<HTMLButtonElement>) {
+    const drag = dragRef.current;
+      if (!drag || drag.pointerId !== event.pointerId) return;
+      suppressClickRef.current = drag.moved;
+      if (drag.moved) {
+        try { window.localStorage.setItem("jshs-ai-launcher-position", JSON.stringify(offsetRef.current)); } catch { /* Position persistence is optional. */ }
+      }
+      dragRef.current = null;
+      if (!suppressClickRef.current) onOpen();
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+  }
+  function handleClick() { if (suppressClickRef.current) { suppressClickRef.current = false; return; } onOpen(); }
+  return <button type="button" className="ai-chat-floating-button" aria-label="開啟 AI 小助手" aria-expanded={false} style={{ transform: "translate3d(" + offset.x + "px, " + offset.y + "px, 0)" }} onClick={handleClick} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={handlePointerUp} onPointerCancel={handlePointerUp}>
+    <span className="ai-chat-bot" aria-hidden="true"><span className="ai-chat-bot-antenna" /><span className="ai-chat-bot-face"><i /><i /></span></span>
+    <span className="ai-chat-floating-label">AI 小助手</span>
+    <span className="ai-chat-floating-hint">問我</span>
+  </button>;
+}
+
+export function AiAssistant({ isMember }: { isMember: boolean }) { const pathname = usePathname(); const [open, setOpen] = useState(false); const [contextQuestion, setContextQuestion] = useState(""); const openAssistant = (question = "") => { document.dispatchEvent(new Event("jshs:ai-open")); setContextQuestion(question); setOpen(true); }; useEffect(() => { document.body.classList.toggle("jshs-ai-open", open); return () => document.body.classList.remove("jshs-ai-open"); }, [open]); useEffect(() => { if (!open) return; const closeOnEscape = (event: globalThis.KeyboardEvent) => { if (event.key === "Escape") setOpen(false); }; document.addEventListener("keydown", closeOnEscape); return () => document.removeEventListener("keydown", closeOnEscape); }, [open]); useEffect(() => { const closeForNavigation = () => setOpen(false); const openWithContext = (event: Event) => { const detail = (event as CustomEvent<{ question?: string }>).detail; openAssistant(detail?.question || ""); }; document.addEventListener("jshs:nav-open", closeForNavigation); document.addEventListener("jshs:ai-context", openWithContext); return () => { document.removeEventListener("jshs:nav-open", closeForNavigation); document.removeEventListener("jshs:ai-context", openWithContext); }; }, []); if (pathname === "/" || pathname === "/ai" || pathname === "/admin" || pathname.startsWith("/admin/")) return null; return <div className="ai-chat-root">{open ? <ChatWorkspace mode="floating" initialQuestion={contextQuestion} onClose={() => setOpen(false)} isMember={isMember} /> : <FloatingAssistantButton onOpen={() => openAssistant()} />}</div>; }
 export function AiChatPage({ initialConversationId = "", isMember }: { initialConversationId?: string; isMember: boolean }) { return <main className="ai-chat-page"><ChatWorkspace mode="full" initialConversationId={initialConversationId} isMember={isMember} /></main>; }
