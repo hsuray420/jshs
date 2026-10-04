@@ -8,13 +8,40 @@ export type AdminSession = {
   lineUserId: string;
   displayName: string;
   pictureUrl?: string;
+  role: AdminRole;
 };
+
+export type AdminRole = "owner" | "administrator" | "reviewer" | "editor";
+const ROLE_WEIGHT: Record<AdminRole, number> = { editor: 1, reviewer: 2, administrator: 3, owner: 4 };
 
 export async function requireAdmin() {
   const user = await getAdminSession();
   if (!user) redirect("/admin/login");
 
   return { user, allowed: true, signOutPath: "/api/admin/logout" };
+}
+
+export async function requireAdminRole(minimumRole: AdminRole) {
+  const admin = await requireAdmin();
+  if (ROLE_WEIGHT[admin.user.role] < ROLE_WEIGHT[minimumRole]) throw new AdminAuthorizationError();
+  return admin;
+}
+
+export class AdminAuthorizationError extends Error {
+  constructor() { super("admin_role_forbidden"); }
+}
+
+export function resolveAdminRole(lineUserId: string): AdminRole {
+  const roleLists: Array<[AdminRole, string | undefined]> = [
+    ["owner", process.env.ADMIN_OWNER_LINE_USER_IDS],
+    ["administrator", process.env.ADMINISTRATOR_LINE_USER_IDS],
+    ["reviewer", process.env.ADMIN_REVIEWER_LINE_USER_IDS],
+    ["editor", process.env.ADMIN_EDITOR_LINE_USER_IDS],
+  ];
+  for (const [role, ids] of roleLists) {
+    if (String(ids || "").split(",").map((id) => id.trim()).includes(lineUserId)) return role;
+  }
+  return "administrator";
 }
 
 export async function getAdminSession(): Promise<AdminSession | null> {
@@ -38,6 +65,7 @@ export async function getAdminSession(): Promise<AdminSession | null> {
     lineUserId: data.lineUserId,
     displayName: data.displayName || "LINE 管理員",
     pictureUrl: data.pictureUrl,
+    role: isAdminRole(data.role) ? data.role : "administrator",
   };
 }
 
@@ -122,4 +150,8 @@ function parseSessionPayload(payload: string) {
   } catch {
     return null;
   }
+}
+
+function isAdminRole(value: unknown): value is AdminRole {
+  return value === "owner" || value === "administrator" || value === "reviewer" || value === "editor";
 }

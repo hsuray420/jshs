@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { createAdminSessionCookie } from "../../../../admin/auth";
+import { createAdminSessionCookie, resolveAdminRole } from "../../../../admin/auth";
 import { listExtraAdminLineUserIds, upsertLineUser } from "../../../../../db/admin-store";
 import {
   exchangeLineCode,
@@ -64,6 +64,7 @@ export async function GET(request: Request) {
       lineUserId: profile.userId,
       displayName: profile.displayName,
       pictureUrl: profile.pictureUrl,
+      role: resolveAdminRole(profile.userId),
     });
 
     await notifyLineAdmins(

@@ -74,6 +74,40 @@ export type LineUser = {
   last_seen_at: string;
 };
 
+export type SchoolDataDraft = {
+  id: string;
+  school_code: string;
+  school_name: string;
+  region_code: string;
+  source_file: string;
+  base_sha: string;
+  base_values_json: string;
+  updates_json: string;
+  status: "draft" | "published" | "conflict";
+  created_by: string;
+  updated_by: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type SchoolDataAudit = {
+  id: string;
+  occurred_at: string;
+  admin_id: string;
+  admin_name: string;
+  action: "draft" | "preview" | "publish" | "rollback";
+  status: "success" | "failed" | "conflict";
+  school_code: string;
+  school_name: string;
+  region_code: string;
+  source_file: string;
+  field: string;
+  old_value: string;
+  new_value: string;
+  commit_sha: string;
+  error_message: string;
+};
+
 export function getD1() {
   if (!env.DB) throw new Error("D1 binding DB is not available.");
   return env.DB;
@@ -139,11 +173,119 @@ export async function ensureAdminSchema() {
     )`),
     db.prepare(`CREATE INDEX IF NOT EXISTS idx_deployment_events_created_at
       ON deployment_events(created_at)`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS school_data_drafts (
+      id TEXT PRIMARY KEY,
+      school_code TEXT NOT NULL,
+      school_name TEXT NOT NULL,
+      region_code TEXT NOT NULL,
+      source_file TEXT NOT NULL,
+      base_sha TEXT NOT NULL DEFAULT '',
+      base_values_json TEXT NOT NULL,
+      updates_json TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'draft',
+      created_by TEXT NOT NULL,
+      updated_by TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      UNIQUE(school_code, region_code, created_by)
+    )`),
+    db.prepare(`CREATE INDEX IF NOT EXISTS idx_school_data_drafts_status
+      ON school_data_drafts(status, updated_at)`),
+    db.prepare(`CREATE TABLE IF NOT EXISTS school_data_audit (
+      id TEXT PRIMARY KEY,
+      occurred_at TEXT NOT NULL,
+      admin_id TEXT NOT NULL,
+      admin_name TEXT NOT NULL,
+      action TEXT NOT NULL,
+      status TEXT NOT NULL,
+      school_code TEXT NOT NULL,
+      school_name TEXT NOT NULL,
+      region_code TEXT NOT NULL,
+      source_file TEXT NOT NULL,
+      field TEXT NOT NULL DEFAULT '',
+      old_value TEXT NOT NULL DEFAULT '',
+      new_value TEXT NOT NULL DEFAULT '',
+      commit_sha TEXT NOT NULL DEFAULT '',
+      error_message TEXT NOT NULL DEFAULT ''
+    )`),
+    db.prepare(`CREATE INDEX IF NOT EXISTS idx_school_data_audit_lookup
+      ON school_data_audit(school_code, occurred_at)`),
   ]);
   const columns = await db.prepare(`PRAGMA table_info(admin_files)`).all<{ name: string }>();
   if (!(columns.results ?? []).some((column) => column.name === "file_blob")) {
     await db.prepare(`ALTER TABLE admin_files ADD COLUMN file_blob BLOB`).run();
   }
+}
+
+export async function getSchoolDataDraft(schoolCode: string, regionCode: string, adminId: string) {
+  await ensureAdminSchema();
+  return getD1().prepare(`SELECT * FROM school_data_drafts
+    WHERE school_code = ? AND region_code = ? AND created_by = ? AND status = 'draft' LIMIT 1`)
+    .bind(schoolCode, regionCode, adminId).first<SchoolDataDraft>();
+}
+
+export async function upsertSchoolDataDraft(input: Omit<SchoolDataDraft, "id" | "status" | "created_at" | "updated_at">) {
+  await ensureAdminSchema();
+  const now = new Date().toISOString();
+  const id = crypto.randomUUID();
+  await getD1().prepare(`INSERT INTO school_data_drafts (
+    id, school_code, school_name, region_code, source_file, base_sha, base_values_json,
+    updates_json, status, created_by, updated_by, created_at, updated_at
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?, ?, ?)
+  ON CONFLICT(school_code, region_code, created_by) DO UPDATE SET
+    school_name = excluded.school_name,
+    source_file = excluded.source_file,
+    base_sha = excluded.base_sha,
+    base_values_json = excluded.base_values_json,
+    updates_json = excluded.updates_json,
+    status = 'draft',
+    updated_by = excluded.updated_by,
+    updated_at = excluded.updated_at`)
+    .bind(id, input.school_code, input.school_name, input.region_code, input.source_file,
+      input.base_sha, input.base_values_json, input.updates_json, input.created_by,
+      input.updated_by, now, now).run();
+  return getSchoolDataDraft(input.school_code, input.region_code, input.created_by);
+}
+
+export async function markSchoolDataDraftPublished(schoolCode: string, regionCode: string, adminId: string) {
+  await ensureAdminSchema();
+  await getD1().prepare(`UPDATE school_data_drafts SET status = 'published', updated_at = ?
+    WHERE school_code = ? AND region_code = ? AND created_by = ? AND status = 'draft'`)
+    .bind(new Date().toISOString(), schoolCode, regionCode, adminId).run();
+}
+
+export async function countPendingSchoolDataDrafts() {
+  await ensureAdminSchema();
+  const row = await getD1().prepare(`SELECT COUNT(*) AS count FROM school_data_drafts WHERE status = 'draft'`).first<{ count: number }>();
+  return Number(row?.count || 0);
+}
+
+export async function createSchoolDataAuditEntries(entries: Array<Omit<SchoolDataAudit, "id" | "occurred_at">>) {
+  if (!entries.length) return;
+  await ensureAdminSchema();
+  const occurredAt = new Date().toISOString();
+  await getD1().batch(entries.map((entry) => getD1().prepare(`INSERT INTO school_data_audit (
+    id, occurred_at, admin_id, admin_name, action, status, school_code, school_name,
+    region_code, source_file, field, old_value, new_value, commit_sha, error_message
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+    .bind(crypto.randomUUID(), occurredAt, entry.admin_id, entry.admin_name, entry.action,
+      entry.status, entry.school_code, entry.school_name, entry.region_code, entry.source_file,
+      entry.field, entry.old_value, entry.new_value, entry.commit_sha, entry.error_message)));
+}
+
+export async function listSchoolDataAudit(filters: { query?: string; admin?: string; field?: string; date?: string } = {}) {
+  await ensureAdminSchema();
+  const query = `%${filters.query || ""}%`;
+  const admin = `%${filters.admin || ""}%`;
+  const field = `%${filters.field || ""}%`;
+  const date = `${filters.date || ""}%`;
+  const result = await getD1().prepare(`SELECT * FROM school_data_audit
+    WHERE (school_name LIKE ? OR school_code LIKE ? OR commit_sha LIKE ?)
+      AND (admin_name LIKE ? OR admin_id LIKE ?)
+      AND field LIKE ? AND occurred_at LIKE ?
+    ORDER BY occurred_at DESC LIMIT 300`)
+    .bind(query, query, query, admin, admin, field, date).all<SchoolDataAudit>();
+  return result.results ?? [];
 }
 
 export async function listAdminFiles() {

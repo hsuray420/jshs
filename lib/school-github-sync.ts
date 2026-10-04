@@ -1,10 +1,19 @@
 import { env } from "cloudflare:workers";
 import { assertAvailableSchoolRegion, regionalCsvPath } from "./school-data/regional-loader.mjs";
-import { updateCanonicalSchoolCsv } from "./school-admin-csv.mjs";
+import { parseCsv } from "./school-data/pipeline.mjs";
+import { updateCanonicalSchoolCsv, validateSchoolAdminUpdates } from "./school-admin-csv.mjs";
+import { buildSchoolCommitMessage, createSchoolFieldDiff, detectSchoolFieldConflicts } from "./school-admin-workflow.mjs";
 
 type RuntimeEnv = typeof env & { GITHUB_TOKEN?: string; GITHUB_REPOSITORY?: string; GITHUB_BRANCH?: string; ADMIN_GITHUB_SYNC_MODE?: string };
 type GithubFile = { content?: string; sha?: string; html_url?: string };
-type SchoolSyncInput = { regionCode: string; schoolCode: string; updates: Record<string, string>; expectedSha: string };
+type SchoolSyncInput = {
+  regionCode: string;
+  schoolCode: string;
+  schoolName: string;
+  updates: Record<string, string>;
+  baseValues: Record<string, string>;
+  expectedSha: string;
+};
 
 const runtimeEnv = env as RuntimeEnv;
 const API = "https://api.github.com";
@@ -54,18 +63,42 @@ async function readFile(filePath: string) {
 export async function getCanonicalSchoolFileSnapshot(regionCode: string) {
   const filePath = filePathForRegion(regionCode);
   const file = await readFile(filePath);
-  return { ...file, filePath };
+  if (file.configured && "content" in file && file.content && file.sha && file.github) {
+    return { configured: true as const, content: file.content, sha: file.sha, htmlUrl: file.htmlUrl, filePath, repository: file.github.repository, branch: file.github.branch };
+  }
+  return { configured: file.configured, reason: file.reason, filePath };
+}
+
+function prepareChange(input: SchoolSyncInput, content: string, sha: string) {
+  const updates = validateSchoolAdminUpdates(input.updates) as Record<string, string>;
+  const latest = (parseCsv(content).rows as Record<string, string>[]).find((row) => row["學校代碼"] === input.schoolCode);
+  if (!latest) throw new Error(`school not found: ${input.schoolCode}`);
+  const conflicts = detectSchoolFieldConflicts({ base: input.baseValues, latest, updates });
+  if (conflicts.length) return { ok: false as const, conflicts, sha };
+  const changed = updateCanonicalSchoolCsv({ csvText: content, schoolCode: input.schoolCode, updates, expectedLabel: input.regionCode });
+  const diff = createSchoolFieldDiff({ base: latest, draft: { ...latest, ...updates } });
+  return { ok: true as const, changed, diff, sha };
+}
+
+export async function previewCanonicalSchoolRow(input: SchoolSyncInput) {
+  const filePath = filePathForRegion(input.regionCode);
+  const file = await readFile(filePath);
+  if (!file.configured || !("content" in file) || !file.content || !file.sha || !file.github) return { ...file, filePath };
+  const prepared = prepareChange(input, file.content, file.sha);
+  if (!prepared.ok) return { configured: true as const, previewed: false as const, reason: "field_conflict" as const, conflicts: prepared.conflicts, sha: file.sha, filePath };
+  return { configured: true as const, previewed: true as const, sha: file.sha, filePath, diff: prepared.diff, changedFields: prepared.changed.changedFields, rowCount: prepared.changed.rowCount };
 }
 
 export async function syncCanonicalSchoolRow(input: SchoolSyncInput) {
   const filePath = filePathForRegion(input.regionCode);
   const file = await readFile(filePath);
-  if (!file.configured) return file;
-  if (file.sha !== input.expectedSha) return { configured: true as const, synced: false as const, reason: "sha_conflict" as const, sha: file.sha };
-  const changed = updateCanonicalSchoolCsv({ csvText: file.content, schoolCode: input.schoolCode, updates: input.updates, expectedLabel: input.regionCode });
+  if (!file.configured || !("content" in file) || !file.content || !file.sha || !file.github) return file;
+  const prepared = prepareChange(input, file.content, file.sha);
+  if (!prepared.ok) return { configured: true as const, synced: false as const, reason: "field_conflict" as const, conflicts: prepared.conflicts, sha: file.sha };
+  const changed = prepared.changed;
   if (!changed.changedFields.length) return { configured: true as const, synced: false as const, reason: "unchanged" as const, sha: file.sha, changedFields: [] as string[] };
   const url = `${API}/repos/${file.github.repository}/contents/${filePath}`;
-  const response = await fetch(url, { method: "PUT", headers: { ...headers(file.github.token), "content-type": "application/json" }, body: JSON.stringify({ message: `admin(schools): update ${input.schoolCode} ${changed.changedFields.join(", ")}`, content: encode(changed.csvText), branch: file.github.branch, sha: input.expectedSha }) }).catch(() => null);
+  const response = await fetch(url, { method: "PUT", headers: { ...headers(file.github.token), "content-type": "application/json" }, body: JSON.stringify({ message: buildSchoolCommitMessage({ schoolCode: input.schoolCode, schoolName: input.schoolName, fields: changed.changedFields }), content: encode(changed.csvText), branch: file.github.branch, sha: file.sha }) }).catch(() => null);
   if (!response?.ok) return { configured: true as const, synced: false as const, reason: response?.status === 409 ? "sha_conflict" as const : "github_write_failed" as const };
   const payload = await response.json().catch(() => null) as { commit?: { sha?: string; html_url?: string } } | null;
   return { configured: true as const, synced: true as const, changedFields: changed.changedFields, commitSha: payload?.commit?.sha || "unknown", commitUrl: payload?.commit?.html_url, syncedAt: new Date().toISOString(), filePath };

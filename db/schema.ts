@@ -32,6 +32,40 @@ export const siteSettings = sqliteTable("site_settings", {
   updatedAt: text("updated_at").notNull(),
 });
 
+export const schoolDataDrafts = sqliteTable("school_data_drafts", {
+  id: text("id").primaryKey(),
+  schoolCode: text("school_code").notNull(),
+  schoolName: text("school_name").notNull(),
+  regionCode: text("region_code").notNull(),
+  sourceFile: text("source_file").notNull(),
+  baseSha: text("base_sha").notNull().default(""),
+  baseValuesJson: text("base_values_json").notNull(),
+  updatesJson: text("updates_json").notNull(),
+  status: text("status").notNull().default("draft"),
+  createdBy: text("created_by").notNull(),
+  updatedBy: text("updated_by").notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+}, (table) => [index("idx_school_data_drafts_status").on(table.status, table.updatedAt)]);
+
+export const schoolDataAudit = sqliteTable("school_data_audit", {
+  id: text("id").primaryKey(),
+  occurredAt: text("occurred_at").notNull(),
+  adminId: text("admin_id").notNull(),
+  adminName: text("admin_name").notNull(),
+  action: text("action").notNull(),
+  status: text("status").notNull(),
+  schoolCode: text("school_code").notNull(),
+  schoolName: text("school_name").notNull(),
+  regionCode: text("region_code").notNull(),
+  sourceFile: text("source_file").notNull(),
+  field: text("field").notNull().default(""),
+  oldValue: text("old_value").notNull().default(""),
+  newValue: text("new_value").notNull().default(""),
+  commitSha: text("commit_sha").notNull().default(""),
+  errorMessage: text("error_message").notNull().default(""),
+}, (table) => [index("idx_school_data_audit_lookup").on(table.schoolCode, table.occurredAt)]);
+
 export const notificationSettings = sqliteTable("notification_settings", {
   eventKey: text("event_key").primaryKey(),
   enabled: integer("enabled").notNull().default(1),
