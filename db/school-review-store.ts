@@ -1,4 +1,6 @@
-import { getD1 } from "./admin-store";
+import { getCommunityDatabase } from "./bindings";
+
+const getCommunityDb = () => getCommunityDatabase().db;
 
 export type SchoolReview = Readonly<{
   id: string;
@@ -16,7 +18,7 @@ export type SchoolReview = Readonly<{
 }>;
 
 export async function ensureSchoolReviewSchema() {
-  const db = getD1();
+  const db = getCommunityDb();
   await db.batch([
     db.prepare(`CREATE TABLE IF NOT EXISTS school_reviews (
       id TEXT PRIMARY KEY,
@@ -50,12 +52,12 @@ export async function ensureSchoolReviewSchema() {
 export async function consumeSchoolReviewRateLimit(fingerprint: string, limit = 5, windowMs = 15 * 60 * 1000) {
   await ensureSchoolReviewSchema();
   const now = Date.now();
-  const current = await getD1().prepare(`SELECT window_started_at, request_count
+  const current = await getCommunityDb().prepare(`SELECT window_started_at, request_count
     FROM school_review_rate_limits WHERE fingerprint = ? LIMIT 1`).bind(fingerprint).first<{ window_started_at: number; request_count: number }>();
   if (current && now - current.window_started_at < windowMs && current.request_count >= limit) return false;
   const nextWindow = current && now - current.window_started_at < windowMs ? current.window_started_at : now;
   const nextCount = current && nextWindow === current.window_started_at ? current.request_count + 1 : 1;
-  await getD1().prepare(`INSERT INTO school_review_rate_limits (fingerprint, window_started_at, request_count)
+  await getCommunityDb().prepare(`INSERT INTO school_review_rate_limits (fingerprint, window_started_at, request_count)
     VALUES (?, ?, ?)
     ON CONFLICT(fingerprint) DO UPDATE SET
       window_started_at = excluded.window_started_at,
@@ -65,7 +67,7 @@ export async function consumeSchoolReviewRateLimit(fingerprint: string, limit = 
 
 export async function listSchoolReviews(district: string, schoolCode: string) {
   await ensureSchoolReviewSchema();
-  const result = await getD1().prepare(`SELECT id, district, school_code, school_name,
+  const result = await getCommunityDb().prepare(`SELECT id, district, school_code, school_name,
     nickname, graduation_year, exam_score, admission_score, admission_result, content, status, created_at
     FROM school_reviews
     WHERE district = ? AND school_code = ? AND status = 'published'
@@ -76,7 +78,7 @@ export async function listSchoolReviews(district: string, schoolCode: string) {
 export async function listRecentSchoolReviews(limit = 100) {
   await ensureSchoolReviewSchema();
   const safeLimit = Math.min(Math.max(Math.trunc(limit), 1), 100);
-  const result = await getD1().prepare(`SELECT id, district, school_code, school_name,
+  const result = await getCommunityDb().prepare(`SELECT id, district, school_code, school_name,
     nickname, graduation_year, exam_score, admission_score, admission_result, content, status, created_at
     FROM school_reviews
     WHERE status = 'published'
@@ -86,7 +88,7 @@ export async function listRecentSchoolReviews(limit = 100) {
 
 export async function createSchoolReview(input: SchoolReview) {
   await ensureSchoolReviewSchema();
-  await getD1().prepare(`INSERT INTO school_reviews (
+  await getCommunityDb().prepare(`INSERT INTO school_reviews (
     id, district, school_code, school_name, nickname, graduation_year,
     exam_score, admission_score, admission_result, content, status, created_at
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
@@ -108,7 +110,7 @@ export async function createSchoolReview(input: SchoolReview) {
 export async function listPendingSchoolReviews(limit = 100) {
   await ensureSchoolReviewSchema();
   const safeLimit = Math.min(Math.max(Math.trunc(limit), 1), 100);
-  const result = await getD1().prepare(`SELECT id, district, school_code, school_name,
+  const result = await getCommunityDb().prepare(`SELECT id, district, school_code, school_name,
     nickname, graduation_year, exam_score, admission_score, admission_result, content, status, created_at
     FROM school_reviews WHERE status = 'pending' ORDER BY created_at ASC LIMIT ?`).bind(safeLimit).all<SchoolReview>();
   return result.results ?? [];
@@ -116,6 +118,6 @@ export async function listPendingSchoolReviews(limit = 100) {
 
 export async function moderateSchoolReview(id: string, status: "published" | "rejected") {
   await ensureSchoolReviewSchema();
-  const result = await getD1().prepare("UPDATE school_reviews SET status = ? WHERE id = ? AND status = 'pending'").bind(status, id).run();
+  const result = await getCommunityDb().prepare("UPDATE school_reviews SET status = ? WHERE id = ? AND status = 'pending'").bind(status, id).run();
   return (result.meta.changes ?? 0) > 0;
 }

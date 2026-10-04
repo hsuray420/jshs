@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { countPendingSchoolDataDrafts, listSchoolDataAudit, listSchoolMediaOverrides } from "../../db/admin-store";
+import { countPendingSchoolDataDrafts, listSchoolDataAudit } from "../../db/admin-store";
+import { listSchoolMediaMetadata } from "../../db/school-media-store";
 import { listPendingSchoolReviews } from "../../db/school-review-store";
 import { countPendingDataReports } from "../../db/data-report-store";
 import { requireAdmin } from "./auth";
@@ -11,7 +12,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminDashboard() {
   const admin = await requireAdmin();
   const schools = getSchools();
-  const [reviews, dataReports, media, pendingDrafts, recentAudit] = await Promise.all([listPendingSchoolReviews(), countPendingDataReports(), listSchoolMediaOverrides(), countPendingSchoolDataDrafts(), listSchoolDataAudit()]);
+  const [reviews, dataReports, media, pendingDrafts, recentAudit] = await Promise.all([listPendingSchoolReviews(), countPendingDataReports(), listSchoolMediaMetadata(), countPendingSchoolDataDrafts(), listSchoolDataAudit()]);
   const imageCodes = new Set(media.map((item) => item.school_code));
   const missingImages = schools.filter((school) => !imageCodes.has(school.code)).length;
   const missingCore = schools.filter((school) => !school.address || !school.phone || !school.website).length;

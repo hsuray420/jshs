@@ -1,6 +1,6 @@
 import { calculateAdmissionScore, isAdmissionCalculatorAvailable, isAdmissionDistrict, type AdmissionScoreInput } from "../../../../lib/admission-score";
 import { createMemberScoreSnapshot } from "../../../../db/score-store";
-import { getMemberSession } from "../../../../lib/member-auth";
+import { getMemberSession, getMemberUserId } from "../../../../lib/member-auth";
 import { notifyMember } from "../../../../lib/notifications";
 import { CURRENT_YEAR_CONTEXT, SOURCE_ACADEMIC_YEAR, SERVICE_YEAR, VERIFICATION_STATUS } from "../../../../lib/trust";
 import { getRegionRegistry } from "../../../../lib/region-registry";
@@ -32,8 +32,10 @@ export async function POST(request: Request) {
     if (result.totalScore === null) return Response.json({ ok: false, error: "請補齊試算欄位。", result }, { status: 422 });
     const member = await getMemberSession();
     if (member) {
+      const userId = await getMemberUserId(member);
       await createMemberScoreSnapshot({
         id: crypto.randomUUID(),
+        user_id: userId,
         line_user_id: member.lineUserId,
         district,
         academic_year: result.rule.academicYear,

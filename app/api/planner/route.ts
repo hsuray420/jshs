@@ -1,5 +1,5 @@
 import { createPlannerItem, deletePlannerItem, getOrCreateMemberPlanner, listPlannerItems } from "../../../db/planner-store";
-import { getMemberSession } from "../../../lib/member-auth";
+import { getMemberSession, getMemberUserId } from "../../../lib/member-auth";
 import { getAdmissionChoiceLimit } from "../../../lib/admission-score";
 
 export const dynamic = "force-dynamic";
@@ -54,7 +54,7 @@ export async function DELETE(request: Request) {
 
 async function memberPlanner() {
   const member = await getMemberSession();
-  return member ? getOrCreateMemberPlanner(member.lineUserId) : null;
+  return member ? getOrCreateMemberPlanner(await getMemberUserId(member), member.lineUserId) : null;
 }
 
 function memberRequired() {

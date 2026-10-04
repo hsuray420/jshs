@@ -30,12 +30,7 @@ export function MockExamWorkspace({ mode = "manage", isMember = false }: { mode?
           if (!response.ok) throw new Error("sync");
           const payload = await response.json() as { records?: MockRecord[] };
           const cloudRecords = payload.records || [];
-          const cloudIds = new Set(cloudRecords.map((record) => record.id));
-          const pendingLocal = localRecords.filter((record) => !cloudIds.has(record.id));
-          if (pendingLocal.length) await Promise.all(pendingLocal.map((record) => fetch("/api/mock-exams", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(record) })));
-          const merged = [...cloudRecords, ...pendingLocal].sort((a, b) => b.date.localeCompare(a.date));
-          setRecords(merged);
-          localStorage.setItem(KEY, JSON.stringify(merged));
+          setRecords(cloudRecords.sort((a, b) => b.date.localeCompare(a.date)));
         }
       } catch { setRecords(localRecords); setError(isMember ? "會員模考紀錄同步失敗，仍顯示本機資料；請重試。" : "讀取本機模考紀錄失敗，請重試。"); }
       finally { setLoaded(true); }

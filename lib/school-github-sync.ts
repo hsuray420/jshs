@@ -69,6 +69,35 @@ export async function getCanonicalSchoolFileSnapshot(regionCode: string) {
   return { configured: file.configured, reason: file.reason, filePath };
 }
 
+export async function getLatestCanonicalSchoolCommit(regionCode: string): Promise<{
+  configured: boolean;
+  connected: boolean;
+  contentsRead: boolean;
+  commit: { sha: string; url: string; message: string; date: string } | null;
+}> {
+  const github = config();
+  if (!github) return { configured: false, connected: false, contentsRead: false, commit: null };
+  const filePath = filePathForRegion(regionCode);
+  const file = await readFile(filePath);
+  const url = `${API}/repos/${github.repository}/commits?path=${encodeURIComponent(filePath)}&sha=${encodeURIComponent(github.branch)}&per_page=1`;
+  const response = await fetch(url, { headers: headers(github.token) }).catch(() => null);
+  if (!response?.ok) return { configured: true, connected: false, contentsRead: file.configured && "content" in file, commit: null };
+  const commits = await response.json().catch(() => null) as Array<{ sha?: unknown; html_url?: unknown; commit?: { message?: unknown; author?: { date?: unknown } } }> | null;
+  const commit = Array.isArray(commits) ? commits[0] : null;
+  if (!commit || typeof commit.sha !== "string") return { configured: true, connected: false, contentsRead: file.configured && "content" in file, commit: null };
+  return {
+    configured: true,
+    connected: file.configured && "content" in file,
+    contentsRead: file.configured && "content" in file,
+    commit: {
+      sha: commit.sha,
+      url: typeof commit.html_url === "string" ? commit.html_url : "",
+      message: typeof commit.commit?.message === "string" ? commit.commit.message.split("\n")[0] : "",
+      date: typeof commit.commit?.author?.date === "string" ? commit.commit.author.date : "",
+    },
+  };
+}
+
 function prepareChange(input: SchoolSyncInput, content: string, sha: string) {
   const updates = validateSchoolAdminUpdates(input.updates) as Record<string, string>;
   const latest = (parseCsv(content).rows as Record<string, string>[]).find((row) => row["學校代碼"] === input.schoolCode);

@@ -1,4 +1,6 @@
-import { getD1 } from "./admin-store";
+import { getCommunityDatabase } from "./bindings";
+
+const getCommunityDb = () => getCommunityDatabase().db;
 
 export type DataReportStatus = "pending" | "accepted" | "fixed" | "rejected";
 export type DataReport = Readonly<{
@@ -20,7 +22,7 @@ export type DataReport = Readonly<{
 }>;
 
 export async function ensureDataReportSchema() {
-  const db = getD1();
+  const db = getCommunityDb();
   await db.batch([
     db.prepare(`CREATE TABLE IF NOT EXISTS data_reports (
       id TEXT PRIMARY KEY,
@@ -52,7 +54,7 @@ export async function ensureDataReportSchema() {
 export async function consumeDataReportRateLimit(fingerprint: string, limit = 5, windowMs = 15 * 60 * 1000) {
   await ensureDataReportSchema();
   const now = Date.now();
-  const db = getD1();
+  const db = getCommunityDb();
   const current = await db.prepare(`SELECT window_started_at, request_count
     FROM data_report_rate_limits WHERE fingerprint = ? LIMIT 1`).bind(fingerprint).first<{ window_started_at: number; request_count: number }>();
   if (current && now - current.window_started_at < windowMs && current.request_count >= limit) return false;
@@ -68,7 +70,7 @@ export async function consumeDataReportRateLimit(fingerprint: string, limit = 5,
 
 export async function createDataReport(input: Omit<DataReport, "updated_at">) {
   await ensureDataReportSchema();
-  await getD1().prepare(`INSERT INTO data_reports (
+  await getCommunityDb().prepare(`INSERT INTO data_reports (
     id, page_url, category, dataset, academic_year, field, current_value,
     suggested_value, source_url, note, contact, status, review_note, created_at, updated_at
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`).bind(
@@ -81,7 +83,7 @@ export async function createDataReport(input: Omit<DataReport, "updated_at">) {
 export async function listPendingDataReports(limit = 100) {
   await ensureDataReportSchema();
   const safeLimit = Math.min(Math.max(Math.trunc(limit), 1), 100);
-  const result = await getD1().prepare(`SELECT id, page_url, category, dataset, academic_year, field,
+  const result = await getCommunityDb().prepare(`SELECT id, page_url, category, dataset, academic_year, field,
     current_value, suggested_value, source_url, note, contact, status, review_note, created_at, updated_at
     FROM data_reports WHERE status = 'pending' ORDER BY created_at ASC LIMIT ?`).bind(safeLimit).all<DataReport>();
   return result.results ?? [];
@@ -89,13 +91,13 @@ export async function listPendingDataReports(limit = 100) {
 
 export async function countPendingDataReports() {
   await ensureDataReportSchema();
-  const result = await getD1().prepare("SELECT COUNT(*) AS count FROM data_reports WHERE status = 'pending'").first<{ count: number }>();
+  const result = await getCommunityDb().prepare("SELECT COUNT(*) AS count FROM data_reports WHERE status = 'pending'").first<{ count: number }>();
   return Number(result?.count || 0);
 }
 
 export async function moderateDataReport(id: string, status: Exclude<DataReportStatus, "pending">, reviewNote = "") {
   await ensureDataReportSchema();
-  const result = await getD1().prepare(`UPDATE data_reports
+  const result = await getCommunityDb().prepare(`UPDATE data_reports
     SET status = ?, review_note = ?, updated_at = ?
     WHERE id = ? AND status = 'pending'`).bind(status, reviewNote.slice(0, 500), new Date().toISOString(), id).run();
   return (result.meta.changes ?? 0) > 0;

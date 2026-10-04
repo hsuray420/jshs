@@ -1,5 +1,5 @@
 import { createPlannerVersion, getOrCreateMemberPlanner, getPlannerState, listPlannerItems, listPlannerVersions, savePlannerState } from "../../../../db/planner-store";
-import { getMemberSession } from "../../../../lib/member-auth";
+import { getMemberSession, getMemberUserId } from "../../../../lib/member-auth";
 
 export const dynamic = "force-dynamic";
 
@@ -55,7 +55,7 @@ function parseState(stateJson: string | null) {
 
 async function memberPlanner() {
   const member = await getMemberSession();
-  return member ? getOrCreateMemberPlanner(member.lineUserId) : null;
+  return member ? getOrCreateMemberPlanner(await getMemberUserId(member), member.lineUserId) : null;
 }
 
 function memberRequired() {

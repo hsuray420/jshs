@@ -1,6 +1,6 @@
 import { requireAdmin } from "../auth";
 import { getSchools } from "../../../lib/school-repository";
-import { listSchoolMediaOverrides } from "../../../db/admin-store";
+import { listSchoolMediaMetadata } from "../../../db/school-media-store";
 import { AdminSchoolsBrowser, type AdminSchoolListItem } from "../../../components/admin-schools-browser";
 
 export const dynamic = "force-dynamic";
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminSchoolsPage({ searchParams }: { searchParams: Promise<{ region?: string }> }) {
   await requireAdmin();
   const { region = "" } = await searchParams;
-  const [schools, media] = await Promise.all([Promise.resolve(getSchools()), listSchoolMediaOverrides()]);
+  const [schools, media] = await Promise.all([Promise.resolve(getSchools()), listSchoolMediaMetadata()]);
   const imageCodes = new Set(media.map((item) => item.school_code));
   const items: AdminSchoolListItem[] = schools.map((school) => ({
     code: school.code, name: school.name, ownership: school.ownership, schoolType: school.schoolType,

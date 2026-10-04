@@ -11,7 +11,9 @@ test("community voting is LINE-member gated and one vote per topic/account", asy
     read("components/community-voting.tsx"),
   ]);
   assert.match(route, /member_required/);
-  assert.match(store, /PRIMARY KEY\(topic_id, line_user_id\)/);
+  assert.match(route, /getMemberUserId/);
+  assert.match(store, /mode === "split" \? "user_id" : "line_user_id"/);
+  assert.match(store, /PRIMARY KEY\(topic_id, \$\{mode === "split" \? "user_id" : "line_user_id"\}\)/);
   assert.match(page, /CommunityVoting/);
 });
 

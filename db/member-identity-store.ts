@@ -1,4 +1,4 @@
-import { getD1 } from "./admin-store";
+import { getCoreDatabase } from "./bindings";
 
 export type JshsMember = Readonly<{
   userId: string;
@@ -10,13 +10,14 @@ export type JshsMember = Readonly<{
 }>;
 
 /**
- * This bridge is intentionally additive. Legacy member tables continue to use
- * line_user_id until a verified Supabase migration has conserved every row.
+ * The identity key is stable across storage domains; legacy rows are preserved
+ * until a separately verified D1 migration is approved.
  */
 export async function ensureMemberIdentitySchema() {
-  const db = getD1();
+  const { db, mode } = getCoreDatabase();
+  const usersTable = mode === "split" ? "users" : "jshs_users";
   await db.batch([
-    db.prepare(`CREATE TABLE IF NOT EXISTS jshs_users (
+    db.prepare(`CREATE TABLE IF NOT EXISTS ${usersTable} (
       id TEXT PRIMARY KEY,
       display_name TEXT NOT NULL DEFAULT '',
       picture_url TEXT NOT NULL DEFAULT '',
@@ -49,7 +50,8 @@ export async function ensureJshsMemberForLine(input: {
   isFriend: boolean;
 }): Promise<JshsMember> {
   await ensureMemberIdentitySchema();
-  const db = getD1();
+  const { db, mode } = getCoreDatabase();
+  const usersTable = mode === "split" ? "users" : "jshs_users";
   const now = new Date().toISOString();
   let identity = await db.prepare(`SELECT user_id FROM user_identities
     WHERE provider = 'line' AND provider_user_id = ? LIMIT 1`).bind(input.lineUserId).first<{ user_id: string }>();
@@ -58,7 +60,7 @@ export async function ensureJshsMemberForLine(input: {
     const userId = crypto.randomUUID();
     try {
       await db.batch([
-        db.prepare(`INSERT INTO jshs_users (id, display_name, picture_url, created_at, updated_at, last_login_at)
+        db.prepare(`INSERT INTO ${usersTable} (id, display_name, picture_url, created_at, updated_at, last_login_at)
           VALUES (?, ?, ?, ?, ?, ?)`).bind(userId, input.displayName || "", input.pictureUrl || "", now, now, now),
         db.prepare(`INSERT INTO user_identities (id, user_id, provider, provider_user_id, created_at, updated_at)
           VALUES (?, ?, 'line', ?, ?, ?)`).bind(crypto.randomUUID(), userId, input.lineUserId, now, now),
@@ -72,7 +74,7 @@ export async function ensureJshsMemberForLine(input: {
   }
 
   await db.batch([
-    db.prepare(`UPDATE jshs_users SET display_name = CASE WHEN ? != '' THEN ? ELSE display_name END,
+    db.prepare(`UPDATE ${usersTable} SET display_name = CASE WHEN ? != '' THEN ? ELSE display_name END,
       picture_url = CASE WHEN ? != '' THEN ? ELSE picture_url END, updated_at = ?, last_login_at = ? WHERE id = ?`)
       .bind(input.displayName || "", input.displayName || "", input.pictureUrl || "", input.pictureUrl || "", now, now, identity.user_id),
     db.prepare(`INSERT INTO line_friendships (user_id, is_friend, checked_at) VALUES (?, ?, ?)
@@ -85,10 +87,12 @@ export async function ensureJshsMemberForLine(input: {
 
 export async function listJshsMembers() {
   await ensureMemberIdentitySchema();
-  const result = await getD1().prepare(`SELECT users.id AS user_id, users.display_name, users.picture_url,
+  const { db, mode } = getCoreDatabase();
+  const usersTable = mode === "split" ? "users" : "jshs_users";
+  const result = await db.prepare(`SELECT users.id AS user_id, users.display_name, users.picture_url,
     users.created_at, users.last_login_at, identities.provider_user_id AS line_user_id,
     COALESCE(friendships.is_friend, 0) AS is_friend, friendships.checked_at
-    FROM jshs_users AS users
+    FROM ${usersTable} AS users
     JOIN user_identities AS identities ON identities.user_id = users.id AND identities.provider = 'line'
     LEFT JOIN line_friendships AS friendships ON friendships.user_id = users.id
     ORDER BY users.last_login_at DESC LIMIT 200`).all<{
@@ -96,4 +100,21 @@ export async function listJshsMembers() {
       line_user_id: string; is_friend: number; checked_at: string | null;
     }>();
   return result.results ?? [];
+}
+
+export async function findJshsUserIdForLine(lineUserId: string) {
+  await ensureMemberIdentitySchema();
+  const { db } = getCoreDatabase();
+  const identity = await db.prepare(`SELECT user_id FROM user_identities
+    WHERE provider = 'line' AND provider_user_id = ? LIMIT 1`)
+    .bind(lineUserId).first<{ user_id: string }>();
+  return identity?.user_id ?? null;
+}
+
+export async function getLatestLineVerification() {
+  await ensureMemberIdentitySchema();
+  const { db } = getCoreDatabase();
+  const result = await db.prepare("SELECT MAX(checked_at) AS checked_at FROM line_friendships")
+    .first<{ checked_at: string | null }>();
+  return result?.checked_at ?? null;
 }

@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { findJshsUserIdForLine } from "../db/member-identity-store";
 
 const MEMBER_COOKIE = "jshs_member_session";
 const SESSION_DAYS = 30;
@@ -19,6 +20,13 @@ export async function getMemberSession(): Promise<MemberSession | null> {
   const data = parsePayload(payload);
   if (!data || data.expires < Date.now()) return null;
   return { userId: typeof data.userId === "string" ? data.userId : undefined, lineUserId: data.lineUserId, displayName: data.displayName || "LINE 使用者", pictureUrl: data.pictureUrl, friendVerifiedAt: data.friendVerifiedAt };
+}
+
+export async function getMemberUserId(member: MemberSession) {
+  if (member.userId) return member.userId;
+  const userId = await findJshsUserIdForLine(member.lineUserId);
+  if (!userId) throw new Error("member_identity_missing");
+  return userId;
 }
 
 export async function createMemberSessionCookie(member: MemberSession) {

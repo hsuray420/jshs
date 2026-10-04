@@ -1,35 +1,53 @@
-# Storage upgrade — production migration boundary
+# D1 storage separation and migration boundary
 
-## Current, verified state
+## Ownership
 
-- Cloudflare Worker runs the web application and binds Cloudflare D1 as `DB`.
-- Existing member records, mock exams, score snapshots, planner state, notifications, and Admin drafts are keyed by `line_user_id` in D1.
-- School CSV remains canonical in GitHub; generated JSON is derived and must not be edited.
-- Existing school-image overrides remain in D1 until ImageKit has been configured and each image has been verified.
+The production database remains Cloudflare D1. Supabase is not part of this design.
 
-## Target ownership
-
-| Data | Owner after migration | Notes |
+| Domain | Target D1 | Data |
 | --- | --- | --- |
-| Public official school, admission, and district CSV | GitHub | Versioned, reviewed source data only. |
-| User, identity, score, weakness, wish, favorite, submission, draft, audit | Supabase | Server-authorized access and deny-by-default RLS. |
-| Public school image binaries | ImageKit | Database stores only file ID, URL, and provenance metadata. |
-| Runtime, API, transient cache, operational logs | Cloudflare Worker | No durable user-data disk. |
+| Core identity | `CORE_DB` / `jshs-core` | `users`, `user_identities`, `line_friendships`, account settings, member favorites |
+| Learning | `LEARNING_DB` / `jshs-learning` | mock exams, score history, exam results, weakness profiles, analysis snapshots, planner records, member AI conversations |
+| Community | `COMMUNITY_DB` / `jshs-community` | anonymous reviews/reports, moderation, votes, school-image metadata, school-data drafts/audit and publishing records |
+| Official source data | GitHub Contents API | Official school, admissions, and district CSV only |
+| Public school image binaries | ImageKit | Binary objects; D1 contains the public URL and provenance metadata |
 
-## Required secrets and non-secret configuration
+No SQL JOIN or foreign key crosses D1 boundaries. Member data uses the existing JSHS UUID; LINE IDs remain identity-provider keys and legacy ownership keys only. Anonymous reports/reviews do not create a member identity.
 
-Worker secrets: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`, `IMAGEKIT_URL_ENDPOINT`, existing GitHub and LINE secrets.
+## Transitional bindings
 
-Non-secret Admin links: `ADMIN_HOSTING_DASHBOARD_URL`, `SUPABASE_DASHBOARD_URL`, `IMAGEKIT_DASHBOARD_URL`, `GITHUB_REPOSITORY_URL`, `LINE_DEVELOPERS_DASHBOARD_URL`, `LINE_OA_DASHBOARD_URL`.
+`db/bindings.ts` resolves each named D1 independently. If a named binding is absent, that domain temporarily uses the existing `DB` binding so production continues to use its current D1. A present-but-failing named binding never silently falls back to the legacy database.
 
-## Safe migration sequence
+`wrangler.jsonc` intentionally retains the existing production `DB` binding and does not contain guessed IDs for the three new databases. Provision the three D1 databases and apply the matching `db/migrations/{core,learning,community}/0001_*.sql` schemas in a non-production environment first. Do not attach the new bindings to production until migration preflight, row conservation, identity mapping, and readback all pass.
 
-1. Export D1 counts for members, mock exams, score snapshots, planners, notifications, wishes/favorites, and submissions.
-2. Apply `supabase/migrations/0001_jshs_dynamic_data.sql` to an empty Supabase project through the approved migration workflow.
-3. Backfill `jshs_users` and `user_identities` using the already-created internal UUID bridge; do not regenerate IDs.
-4. Migrate each dependent table with an explicit `line_user_id → user_id` mapping and compare pre/post counts.
-5. Reject migration on duplicate LINE identities, orphan rows, or any row-count loss.
-6. Enable server-side dual-read validation before changing writes; only cut over after verified readback.
-7. Upload and verify ImageKit assets one at a time. Keep the existing image serving path until the ImageKit URL has been persisted and checked.
+The SQL files are proposed initial schemas, not evidence that Cloudflare databases have been created or migrated. Runtime compatibility stores still create their legacy-compatible schemas as needed; this is not a substitute for the checked migration.
 
-No production migration is run merely by deploying this repository. This prevents silent user-data loss when provider credentials or an approved export are absent.
+## Guest and explicit import
+
+Unauthenticated calculators, mock exams, planner items, and favorites remain in browser storage. Member routes derive the UUID from the signed server session and never accept an owner ID from a request.
+
+After LINE Login, `/account` detects local score history, mock records, planner entries, and favorites. It displays category counts and asks before any upload. Pressing **匯入** invokes `/api/member/import`; the route bounds and validates each category, writes Learning records by internal user UUID and favorites to Core, and performs readback checks. Local copies are not removed after import. A separate user action removes only keys whose values have not changed since the import began.
+
+The mock-exam workspace no longer uploads pending guest records just because a member signs in.
+
+## ImageKit
+
+New school-image uploads require all three server-side settings: `IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`, and `IMAGEKIT_URL_ENDPOINT`. The Worker uploads to ImageKit and persists the returned file ID/URLs and attribution metadata. If settings are missing, the UI disables upload and the server rejects it; new images do not fall back to D1 BLOB.
+
+Existing D1 BLOB-backed images remain readable. They are not deleted or migrated automatically. The safe later migration is: upload one legacy image, verify returned URL and file ID, update the metadata, verify the public read path, then delete the old BLOB. This repository does not run that migration.
+
+## Observability
+
+The Admin resource page removes the Supabase card. D1 cards run a real `SELECT 1` and report SQLite page-count size when available; no percentage is displayed without a reliable plan limit. ImageKit is probed through its Files API. GitHub uses the configured Contents repository's latest school CSV commit history. LINE is labelled as configured and shows the last stored friend-status check; this is not described as a live LINE health test.
+
+## Safe staged rollout
+
+1. Provision the three D1 databases and apply the schemas in a staging environment.
+2. Record source table counts, stable keys, duplicate identity keys, and orphan checks.
+3. Copy rows while preserving each existing JSHS UUID and map legacy LINE ownership through `user_identities`.
+4. Compare source/destination counts and domain-specific checks (scores, planner rows, reviews, identities); verify representative reads.
+5. Test named bindings in staging and simulate each binding failing independently.
+6. Only after complete readback, configure production bindings and validate again.
+7. Keep the old `DB` attached and retained for the approved recovery window. Do not drop it as part of this rollout.
+
+No external database was available in this repository session, so no D1 was provisioned, migration executed, row count claimed, or production binding switched.

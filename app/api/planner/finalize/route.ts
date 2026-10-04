@@ -1,5 +1,5 @@
 import { confirmPlanner, getOrCreateMemberPlanner, getPlannerState, listPlannerItems } from "../../../../db/planner-store";
-import { getMemberSession } from "../../../../lib/member-auth";
+import { getMemberSession, getMemberUserId } from "../../../../lib/member-auth";
 import { notifyMember } from "../../../../lib/notifications";
 
 export const dynamic = "force-dynamic";
@@ -8,7 +8,7 @@ export async function POST() {
   const member = await getMemberSession();
   if (!member) return memberRequired();
 
-  const plannerId = await getOrCreateMemberPlanner(member.lineUserId);
+  const plannerId = await getOrCreateMemberPlanner(await getMemberUserId(member), member.lineUserId);
   const items = await listPlannerItems(plannerId);
   if (!items.length) {
     return Response.json({ ok: false, error: "planner_empty" }, { status: 400 });

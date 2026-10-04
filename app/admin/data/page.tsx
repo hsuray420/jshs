@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireAdmin } from "../auth";
-import { countPendingSchoolDataDrafts, listSchoolDataAudit, listSchoolMediaOverrides } from "../../../db/admin-store";
+import { countPendingSchoolDataDrafts, listSchoolDataAudit } from "../../../db/admin-store";
+import { listSchoolMediaMetadata } from "../../../db/school-media-store";
 import { getSchools, schoolMetadata } from "../../../lib/school-repository";
 import { getCanonicalSchoolFileSnapshot } from "../../../lib/school-github-sync";
 import validation from "../../../content/schools/generated/validation.json";
@@ -11,7 +12,7 @@ export default async function DataOverview() {
   await requireAdmin();
   const schools = getSchools();
   const syncPromise = getCanonicalSchoolFileSnapshot(schoolMetadata.enabledRegions[0]?.code || "tp").catch(() => ({ configured: false as const, reason: "github_read_failed", filePath: "" }));
-  const [media, pendingDrafts, audit, sync] = await Promise.all([listSchoolMediaOverrides(), countPendingSchoolDataDrafts(), listSchoolDataAudit(), syncPromise]);
+  const [media, pendingDrafts, audit, sync] = await Promise.all([listSchoolMediaMetadata(), countPendingSchoolDataDrafts(), listSchoolDataAudit(), syncPromise]);
   const imageCodes = new Set(media.map((item) => item.school_code));
   const missingImages = schools.filter((school) => !imageCodes.has(school.code)).length;
   const missingSources = schools.filter((school) => !Object.values(school.sources).some((items) => items.length)).length;

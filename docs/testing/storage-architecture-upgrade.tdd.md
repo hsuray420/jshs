@@ -1,30 +1,21 @@
-# Storage architecture upgrade — TDD evidence
+# D1 storage architecture test evidence
 
-## Journeys
+## Automated contracts
 
-1. A LINE-authenticated member receives a stable JSHS UUID while the existing LINE key and historic D1 rows remain intact.
-2. An operator can see whether Worker, Supabase, ImageKit, GitHub, and LINE are actually configured without fabricated capacity figures.
-3. An administrator can obtain ImageKit upload credentials only from a same-origin, authenticated server endpoint.
-4. A future Supabase migration has the required relational schema with RLS enabled and browser access denied by default.
+`tests/storage-architecture-upgrade.test.mjs` checks that:
 
-## RED → GREEN
+- The three target D1 schemas exist and use the intended ownership keys.
+- Runtime stores route identity, learning, and community data through explicit bindings.
+- Missing named bindings use only the legacy D1 compatibility path.
+- Member import derives the user from the session, validates bounded records, and reads records back.
+- Mock guest data is not automatically uploaded after login.
+- ImageKit secrets stay server-side and school uploads have no D1 BLOB fallback.
+- The System Resources page does not report Supabase or hard-coded capacity figures as production health.
 
-| Guarantee | Test | RED evidence | GREEN evidence |
-| --- | --- | --- | --- |
-| Internal user identity bridge | `storage-architecture-upgrade.test.mjs` | Missing `member-identity-store.ts` | Passing source contract and TypeScript check |
-| Supabase RLS schema | `storage-architecture-upgrade.test.mjs` | Missing migration and adapter | All target tables and RLS statements found |
-| System resources control plane | `storage-architecture-upgrade.test.mjs` | Missing resource page/config | Provider cards and centralized links found |
-| ImageKit secrets stay server-only | `storage-architecture-upgrade.test.mjs` | Missing signing route | Same-origin/Auth contract and no client secret reference found |
+Run the focused contract with `node --test tests/storage-architecture-upgrade.test.mjs`; run repository checks with `pnpm run lint`, `pnpm run typecheck`, `pnpm test`, and `pnpm run build`.
 
-## Commands
+## Manual staging gates
 
-- `node --test tests/storage-architecture-upgrade.test.mjs tests/admin-architecture.test.mjs tests/member-line-login.test.mjs tests/member-friend-gate-and-feature-routes.test.mjs` — 12 passed.
-- `pnpm run test:unit` — 321 passed, 0 failed, 0 cancelled.
-- `pnpm run typecheck` — passed.
-- `pnpm run lint` — 0 errors, 23 existing warnings.
-- `pnpm run build` — passed; includes `/admin/system/resources`, `/admin/users`, and `/api/admin/imagekit/auth`.
-- `pnpm audit --audit-level=critical` — no critical findings; 20 remaining transitive findings (3 low, 8 moderate, 9 high) require dependency-owner follow-up.
+Repository tests cannot create the external D1 databases or prove production row conservation. Before production bindings are changed, staging must record and compare old/new row counts, stable keys, duplicate LINE mappings, orphan identities, scores, planner records, reviews, and readback results. Any failed comparison blocks cutover.
 
-## Known gaps
-
-No Supabase project, approved D1 export, ImageKit credentials, or production Admin session were supplied. Therefore no production data was moved, no provider API usage was fabricated, and no external dashboard was changed. The migration remains deliberately prepared-but-not-applied until row-conservation validation can run against the chosen Supabase project.
+Real ImageKit upload/delete, GitHub API authentication, LINE Login, and browser persistence require configured external credentials and cannot be represented as passing by source-only tests.

@@ -1,13 +1,10 @@
 import { redirect } from "next/navigation";
 import {
-  createAdminFile,
   consumeAdminRateLimit,
   deleteAdminFile,
-  deleteSchoolMediaOverride,
-  getSchoolMediaOverride,
   enqueueExternalMediaCleanup,
-  upsertSchoolMediaOverride,
 } from "../../../../db/admin-store";
+import { deleteSchoolMediaMetadata, getSchoolMediaMetadata, saveSchoolMediaMetadata } from "../../../../db/school-media-store";
 import { requireAdminRole } from "../../../admin/auth";
 import { getSchoolSearchIndex } from "../../../../lib/school-search-index";
 import { deleteImageKitFile, getImageKitConfig, uploadSchoolImageToImageKit } from "../../../../lib/imagekit-server";
@@ -31,12 +28,12 @@ export async function POST(request: Request) {
   if (!school) return redirect("/admin/media?updated=school_image_invalid_school");
 
   if (form.get("action") === "remove") {
-    const current = await getSchoolMediaOverride(schoolCode);
+    const current = await getSchoolMediaMetadata(schoolCode);
     if (current?.storage_provider === "imagekit") {
       try { await deleteImageKitFile(current.file_id); }
       catch { return redirect("/admin/media?updated=school_image_delete_failed"); }
     }
-    await deleteSchoolMediaOverride(schoolCode);
+    await deleteSchoolMediaMetadata(schoolCode);
     if (current?.storage_provider !== "imagekit" && current) await deleteAdminFile(current.file_id);
     return redirect("/admin/media?updated=school_image_removed");
   }
@@ -55,7 +52,7 @@ export async function POST(request: Request) {
   }
 
   const createdAt = new Date().toISOString();
-  const current = await getSchoolMediaOverride(schoolCode);
+  const current = await getSchoolMediaMetadata(schoolCode);
   const imageKitConfigured = Boolean(getImageKitConfig());
   let fileId = crypto.randomUUID();
   let imageUrl = "";
@@ -68,35 +65,35 @@ export async function POST(request: Request) {
       thumbnailUrl = image.thumbnailUrl;
     } catch { return redirect("/admin/media?updated=school_image_upload_failed"); }
   } else {
-    const safeName = upload.name.replace(/[^\w.\-\u4e00-\u9fff]/g, "_");
-    await createAdminFile({
-      id: fileId,
-      object_key: `public/school-images/${schoolCode}/${fileId}-${safeName}`,
-      file_name: upload.name,
-      content_type: upload.type,
-      size: upload.size,
-      category: "school-image",
-      visibility: "public",
-      description: `${schoolCode} ${school.name} 校園圖片（等待 ImageKit 遷移）`,
-      uploaded_by: admin.user.displayName,
-      created_at: createdAt,
-      file_blob: await upload.arrayBuffer(),
-    });
+    return redirect("/admin/media?updated=school_image_not_configured");
   }
-  await upsertSchoolMediaOverride({
-    school_code: schoolCode,
-    file_id: fileId,
-    storage_provider: imageKitConfigured ? "imagekit" : "d1",
-    image_url: imageUrl,
-    thumbnail_url: thumbnailUrl,
-    source: source as "jshs-owned" | "official-school-site" | "licensed-public" | "admin-provided",
-    source_url: sourceUrl,
-    license,
-    credit,
-    alt,
-    updated_by: admin.user.displayName,
-    updated_at: createdAt,
-  });
+  try {
+    await saveSchoolMediaMetadata({
+      school_code: schoolCode,
+      file_id: fileId,
+      storage_provider: "imagekit",
+      image_url: imageUrl,
+      thumbnail_url: thumbnailUrl,
+      source: source as "jshs-owned" | "official-school-site" | "licensed-public" | "admin-provided",
+      source_url: sourceUrl,
+      license,
+      credit,
+      alt,
+      sort_order: current?.sort_order ?? 0,
+      is_cover: current?.is_cover ?? true,
+      updated_by: admin.user.displayName,
+      updated_at: createdAt,
+    });
+  } catch (error) {
+    console.error("School image metadata persistence failed", error);
+    try {
+      await deleteImageKitFile(fileId);
+    } catch (cleanupError) {
+      console.error("New ImageKit file cleanup failed", cleanupError);
+      await enqueueExternalMediaCleanup({ provider: "imagekit", fileId, error: "metadata_persist_failed" });
+    }
+    return redirect("/admin/media?updated=school_image_metadata_failed");
+  }
   if (current && current.file_id !== fileId) {
     if (current.storage_provider === "imagekit") {
       try { await deleteImageKitFile(current.file_id); }

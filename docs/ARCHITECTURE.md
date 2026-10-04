@@ -3,6 +3,8 @@
 > 工程師交接用的現況說明；以目前 repository、Cloudflare 設定與測試為準。
 >
 > 確認日期：2026-08-24
+>
+> 資料庫分拆目前是過渡狀態：Repository 已加入三域 schema/store，但 `wrangler.jsonc` 仍只設定舊 `DB`。新 D1 未在 Cloudflare 建立或套用 schema 前，不可宣稱正式切換完成。細節見 [資料庫分拆與遷移界線](./architecture/storage-upgrade.md)。
 
 ## 1. 一句話總覽
 
@@ -138,13 +140,27 @@ POST /api/school-reviews
 - `lib/admission-score.ts` 是計分規則；`POST /api/admission/calculate` 不查 DB。
 - `content/news.json` 是新聞 source，目前 6 篇；build 時產生 sitemap 與文章 metadata/JSON-LD。
 
-### Planner：匿名 cookie + D1
+### Planner：Guest local-only、Member D1
 
-第一次使用建立 `jshs_planner_id` UUID cookie；`planner_items` 存候選校科，`planner_states` 存 JSON workspace state。cookie 有效期 365 天，這不是 LINE 帳號綁定，也不是一般登入身分。
+Guest 的候選校科、狀態與版本留在 Browser localStorage；Guest API 不建立 planner row。登入會員使用 `jshs_member_session` 導出的內部 UUID 對應 D1 `member_planners`，再以 planner ID 管理候選校科、狀態與版本。登入後本機資料只在使用者明確按下匯入時上傳。
 
 ## 8. D1 資料庫
 
-正式設定在 `wrangler.jsonc`：binding `DB`、database `jshs-db`、Cloudflare D1。
+目前正式設定仍是 `wrangler.jsonc` 的舊 binding `DB` / `jshs-db`。程式可解析 `CORE_DB`、`LEARNING_DB`、`COMMUNITY_DB`；未設定新 binding 時，各 domain 仍暫用舊 DB。新資料庫 schema 見 `db/migrations/`，但尚未取得 Cloudflare database IDs，故設定檔未加入猜測值。
+
+### 已知舊 D1 資料表與規劃歸屬
+
+| 舊 D1 表（Repository runtime schema） | 目標／目前狀態 |
+|---|---|
+| `jshs_users`, `user_identities`, `line_friendships` | CORE；以既有 UUID 保留映射 |
+| `member_mock_exams`, `member_score_history`, `member_planners`, `planner_items`, `planner_states`, `planner_confirmations`, `planner_versions`, `member_ai_conversations` | LEARNING；目前 store 可依 binding 路由，切換前必須先回填 |
+| `school_reviews`, `school_review_rate_limits`, `data_reports`, `data_report_rate_limits`, `community_vote_topics`, `community_votes`, `school_data_drafts`, `school_data_audit` | COMMUNITY；review/report/vote/draft/audit store 已改為明確 Community binding 路由 |
+| `school_media_overrides` | 舊 DB 的圖片 metadata；Community 新表為 `school_media_metadata`。舊資料未搬移，既有 D1 BLOB 仍可讀 |
+| `line_users`, `notification_settings`, `member_notification_preferences`, `important_dates` | 仍由既有管理／通知 store 使用舊 DB；尚未完成歸屬切換 |
+| `admin_files`, `site_settings`, `deployment_events`, `admin_rate_limits`, `external_media_cleanup`, `content_entries`, `content_revisions` | 尚留在舊 DB；不得因三域遷移而遺失。通用檔案 BLOB 仍是舊管理檔案能力，不再作新校園圖片上傳 fallback |
+| `anonymous_submissions`, `admin_audit_logs`, `exam_sessions`, `exam_results`, `subject_scores`, `analysis_snapshots`, `weakness_profiles`, `account_settings` | 已有目標 schema；其中部分尚無完整既有資料流／遷移，不能當作 production 已啟用 |
+
+以上是從 Repository 的 runtime DDL 得到的表清單，不是對遠端 D1 即時查詢的 row inventory；本輪沒有 Cloudflare 資料庫連線，沒有讀取或搬移 production rows。
 
 | Table | 用途 | 建立位置 | 關鍵欄位/索引 |
 |---|---|---|---|

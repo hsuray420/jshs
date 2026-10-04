@@ -1,5 +1,5 @@
 import cache from "@/content/schools/generated/school-image-cache.json";
-import { getSchoolMediaOverride } from "@/db/admin-store";
+import { getSchoolMediaMetadata } from "@/db/school-media-store";
 import { getSchoolSearchIndex } from "@/lib/school-search-index";
 
 export async function GET(request: Request) {
@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const record = (cache as Record<string, unknown>)[code] || null;
   let override = null;
   try {
-    override = await getSchoolMediaOverride(code);
+    override = await getSchoolMediaMetadata(code);
   } catch {
     // The static resolver remains usable in local preview environments without D1.
   }

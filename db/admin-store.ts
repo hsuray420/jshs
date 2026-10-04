@@ -1,4 +1,4 @@
-import { env } from "cloudflare:workers";
+import { getCommunityDatabase, getLegacyDatabase } from "./bindings";
 
 export type AdminFile = {
   id: string;
@@ -112,8 +112,7 @@ export type SchoolDataAudit = {
 };
 
 export function getD1() {
-  if (!env.DB) throw new Error("D1 binding DB is not available.");
-  return env.DB;
+  return getLegacyDatabase();
 }
 
 export async function ensureAdminSchema() {
@@ -259,17 +258,17 @@ export async function consumeAdminRateLimit(input: { key: string; limit: number;
 }
 
 export async function getSchoolDataDraft(schoolCode: string, regionCode: string, adminId: string) {
-  await ensureAdminSchema();
-  return getD1().prepare(`SELECT * FROM school_data_drafts
+  const db = await getCommunityAdminDatabase();
+  return db.prepare(`SELECT * FROM school_data_drafts
     WHERE school_code = ? AND region_code = ? AND created_by = ? AND status = 'draft' LIMIT 1`)
     .bind(schoolCode, regionCode, adminId).first<SchoolDataDraft>();
 }
 
 export async function upsertSchoolDataDraft(input: Omit<SchoolDataDraft, "id" | "status" | "created_at" | "updated_at">) {
-  await ensureAdminSchema();
+  const db = await getCommunityAdminDatabase();
   const now = new Date().toISOString();
   const id = crypto.randomUUID();
-  await getD1().prepare(`INSERT INTO school_data_drafts (
+  await db.prepare(`INSERT INTO school_data_drafts (
     id, school_code, school_name, region_code, source_file, base_sha, base_values_json,
     updates_json, status, created_by, updated_by, created_at, updated_at
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'draft', ?, ?, ?, ?)
@@ -289,23 +288,23 @@ export async function upsertSchoolDataDraft(input: Omit<SchoolDataDraft, "id" | 
 }
 
 export async function markSchoolDataDraftPublished(schoolCode: string, regionCode: string, adminId: string) {
-  await ensureAdminSchema();
-  await getD1().prepare(`UPDATE school_data_drafts SET status = 'published', updated_at = ?
+  const db = await getCommunityAdminDatabase();
+  await db.prepare(`UPDATE school_data_drafts SET status = 'published', updated_at = ?
     WHERE school_code = ? AND region_code = ? AND created_by = ? AND status = 'draft'`)
     .bind(new Date().toISOString(), schoolCode, regionCode, adminId).run();
 }
 
 export async function countPendingSchoolDataDrafts() {
-  await ensureAdminSchema();
-  const row = await getD1().prepare(`SELECT COUNT(*) AS count FROM school_data_drafts WHERE status = 'draft'`).first<{ count: number }>();
+  const db = await getCommunityAdminDatabase();
+  const row = await db.prepare(`SELECT COUNT(*) AS count FROM school_data_drafts WHERE status = 'draft'`).first<{ count: number }>();
   return Number(row?.count || 0);
 }
 
 export async function createSchoolDataAuditEntries(entries: Array<Omit<SchoolDataAudit, "id" | "occurred_at">>) {
   if (!entries.length) return;
-  await ensureAdminSchema();
+  const db = await getCommunityAdminDatabase();
   const occurredAt = new Date().toISOString();
-  await getD1().batch(entries.map((entry) => getD1().prepare(`INSERT INTO school_data_audit (
+  await db.batch(entries.map((entry) => db.prepare(`INSERT INTO school_data_audit (
     id, occurred_at, admin_id, admin_name, action, status, school_code, school_name,
     region_code, source_file, field, old_value, new_value, commit_sha, error_message
   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
@@ -315,18 +314,24 @@ export async function createSchoolDataAuditEntries(entries: Array<Omit<SchoolDat
 }
 
 export async function listSchoolDataAudit(filters: { query?: string; admin?: string; field?: string; date?: string } = {}) {
-  await ensureAdminSchema();
+  const db = await getCommunityAdminDatabase();
   const query = `%${filters.query || ""}%`;
   const admin = `%${filters.admin || ""}%`;
   const field = `%${filters.field || ""}%`;
   const date = `${filters.date || ""}%`;
-  const result = await getD1().prepare(`SELECT * FROM school_data_audit
+  const result = await db.prepare(`SELECT * FROM school_data_audit
     WHERE (school_name LIKE ? OR school_code LIKE ? OR commit_sha LIKE ?)
       AND (admin_name LIKE ? OR admin_id LIKE ?)
       AND field LIKE ? AND occurred_at LIKE ?
     ORDER BY occurred_at DESC LIMIT 300`)
     .bind(query, query, query, admin, admin, field, date).all<SchoolDataAudit>();
   return result.results ?? [];
+}
+
+async function getCommunityAdminDatabase() {
+  const connection = getCommunityDatabase();
+  if (connection.mode === "legacy") await ensureAdminSchema();
+  return connection.db;
 }
 
 export async function listAdminFiles() {
