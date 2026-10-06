@@ -16,7 +16,7 @@ for(const route of routes){
   const page=await browser.newPage();
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   try{
-    const response=await page.goto(`http://localhost:4173${route}`,{waitUntil:'networkidle',timeout:60000});
+    const response=await page.goto(`http://localhost:4173${route}`,{waitUntil:'domcontentloaded',timeout:30000});
     for(const width of widths){
       await page.setViewportSize({width,height:900});
       const check=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,title:document.title,leak:/\bundefined\b|\bnull\b/.test(document.querySelector('main')?.innerText||''),canonical:document.querySelector('link[rel=canonical]')?.getAttribute('href')}));

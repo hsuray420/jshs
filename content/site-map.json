@@ -18,7 +18,7 @@
         { "label": "學校地圖", "href": "/schools/map", "description": "先選就學區，再看學校位置", "section": "探索學校", "icon": "school" },
         { "label": "群科介紹", "href": "/schools/groups", "description": "理解學習內容與後續方向", "section": "探索學校" },
         { "label": "學校比較", "href": "/schools/compare", "description": "並排比較 2–4 所學校／校科", "section": "比較與參考", "icon": "planner" },
-        { "label": "通勤比較", "href": "/schools/commute", "description": "比較距離、時間與交通方式", "section": "比較與參考" },
+        { "label": "通勤比較", "href": "/schools/commute", "description": "查看校方交通資訊，路線交由 Google 地圖計算", "section": "比較與參考" },
         { "label": "歷年錄取", "href": "/schools/history", "description": "查看年度與來源的錄取參考", "section": "比較與參考" },
         { "label": "費用試算", "href": "/schools/cost", "description": "區分官方金額與本站估算", "section": "比較與參考" },
         { "label": "學長姐分享", "href": "/schools/alumni", "description": "參考社群經驗，不代表校方立場", "section": "比較與參考" }

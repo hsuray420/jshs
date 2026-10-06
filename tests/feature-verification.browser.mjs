@@ -54,17 +54,17 @@ await scenario("history_loading_empty_error_invalid_and_mobile", async () => {
     await route.fulfill({ contentType: "application/json", body: JSON.stringify({ records: [] }) });
   });
   await page.goto(`${baseURL}/schools/history`, { waitUntil: "domcontentloaded" });
-  const loading = await page.getByText("正在載入歷年資料").isVisible();
+  const loading = await page.getByText("正在載入歷年資料").waitFor({ state: "visible", timeout: 10000 }).then(() => true, () => false);
   await page.getByText("目前沒有找到這個年度的官方歷史資料。").waitFor();
-  const empty = await page.getByText("目前沒有符合條件的社群參考紀錄。").isVisible();
+  const empty = await page.getByText("目前沒有符合條件的社群參考紀錄。").waitFor({ state: "visible", timeout: 10000 }).then(() => true, () => false);
   await page.unrouteAll();
   await page.route("**/it_hs/historical-records.json", (route) => route.fulfill({ status: 500, body: "server failure" }));
-  await page.reload({ waitUntil: "networkidle" });
-  const error = await page.getByText("歷年資料暫時無法載入").isVisible();
+  await page.reload({ waitUntil: "domcontentloaded", timeout: 30000 });
+  const error = await page.getByText("歷年資料暫時無法載入").waitFor({ state: "visible", timeout: 10000 }).then(() => true, () => false);
   await page.unrouteAll();
   await page.route("**/it_hs/historical-records.json", (route) => route.fulfill({ contentType: "application/json", body: "not-json" }));
-  await page.reload({ waitUntil: "networkidle" });
-  const invalid = await page.getByText("歷年資料格式無法辨識").isVisible();
+  await page.reload({ waitUntil: "domcontentloaded", timeout: 30000 });
+  const invalid = await page.getByText("歷年資料格式無法辨識").waitFor({ state: "visible", timeout: 10000 }).then(() => true, () => false);
   const overflow = await page.evaluate(() => document.body.scrollWidth > window.innerWidth + 1);
   await page.close();
   return loading && empty && error && invalid && !overflow;
@@ -72,7 +72,7 @@ await scenario("history_loading_empty_error_invalid_and_mobile", async () => {
 
 await scenario("history_community_separation", async () => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-  await page.goto(`${baseURL}/schools/history`, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL}/schools/history`, { waitUntil: "domcontentloaded", timeout: 30000 });
   const sections = await page.locator("section").allTextContents();
   const official = sections.find((text) => text.includes("官方資料")) || "";
   const community = sections.find((text) => text.includes("社群參考資料")) || "";
@@ -82,7 +82,7 @@ await scenario("history_community_separation", async () => {
 
 await scenario("retired_placement_route_redirects_to_score_analysis", async () => {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
-  await page.goto(`${baseURL}/tools/placement`, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL}/tools/placement`, { waitUntil: "domcontentloaded", timeout: 30000 });
   const text = await page.locator("main").innerText();
   const pathname = new URL(page.url()).pathname;
   await page.close();
@@ -92,7 +92,7 @@ await scenario("retired_placement_route_redirects_to_score_analysis", async () =
 await scenario("recommend_discovery_not_prediction", async () => {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await page.addInitScript(() => localStorage.setItem("jshs_score_latest", JSON.stringify({ district: "ct", result: { totalScore: 50 } })));
-  await page.goto(`${baseURL}/planner/recommend`, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL}/planner/recommend`, { waitUntil: "domcontentloaded", timeout: 30000 });
   const text = await page.locator("main").innerText();
   const overflow = await page.evaluate(() => document.body.scrollWidth > window.innerWidth + 1);
   await page.close();
@@ -101,7 +101,7 @@ await scenario("recommend_discovery_not_prediction", async () => {
 
 await scenario("news_portal_is_not_announcement", async () => {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
-  await page.goto(`${baseURL}/news`, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL}/news`, { waitUntil: "domcontentloaded", timeout: 30000 });
   const text = await page.locator("main").innerText();
   await page.close();
   return text.includes("目前沒有可驗證的官方公告紀錄") && text.includes("官方入口不是公告紀錄");
@@ -109,7 +109,7 @@ await scenario("news_portal_is_not_announcement", async () => {
 
 await scenario("trust_history_not_verified", async () => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-  await page.goto(`${baseURL}/trust/progress`, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL}/trust/progress`, { waitUntil: "domcontentloaded", timeout: 30000 });
   const rows = await page.locator("tbody tr").allTextContents();
   await page.close();
   return rows.some((row) => /UNAVAILABLE|PARTIAL/.test(row));
@@ -117,12 +117,12 @@ await scenario("trust_history_not_verified", async () => {
 
 await scenario("groups_search_empty_and_back", async () => {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
-  await page.goto(`${baseURL}/schools/groups`, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL}/schools/groups`, { waitUntil: "domcontentloaded", timeout: 30000 });
   await page.getByPlaceholder("例如：電機、餐旅").fill("不存在的群別");
-  const empty = await page.getByText("找不到符合條件的群別").isVisible();
-  await page.goto(`${baseURL}/schools`, { waitUntil: "networkidle" });
-  await page.goBack({ waitUntil: "networkidle" });
-  const restored = await page.getByText("技高群科探索").isVisible();
+  const empty = await page.getByText("找不到符合條件的群別").waitFor({ state: "visible", timeout: 10000 }).then(() => true, () => false);
+  await page.goto(`${baseURL}/schools`, { waitUntil: "domcontentloaded", timeout: 30000 });
+  await page.goBack({ waitUntil: "domcontentloaded", timeout: 30000 });
+  const restored = await page.getByText("技高群科探索").waitFor({ state: "visible", timeout: 10000 }).then(() => true, () => false);
   await page.close();
   return empty && restored;
 });
@@ -136,7 +136,7 @@ await scenario("commute_osrm_failure_no_minutes", async () => {
   await page.route("**/api/school-geocode?district=*", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ coordinates: { "ct:050314": { lat: 24.18, lon: 120.65 } } }) }));
   await page.route("**/api/school-geocode?q=*", (route) => route.fulfill({ contentType: "application/json", body: JSON.stringify({ coordinate: { lat: 24.17, lon: 120.64 } }) }));
   await page.route("**/api/commute?*", (route) => route.fulfill({ status: 500, contentType: "application/json", body: JSON.stringify({ ok: false }) }));
-  await page.goto(`${baseURL}/schools/commute?district=ct`, { waitUntil: "networkidle" });
+  await page.goto(`${baseURL}/schools/commute?district=ct`, { waitUntil: "domcontentloaded", timeout: 30000 });
   await page.getByLabel("出發地／住家地址").fill("臺中市西屯區市政路");
   await page.getByRole("button", { name: "定位出發地" }).click();
   await page.getByRole("checkbox").first().check();
