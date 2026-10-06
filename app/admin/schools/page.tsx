@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireAdmin } from "../auth";
 import { getSchools } from "../../../lib/school-repository";
 import { listSchoolMediaMetadata } from "../../../db/school-media-store";
@@ -17,5 +18,5 @@ export default async function AdminSchoolsPage({ searchParams }: { searchParams:
     address: school.address, website: school.website, transport: school.transport, commute: school.commute,
     lodging: school.lodging, hasImage: imageCodes.has(school.code),
   }));
-  return <><section className="admin-page-heading"><div><p className="admin-eyebrow">Data / Canonical Schools</p><h1>學校資料管理</h1><p className="admin-muted">搜尋前台正式學校資料，從正確的區域 CSV 進行修正。生成快取不在此直接編輯。</p></div><span className="admin-badge ok">{items.length} 所學校</span></section><AdminSchoolsBrowser schools={items} initialRegion={region} /></>;
+  return <><section className="admin-page-heading"><div><p className="admin-eyebrow">Data / Canonical Schools</p><h1>學校資料管理</h1><p className="admin-muted">搜尋前台正式學校資料，從正確的區域 CSV 進行修正。生成快取不在此直接編輯。</p></div><div style={{ display: "flex", gap: "10px", alignItems: "center" }}><Link className="admin-button-secondary" href="/admin/schools/popular">設定熱門學校 ↗</Link><span className="admin-badge ok">{items.length} 所學校</span></div></section><AdminSchoolsBrowser schools={items} initialRegion={region} /></>;
 }

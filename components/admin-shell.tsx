@@ -9,7 +9,7 @@ type AdminNavGroup = { label: string; items: readonly AdminNavItem[] };
 
 const groups: readonly AdminNavGroup[] = [
   { label: "總覽", items: [["總覽", "/admin"]] },
-  { label: "網站編輯", items: [["前台鏡像編輯", "/admin/editor"], ["學校資料", "/admin/schools"], ["媒體與圖片", "/admin/media"]] },
+  { label: "網站編輯", items: [["前台鏡像編輯", "/admin/editor"], ["學校資料", "/admin/schools"], ["熱門學校推薦", "/admin/schools/popular"], ["媒體與圖片", "/admin/media"]] },
   { label: "內容與資料", items: [["內容管理", "/admin/content"], ["資料健康中心", "/admin/data"], ["資料回報", "/admin/data/reports"], ["學校評論", "/admin/data/reviews"], ["15 區 CSV 原始檔", "/admin/data/csv"], ["資料作業", "/admin/data/operations"]] },
   { label: "營運", items: [["通知中心", "/admin/notifications"], ["支持與付款", "/admin/payments"], ["程式發布", "/admin/code"]] },
   { label: "治理與系統", items: [["發布記錄", "/admin/deployments"], ["Audit Log", "/admin/audit"], ["使用者與權限", "/admin/users"], ["網站設定", "/admin/settings"], ["系統狀態", "/admin/system"], ["系統資源", "/admin/system/resources"]] },
