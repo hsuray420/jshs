@@ -110,7 +110,7 @@ function createAssistantStream(
             if (chunk.done) break;
           }
           if (buffer.trim()) emitProviderEvent(buffer, send);
-          send("[DONE]");
+          controller.enqueue(encoder.encode("data: [DONE]\n\n"));
           controller.close();
         } catch (error) {
           send({ error: "assistant_stream_failed" });
@@ -126,9 +126,10 @@ function createAssistantStream(
 
 function emitProviderEvent(event: string, send: (event: unknown) => void) {
   const data = event.split(/\r?\n/u).filter((line) => line.startsWith("data:")).map((line) => line.replace(/^data:\s?/u, "")).join("\n").trim();
-  if (!data || data === "[DONE]") return;
+  if (!data || data === "[DONE]" || data === `"[DONE]"`) return;
   try {
-    const parsed = JSON.parse(data) as { response?: unknown; delta?: unknown; token?: unknown; text?: unknown };
+    const parsed = JSON.parse(data) as { response?: unknown; delta?: unknown; token?: unknown; text?: unknown; done?: unknown };
+    if (parsed.done === true) return;
     const delta = [parsed.response, parsed.delta, parsed.token, parsed.text].find((value): value is string => typeof value === "string");
     if (delta) send({ delta });
   } catch {

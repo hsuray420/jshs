@@ -56,9 +56,34 @@ async function requestAssistant(question: string, history: readonly ChatMessage[
   if (!contentType.includes("text/event-stream") || !response.body) { const result = await response.json() as ChatResult; await simulateTyping(result.answer || "", signal, onDelta); return result; }
   const batch = createFrameBatcher(onDelta);
   const reader = response.body.getReader(); const decoder = new TextDecoder(); let buffer = ""; let answer = ""; let metadata: Omit<ChatResult, "answer"> = { sources: [] }; let completed = false;
-  const parseEvent = (event: string) => { const data = event.split(/\r?\n/u).filter((line) => line.startsWith("data:")).map((line) => line.replace(/^data:\s?/u, "")).join("\n").trim(); if (!data || data === "[DONE]") { if (data === "[DONE]") completed = true; return; } let parsed: StreamEvent; try { parsed = JSON.parse(data) as StreamEvent; } catch { throw Object.assign(new Error("assistant_invalid_stream"), { code: "assistant_invalid_stream" }); } if (parsed.error) throw Object.assign(new Error("assistant_stream_failed"), { code: parsed.error }); if (parsed.meta) metadata = { ...metadata, ...parsed.meta }; if (parsed.delta) { answer += parsed.delta; batch.push(answer); } if (parsed.answer && !answer) { answer = parsed.answer; batch.push(answer); } };
-  try { while (true) { const chunk = await reader.read(); buffer += decoder.decode(chunk.value || new Uint8Array(), { stream: !chunk.done }); const events = buffer.split(/\r?\n\r?\n/u); buffer = events.pop() || ""; events.forEach(parseEvent); if (chunk.done) break; } if (buffer.trim()) parseEvent(buffer); await batch.flush(); } finally { reader.releaseLock(); }
-  if (!completed || !answer) throw Object.assign(new Error(answer ? "assistant_stream_incomplete" : "assistant_stream_empty"), { code: answer ? "assistant_stream_incomplete" : "assistant_stream_empty" });
+  const parseEvent = (event: string) => {
+    const data = event.split(/\r?\n/u).filter((line) => line.startsWith("data:")).map((line) => line.replace(/^data:\s?/u, "")).join("\n").trim();
+    if (!data) return;
+    if (data === "[DONE]" || data === `"[DONE]"` || data === "'[DONE]'") { completed = true; return; }
+    let parsed: StreamEvent | string;
+    try { parsed = JSON.parse(data) as StreamEvent | string; } catch { throw Object.assign(new Error("assistant_invalid_stream"), { code: "assistant_invalid_stream" }); }
+    if (parsed === "[DONE]" || (typeof parsed === "object" && parsed !== null && (parsed as { done?: boolean }).done === true)) { completed = true; return; }
+    if (typeof parsed === "object" && parsed !== null) {
+      if (parsed.error) throw Object.assign(new Error("assistant_stream_failed"), { code: parsed.error });
+      if (parsed.meta) metadata = { ...metadata, ...parsed.meta };
+      if (parsed.delta) { answer += parsed.delta; batch.push(answer); }
+      if (parsed.answer && !answer) { answer = parsed.answer; batch.push(answer); }
+    }
+  };
+  try {
+    while (true) {
+      const chunk = await reader.read();
+      buffer += decoder.decode(chunk.value || new Uint8Array(), { stream: !chunk.done });
+      const events = buffer.split(/\r?\n\r?\n/u);
+      buffer = events.pop() || "";
+      events.forEach(parseEvent);
+      if (chunk.done) break;
+    }
+    if (buffer.trim()) parseEvent(buffer);
+    await batch.flush();
+    if (answer.trim()) completed = true;
+  } finally { reader.releaseLock(); }
+  if (!answer.trim()) throw Object.assign(new Error("assistant_stream_empty"), { code: "assistant_stream_empty" });
   return { answer, ...metadata };
 }
 
