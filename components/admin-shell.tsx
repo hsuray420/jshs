@@ -23,13 +23,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
     .filter(([, href]) => pathname === href || (href !== "/admin" && pathname.startsWith(`${href}/`)))
     .sort((left, right) => right[1].length - left[1].length)[0];
   return <div className="admin-app-shell">
-    <button type="button" className="admin-mobile-menu" onClick={() => setOpen(true)} aria-label="開啟後台選單">☰ <span>後台選單</span></button>
+    <button type="button" className="admin-mobile-menu" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="admin-navigation" aria-label="開啟後台選單">☰ <span>後台選單</span></button>
     {open ? <button type="button" className="admin-sidebar-backdrop" onClick={() => setOpen(false)} aria-label="關閉後台選單" /> : null}
-    <aside className={`admin-sidebar ${open ? "is-open" : ""}`}>
+    <aside id="admin-navigation" className={`admin-sidebar ${open ? "is-open" : ""}`}>
       <div className="admin-sidebar-brand"><span className="admin-sidebar-mark">J</span><span><strong>全國國中升學資訊網</strong><small>管理後台</small></span><button type="button" className="admin-sidebar-close" onClick={() => setOpen(false)} aria-label="關閉選單">×</button></div>
       <nav aria-label="管理後台主選單">{groups.map((group) => <section key={group.label} className="admin-nav-group"><p>{group.label}</p>{group.items.map(([label, href]) => <Link key={href} href={href} onClick={() => setOpen(false)} className={current?.[1] === href ? "is-active" : ""}>{label}</Link>)}</section>)}</nav>
       <div className="admin-sidebar-footer"><Link href="/" target="_blank">查看前台 ↗</Link><Link href="/api/admin/logout">登出</Link></div>
     </aside>
-    <div className="admin-workspace"><header className="admin-topbar"><div><span className="admin-breadcrumb">全國國中升學資訊網／管理後台</span><strong>{current?.[0] || "總覽"}</strong></div><div className="admin-topbar-actions"><Link href="/admin/system/resources">系統資源</Link><Link href="/admin/system">系統與安全</Link></div></header><main className="admin-main">{children}</main></div>
+    <div className="admin-workspace"><header className="admin-topbar"><div><span className="admin-breadcrumb">管理後台 <span aria-hidden="true">/</span> {current?.[0] || "總覽"}</span><strong>{current?.[0] || "總覽"}</strong></div><div className="admin-topbar-actions"><Link href="/admin/system/resources">系統資源</Link><Link href="/admin/system">系統與安全</Link></div></header><main className="admin-main">{children}</main></div>
   </div>;
 }
