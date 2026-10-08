@@ -889,6 +889,10 @@
 .admin-dashboard-card > strong { color: #172033; font-size: 28px; }
 .admin-quick-links { grid-template-columns: 1fr; }
 .admin-quick-links a { border-bottom: 1px solid #e3eaf2; border-radius: 0; padding: 12px 0; }
+.admin-workspace { margin-left: 0; min-width: 0; }
+.admin-topbar > div { min-width: 0; }
+.admin-topbar > div:first-child { flex: 1 1 auto; }
+.admin-topbar-actions { flex: 0 0 auto; }
 
 @media (max-width: 900px) {
   .admin-app-shell { display: block; }
