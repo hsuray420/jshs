@@ -11,9 +11,9 @@ test("AI privacy copy separates message processing from conversation storage", a
     read("content/trust/privacy.txt"),
     read("app/ai/page.tsx"),
   ]);
-  assert.match(assistant, /訊息會送到服務端與 AI 系統產生回答/);
-  assert.match(assistant, /訪客聊天紀錄留在本機 IndexedDB/);
-  assert.match(assistant, /會員對話會同步到本站伺服器/);
+  assert.doesNotMatch(assistant, /訊息會送到服務端與 AI 系統產生回答/);
+  assert.doesNotMatch(assistant, /訪客聊天紀錄留在本機 IndexedDB/);
+  assert.doesNotMatch(assistant, /會員對話會同步到本站伺服器/);
   assert.match(privacy, /AI 小助手訊息與聊天紀錄/);
   assert.match(aiPage, /robots: \{ index: false, follow: true \}/);
   assert.doesNotMatch(assistant, /不會上傳雲端|訊息完全不會離開裝置/);

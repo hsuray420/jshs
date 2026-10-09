@@ -113,7 +113,7 @@ test("assistant prompt keeps general model knowledge available and treats site d
   assert.match(policy, /額外上下文/);
   assert.doesNotMatch(policy, /只能根據 CONTEXT/);
   assert.match(ui, /問我升學問題，或任何你想問的事情/);
-  assert.match(ui, /一般 AI · 升學資料助手/);
+  assert.doesNotMatch(ui, /一般 AI · 升學資料助手/);
 });
 
 test("assistant sends the current question once and isolates general replies from prior site context", async () => {
