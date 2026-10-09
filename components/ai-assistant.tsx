@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, KeyboardEvent, PointerEvent as ReactPointerEvent, useCallback, useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AiChatMarkdown } from "./ai-chat-markdown";
 import { appendMessage, ChatConversation, ChatMessage, createConversation, getAllConversations, getConversation, getCurrentConversationId, removeMessage, replaceMessage, setCurrentConversationId, updateConversation } from "../lib/ai-chat-storage";
 
@@ -140,4 +140,4 @@ function FloatingAssistantButton({ onOpen }: { onOpen: () => void }) {
 }
 
 export function AiAssistant({ isMember }: { isMember: boolean }) { const pathname = usePathname(); const [open, setOpen] = useState(false); const [contextQuestion, setContextQuestion] = useState(""); const openAssistant = (question = "") => { document.dispatchEvent(new Event("jshs:ai-open")); setContextQuestion(question); setOpen(true); }; useEffect(() => { document.body.classList.toggle("jshs-ai-open", open); return () => document.body.classList.remove("jshs-ai-open"); }, [open]); useEffect(() => { if (!open) return; const closeOnEscape = (event: globalThis.KeyboardEvent) => { if (event.key === "Escape") setOpen(false); }; document.addEventListener("keydown", closeOnEscape); return () => document.removeEventListener("keydown", closeOnEscape); }, [open]); useEffect(() => { const closeForNavigation = () => setOpen(false); const openWithContext = (event: Event) => { const detail = (event as CustomEvent<{ question?: string }>).detail; openAssistant(detail?.question || ""); }; document.addEventListener("jshs:nav-open", closeForNavigation); document.addEventListener("jshs:ai-context", openWithContext); return () => { document.removeEventListener("jshs:nav-open", closeForNavigation); document.removeEventListener("jshs:ai-context", openWithContext); }; }, []); if (pathname === "/" || pathname === "/ai" || pathname === "/admin" || pathname.startsWith("/admin/")) return null; return <div className="ai-chat-root">{open ? <ChatWorkspace mode="floating" initialQuestion={contextQuestion} onClose={() => setOpen(false)} isMember={isMember} /> : <FloatingAssistantButton onOpen={() => openAssistant()} />}</div>; }
-export function AiChatPage({ initialConversationId = "", isMember }: { initialConversationId?: string; isMember: boolean }) { return <main className="ai-chat-page"><ChatWorkspace mode="full" initialConversationId={initialConversationId} isMember={isMember} /></main>; }
+export function AiChatPage({ initialConversationId = "", isMember }: { initialConversationId?: string; isMember: boolean }) { const router = useRouter(); return <main className="ai-chat-page"><ChatWorkspace mode="full" initialConversationId={initialConversationId} onClose={() => router.back()} isMember={isMember} /></main>; }

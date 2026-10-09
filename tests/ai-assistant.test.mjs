@@ -90,6 +90,12 @@ test("full assistant page uses a bounded workspace on desktop and mobile", async
   assert.match(css, /\.ai-chat-full \{ border-radius: 18px; max-height: 100%/);
 });
 
+test("full assistant page provides a close action", async () => {
+  const ui = await read("components/ai-assistant.tsx");
+  assert.match(ui, /useRouter/);
+  assert.match(ui, /mode="full"[\s\S]*onClose=\{\(\) => router\.back\(\)\}/);
+});
+
 test("assistant handles English greetings locally so they receive a complete reply", async () => {
   const policy = await read("lib/assistant-policy.ts");
   assert.match(policy, /hello\|hallo\|hi/);
