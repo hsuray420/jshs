@@ -8,6 +8,8 @@ import { getGuideTopic, getGuideTopics } from "@/lib/content";
 import guideArticles from "@/content/guide/articles.json";
 import { GuideArticleDetail } from "@/components/guide-article-detail";
 import { getPublishedGuideArticles } from "@/lib/guide-center-server";
+import { getMemberSession } from "@/lib/member-auth";
+import { listPublishedContent } from "@/db/content-store";
 
 const legacyRedirects: Record<string, string> = {
   misconceptions: "/knowledge/glossary",
@@ -42,5 +44,15 @@ export default async function KnowledgeTopicPage({ params }: { params: Promise<{
   const page = getGuideTopic(topic);
   if (!page) notFound();
   const illustration = topic === "admission-basics" ? "admission-basics" : topic === "rules" ? "choice-score" : topic === "glossary" ? "encyclopedia" : "career-explore" as const;
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/knowledge" /><CompactFeatureHero theme="guide" eyebrow="升學指南" title={page.title} description={page.description} illustration={illustration} /><KnowledgeTopicWorkspace topic={topic as Exclude<Topic, "groups">} /><SiteFooter /></main>;
+  const interestEntry = topic === "fit-quiz" ? (await listPublishedContent("interest_quiz")).find((entry) => entry.slug === "holland-interest") : undefined;
+  let interestQuiz: { questions: readonly [string, readonly [string, string][]][] } | undefined;
+  if (interestEntry) {
+    try {
+      const parsed = JSON.parse(interestEntry.body_json) as { questions?: unknown };
+      if (Array.isArray(parsed.questions)) interestQuiz = { questions: parsed.questions.filter((question): question is [string, readonly [string, string][]] => Array.isArray(question) && typeof question[0] === "string" && Array.isArray(question[1])) };
+    } catch {
+      interestQuiz = undefined;
+    }
+  }
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/knowledge" /><CompactFeatureHero theme="guide" eyebrow="升學指南" title={page.title} description={page.description} illustration={illustration} /><KnowledgeTopicWorkspace topic={topic as Exclude<Topic, "groups">} isMember={Boolean(await getMemberSession())} interestQuiz={interestQuiz} /><SiteFooter /></main>;
 }

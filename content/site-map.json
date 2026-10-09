@@ -12,25 +12,24 @@
   ],
   "menuGroups": [
     {
-      "label": "找學校", "href": "/schools", "activeHref": "/schools", "eyebrow": "找學校", "description": "從校科探索開始，找到值得了解的學校。",
+      "label": "找學校", "href": "/schools", "activeHref": "/schools", "eyebrow": "找學校", "description": "",
       "items": [
         { "label": "全國校科查詢", "href": "/schools", "description": "搜尋學區、縣市與群科", "section": "探索學校", "icon": "search" },
         { "label": "學校地圖", "href": "/schools/map", "description": "先選就學區，再看學校位置", "section": "探索學校", "icon": "school" },
-        { "label": "群科介紹", "href": "/schools/groups", "description": "理解學習內容與後續方向", "section": "探索學校" },
+        { "label": "群科介紹", "href": "/schools/groups", "description": "理解學習內容與後續方向", "section": "升學指南" },
         { "label": "學校比較", "href": "/schools/compare", "description": "並排比較 2–4 所學校／校科", "section": "比較與參考", "icon": "planner" },
         { "label": "通勤比較", "href": "/schools/commute", "description": "查看校方交通資訊，路線交由 Google 地圖計算", "section": "比較與參考" },
-        { "label": "歷年錄取", "href": "/schools/history", "description": "查看年度與來源的錄取參考", "section": "比較與參考" },
+        { "label": "歷年錄取", "href": "/schools/history", "description": "查看年度與來源的錄取參考", "section": "探索學校" },
         { "label": "費用試算", "href": "/schools/cost", "description": "區分官方金額與本站估算", "section": "比較與參考" },
-        { "label": "學長姐分享", "href": "/schools/alumni", "description": "參考社群經驗，不代表校方立場", "section": "比較與參考" }
+        { "label": "學長姐分享", "href": "/schools/alumni", "description": "參考社群經驗，不代表校方立場", "section": "探索學校" }
       ]
     },
     {
-      "label": "模擬考", "href": "/scores/mock", "activeHref": "/scores/mock", "eyebrow": "模擬考", "description": "保存模考成績，查看趨勢與歷史參考。", "layout": "compact",
+      "label": "模擬考", "href": "/scores/mock", "activeHref": "/scores/mock", "eyebrow": "模擬考", "description": "", "layout": "compact",
       "items": [
-        { "label": "模擬考中心", "href": "/scores/mock", "description": "集中查看模考入口、資料狀態與下一步。", "section": "模擬考" },
         { "label": "對答案", "href": "/scores/mock", "description": "等可驗證答案來源載入後再開放作答。", "section": "模擬考" },
-        { "label": "我的模考", "href": "/scores/history", "description": "查看已保存的模考紀錄；目前不假造紀錄。", "section": "模擬考" },
-        { "label": "成績趨勢", "href": "/scores/trends", "description": "用已保存成績產生趨勢，不以空資料推估。", "section": "模擬考" },
+        { "label": "模擬考分數試算", "href": "/scores/mock/calculator", "description": "依正式會考相同規則試算模考分數", "section": "模擬考" },
+        { "label": "我的模考", "href": "/scores/history", "description": "查看已保存的模考紀錄與成績趨勢", "section": "模擬考" },
         { "label": "模考落點", "href": "/scores/placement", "description": "查看資料條件與歷史參考，不提供無依據預測。", "section": "模擬考" }
       ]
     },
@@ -47,10 +46,11 @@
       ]
     },
     {
-      "label": "我的志願", "href": "/planner", "activeHref": "/planner", "eyebrow": "我的志願", "description": "整理選項、探索校科，再做客觀健檢。", "layout": "compact",
+      "label": "我的志願", "href": "/planner", "activeHref": "/planner", "eyebrow": "我的志願", "description": "", "layout": "compact",
       "items": [
-        { "label": "自己排", "href": "/planner/custom", "description": "加入、排序、備註並查看健檢", "section": "整理志願", "icon": "planner" },
-        { "label": "志願探索", "href": "/planner/recommend", "description": "依就學區與偏好探索候選校科", "section": "整理志願" },
+        { "label": "模擬志願選填", "href": "/planner/custom", "description": "由 AI 分析志願是否合理並提供建議", "section": "志願分析", "icon": "planner" },
+        { "label": "探索志願", "href": "/planner/recommend", "description": "完成興趣測驗後分析適合的候選校科", "section": "志願分析" },
+        { "label": "興趣測驗", "href": "/knowledge/fit-quiz", "description": "先登入完成 Holland 興趣測驗並保存結果", "section": "志願分析", "icon": "target" },
         { "label": "版本紀錄", "href": "/planner/versions", "description": "查看與恢復已保存的志願快照", "section": "管理清單" },
         { "label": "列印／下載", "href": "/planner/export", "description": "取得志願摘要或列印版本", "section": "管理清單" },
         { "label": "官方選填平台", "href": "/planner/official-platform", "description": "前往正式官方志願選填平台", "section": "管理清單" }

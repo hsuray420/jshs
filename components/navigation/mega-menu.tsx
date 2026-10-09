@@ -15,6 +15,7 @@ const fallbackIcons: Readonly<Record<string, SiteIconName>> = {
   "模擬考中心": "calculator", "我的模考": "chart", "成績趨勢": "chart", "模考落點": "target", "對答案": "check",
   "成績積分試算": "calculator", "積分規則": "book", "個人積分摘要": "chart",
   "自己排": "planner", "志願探索": "search", "版本紀錄": "history", "列印／下載": "file", "官方選填平台": "school",
+  "模擬志願選填": "planner", "探索志願": "search", "興趣測驗": "target", "模擬考分數試算": "calculator",
   "升學總覽": "calendar", "重要時程": "calendar", "現在該做什麼": "check", "我的待辦": "check",
   "升學入門": "book", "志願與積分": "calculator", "特殊入學與資格": "shield", "升學百科": "knowledge", "生涯探索": "target", "升學動態": "bell", "官方公告": "knowledge", "官方簡章與規則": "file", "官方招生時程": "calendar", "官方招生平台": "school",
   "資料來源": "shield", "資料更新狀態": "history", "15 區建置進度": "chart", "試算與分析方法": "calculator", "資料版本紀錄": "history", "錯誤回報": "messages", "平台可信度說明": "shield", "資料更新紀錄": "history",
@@ -44,7 +45,7 @@ export function groupMenuSections(group: MenuGroup): readonly MenuSection[] {
 export function NavMegaMenuItem({ item, onNavigate, mobile = false, theme }: { item: MenuItem; onNavigate?: () => void; mobile?: boolean; theme: FeatureTheme }) {
   return <Link href={item.href} onClick={onNavigate} role="menuitem" className={`jshs-nav-mega-item jshs-nav-theme--${theme}${mobile ? " is-mobile" : ""}`}>
     <span className="jshs-nav-mega-icon" aria-hidden="true"><SiteIcon name={itemIcon(item)} size={20} /></span>
-    <span className="jshs-nav-mega-item-copy"><b>{item.label}</b><span>{item.description}</span></span>
+    <span className="jshs-nav-mega-item-copy"><b>{item.label}</b></span>
     <SiteIcon name="chevron-right" size={16} className="jshs-nav-mega-chevron" />
   </Link>;
 }
@@ -52,7 +53,6 @@ export function NavMegaMenuItem({ item, onNavigate, mobile = false, theme }: { i
 export function NavDropdownHeader({ group }: { group: MenuGroup }) {
   return <header className="jshs-nav-mega-header">
     <h2>{group.eyebrow}</h2>
-    <p>{group.description}</p>
   </header>;
 }
 
@@ -110,7 +110,7 @@ export function NavDropdown({ item, group, active, open, onToggle, onNavigate }:
 
 export function NavMobileAccordion({ item, group, onNavigate }: { item: NavigationItem; group: MenuGroup; onNavigate: () => void }) {
   return <details className={`jshs-mobile-group jshs-nav-mobile-accordion jshs-nav-theme--${featureThemeFor(item.label)}`} open={item.label === "找學校"}>
-    <summary className="jshs-mobile-group-heading"><span className="jshs-nav-mobile-icon" aria-hidden="true"><SiteIcon name={item.icon || "more"} size={19} /></span><span><b>{item.label}</b><small>{group.description}</small></span><SiteIcon name="chevron-down" size={17} /></summary>
+    <summary className="jshs-mobile-group-heading"><span className="jshs-nav-mobile-icon" aria-hidden="true"><SiteIcon name={item.icon || "more"} size={19} /></span><span><b>{item.label}</b></span><SiteIcon name="chevron-down" size={17} /></summary>
     <div className="jshs-nav-mobile-body"><NavDropdownGrid group={group} onNavigate={onNavigate} mobile /><NavDropdownFooter group={group} onNavigate={onNavigate} /></div>
   </details>;
 }

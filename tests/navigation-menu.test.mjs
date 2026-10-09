@@ -11,9 +11,9 @@ const assistantUrl = new URL("../components/ai-assistant.tsx", import.meta.url);
 const expectedGroups = ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"];
 const requiredLabels = [
   "全國校科查詢", "歷年錄取", "學長姐分享", "學校地圖", "費用試算", "通勤比較", "群科介紹",
-  "模擬考", "模擬考中心", "對答案", "我的模考", "成績趨勢", "模考落點",
+  "模擬考", "對答案", "模擬考分數試算", "我的模考", "模考落點",
   "會考與免試", "成績積分試算", "積分規則", "個人積分摘要", "升學總覽", "重要時程",
-  "現在該做什麼", "我的待辦", "自己排", "志願探索", "版本紀錄", "列印／下載", "官方選填平台",
+  "現在該做什麼", "我的待辦", "模擬志願選填", "探索志願", "興趣測驗", "版本紀錄", "列印／下載", "官方選填平台",
   "特殊入學與資格", "升學入門", "志願與積分", "升學百科", "生涯探索", "升學動態", "官方公告", "官方簡章與規則", "官方招生時程", "官方招生平台", "資料來源", "資料更新狀態",
   "15 區建置進度", "試算與分析方法", "資料版本紀錄", "錯誤回報", "平台可信度說明",
   "關於本站", "支持／合作", "聯絡我們", "服務狀態", "隱私權政策", "服務條款", "Cookie／資料使用說明",
@@ -27,7 +27,7 @@ test("site map defines the final eight menu groups from the product navigation",
   const labels = siteMap.menuGroups.flatMap(({ label, items }) => [label, ...collectLabels(items)]);
   for (const label of requiredLabels) assert.ok(labels.includes(label), `missing menu item: ${label}`);
   const schoolGroup = siteMap.menuGroups.find(({ label }) => label === "找學校");
-  assert.deepEqual([...new Set(schoolGroup.items.map(({ section }) => section))].sort(), ["探索學校", "比較與參考"]);
+  assert.deepEqual([...new Set(schoolGroup.items.map(({ section }) => section))].sort(), ["升學指南", "探索學校", "比較與參考"]);
   const analyticsGroup = siteMap.menuGroups.find(({ label }) => label === "成績分析");
   assert.deepEqual(analyticsGroup.items.map(({ label }) => label), ["會考與免試"]);
 });
@@ -88,9 +88,10 @@ test("navigation menus use one shared data-driven mega-menu system", async () =>
   assert.ok(catalog.menuGroups.some(({ items }) => items.some(({ icon }) => icon)));
 });
 
-test("mega menu descriptions remain readable and floating surfaces are mutually exclusive", async () => {
-  const [globals, header, assistant] = await Promise.all([readFile(globalsUrl, "utf8"), readFile(headerUrl, "utf8"), readFile(assistantUrl, "utf8")]);
-  assert.match(globals, /\.jshs-nav-mega-item-copy span \{[^}]*overflow: visible;[^}]*overflow-wrap: anywhere;[^}]*white-space: normal;[^}]*word-break: break-word;/s);
+test("mega menu hides secondary descriptions while keeping floating surfaces mutually exclusive", async () => {
+  const [globals, header, megaMenu, assistant] = await Promise.all([readFile(globalsUrl, "utf8"), readFile(headerUrl, "utf8"), readFile(megaMenuUrl, "utf8"), readFile(assistantUrl, "utf8")]);
+  assert.doesNotMatch(header, /group\.description/);
+  assert.doesNotMatch(megaMenu, /<span>\{item\.description\}<\/span>/);
   assert.match(globals, /\.jshs-nav-mega-footer \{[^}]*padding: 12px 16px 0;/s);
   assert.doesNotMatch(globals, /\.jshs-desktop-more > div \{/);
   assert.match(header, /new Event\("jshs:nav-open"\)/);
