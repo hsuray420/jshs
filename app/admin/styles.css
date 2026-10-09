@@ -908,3 +908,453 @@
 @media (prefers-reduced-motion: reduce) {
   .admin-panel, .admin-dashboard-card, .admin-nav-group a, .admin-sidebar { transition: none; }
 }
+
+/* ==========================================================================
+   Dual Console Architecture Styles: Business vs Technical
+   ========================================================================== */
+
+
+/* Console Switcher in Sidebar */
+.admin-console-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 4px;
+  margin: 0 6px 18px;
+}
+
+.admin-console-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 150ms ease;
+}
+
+.admin-console-tab:hover {
+  color: #1e293b;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.admin-console-tab.is-active {
+  background: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.admin-tab-icon {
+  font-size: 14px;
+}
+
+.admin-sidebar-mark.is-tech {
+  background: #475569;
+}
+
+.admin-sidebar-console-switch {
+  margin-bottom: 8px;
+}
+
+.admin-console-switch-link {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2563eb !important;
+  background: #eff6ff;
+  border-radius: 8px;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.admin-console-switch-link:hover {
+  background: #dbeafe;
+}
+
+/* Topbar Mode Pills and Actions */
+.admin-mode-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-mode-pill.is-biz {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
+.admin-mode-pill.is-tech {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.admin-switch-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 5px 10px;
+  text-decoration: none;
+  transition: all 150ms ease;
+}
+
+.admin-switch-mode-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.admin-topbar-link {
+  color: #64748b;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Business Dashboard: Exam Season Banner */
+.admin-exam-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e8f2ff 100%);
+  border: 1px solid #c7dcfc;
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 22px;
+}
+
+.admin-exam-banner-left {
+  max-width: 720px;
+}
+
+.admin-exam-tag {
+  display: inline-block;
+  background: #2563eb;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.admin-exam-banner-left h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e3a8a;
+  letter-spacing: -0.02em;
+}
+
+.admin-exam-banner-stats {
+  display: flex;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.admin-exam-stat-item {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 14px 18px;
+  text-align: center;
+  min-width: 110px;
+}
+
+.admin-exam-stat-item span {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.admin-exam-stat-item strong {
+  display: block;
+  font-size: 18px;
+  color: #1e3a8a;
+}
+
+/* Business Dashboard: 15 Districts Grid */
+.admin-district-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.admin-district-badge {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 150ms ease;
+}
+
+.admin-district-badge:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+  transform: translateY(-2px);
+}
+
+.admin-district-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.admin-district-count {
+  font-size: 16px;
+  color: #2563eb;
+}
+
+.admin-district-tag {
+  font-size: 11px;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+/* Technical Dashboard: DevOps Banner */
+.admin-tech-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 22px;
+  color: #f8fafc;
+}
+
+.admin-tech-banner-left {
+  max-width: 720px;
+}
+
+.admin-tech-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+
+.admin-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+.admin-tech-banner-left h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.admin-tech-banner-left .admin-muted {
+  color: #94a3b8;
+}
+
+.admin-tech-banner-stats {
+  display: flex;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.admin-tech-stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px 16px;
+  text-align: center;
+  min-width: 100px;
+}
+
+.admin-tech-stat-card span {
+  display: block;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+.admin-tech-stat-card strong {
+  display: block;
+  font-size: 16px;
+  color: #38bdf8;
+}
+
+.admin-tech-stat-card small {
+  display: block;
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Technical Service Health Grid */
+.admin-tech-service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.admin-service-card {
+  display: grid;
+  gap: 8px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 150ms ease;
+}
+
+.admin-service-card:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+}
+
+.admin-service-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.admin-service-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.admin-service-desc {
+  margin: 0;
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.admin-service-detail {
+  font-size: 11px;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* Technical Subsystems Grid */
+.admin-subsystem-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.admin-subsystem-card {
+  display: grid;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 150ms ease;
+}
+
+.admin-subsystem-card:hover {
+  border-color: #94a3b8;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+  transform: translateY(-2px);
+}
+
+.admin-subsystem-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 2px 8px;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.admin-subsystem-title {
+  font-size: 16px;
+  color: #0f172a;
+}
+
+.admin-subsystem-desc {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.admin-subsystem-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: #2563eb;
+  margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+  .admin-exam-banner,
+  .admin-tech-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .admin-exam-banner-stats,
+  .admin-tech-banner-stats {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .admin-district-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .admin-tech-service-grid,
+  .admin-subsystem-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-district-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .admin-tech-service-grid,
+  .admin-subsystem-grid {
+    grid-template-columns: 1fr;
+  }
+}
