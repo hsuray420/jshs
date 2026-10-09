@@ -16,7 +16,6 @@
       "items": [
         { "label": "全國校科查詢", "href": "/schools", "description": "搜尋學區、縣市與群科", "section": "探索學校", "icon": "search" },
         { "label": "學校地圖", "href": "/schools/map", "description": "先選就學區，再看學校位置", "section": "探索學校", "icon": "school" },
-        { "label": "群科介紹", "href": "/schools/groups", "description": "理解學習內容與後續方向", "section": "升學指南" },
         { "label": "學校比較", "href": "/schools/compare", "description": "並排比較 2–4 所學校／校科", "section": "比較與參考", "icon": "planner" },
         { "label": "通勤比較", "href": "/schools/commute", "description": "查看校方交通資訊，路線交由 Google 地圖計算", "section": "比較與參考" },
         { "label": "歷年錄取", "href": "/schools/history", "description": "查看年度與來源的錄取參考", "section": "探索學校" },

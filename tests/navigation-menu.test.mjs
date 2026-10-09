@@ -10,7 +10,7 @@ const globalsUrl = new URL("../app/globals.css", import.meta.url);
 const assistantUrl = new URL("../components/ai-assistant.tsx", import.meta.url);
 const expectedGroups = ["找學校", "模擬考", "成績分析", "我的志願", "日程", "升學指南", "資料與信任", "官方資訊"];
 const requiredLabels = [
-  "全國校科查詢", "歷年錄取", "學長姐分享", "學校地圖", "費用試算", "通勤比較", "群科介紹",
+  "全國校科查詢", "歷年錄取", "學長姐分享", "學校地圖", "費用試算", "通勤比較",
   "模擬考", "對答案", "模擬考分數試算", "我的模考", "模考落點",
   "會考與免試", "成績積分試算", "積分規則", "個人積分摘要", "升學總覽", "重要時程",
   "現在該做什麼", "我的待辦", "模擬志願選填", "探索志願", "興趣測驗", "版本紀錄", "列印／下載", "官方選填平台",
@@ -27,7 +27,7 @@ test("site map defines the final eight menu groups from the product navigation",
   const labels = siteMap.menuGroups.flatMap(({ label, items }) => [label, ...collectLabels(items)]);
   for (const label of requiredLabels) assert.ok(labels.includes(label), `missing menu item: ${label}`);
   const schoolGroup = siteMap.menuGroups.find(({ label }) => label === "找學校");
-  assert.deepEqual([...new Set(schoolGroup.items.map(({ section }) => section))].sort(), ["升學指南", "探索學校", "比較與參考"]);
+  assert.deepEqual([...new Set(schoolGroup.items.map(({ section }) => section))].sort(), ["探索學校", "比較與參考"]);
   const analyticsGroup = siteMap.menuGroups.find(({ label }) => label === "成績分析");
   assert.deepEqual(analyticsGroup.items.map(({ label }) => label), ["會考與免試"]);
 });
