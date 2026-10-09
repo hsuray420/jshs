@@ -20,7 +20,7 @@ test("task hubs route users into admission and separate mock-exam surfaces", asy
   assert.match(home, /jshs-v2-home/);
   assert.match(ai, /\/api\/assistant/);
   assert.match(scoreRegistry, /"href": "\/scores\/admission"/);
-  assert.match(scoreRegistry, /"key": "mock-center"/);
+  assert.match(scoreRegistry, /"key": "mock-calculator"/);
   assert.match(scoreRegistry, /"area": "mock"/);
   assert.match(tools, /ScoreFeatureEntry/);
   assert.match(home, /\/planner/);

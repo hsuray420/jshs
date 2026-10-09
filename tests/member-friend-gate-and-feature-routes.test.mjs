@@ -38,7 +38,7 @@ test("成績分析的每個功能都有自己的 canonical route", async () => {
     read("components/admission-calculator.tsx"),
   ]);
 
-  for (const path of ["/scores", "/scores/mock", "/scores/admission", "/scores/rules", "/scores/summary", "/scores/history", "/scores/trends", "/scores/placement"]) {
+  for (const path of ["/scores", "/scores/mock", "/scores/mock/calculator", "/scores/admission", "/scores/rules", "/scores/summary", "/scores/history", "/scores/placement"]) {
     assert.match(siteMap, new RegExp(path.replaceAll("/", "\\/")));
   }
   for (const source of [scores, mock, tools, summary, history, placement, rules]) assert.match(source, /SiteHeader/);
