@@ -26,16 +26,20 @@ function itemIcon(item: MenuItem): SiteIconName { return (item.icon as SiteIconN
 
 export function groupMenuSections(group: MenuGroup): readonly MenuSection[] {
   const sections: MenuSection[] = [];
+  const sectionIndexes = new Map<string, number>();
   for (const item of group.items) {
     if (item.children?.length) {
       sections.push({ label: item.label, items: item.children });
       continue;
     }
     const label = item.section || undefined;
-    const previous = sections.at(-1);
-    if (previous && previous.label === label) {
-      sections[sections.length - 1] = { ...previous, items: [...previous.items, item] };
+    const key = label || "";
+    const existingIndex = sectionIndexes.get(key);
+    if (existingIndex !== undefined) {
+      const existing = sections[existingIndex];
+      sections[existingIndex] = { ...existing, items: [...existing.items, item] };
     } else {
+      sectionIndexes.set(key, sections.length);
       sections.push({ label, items: [item] });
     }
   }

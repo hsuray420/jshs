@@ -86,6 +86,8 @@ test("navigation menus use one shared data-driven mega-menu system", async () =>
   assert.ok(catalog.menuGroups.some(({ layout }) => layout === "compact"));
   assert.ok(catalog.menuGroups.some(({ items }) => items.some(({ section }) => section)));
   assert.ok(catalog.menuGroups.some(({ items }) => items.some(({ icon }) => icon)));
+  assert.match(megaMenu, /const sectionIndexes = new Map<string, number>\(\)/);
+  assert.match(megaMenu, /sectionIndexes\.get\(key\)/);
 });
 
 test("mega menu hides secondary descriptions while keeping floating surfaces mutually exclusive", async () => {
