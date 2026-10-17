@@ -46,7 +46,10 @@ function Hero({
       }
     >
       <div className="jshs-feature-hero-copy">
-        <p className="jshs-feature-eyebrow">{eyebrow}</p>
+        <p className="jshs-feature-eyebrow">
+          <span className="apple-indicator-dot shrink-0 inline-block h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
+          <span>{eyebrow}</span>
+        </p>
         <h1>{title}</h1>
         <p className="jshs-feature-description">{description}</p>
         {status || sourceInfo || actions ? (
@@ -57,7 +60,9 @@ function Hero({
           </div>
         ) : null}
       </div>
-      <FeatureIllustration name={illustration} theme={theme} />
+      <div className="jshs-feature-stage-wrap">
+        <FeatureIllustration name={illustration} theme={theme} />
+      </div>
     </PageContainer>
   );
 }

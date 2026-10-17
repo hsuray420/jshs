@@ -18,33 +18,43 @@ const labels: Record<FeatureIllustrationName, string> = {
 };
 
 function Scene({ name }: { name: FeatureIllustrationName }) {
-  // 1. Schools & Navigation (Map, Pin, Academy Arch, Route)
+  // 1. Schools & Navigation (Spatial Radar, Bobbing Pin, 3D Grid)
   if (["school-search", "school-map", "commute"].includes(name)) {
     return (
       <g className="jshs-art-group">
         {/* Isometric perspective campus map plane */}
-        <polygon points="50,170 180,215 310,170 180,125" className="jshs-illustration-plane" fill="currentColor" fillOpacity="0.08" />
-        <polygon points="50,170 180,215 180,225 50,180" fill="currentColor" fillOpacity="0.12" />
-        <polygon points="180,215 310,170 310,180 180,225" fill="currentColor" fillOpacity="0.18" />
+        <polygon points="50,172 180,218 310,172 180,126" className="jshs-illustration-plane" fill="currentColor" fillOpacity="0.06" />
+        <polygon points="50,172 180,218 180,226 50,180" fill="currentColor" fillOpacity="0.10" />
+        <polygon points="180,218 310,172 310,180 180,226" fill="currentColor" fillOpacity="0.15" />
 
-        {/* Campus Academy Main Building */}
+        {/* Campus Academy Building */}
         <path className="jshs-illustration-fill" d="M86 165V105l94-42 94 42v60H86Z" />
-        {/* Bell Tower & Gable Roof */}
         <polygon points="180,42 145,63 215,63" className="jshs-illustration-accent" />
-        <rect x="168" y="63" width="24" height="26" fill="white" fillOpacity="0.9" rx="3" />
+        <rect x="168" y="63" width="24" height="26" fill="white" fillOpacity="0.9" rx="4" />
         <circle cx="180" cy="74" r="5" fill="currentColor" />
 
-        {/* Architectural lines & windows */}
+        {/* Architectural lines & Arched Portico */}
         <path className="jshs-illustration-line" d="M74 165h212M112 165v-48h136v48M180 89v76M130 135h22m76 0h22" strokeWidth="2.5" strokeLinecap="round" />
-        {/* Arched Portico */}
         <path d="M166 165v-24c0-7 6-13 14-13s14 6 14 13v24" fill="white" />
 
-        {/* 3D Glowing Droplet Pin */}
-        <g transform="translate(240, 48)">
-          <path className="jshs-illustration-pin-shadow" d="M18 42c6 0 12 3 12 6s-6 6-12 6-12-3-12-6 6-6 12-6Z" fill="currentColor" fillOpacity="0.2" />
-          <path className="jshs-illustration-pin" d="M18 0C8 0 0 8 0 18c0 14 18 30 18 30s18-16 18-30C36 8 28 0 18 0Z" fill="url(#ill-grad-pin)" />
+        {/* Sonar Radar Waves radiating outwards */}
+        <circle className="apple-radar-wave-1" cx="258" cy="66" r="14" fill="none" stroke="var(--feature-primary, #2563EB)" />
+        <circle className="apple-radar-wave-2" cx="258" cy="66" r="14" fill="none" stroke="var(--feature-primary, #2563EB)" />
+
+        {/* 3D Floating Droplet Pin with gentle levitation */}
+        <g className="apple-pin-float" transform="translate(240, 42)">
+          <path d="M18 42c6 0 12 3 12 6s-6 6-12 6-12-3-12-6 6-6 12-6Z" fill="currentColor" fillOpacity="0.18" />
+          <path d="M18 0C8 0 0 8 0 18c0 14 18 30 18 30s18-16 18-30C36 8 28 0 18 0Z" fill="url(#ill-grad-pin)" filter="url(#ill-shadow-card)" />
           <circle cx="18" cy="17" r="7" fill="white" />
           <circle cx="18" cy="17" r="3" fill="currentColor" />
+        </g>
+
+        {/* Floating Haptic Chip: 15 就學區 */}
+        <g className="apple-float-chip-left" transform="translate(36, 68)">
+          <rect width="94" height="30" rx="15" fill="white" fillOpacity="0.92" stroke="rgba(15,23,42,0.08)" strokeWidth="1" filter="url(#ill-shadow-chip)" />
+          <circle cx="16" cy="15" r="7" fill="#EFF6FF" />
+          <path d="M16 10l2 5-5-2 3-3z" fill="#2563EB" />
+          <text x="28" y="19" fill="#0F172A" fontSize="11" fontWeight="700" fontFamily="system-ui, sans-serif">15 就學區</text>
         </g>
 
         {name === "commute" && (
@@ -58,20 +68,26 @@ function Scene({ name }: { name: FeatureIllustrationName }) {
   if (["admissions-history", "score-history", "planner-history"].includes(name)) {
     return (
       <g className="jshs-art-group">
-        {/* Layered Card Deck */}
-        <rect x="96" y="44" width="168" height="136" rx="18" fill="currentColor" fillOpacity="0.06" transform="rotate(-3 180 112)" />
-        <rect className="jshs-illustration-fill" x="88" y="52" width="184" height="142" rx="20" />
+        {/* Layered Frosted Glass Cards */}
+        <rect x="94" y="44" width="172" height="138" rx="20" fill="currentColor" fillOpacity="0.06" transform="rotate(-3 180 112)" />
+        <rect className="jshs-illustration-fill" x="88" y="50" width="184" height="144" rx="22" filter="url(#ill-shadow-card)" />
 
         {/* Chart Grid Lines */}
         <path className="jshs-illustration-line" d="M116 88h128M116 120h128M116 152h128" strokeOpacity="0.2" strokeWidth="1.5" />
         {/* Trend Area Gradient & Smooth Line */}
         <path d="M124 148l32-26 34 16 46-52v62H124Z" fill="url(#ill-grad-trend)" fillOpacity="0.35" />
         <path d="M124 148l32-26 34 16 46-52" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-        {/* Glowing Data Nodes */}
+        {/* Glowing Data Nodes with subtle pulse */}
         <circle cx="124" cy="148" r="5" fill="white" stroke="currentColor" strokeWidth="2.5" />
         <circle cx="156" cy="122" r="5" fill="white" stroke="currentColor" strokeWidth="2.5" />
         <circle cx="190" cy="138" r="5" fill="white" stroke="currentColor" strokeWidth="2.5" />
-        <circle cx="236" cy="86" r="6" className="jshs-illustration-accent" stroke="white" strokeWidth="2.5" />
+        <circle className="apple-indicator-dot" cx="236" cy="86" r="6" fill="#10B981" stroke="white" strokeWidth="2.5" />
+
+        {/* Floating Haptic Chip */}
+        <g className="apple-float-chip-right" transform="translate(230, 40)">
+          <rect width="90" height="28" rx="14" fill="white" fillOpacity="0.92" stroke="rgba(15,23,42,0.08)" strokeWidth="1" filter="url(#ill-shadow-chip)" />
+          <text x="45" y="18" fill="#0F172A" fontSize="10" fontWeight="700" textAnchor="middle" fontFamily="system-ui, sans-serif">歷年分佈曲線</text>
+        </g>
       </g>
     );
   }
@@ -81,51 +97,82 @@ function Scene({ name }: { name: FeatureIllustrationName }) {
     return (
       <g className="jshs-art-group">
         {/* Left Column Card */}
-        <rect className="jshs-illustration-fill" x="62" y="62" width="102" height="128" rx="18" />
-        <rect x="76" y="78" width="74" height="12" rx="6" fill="currentColor" fillOpacity="0.2" />
-        <path className="jshs-illustration-line" d="M76 104h54M76 126h74M76 148h42M76 166h60" strokeWidth="2" strokeLinecap="round" />
+        <rect className="jshs-illustration-fill" x="62" y="60" width="104" height="132" rx="20" filter="url(#ill-shadow-card)" />
+        <rect x="76" y="76" width="76" height="12" rx="6" fill="currentColor" fillOpacity="0.2" />
+        <path className="jshs-illustration-line" d="M76 102h54M76 124h74M76 146h42M76 166h60" strokeWidth="2" strokeLinecap="round" />
 
         {/* VS / Comparison Glowing Beacon */}
-        <circle cx="180" cy="124" r="22" fill="url(#ill-grad-orb)" />
+        <circle cx="180" cy="124" r="22" fill="url(#ill-grad-orb)" filter="url(#ill-shadow-chip)" />
         <path className="jshs-illustration-accent" d="M174 116l12 16m0-16l-12 16" stroke="white" strokeWidth="3" strokeLinecap="round" />
 
         {/* Right Column Card */}
-        <rect className="jshs-illustration-fill" x="196" y="62" width="102" height="128" rx="18" />
-        <rect x="210" y="78" width="74" height="12" rx="6" className="jshs-illustration-accent" fillOpacity="0.28" />
-        <path className="jshs-illustration-line" d="M210 104h74M210 126h54M210 148h68M210 166h48" strokeWidth="2" strokeLinecap="round" />
+        <rect className="jshs-illustration-fill" x="194" y="60" width="104" height="132" rx="20" filter="url(#ill-shadow-card)" />
+        <rect x="208" y="76" width="76" height="12" rx="6" className="jshs-illustration-accent" fillOpacity="0.28" />
+        <path className="jshs-illustration-line" d="M208 102h74M208 124h54M208 146h68M208 166h48" strokeWidth="2" strokeLinecap="round" />
       </g>
     );
   }
 
-  // 4. Calculator & Admission Score Engine
+  // 4. Calculator & Admission Score Engine (Apple Kinetic Dynamic Stage)
   if (["cost-calculator", "score-calculator", "score-rules"].includes(name)) {
     return (
       <g className="jshs-art-group">
-        {/* Calculator Body */}
-        <rect className="jshs-illustration-fill" x="108" y="38" width="144" height="172" rx="24" />
-        {/* Glowing Screen Display */}
-        <rect x="126" y="58" width="108" height="40" rx="10" fill="white" />
-        <rect x="136" y="72" width="48" height="12" rx="4" fill="currentColor" fillOpacity="0.25" />
-        <circle cx="218" cy="78" r="5" className="jshs-illustration-accent" />
+        {/* Kinetic Concentric Charge Arc */}
+        <circle cx="180" cy="118" r="92" stroke="currentColor" strokeOpacity="0.07" strokeWidth="6" fill="none" />
+        <circle
+          className="apple-kinetic-arc"
+          cx="180"
+          cy="118"
+          r="92"
+          stroke="url(#ill-grad-arc)"
+          strokeWidth="6"
+          strokeDasharray="578"
+          strokeDashoffset="144"
+          strokeLinecap="round"
+          fill="none"
+          transform="rotate(-90 180 118)"
+        />
 
-        {/* Keypad Buttons Grid */}
-        <rect x="126" y="112" width="22" height="20" rx="6" fill="white" fillOpacity="0.8" />
-        <rect x="156" y="112" width="22" height="20" rx="6" fill="white" fillOpacity="0.8" />
-        <rect x="186" y="112" width="22" height="20" rx="6" fill="white" fillOpacity="0.8" />
-        <rect x="214" y="112" width="20" height="20" rx="6" className="jshs-illustration-accent" fillOpacity="0.8" />
+        {/* Central Frosted Glass Pod Body */}
+        <rect x="114" y="38" width="132" height="162" rx="26" fill="white" fillOpacity="0.92" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" filter="url(#ill-shadow-card)" />
+        <rect className="jshs-illustration-fill" x="114" y="38" width="132" height="162" rx="26" fillOpacity="0.08" />
 
-        <rect x="126" y="140" width="22" height="20" rx="6" fill="white" fillOpacity="0.8" />
-        <rect x="156" y="140" width="22" height="20" rx="6" fill="white" fillOpacity="0.8" />
-        <rect x="186" y="140" width="22" height="20" rx="6" fill="white" fillOpacity="0.8" />
-        <rect x="214" y="140" width="20" height="20" rx="6" className="jshs-illustration-accent" fillOpacity="0.8" />
+        {/* Digital LCD Screen Display */}
+        <rect x="126" y="52" width="108" height="42" rx="12" fill="#0F172A" />
+        {/* Readiness Pulsing Dot */}
+        <circle className="apple-indicator-dot" cx="138" cy="73" r="4" fill="#10B981" />
+        {/* Digital Score Output */}
+        <text x="148" y="78" fill="#F8FAFC" fontSize="15" fontWeight="850" fontFamily="system-ui, -apple-system, sans-serif" letterSpacing="-0.02em">108.0</text>
+        <text x="222" y="76" fill="#94A3B8" fontSize="9" fontWeight="600" textAnchor="end" fontFamily="system-ui, sans-serif">即時試算</text>
 
-        <rect x="126" y="168" width="52" height="22" rx="6" fill="white" fillOpacity="0.8" />
-        <rect x="186" y="168" width="48" height="22" rx="6" fill="url(#ill-grad-pin)" />
+        {/* 4x3 Haptic Keypad Grid */}
+        <rect x="126" y="104" width="22" height="18" rx="6" fill="white" stroke="rgba(15,23,42,0.06)" />
+        <rect x="155" y="104" width="22" height="18" rx="6" fill="white" stroke="rgba(15,23,42,0.06)" />
+        <rect x="184" y="104" width="22" height="18" rx="6" fill="white" stroke="rgba(15,23,42,0.06)" />
+        <rect x="212" y="104" width="22" height="18" rx="6" className="jshs-illustration-accent" fillOpacity="0.85" />
 
-        {/* Floating Checkmark Badge */}
-        <g transform="translate(242, 134)">
-          <circle cx="18" cy="18" r="18" fill="white" filter="drop-shadow(0 4px 10px rgba(0,0,0,0.12))" />
-          <path d="M11 18l5 5 11-12" fill="none" stroke="#059669" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
+        <rect x="126" y="128" width="22" height="18" rx="6" fill="white" stroke="rgba(15,23,42,0.06)" />
+        <rect x="155" y="128" width="22" height="18" rx="6" fill="white" stroke="rgba(15,23,42,0.06)" />
+        <rect x="184" y="128" width="22" height="18" rx="6" fill="white" stroke="rgba(15,23,42,0.06)" />
+        <rect x="212" y="128" width="22" height="18" rx="6" className="jshs-illustration-accent" fillOpacity="0.85" />
+
+        <rect x="126" y="152" width="51" height="20" rx="6" fill="white" stroke="rgba(15,23,42,0.06)" />
+        <rect x="184" y="152" width="50" height="20" rx="6" fill="url(#ill-grad-pin)" />
+
+        {/* Floating Haptic Chip 1: 會考 30 分 */}
+        <g className="apple-float-chip-left" transform="translate(32, 68)">
+          <rect width="92" height="30" rx="15" fill="white" fillOpacity="0.95" stroke="rgba(15,23,42,0.08)" strokeWidth="1" filter="url(#ill-shadow-chip)" />
+          <circle cx="16" cy="15" r="7" fill="#ECFDF5" />
+          <path d="M13 15l2 2 4-4" stroke="#059669" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          <text x="28" y="19" fill="#0F172A" fontSize="11" fontWeight="700" fontFamily="system-ui, sans-serif">會考 30 分</text>
+        </g>
+
+        {/* Floating Haptic Chip 2: 多元 40 分 */}
+        <g className="apple-float-chip-right" transform="translate(236, 142)">
+          <rect width="92" height="30" rx="15" fill="white" fillOpacity="0.95" stroke="rgba(15,23,42,0.08)" strokeWidth="1" filter="url(#ill-shadow-chip)" />
+          <circle cx="16" cy="15" r="7" fill="#EFF6FF" />
+          <polygon points="16,10 17.5,13.5 21,13.5 18,16 19.5,19.5 16,17.5 12.5,19.5 14,16 11,13.5 14.5,13.5" fill="#2563EB" />
+          <text x="28" y="19" fill="#0F172A" fontSize="11" fontWeight="700" fontFamily="system-ui, sans-serif">多元 40 分</text>
         </g>
       </g>
     );
@@ -135,35 +182,52 @@ function Scene({ name }: { name: FeatureIllustrationName }) {
   if (["alumni", "assistant", "support"].includes(name)) {
     return (
       <g className="jshs-art-group">
-        {/* Primary Message Balloon */}
-        <path className="jshs-illustration-fill" d="M82 66h160c14 0 26 12 26 26v64c0 14-12 26-26 26h-76l-46 30 11-30H82c-14 0-26-12-26-26V92c0-14 12-26 26-26Z" />
-        <path className="jshs-illustration-line" d="M96 108h132M96 138h88" strokeWidth="3" strokeLinecap="round" />
+        {/* Floating Dialogue Bubble 1 */}
+        <g className="apple-float-chip-left" transform="translate(68, 62)">
+          <rect width="180" height="74" rx="20" fill="white" fillOpacity="0.92" stroke="rgba(15,23,42,0.08)" filter="url(#ill-shadow-card)" />
+          <path className="jshs-illustration-line" d="M22 28h136M22 46h92" strokeWidth="2.5" strokeLinecap="round" />
+        </g>
+
+        {/* Floating Dialogue Bubble 2 */}
+        <g className="apple-float-chip-right" transform="translate(140, 118)">
+          <rect className="jshs-illustration-fill" width="154" height="64" rx="18" filter="url(#ill-shadow-chip)" />
+          <path d="M22 24h110M22 40h72" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
+        </g>
+
         {/* Floating Avatar Orb */}
-        <circle className="jshs-illustration-accent" cx="248" cy="58" r="24" />
-        <circle cx="248" cy="52" r="8" fill="white" />
-        <path d="M234 72c0-7 6-12 14-12s14 5 14 12" fill="white" />
+        <g transform="translate(262, 54)">
+          <circle className="jshs-illustration-accent" cx="18" cy="18" r="22" filter="url(#ill-shadow-chip)" />
+          <circle cx="18" cy="14" r="7" fill="white" />
+          <path d="M7 30c0-6 5-10 11-10s11 4 11 10" fill="white" />
+        </g>
       </g>
     );
   }
 
-  // 6. Schedule, Calendar & Countdown Timeline
+  // 6. Schedule, Calendar & Countdown Timeline (Apple Watch Chrono Style)
   if (["open-day", "schedule", "timeline", "schedule-now", "todo", "calendar-export"].includes(name)) {
     return (
       <g className="jshs-art-group">
-        {/* 3D Flip Calendar Card */}
-        <rect className="jshs-illustration-fill" x="88" y="48" width="184" height="156" rx="22" />
-        {/* Top Header Bar */}
-        <path d="M88 48h184v38H88z" fill="url(#ill-grad-pin)" rx="22" />
-        {/* Twin Spiral Binders */}
-        <rect x="124" y="34" width="12" height="26" rx="6" fill="white" stroke="currentColor" strokeWidth="2" />
-        <rect x="224" y="34" width="12" height="26" rx="6" fill="white" stroke="currentColor" strokeWidth="2" />
+        {/* Chronograph Dial Precision Ticks */}
+        <circle cx="180" cy="118" r="92" stroke="currentColor" strokeOpacity="0.08" strokeWidth="3" strokeDasharray="3 6" fill="none" />
 
-        {/* Calendar Grid & Dates */}
-        <path className="jshs-illustration-line" d="M112 118h30m34 0h30m34 0h30M112 152h30m34 0h30" strokeWidth="2.5" strokeLinecap="round" />
-        {/* Glowing Success Checked Badge */}
-        <g transform="translate(204, 138)">
-          <circle cx="22" cy="22" r="22" fill="#FEF3C7" stroke="#D97706" strokeWidth="2" />
-          <path d="M14 22l6 6 12-14" fill="none" stroke="#D97706" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
+        {/* Smooth Rotating Sweep Hand */}
+        <g className="apple-sweep-hand">
+          <line x1="180" y1="118" x2="180" y2="38" stroke="url(#ill-grad-pin)" strokeWidth="2.5" strokeLinecap="round" />
+          <circle cx="180" cy="38" r="4.5" fill="#D97706" />
+        </g>
+
+        {/* Central Apple-Style Calendar Flip Pod */}
+        <rect x="122" y="62" width="116" height="112" rx="24" fill="white" fillOpacity="0.94" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" filter="url(#ill-shadow-card)" />
+        <path d="M122 62h116v32H122z" fill="url(#ill-grad-pin)" rx="24" />
+        <text x="180" y="83" fill="white" fontSize="11" fontWeight="800" textAnchor="middle" fontFamily="system-ui, sans-serif">116 國中會考</text>
+        <text x="180" y="132" fill="#0F172A" fontSize="28" fontWeight="900" textAnchor="middle" letterSpacing="-0.03em" fontFamily="system-ui, sans-serif">倒數</text>
+        <circle className="apple-indicator-dot" cx="180" cy="154" r="3.5" fill="#10B981" />
+
+        {/* Floating Haptic Chip: 重要時程 */}
+        <g className="apple-float-chip-left" transform="translate(34, 66)">
+          <rect width="88" height="28" rx="14" fill="white" fillOpacity="0.92" stroke="rgba(15,23,42,0.08)" strokeWidth="1" filter="url(#ill-shadow-chip)" />
+          <text x="44" y="18" fill="#0F172A" fontSize="10" fontWeight="700" textAnchor="middle" fontFamily="system-ui, sans-serif">行事曆整合</text>
         </g>
       </g>
     );
@@ -174,54 +238,42 @@ function Scene({ name }: { name: FeatureIllustrationName }) {
     return (
       <g className="jshs-art-group">
         {/* 3D Unfolded Hardcover Book */}
-        <path className="jshs-illustration-fill" d="M72 74c44-18 72 2 108 26v100c-36-24-64-42-108-24V74Zm216 0c-44-18-72 2-108 26v100c36-24 64-42 108-24V74Z" />
-        {/* Book Spine Centerline */}
+        <path className="jshs-illustration-fill" d="M72 74c44-18 72 2 108 26v100c-36-24-64-42-108-24V74Zm216 0c-44-18-72 2-108 26v100c36-24 64-42 108-24V74Z" filter="url(#ill-shadow-card)" />
         <path className="jshs-illustration-line" d="M180 100v100" strokeWidth="3" strokeLinecap="round" />
-        {/* Book Page Lines */}
         <path className="jshs-illustration-line" d="M98 108c24-8 44 2 62 14m-62 26c24-8 44 2 62 14m102-54c-24-8-44 2-62 14m62 26c-24-8-44 2-62 14" strokeWidth="2" strokeLinecap="round" />
         {/* Top Glowing Compass / Beacon */}
         <g transform="translate(180, 52)">
-          <circle cx="0" cy="0" r="22" fill="url(#ill-grad-orb)" />
-          <polygon points="0,-15 5,0 0,15 -5,0" fill="white" />
+          <circle cx="0" cy="0" r="22" fill="url(#ill-grad-orb)" filter="url(#ill-shadow-chip)" />
+          <polygon points="0,-14 5,0 0,14 -5,0" fill="white" />
         </g>
       </g>
     );
   }
 
-  // 8. Wishlist Planner, Sorting & Recommendations
+  // 8. Wishlist Planner, Sorting & Recommendations (Magnetic Stack)
   if (["planner", "planner-recommendation", "planner-health", "planner-export", "official-platform"].includes(name)) {
     return (
       <g className="jshs-art-group">
-        {/* Reorderable Wishlist Cards Stack */}
-        <rect x="70" y="52" width="200" height="44" rx="14" fill="currentColor" fillOpacity="0.08" />
-        <rect x="74" y="96" width="200" height="44" rx="14" fill="currentColor" fillOpacity="0.12" />
-        <rect className="jshs-illustration-fill" x="80" y="140" width="200" height="46" rx="14" />
-
-        {/* Card 1: 1st Choice Crown Medal */}
-        <g transform="translate(86, 62)">
-          <circle cx="16" cy="12" r="12" fill="#FED7AA" />
-          <path d="M10 16l2-8 4 4 4-4 2 8H10Z" fill="#EA580C" />
-          <rect x="36" y="8" width="100" height="8" rx="4" fill="currentColor" fillOpacity="0.3" />
+        {/* Magnetic Stack of iOS Widget Style Cards */}
+        <g className="apple-stack-float">
+          {/* Card 3 (Back) */}
+          <rect x="74" y="52" width="192" height="42" rx="14" fill="currentColor" fillOpacity="0.08" />
+          {/* Card 2 (Mid) */}
+          <rect x="80" y="96" width="192" height="42" rx="14" fill="currentColor" fillOpacity="0.14" />
+          {/* Card 1 (Front Active) */}
+          <rect x="86" y="140" width="192" height="46" rx="16" fill="white" fillOpacity="0.94" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5" filter="url(#ill-shadow-card)" />
+          {/* First Choice Pill */}
+          <rect x="98" y="150" width="76" height="26" rx="13" fill="#FFF1F2" />
+          <text x="136" y="167" fill="#E11D48" fontSize="11" fontWeight="800" textAnchor="middle" fontFamily="system-ui, sans-serif">#1 第一志願</text>
+          <rect x="184" y="159" width="74" height="8" rx="4" fill="#0F172A" fillOpacity="0.25" />
         </g>
 
-        {/* Card 2: 2nd Choice */}
-        <g transform="translate(90, 106)">
-          <circle cx="16" cy="12" r="12" fill="white" />
-          <text x="16" y="16" fontSize="12" fontWeight="bold" textAnchor="middle" fill="#EA580C">2</text>
-          <rect x="36" y="8" width="80" height="8" rx="4" fill="currentColor" fillOpacity="0.3" />
-        </g>
-
-        {/* Card 3: 3rd Choice */}
-        <g transform="translate(96, 150)">
-          <circle cx="16" cy="14" r="12" fill="white" />
-          <text x="16" y="18" fontSize="12" fontWeight="bold" textAnchor="middle" fill="#EA580C">3</text>
-          <rect x="36" y="10" width="70" height="8" rx="4" fill="currentColor" fillOpacity="0.4" />
-        </g>
-
-        {/* Floating Heart / Match Badge */}
-        <g transform="translate(244, 94)">
-          <circle cx="22" cy="22" r="22" fill="url(#ill-grad-pin)" filter="drop-shadow(0 6px 14px rgba(234,88,12,0.3))" />
-          <path d="M22 29s-9-5.5-9-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 5.5-9 11-9 11Z" fill="white" />
+        {/* Floating Haptic Chip: 即時排序中 */}
+        <g className="apple-float-chip-right" transform="translate(236, 74)">
+          <rect width="90" height="30" rx="15" fill="white" fillOpacity="0.92" stroke="rgba(15,23,42,0.08)" strokeWidth="1" filter="url(#ill-shadow-chip)" />
+          <circle cx="16" cy="15" r="7" fill="#FFF1F2" />
+          <circle className="apple-indicator-dot" cx="16" cy="15" r="3" fill="#E11D48" />
+          <text x="28" y="19" fill="#0F172A" fontSize="11" fontWeight="700" fontFamily="system-ui, sans-serif">即時排序中</text>
         </g>
       </g>
     );
@@ -232,11 +284,11 @@ function Scene({ name }: { name: FeatureIllustrationName }) {
     return (
       <g className="jshs-art-group">
         {/* 3D Verification Shield */}
-        <path className="jshs-illustration-fill" d="M180 32 268 68v64c0 56-40 84-88 102-48-18-88-46-88-102V68l88-36Z" />
+        <path className="jshs-illustration-fill" d="M180 32 268 68v64c0 56-40 84-88 102-48-18-88-46-88-102V68l88-36Z" filter="url(#ill-shadow-card)" />
         <path d="M180 44l76 32v56c0 48-34 72-76 88V44Z" fill="white" fillOpacity="0.18" />
 
         {/* Official Double Checkmark Seal */}
-        <circle cx="180" cy="132" r="34" fill="url(#ill-grad-orb)" />
+        <circle cx="180" cy="132" r="34" fill="url(#ill-grad-orb)" filter="url(#ill-shadow-chip)" />
         <path d="M164 132l11 11 22-24" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
         {/* Radiating Trust Beams */}
         <circle cx="180" cy="132" r="46" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 4" strokeOpacity="0.4" />
@@ -248,7 +300,7 @@ function Scene({ name }: { name: FeatureIllustrationName }) {
   if (name === "districts") {
     return (
       <g className="jshs-art-group">
-        <path className="jshs-illustration-fill" d="M74 182 113 72l70 25 47-45 56 55-50 75-72-18-90 18Z" />
+        <path className="jshs-illustration-fill" d="M74 182 113 72l70 25 47-45 56 55-50 75-72-18-90 18Z" filter="url(#ill-shadow-card)" />
         <path className="jshs-illustration-line" d="m113 72 51 92m19-67 53 85m-6-130-66 112" strokeWidth="2.5" />
         <circle className="jshs-illustration-accent" cx="125" cy="113" r="14" />
         <circle cx="184" cy="97" r="10" className="jshs-illustration-accent" fillOpacity="0.6" />
@@ -261,7 +313,7 @@ function Scene({ name }: { name: FeatureIllustrationName }) {
   if (name === "site-search") {
     return (
       <g className="jshs-art-group">
-        <circle className="jshs-illustration-fill" cx="152" cy="114" r="62" />
+        <circle className="jshs-illustration-fill" cx="152" cy="114" r="62" filter="url(#ill-shadow-card)" />
         <circle fill="white" cx="152" cy="114" r="38" />
         <path className="jshs-illustration-line" d="m196 158 58 58" strokeWidth="8" strokeLinecap="round" />
         <path className="jshs-illustration-accent" d="M140 114h24m-12-12v24" strokeWidth="3.5" strokeLinecap="round" />
@@ -273,7 +325,7 @@ function Scene({ name }: { name: FeatureIllustrationName }) {
   if (name === "account") {
     return (
       <g className="jshs-art-group">
-        <circle className="jshs-illustration-fill" cx="180" cy="90" r="46" />
+        <circle className="jshs-illustration-fill" cx="180" cy="90" r="46" filter="url(#ill-shadow-card)" />
         <circle cx="180" cy="80" r="22" fill="white" />
         <path className="jshs-illustration-fill" d="M96 204c6-48 38-70 84-70s78 22 84 70H96Z" />
       </g>
@@ -283,7 +335,7 @@ function Scene({ name }: { name: FeatureIllustrationName }) {
   // Default Fallback
   return (
     <g className="jshs-art-group">
-      <rect className="jshs-illustration-fill" x="93" y="62" width="174" height="128" rx="18" />
+      <rect className="jshs-illustration-fill" x="93" y="62" width="174" height="128" rx="18" filter="url(#ill-shadow-card)" />
       <path className="jshs-illustration-line" d="M123 100h114M123 130h87M123 160h57" strokeWidth="2.5" strokeLinecap="round" />
       <path className="jshs-illustration-accent" d="m246 65 16 16 27-34" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </g>
@@ -310,7 +362,7 @@ export function FeatureIllustration({
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        {/* Theme Ambient Radial Orbs */}
+        {/* Dynamic Glow Radial & Linear Gradients */}
         <radialGradient id="ill-grad-orb" cx="40%" cy="40%" r="60%">
           <stop offset="0%" stopColor="var(--feature-primary, #2563EB)" stopOpacity="1" />
           <stop offset="100%" stopColor="var(--feature-primary-hover, #1D4ED8)" stopOpacity="0.85" />
@@ -319,13 +371,26 @@ export function FeatureIllustration({
           <stop offset="0%" stopColor="var(--feature-primary, #2563EB)" />
           <stop offset="100%" stopColor="var(--feature-accent, #60A5FA)" />
         </linearGradient>
+        <linearGradient id="ill-grad-arc" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="var(--feature-primary, #2563EB)" />
+          <stop offset="70%" stopColor="var(--feature-accent, #60A5FA)" />
+          <stop offset="100%" stopColor="#10B981" />
+        </linearGradient>
         <linearGradient id="ill-grad-trend" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="var(--feature-primary, #2563EB)" stopOpacity="0.4" />
+          <stop offset="0%" stopColor="var(--feature-primary, #2563EB)" stopOpacity="0.45" />
           <stop offset="100%" stopColor="var(--feature-surface, #EFF6FF)" stopOpacity="0.0" />
         </linearGradient>
+
+        {/* Apple Ambient Soft Elevation Filters */}
+        <filter id="ill-shadow-chip" x="-15%" y="-25%" width="130%" height="160%">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#0F172A" floodOpacity="0.08" />
+        </filter>
+        <filter id="ill-shadow-card" x="-15%" y="-20%" width="130%" height="150%">
+          <feDropShadow dx="0" dy="8" stdDeviation="14" floodColor="#0F172A" floodOpacity="0.09" />
+        </filter>
       </defs>
 
-      {/* Apple-grade Ambient Blurred Light Halos */}
+      {/* Apple Ambient Blurred Light Halos */}
       <circle className="jshs-illustration-orb" cx="284" cy="76" r="64" fill="var(--feature-surface-strong, #DBEAFE)" opacity="0.65" filter="blur(16px)" />
       <circle className="jshs-illustration-orb is-small" cx="77" cy="183" r="38" fill="var(--feature-surface, #EFF6FF)" opacity="0.75" filter="blur(12px)" />
 
