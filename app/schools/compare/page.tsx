@@ -9,5 +9,5 @@ export const metadata: Metadata = { title: "學校比較｜全國國中升學資
 export default async function SchoolRoute({ searchParams }: { searchParams: Promise<{ district?: string; schools?: string }> }) {
   const params = await searchParams;
   const initialSchools = typeof params.schools === "string" ? params.schools.split(",").map((code) => code.trim()).filter(Boolean).slice(0, 4) : [];
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/schools" /><FeatureHero theme="schools" eyebrow="全國高中職查詢" title="並排比較你正在考慮的學校" description="選擇 2 至 4 所學校，比較招生、課程、交通與住宿資訊。" illustration="school-compare" /><SchoolComparisonExplorer initialDistrict={params.district} initialSchools={initialSchools} /><SiteFooter /></main>;
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/schools" /><FeatureHero theme="schools" eyebrow="找學校" title="學校比較" description="選擇 2 至 4 所學校，比較招生、課程、交通與住宿資訊。" illustration="school-compare" /><SchoolComparisonExplorer initialDistrict={params.district} initialSchools={initialSchools} /><SiteFooter /></main>;
 }

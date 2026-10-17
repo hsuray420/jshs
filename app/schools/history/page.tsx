@@ -10,5 +10,5 @@ export const metadata: Metadata = { title: "歷年錄取參考｜找學校｜全
 
 export default async function SchoolHistoryRoute({ searchParams }: { searchParams: Promise<{ district?: string }> }) {
   const params = await searchParams;
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/schools" /><FeatureHero theme="schools" eyebrow="找學校 · 歷年錄取" title="把不同年度的錄取資料分開查" description="篩選學校、科別與年度，查看可回查的官方資料及明確標示的社群參考。" illustration="admissions-history" /><DistrictGate initialDistrict={params.district}><AdmissionHistoryExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} /></DistrictGate><SiteFooter /></main>;
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/schools" /><FeatureHero theme="schools" eyebrow="找學校" title="歷年錄取" description="篩選學校、科別與年度，查看可回查的官方資料及明確標示的社群參考。" illustration="admissions-history" /><DistrictGate initialDistrict={params.district}><AdmissionHistoryExplorer districtOptions={schoolDistrictOptions} initialDistrict={params.district} /></DistrictGate><SiteFooter /></main>;
 }

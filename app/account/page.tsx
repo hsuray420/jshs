@@ -10,5 +10,5 @@ export const dynamic = "force-dynamic";
 
 export default async function AccountPage({ searchParams }: { searchParams: Promise<{ error?: string; registered?: string }> }) {
   const [member, params] = await Promise.all([getMemberSession(), searchParams]);
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/account" /><FeatureHero theme="other" eyebrow="帳號與資料" title="你的升學資料，由你掌握。" description="主要功能可免登入使用；註冊後可保存規劃與試算資料，且不會公開你的 LINE userId。" illustration="account" /><AccountCenter member={member} error={params.error} registered={params.registered === "1"} /><SiteFooter /></main>;
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/account" /><FeatureHero theme="other" eyebrow="帳號與資料" title="帳號與資料" description="主要功能可免登入使用；註冊後可保存規劃與試算資料，且不會公開你的 LINE userId。" illustration="account" /><AccountCenter member={member} error={params.error} registered={params.registered === "1"} /><SiteFooter /></main>;
 }

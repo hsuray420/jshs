@@ -23,7 +23,7 @@ export default async function ToolsPage({ searchParams }: { searchParams: Promis
   return (
     <main className="min-h-screen jshs-page-shell jshs-feature-score">
       <SiteHeader activeHref="/scores" />
-      <FeatureHero theme="analytics" eyebrow="成績分析 · 免試入學積分" title="試算成績，掌握下一步" description="依已驗證就學區規則完成 116 學年度積分試算；其他區域資料驗證中，暫不開放試算。" illustration="score-calculator" status={<><span>7 區開放試算</span><span>8 區資料驗證中</span><span>官方規則優先</span></>} />
+      <FeatureHero theme="analytics" eyebrow="成績分析" title="免試入學積分試算" description="依已驗證就學區規則完成 116 學年度積分試算；其他區域資料驗證中，暫不開放試算。" illustration="score-calculator" status={<><span>7 區開放試算</span><span>8 區資料驗證中</span><span>官方規則優先</span></>} />
       <DistrictGate initialDistrict={params.district}>
         <AdmissionCalculator initialDistrict={initialDistrict} isMember={Boolean(await getMemberSession())} />
       </DistrictGate>

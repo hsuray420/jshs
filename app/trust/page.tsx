@@ -22,7 +22,7 @@ const sections = [
 ] as const;
 
 export default function TrustPage() {
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/trust" /><FeatureHero theme="trust" eyebrow="資料與信任" title="每一筆資料都應看得見它的來源與邊界" description="查看來源、年度、更新狀態與可使用範圍；正式權益仍以官方公告為準。" illustration="trust" /><TrustStatus /><section className="mx-auto w-[min(1120px,calc(100%-32px))] py-10"><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{sections.map(([slug, title, body]) => <Link key={slug} href={`/trust/${slug}`} className="p-5 jshs-surface-card"><span className="jshs-chip">信任說明</span><h2 className="mt-3 text-lg">{title}</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">{body}</p><span className="mt-4 block text-sm text-[var(--jshs-primary)]">前往說明 →</span></Link>)}</div></section><SiteFooter /></main>;
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/trust" /><FeatureHero theme="trust" eyebrow="資料與信任" title="資料與信任" description="查看來源、年度、更新狀態與可使用範圍；正式權益仍以官方公告為準。" illustration="trust" /><TrustStatus /><section className="mx-auto w-[min(1120px,calc(100%-32px))] py-10"><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{sections.map(([slug, title, body]) => <Link key={slug} href={`/trust/${slug}`} className="p-5 jshs-surface-card"><span className="jshs-chip">信任說明</span><h2 className="mt-3 text-lg">{title}</h2><p className="mt-2 text-sm leading-6 jshs-muted-copy">{body}</p><span className="mt-4 block text-sm text-[var(--jshs-primary)]">前往說明 →</span></Link>)}</div></section><SiteFooter /></main>;
 }
 
 function TrustStatus() {

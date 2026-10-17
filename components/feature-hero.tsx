@@ -6,7 +6,7 @@ import { PageContainer } from "@/components/ui/layout";
 
 type HeroProps = {
   title: string;
-  eyebrow: string;
+  eyebrow?: string;
   description: string;
   theme: FeatureThemeName;
   illustration: FeatureIllustrationName;
@@ -27,6 +27,10 @@ function Hero({
   sourceInfo,
 }: HeroProps & { compact?: boolean }) {
   const tokens = featureThemes[theme];
+  const trimmedEyebrow = eyebrow?.trim() || "";
+  const trimmedTitle = title.trim();
+  const showEyebrow = Boolean(trimmedEyebrow && trimmedEyebrow !== trimmedTitle);
+
   return (
     <PageContainer
       as="section"
@@ -46,10 +50,12 @@ function Hero({
       }
     >
       <div className="jshs-feature-hero-copy">
-        <p className="jshs-feature-eyebrow">
-          <span className="apple-indicator-dot shrink-0 inline-block h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
-          <span>{eyebrow}</span>
-        </p>
+        {showEyebrow ? (
+          <p className="jshs-feature-eyebrow">
+            <span className="apple-indicator-dot shrink-0 inline-block h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
+            <span>{trimmedEyebrow}</span>
+          </p>
+        ) : null}
         <h1>{title}</h1>
         <p className="jshs-feature-description">{description}</p>
         {status || sourceInfo || actions ? (

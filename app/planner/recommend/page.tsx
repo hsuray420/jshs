@@ -19,5 +19,5 @@ export default async function RecommendPlannerPage({ searchParams }: { searchPar
   if (!member) redirect("/knowledge/fit-quiz?next=%2Fplanner%2Frecommend");
   const interestProfile = await getMemberInterestProfile(member.lineUserId);
   if (!interestProfile) redirect("/knowledge/fit-quiz?next=%2Fplanner%2Frecommend");
-  return <main className="min-h-screen jshs-page-shell jshs-feature-planner"><SiteHeader activeHref="/planner" /><FeatureHero theme="planner" eyebrow="我的志願 · 探索志願" title="完成興趣測驗後探索適合的志願" description="先完成 Holland 興趣測驗，再用結果整理候選校科；推薦結果不代替資格審查或官方選填。" illustration="planner-recommendation" /><PlannerModeWorkspace mode="recommend" schools={getPlannerSchools()} isMember initialDistrict={district} initialScore={score} /><SiteFooter /></main>;
+  return <main className="min-h-screen jshs-page-shell jshs-feature-planner"><SiteHeader activeHref="/planner" /><FeatureHero theme="planner" eyebrow="我的志願" title="探索志願" description="先完成 Holland 興趣測驗，再用結果整理候選校科；推薦結果不代替資格審查或官方選填。" illustration="planner-recommendation" /><PlannerModeWorkspace mode="recommend" schools={getPlannerSchools()} isMember initialDistrict={district} initialScore={score} /><SiteFooter /></main>;
 }

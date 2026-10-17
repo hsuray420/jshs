@@ -21,7 +21,7 @@ export default async function PlannerPage() {
   return (
     <main className="min-h-screen jshs-page-shell jshs-feature-planner">
       <SiteHeader activeHref="/planner" />
-      <FeatureHero theme="planner" eyebrow="我的志願" title="先試算，再選擇適合的填志願方式" description="完成積分試算後，可用系統推薦或自己排序建立志願清單。" illustration="planner" />
+      <FeatureHero theme="planner" eyebrow="我的志願" title="我的志願" description="完成積分試算後，可用系統推薦或自己排序建立志願清單。" illustration="planner" />
       <PlannerHub isMember={Boolean(member)} />
       <SiteFooter />
     </main>

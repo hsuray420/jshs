@@ -8,5 +8,5 @@ export const metadata: Metadata = { title: "通勤比較｜全國國中升學資
 
 export default async function SchoolRoute({ searchParams }: { searchParams: Promise<{ district?: string }> }) {
   const params = await searchParams;
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/schools" /><FeatureHero theme="schools" eyebrow="全國高中職查詢" title="比較學校交通與你的上學路線" description="分別查看校方交通資訊，並開啟 Google 地圖計算你的通勤路線。" illustration="commute" /><CommuteComparison initialDistrict={params.district} /><SiteFooter /></main>;
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/schools" /><FeatureHero theme="schools" eyebrow="找學校" title="通勤比較" description="分別查看校方交通資訊，並開啟 Google 地圖計算你的通勤路線。" illustration="commute" /><CommuteComparison initialDistrict={params.district} /><SiteFooter /></main>;
 }

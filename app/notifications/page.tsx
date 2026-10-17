@@ -10,5 +10,5 @@ export const dynamic = "force-dynamic";
 
 export default async function NotificationsPage() {
   const member = await getMemberSession();
-  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/notifications" /><FeatureHero theme="other" eyebrow="通知與提醒" title="在正確的時間，收到下一步" description="通知預設全部關閉；登入後可自行開通志願、成績與重要日期提醒。" illustration="calendar-export" /><NotificationCenter isMember={Boolean(member)} /><SiteFooter /></main>;
+  return <main className="min-h-screen jshs-page-shell"><SiteHeader activeHref="/notifications" /><FeatureHero theme="other" eyebrow="通知與提醒" title="通知與提醒" description="通知預設全部關閉；登入後可自行開通志願、成績與重要日期提醒。" illustration="calendar-export" /><NotificationCenter isMember={Boolean(member)} /><SiteFooter /></main>;
 }
