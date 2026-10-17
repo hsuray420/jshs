@@ -848,15 +848,6 @@
       border-color: color-mix(in oklab, var(--color-white) 70%, transparent);
     }
   }
-  .bg-\[\#102f60\] {
-    background-color: #102f60;
-  }
-  .bg-\[\#eaf3ff\] {
-    background-color: #eaf3ff;
-  }
-  .bg-\[\#f5f8fc\] {
-    background-color: #f5f8fc;
-  }
   .bg-\[var\(--jshs-brand-tint\)\] {
     background-color: var(--jshs-brand-tint);
   }

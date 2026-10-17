@@ -90,15 +90,12 @@ main :where(p, small, dd, li) { color: var(--text-secondary); }
 main :where(a) { color: var(--brand-primary); text-decoration-thickness: 1px; text-underline-offset: 3px; }
 main :where(.font-black, .font-extrabold, .font-bold, .font-semibold) { font-weight: var(--font-weight-strong) !important; }
 
-main :where(section, header, div, article, aside)[class*="gradient"],
-main :where(section, header, div, article, aside)[class*="bg-[#102f60]"],
-main :where(section, header, div, article, aside)[class*="bg-[#eaf3ff]"],
-main :where(section, header, div, article, aside)[class*="bg-[#f5f8fc]"] {
-  background-image: none !important;
-}
-
-main :where([class*="backdrop"], [style*="backdrop-filter"]) {
-  backdrop-filter: none !important;
+/* Accessibility: respect user preference for reduced transparency */
+@media (prefers-reduced-transparency: reduce) {
+  *, *::before, *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 }
 
 .jshs-container { margin-inline: auto; max-width: var(--content-max); min-width: 0; padding-inline: var(--page-gutter); width: 100%; }
@@ -2422,3 +2419,560 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
   .ai-chat-floating .ai-chat-message.is-user .ai-chat-message-body { max-width: 88%; }
 }
 @keyframes ai-chat-window-in-mobile { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ==========================================================================
+   Apple Human Interface Master Visual System (Bright & Airy Unified Design)
+   ========================================================================== */
+
+/* 1. Header Surface Glass & Dropdowns */
+.jshs-site-header {
+  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: saturate(180%) blur(20px) !important;
+  -webkit-backdrop-filter: saturate(180%) blur(20px) !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.07) !important;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03) !important;
+  transition: background-color 240ms var(--ease-apple), box-shadow 240ms var(--ease-apple);
+}
+
+.jshs-brand-logo {
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+}
+
+.jshs-desktop-nav a:hover,
+.jshs-desktop-more summary:hover,
+.jshs-desktop-more > button:hover {
+  background: rgba(15, 23, 42, 0.04) !important;
+  border-radius: 9999px !important;
+}
+
+.jshs-nav-mega-panel {
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  backdrop-filter: saturate(180%) blur(24px) !important;
+  -webkit-backdrop-filter: saturate(180%) blur(24px) !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.14), 0 4px 16px -2px rgba(15, 23, 42, 0.06) !important;
+  padding: 24px !important;
+}
+
+.jshs-nav-mega-item {
+  border-radius: 14px !important;
+  padding: 10px 14px !important;
+  border: 1px solid transparent !important;
+  transition: background 200ms var(--ease-apple), transform 200ms var(--ease-apple), border-color 200ms var(--ease-apple) !important;
+}
+
+.jshs-nav-mega-item:hover {
+  background: rgba(37, 99, 235, 0.06) !important;
+  border-color: rgba(37, 99, 235, 0.15) !important;
+  transform: translateX(3px) !important;
+}
+
+.jshs-nav-mega-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 40px !important;
+  background: rgba(37, 99, 235, 0.08) !important;
+  color: #2563EB !important;
+}
+
+.jshs-nav-theme--mock-exam .jshs-nav-mega-icon { background: rgba(124, 58, 237, 0.1) !important; color: #7C3AED !important; }
+.jshs-nav-theme--mock-exam .jshs-nav-mega-item:hover { background: rgba(124, 58, 237, 0.06) !important; border-color: rgba(124, 58, 237, 0.18) !important; }
+
+.jshs-nav-theme--analytics .jshs-nav-mega-icon { background: rgba(5, 150, 105, 0.1) !important; color: #059669 !important; }
+.jshs-nav-theme--analytics .jshs-nav-mega-item:hover { background: rgba(5, 150, 105, 0.06) !important; border-color: rgba(5, 150, 105, 0.18) !important; }
+
+.jshs-nav-theme--planner .jshs-nav-mega-icon { background: rgba(234, 88, 12, 0.1) !important; color: #EA580C !important; }
+.jshs-nav-theme--planner .jshs-nav-mega-item:hover { background: rgba(234, 88, 12, 0.06) !important; border-color: rgba(234, 88, 12, 0.18) !important; }
+
+.jshs-nav-theme--schedule .jshs-nav-mega-icon { background: rgba(217, 119, 6, 0.1) !important; color: #D97706 !important; }
+.jshs-nav-theme--schedule .jshs-nav-mega-item:hover { background: rgba(217, 119, 6, 0.06) !important; border-color: rgba(217, 119, 6, 0.18) !important; }
+
+.jshs-nav-theme--guide .jshs-nav-mega-icon { background: rgba(13, 148, 136, 0.1) !important; color: #0D9488 !important; }
+.jshs-nav-theme--guide .jshs-nav-mega-item:hover { background: rgba(13, 148, 136, 0.06) !important; border-color: rgba(13, 148, 136, 0.18) !important; }
+
+.jshs-nav-theme--trust .jshs-nav-mega-icon { background: rgba(51, 65, 85, 0.1) !important; color: #334155 !important; }
+.jshs-nav-theme--trust .jshs-nav-mega-item:hover { background: rgba(51, 65, 85, 0.06) !important; border-color: rgba(51, 65, 85, 0.18) !important; }
+
+/* 2. Apple Cards, Surface & Spring Feedback */
+.jshs-surface-card {
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+  border-radius: var(--radius-xl) !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.03), 0 10px 28px -4px rgba(15, 23, 42, 0.05) !important;
+  transition: transform 240ms var(--ease-apple), box-shadow 240ms var(--ease-apple), border-color 240ms var(--ease-apple) !important;
+}
+
+.jshs-surface-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 14px 36px -6px rgba(15, 23, 42, 0.10), 0 4px 12px -2px rgba(15, 23, 42, 0.05) !important;
+  border-color: rgba(37, 99, 235, 0.28) !important;
+}
+
+.jshs-button,
+.jshs-button-primary,
+.jshs-button-secondary,
+.jshs-home-dark-button,
+.sv-btn,
+button:not(:disabled) {
+  transition: transform 160ms var(--ease-apple), opacity 160ms ease, box-shadow 160ms ease !important;
+}
+
+.jshs-button:active,
+.jshs-button-primary:active,
+.jshs-button-secondary:active,
+.jshs-home-dark-button:active,
+.sv-btn:active,
+button:active:not(:disabled) {
+  transform: scale(0.96) !important;
+}
+
+/* 3. Homepage Apple Dawn Hero & Glowing Search */
+.jshs-v2-home .jshs-v2-hero {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(219, 234, 254, 0.7) 0%, rgba(219, 234, 254, 0) 50%),
+    radial-gradient(circle at 80% 25%, rgba(237, 233, 254, 0.6) 0%, rgba(237, 233, 254, 0) 45%),
+    linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.jshs-home-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  margin-bottom: 20px;
+}
+
+.jshs-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+  animation: jshs-pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes jshs-pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.jshs-v2-home .jshs-v2-hero h1 {
+  font-size: clamp(42px, 5.5vw, 68px) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.15 !important;
+  color: #0F172A !important;
+}
+
+.jshs-hero-gradient-text {
+  background: linear-gradient(135deg, #2563EB 0%, #4338CA 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.jshs-v2-home .jshs-v2-search {
+  height: 64px !important;
+  max-width: 640px !important;
+  border-radius: 9999px !important;
+  background: #FFFFFF !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 12px 36px -4px rgba(37, 99, 235, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04) !important;
+  padding: 8px 8px 8px 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: border-color 220ms var(--ease-apple), box-shadow 220ms var(--ease-apple), transform 220ms var(--ease-apple) !important;
+}
+
+.jshs-v2-home .jshs-v2-search:focus-within {
+  border-color: #93b9f8 !important;
+  box-shadow: 0 0 0 4px rgb(37 99 235 / 10%), 0 16px 40px -4px rgba(37, 99, 235, 0.16) !important;
+  transform: translateY(-1px) !important;
+}
+
+.jshs-search-submit {
+  width: 48px !important;
+  height: 48px !important;
+  flex: 0 0 48px !important;
+  border-radius: 50% !important;
+  background: #2563EB !important;
+  color: #FFFFFF !important;
+  display: grid !important;
+  place-items: center !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
+  border: 0 !important;
+  cursor: pointer !important;
+}
+
+.jshs-search-submit:hover {
+  background: #1D4ED8 !important;
+  transform: scale(1.05) !important;
+}
+
+.jshs-hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.jshs-hero-district-link {
+  color: #475569;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.jshs-hero-district-link:hover {
+  color: #2563EB;
+}
+
+/* 4. Apple Bento Grid */
+.jshs-home-bento {
+  padding-block: 56px 72px !important;
+}
+
+.jshs-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.jshs-bento-card {
+  border-radius: 28px !important;
+  padding: 36px 36px 32px !important;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.03), 0 10px 28px -4px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 290px;
+  transition: transform 260ms var(--ease-apple), box-shadow 260ms var(--ease-apple), border-color 260ms var(--ease-apple);
+}
+
+.jshs-bento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px -6px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+}
+
+.jshs-bento-card.is-schools {
+  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%) !important;
+  border-color: rgba(37, 99, 235, 0.28) !important;
+}
+
+.jshs-bento-card.is-analytics {
+  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 50%, #EDE9FE 100%) !important;
+  border-color: rgba(5, 150, 105, 0.28) !important;
+}
+
+.jshs-bento-card.is-planner {
+  background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%) !important;
+  border-color: rgba(234, 88, 12, 0.28) !important;
+}
+
+.jshs-bento-card.is-schedule {
+  background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 50%, #F0FDFA 100%) !important;
+  border-color: rgba(217, 119, 6, 0.28) !important;
+}
+
+.jshs-bento-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.jshs-bento-tag {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.jshs-bento-tag.is-schools { color: #1D4ED8; }
+.jshs-bento-tag.is-analytics { color: #047857; }
+.jshs-bento-tag.is-planner { color: #C2410C; }
+.jshs-bento-tag.is-schedule { color: #B45309; }
+
+.jshs-bento-num {
+  font-size: 13px;
+  font-weight: 800;
+  opacity: 0.35;
+  font-variant-numeric: tabular-nums;
+}
+
+.jshs-bento-title {
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  color: #0F172A !important;
+  margin: 0 0 10px !important;
+}
+
+.jshs-bento-desc {
+  font-size: 15px !important;
+  line-height: 1.65 !important;
+  color: #475569 !important;
+  max-width: 440px !important;
+  margin: 0 !important;
+}
+
+.jshs-bento-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.jshs-bento-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  font-size: 13px;
+  font-weight: 700;
+  color: #0F172A;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  transition: transform 180ms var(--ease-apple), background 180ms ease, box-shadow 180ms ease;
+}
+
+.jshs-bento-pill:hover {
+  background: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  color: #2563EB;
+}
+
+.jshs-bento-pill:active {
+  transform: scale(0.96);
+}
+
+@media (max-width: 840px) {
+  .jshs-bento-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .jshs-bento-card {
+    padding: 26px 24px 24px !important;
+    min-height: auto;
+  }
+}
+
+/* 5. School Poster Media Styles */
+.sv-school-poster {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  display: block;
+}
+
+.sv-poster-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 340ms var(--ease-apple);
+}
+
+.sv-school-card:hover .sv-poster-svg,
+.jshs-home-school-card:hover .sv-poster-svg {
+  transform: scale(1.03);
+}
+
+.sv-poster-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  font-size: 11px;
+  font-weight: 700;
+  color: #0F172A;
+  z-index: 2;
+}
+
+.sv-poster-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2563EB;
+}
+.sv-school-poster--technical .sv-poster-badge-dot { background: #EA580C; }
+.sv-school-poster--junior_college .sv-poster-badge-dot { background: #059669; }
+.sv-school-poster--comprehensive .sv-poster-badge-dot { background: #6366F1; }
+
+.sv-poster-track {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  z-index: 2;
+}
+
+.sv-poster-track-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: rgba(15, 23, 42, 0.7);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+/* 6. Spotlight Dark Card: Deep Sea Night Blue */
+.jshs-home-belief.is-truthful {
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 55%, #1E3A8A 100%) !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.28) !important;
+  padding: 64px 56px !important;
+  color: #FFFFFF !important;
+  position: relative !important;
+  overflow: hidden !important;
+  display: block !important;
+}
+
+.jshs-home-belief.is-truthful h2 {
+  color: #FFFFFF !important;
+  font-size: clamp(34px, 4vw, 48px) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.04em !important;
+  line-height: 1.2 !important;
+  margin: 12px 0 20px !important;
+}
+
+.jshs-home-belief.is-truthful p:not(.jshs-home-eyebrow) {
+  color: #CBD5E1 !important;
+  font-size: 17px !important;
+  line-height: 1.8 !important;
+  max-width: 580px !important;
+}
+
+.jshs-home-belief.is-truthful .jshs-home-eyebrow {
+  color: #60A5FA !important;
+  letter-spacing: 0.14em !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+.jshs-belief-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.jshs-home-dark-button {
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+  border-radius: 9999px !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  padding: 14px 28px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  text-decoration: none !important;
+}
+
+.jshs-home-dark-button:hover {
+  background: #F1F5F9 !important;
+  transform: translateY(-2px) !important;
+}
+
+.jshs-home-ghost-button {
+  color: #E2E8F0;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background 180ms ease, border-color 180ms ease;
+}
+
+.jshs-home-ghost-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 640px) {
+  .jshs-home-belief.is-truthful {
+    padding: 40px 24px !important;
+    border-radius: 20px !important;
+  }
+}
+
+/* 7. Scroll Reveal & Apple Motion System */
+.jshs-reveal {
+  opacity: 0;
+  transform: translateY(18px) scale(0.985);
+  transition: opacity 520ms cubic-bezier(0.22, 1, 0.36, 1), transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.jshs-reveal.is-visible,
+[data-revealed="true"] .jshs-reveal {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.jshs-delay-1 { transition-delay: 70ms; }
+.jshs-delay-2 { transition-delay: 140ms; }
+.jshs-delay-3 { transition-delay: 210ms; }
+.jshs-delay-4 { transition-delay: 280ms; }
+
+/* 8. Contrast and Feature Brand Protection */
+.jshs-feature-score { --brand-primary: #047857; }
+.jshs-feature-planner { --brand-primary: #c2410c; }
+
+.jshs-page-shell.jshs-feature-school > footer::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: -48px;
+  height: 48px;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, #fff);
+}

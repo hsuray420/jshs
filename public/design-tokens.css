@@ -1,11 +1,18 @@
 :root {
   --bg-page: #F7F9FC;
+  --bg-section-alt: #FFFFFF;
   --bg-subtle: #F7F9FC;
+  --bg-subtle-ice: #F1F5F9;
   --bg-elevated: #FFFFFF;
+  --bg-glass: rgba(255, 255, 255, 0.84);
   --text-primary: #172033;
+  --text-primary-deep: #0F172A;
   --text-secondary: #667085;
+  --text-secondary-slate: #475569;
   --text-tertiary: #98A2B3;
+  --text-tertiary-muted: #94A3B8;
   --border-light: #E7EAF0;
+  --border-subtle: rgba(15, 23, 42, 0.07);
   --border-strong: #D7DCE5;
   --brand-primary: #1A73E8;
   --brand-primary-hover: #1558B0;
@@ -28,6 +35,7 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 20px;
+  --radius-2xl: 28px;
   --radius-full: 999px;
   --space-1: 4px;
   --space-2: 8px;
@@ -40,9 +48,11 @@
   --space-24: 96px;
   --feature-hero-radius: 32px;
   --feature-workspace-gap: 32px;
-  --shadow-card: 0 1px 2px rgba(16, 24, 40, .04), 0 4px 12px rgba(16, 24, 40, .04);
+  --shadow-card: 0 2px 6px -1px rgba(15, 23, 42, 0.03), 0 10px 28px -4px rgba(15, 23, 42, 0.05);
   --shadow-subtle: 0 1px 2px rgba(16, 24, 40, .03);
-  --shadow-hover: 0 6px 16px rgba(16, 24, 40, .08);
+  --shadow-hover: 0 14px 36px -6px rgba(15, 23, 42, 0.10), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+  --shadow-dropdown: 0 24px 60px -12px rgba(15, 23, 42, 0.14), 0 4px 16px -2px rgba(15, 23, 42, 0.06);
+  --ease-apple: cubic-bezier(0.22, 1, 0.36, 1);
   --font-system: Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
   --font-weight-strong: 600;
   --font-size-body: 16px;
@@ -52,30 +62,29 @@
   --font-size-h3: 18px;
   --font-size-nav: 14px;
 
-  /* Shared responsive layout contract. Keep these values in one place so
-     route components do not invent their own container and spacing rules. */
+  /* Shared responsive layout contract */
   --content-max: 1200px;
   --content-wide-max: 1200px;
   --content-narrow-max: 760px;
   --page-gutter: 24px;
   --tap-target: 44px;
-  --header-height: 64px;
+  --header-height: 68px;
   --nav-menu-width: 760px;
   --nav-menu-max-width: calc(100vw - 48px);
   --nav-menu-padding: 24px;
-  --nav-menu-radius: 20px;
+  --nav-menu-radius: 24px;
   --nav-menu-border: rgba(15, 23, 42, 0.08);
-  --nav-menu-shadow: 0 18px 50px rgba(15, 23, 42, 0.10), 0 4px 14px rgba(15, 23, 42, 0.04);
+  --nav-menu-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.14), 0 4px 16px -2px rgba(15, 23, 42, 0.06);
   --nav-menu-column-gap: 32px;
   --nav-menu-row-gap: 24px;
-  --nav-menu-item-radius: 12px;
+  --nav-menu-item-radius: 14px;
   --nav-menu-item-height: 64px;
   --nav-menu-icon-size: 40px;
-  --nav-menu-icon-radius: 11px;
+  --nav-menu-icon-radius: 12px;
   --nav-menu-icon-bg: #EFF6FF;
-  --nav-menu-icon-color: #1677FF;
-  --nav-menu-hover: #F4F8FF;
-  --nav-menu-active: #EEF5FF;
+  --nav-menu-icon-color: #2563EB;
+  --nav-menu-hover: #F8FAFC;
+  --nav-menu-active: #EFF6FF;
   --mobile-nav-height: 68px;
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
@@ -83,8 +92,9 @@
   --z-mobile-nav: 50;
   --z-drawer: 80;
   --z-ai: 94;
-  --focus-ring: 0 0 0 3px rgb(0 122 255 / 20%);
+  --focus-ring: 0 0 0 3px rgb(37 99 235 / 25%);
 
+  /* JSHS canonical aliases */
   --jshs-background: var(--bg-page);
   --jshs-foreground: var(--text-primary);
   --jshs-page: var(--bg-page);

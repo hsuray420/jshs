@@ -1,16 +1,16 @@
 :root {
-    --bg: #E0E5EC;
-    --fg: #3D4852;
-    --muted: #6B7280;
-    --accent: #6C63FF;
-    --accent-light: #8B84FF;
-    --shadow-dark: rgba(163,177,198,0.6);
-    --shadow-dark-strong: rgba(163,177,198,0.7);
-    --shadow-light: rgba(255,255,255,0.55);
-    --radius-xl: 32px;
+    --bg: #F8FAFC;
+    --fg: #0F172A;
+    --muted: #475569;
+    --accent: #2563EB;
+    --accent-light: #60A5FA;
+    --shadow-dark: rgba(15,23,42,0.04);
+    --shadow-dark-strong: rgba(15,23,42,0.08);
+    --shadow-light: rgba(255,255,255,0.9);
+    --radius-xl: 20px;
     --radius-lg: 16px;
     --radius-md: 12px;
-    --transition: 300ms ease;
+    --transition: 240ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 body {
@@ -541,16 +541,17 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 .section-panel,
 .ui-card,
 .panel-card {
-    background: var(--bg);
+    background: #FFFFFF;
     border-radius: var(--radius-xl);
-    box-shadow: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.03), 0 10px 28px -4px rgba(15, 23, 42, 0.05);
     transition: transform var(--transition), box-shadow var(--transition);
 }
 
 .hero-panel:hover,
 .section-panel:hover {
-    transform: translateY(-2px);
-    box-shadow: 12px 12px 20px var(--shadow-dark-strong), -12px -12px 20px var(--shadow-light);
+    transform: translateY(-4px);
+    box-shadow: 0 14px 36px -6px rgba(15, 23, 42, 0.10), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
 }
 
 .ui-card {
@@ -859,38 +860,40 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
     align-items: center;
     justify-content: center;
     transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
-    box-shadow: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+    box-shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.03), 0 10px 28px -4px rgba(15, 23, 42, 0.05);
     text-decoration: none;
 }
 
 .ui-btn-primary {
-    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    background: #2563EB;
     color: white;
 }
 
 .ui-btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px -6px rgba(15, 23, 42, 0.10);
 }
 
 .ui-btn:active {
-    transform: translateY(1px);
-    box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+    transform: scale(0.96);
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.1);
 }
 
 .ui-input {
     width: 100%;
-    border: none;
+    border: 1px solid rgba(15, 23, 42, 0.12);
     outline: none;
     border-radius: var(--radius-lg);
     padding: 0.85rem 1rem;
-    background: var(--bg);
-    box-shadow: inset 6px 6px 10px var(--shadow-dark), inset -6px -6px 10px var(--shadow-light);
+    background: #FFFFFF;
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
     color: var(--fg);
-    transition: box-shadow var(--transition);
+    transition: box-shadow var(--transition), border-color var(--transition);
 }
 
 .ui-input:focus {
-    box-shadow: 0 0 0 3px rgba(108,99,255,0.18), inset 10px 10px 20px rgba(163,177,198,0.7), inset -10px -10px 20px rgba(255,255,255,0.6);
+    border-color: #2563EB;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
 }
 
 .calc-form-stack {
@@ -1132,9 +1135,10 @@ header.site-header { background: rgba(255,255,255,.9) !important; border-bottom-
 .calc-guide-card {
     display: grid;
     gap: 1rem;
-    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(241,245,255,0.9));
-    border: 1px solid rgba(148,163,184,0.2);
-    box-shadow: 9px 9px 16px var(--shadow-dark), -9px -9px 16px var(--shadow-light);
+    background: #FFFFFF;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.03), 0 10px 28px -4px rgba(15, 23, 42, 0.05);
 }
 
 .calc-guide-head {

@@ -1,14 +1,14 @@
 .sv-root {
-  --sv-blue: #1556ae;
-  --sv-blue-strong: #0f3f86;
-  --sv-ink: #17253a;
-  --sv-muted: #5b6b80;
-  --sv-soft: #f4f7fb;
+  --sv-blue: #2563eb;
+  --sv-blue-strong: #1d4ed8;
+  --sv-ink: #0f172a;
+  --sv-muted: #475569;
+  --sv-soft: #f8fafc;
   --sv-card: #ffffff;
-  --sv-line: #dbe4ef;
-  --sv-line-strong: #c5d3e4;
+  --sv-line: rgba(15, 23, 42, 0.08);
+  --sv-line-strong: rgba(15, 23, 42, 0.16);
   color: var(--sv-ink);
-  background: linear-gradient(180deg, #f7faff 0%, #f4f7fb 520px, #f6f8fb 100%);
+  background: var(--bg-page, #f8fafc);
   min-width: 0;
   font-size: 16px;
   line-height: 1.7;
@@ -1138,3 +1138,57 @@
 .sv-explorer-root .sv-school-card-main { background:transparent; padding:0; }
 .sv-explorer-root .sv-school-card .sv-card-topline { align-items:flex-start; }
 @media (max-width:699px) { .sv-explorer-root .sv-school-card { gap:12px; grid-template-columns:48px minmax(0,1fr); padding:14px; }.sv-explorer-root .sv-school-card-symbol { border-radius:12px; height:48px; width:48px; } }
+
+/* ==========================================================================
+   Apple Aesthetic Refinements for School Explorer & Details
+   ========================================================================== */
+.sv-school-card {
+  border-radius: 20px !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 2px 6px -1px rgba(15, 23, 42, 0.03), 0 10px 28px -4px rgba(15, 23, 42, 0.05) !important;
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 240ms cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.sv-school-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 14px 36px -6px rgba(15, 23, 42, 0.10), 0 4px 12px -2px rgba(15, 23, 42, 0.05) !important;
+  border-color: rgba(37, 99, 235, 0.35) !important;
+}
+
+.sv-compare-bar {
+  background: rgba(15, 23, 42, 0.90) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-radius: 9999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.28) !important;
+  padding: 12px 24px !important;
+}
+
+.sv-compare-bar a {
+  background: #2563EB !important;
+  color: #FFFFFF !important;
+  padding: 6px 16px !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35) !important;
+  transition: transform 180ms ease, background 180ms ease !important;
+}
+
+.sv-compare-bar a:hover {
+  background: #1D4ED8 !important;
+  transform: scale(1.04) !important;
+}
+
+.sv-favorite-button {
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1), color 200ms ease !important;
+}
+
+.sv-favorite-button:active {
+  transform: scale(1.25) !important;
+}
+
+.sv-favorite-button.is-selected {
+  color: #EF4444 !important;
+}
