@@ -1052,8 +1052,8 @@
   .pb-16 {
     padding-bottom: calc(var(--spacing) * 16);
   }
-  .pb-\[max\(6px\,env\(safe-area-inset-bottom\)\)\] {
-    padding-bottom: max(6px, env(safe-area-inset-bottom));
+  .pb-\[max\(8px\,env\(safe-area-inset-bottom\)\)\] {
+    padding-bottom: max(8px, env(safe-area-inset-bottom));
   }
   .pl-12 {
     padding-left: calc(var(--spacing) * 12);
@@ -1200,6 +1200,9 @@
   .tracking-\[0\.18em\] {
     --tw-tracking: 0.18em;
     letter-spacing: 0.18em;
+  }
+  .text-wrap {
+    text-wrap: wrap;
   }
   .break-words {
     overflow-wrap: break-word;
