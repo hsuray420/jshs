@@ -17,8 +17,36 @@ const regions = getRegionRegistry();
 const defaultDistrict = "ct";
 
 function SearchBox({ value, onChange }: { value: string; onChange: (value: string) => void }) {
-  return <form className="sv-search-box" role="search" onSubmit={(event) => event.preventDefault()}><SiteIcon name="search" size={20} /><label className="sr-only" htmlFor="school-search">搜尋學校、科別或課程方向</label><input id="school-search" type="search" value={value} onChange={(event) => onChange(event.target.value)} placeholder="搜尋學校名稱、地區或科別…" /><button type="submit" aria-label="搜尋"><SiteIcon name="search" size={19} /></button></form>;
+  return (
+    <form className="sv-search-box" role="search" onSubmit={(event) => event.preventDefault()}>
+      <SiteIcon name="search" size={20} className="sv-search-lead-icon" />
+      <label className="sr-only" htmlFor="school-search">搜尋學校、科別或課程方向</label>
+      <input
+        id="school-search"
+        type="search"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder="搜尋學校名稱、地區或科別…"
+        autoComplete="off"
+      />
+      {value ? (
+        <button
+          type="button"
+          aria-label="清除搜尋"
+          onClick={() => onChange("")}
+          className="sv-search-clear"
+        >
+          <SiteIcon name="close" size={16} />
+        </button>
+      ) : (
+        <button type="submit" aria-label="搜尋" className="sv-search-submit">
+          <SiteIcon name="search" size={16} />
+        </button>
+      )}
+    </form>
+  );
 }
+
 
 function FilterPanel({ prefix, schools, filters, update, clear }: { prefix: string; schools: readonly SchoolSearchIndexEntry[]; filters: SchoolExplorerFilters; update: (key: keyof SchoolExplorerFilters, value: string) => void; clear: () => void }) {
   const fields: [keyof SchoolExplorerFilters, string, string[]][] = [["ownership", "公私立", unique(schools.map((school) => school.ownership))], ["program", "學校類型／學制", unique(schools.flatMap((school) => school.schoolTypes || [school.schoolType]))], ["city", "縣市", unique(schools.map((school) => school.city))], ["department", "科別", unique(schools.flatMap((school) => school.departmentNames))]];
@@ -29,28 +57,30 @@ function SchoolCard({ school, selected, onCompare, compact = false }: { school: 
   const isPublic = (school.ownership || "").includes("公立");
   return (
     <article className={`sv-school-card${compact ? " is-popular" : ""}${isPublic ? " is-public" : " is-private"}`}>
-      <div className="sv-school-card-symbol" aria-hidden="true">
-        <SiteIcon name="school" size={24} />
+      <div className="sv-card-topline">
+        <div className="sv-topline-left">
+          <div className="sv-school-card-symbol" aria-hidden="true">
+            <SiteIcon name="school" size={17} />
+          </div>
+          <div className="sv-tags">
+            <span className="sv-tag-ownership">{school.ownership || "公私立未提供"}</span>
+            <span className="sv-tag-type">{school.schoolType || "學制未提供"}</span>
+            <span className="sv-tag-gender">{school.gender || "兼收"}</span>
+          </div>
+        </div>
+        {onCompare ? (
+          <button
+            type="button"
+            className={`sv-favorite-button${selected ? " is-selected" : ""}`}
+            aria-pressed={selected}
+            aria-label={selected ? "取消比較" : "加入比較"}
+            onClick={() => onCompare(school.code)}
+          >
+            <span className="sv-heart-icon">{selected ? "♥" : "♡"}</span>
+          </button>
+        ) : null}
       </div>
       <div className="sv-school-card-main">
-        <div className="sv-card-topline">
-          <div className="sv-tags">
-            <span className="sv-tag-ownership">{school.ownership || "公私立資料未提供"}</span>
-            <span className="sv-tag-type">{school.schoolType || "學校類型未提供"}</span>
-            <span className="sv-tag-gender">{school.gender || "性別未提供"}</span>
-          </div>
-          {onCompare ? (
-            <button
-              type="button"
-              className={`sv-favorite-button${selected ? " is-selected" : ""}`}
-              aria-pressed={selected}
-              aria-label={selected ? "取消比較" : "加入比較"}
-              onClick={() => onCompare(school.code)}
-            >
-              <span className="sv-heart-icon">♥</span>
-            </button>
-          ) : null}
-        </div>
         <h3>
           <Link href={`/schools/${school.code}`}>{school.name}</Link>
         </h3>
@@ -59,7 +89,7 @@ function SchoolCard({ school, selected, onCompare, compact = false }: { school: 
         </p>
         {!compact ? (
           <>
-            <p className="sv-departments">{school.departmentNames.slice(0, 2).join(" · ") || "主要科別尚未提供"}</p>
+            <p className="sv-departments">{school.departmentNames.slice(0, 3).join(" · ") || "主要科別尚未提供"}</p>
             <div className="sv-school-card-actions">
               <Link className="sv-primary-link" href={`/schools/${school.code}`}>
                 查看學校 <SiteIcon name="chevron-right" size={15} />
@@ -71,6 +101,7 @@ function SchoolCard({ school, selected, onCompare, compact = false }: { school: 
     </article>
   );
 }
+
 
 export function SchoolExplorer({ schools: initialSchools = [], initialFilters = {}, initialPopularConfig }: { schools?: readonly SchoolSearchIndexEntry[]; initialFilters?: SchoolExplorerFilters; initialPopularConfig?: Record<string, string[]> }) {
   const [schools, setSchools] = useState<readonly SchoolSearchIndexEntry[]>(initialSchools);
