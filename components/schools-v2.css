@@ -1,6 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
-
 .sv-root {
   --sv-blue: #2563eb;
   --sv-blue-strong: #1d4ed8;
@@ -2828,3 +2825,734 @@
 .stitch-explore-all-link:hover {
   color: #00236f;
 }
+
+/* ==========================================================================
+   Stitch JSHS Academic Portal - "找學校" 100% Faithful System
+   ========================================================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.heart-pop-anim {
+  animation: heartPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  font-feature-settings: 'liga';
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+.delay-1 { animation-delay: 0.05s; }
+.delay-2 { animation-delay: 0.12s; }
+.delay-3 { animation-delay: 0.18s; }
+.delay-4 { animation-delay: 0.24s; }
+
+.stitch-portal-canvas {
+  background-color: #f8f9ff;
+  min-height: 100vh;
+  color: #0b1c30;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
+  width: 100%;
+  position: relative;
+}
+
+.stitch-portal-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .stitch-portal-container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stitch-portal-container {
+    padding-left: 3.5rem;
+    padding-right: 3.5rem;
+  }
+}
+
+.stitch-hero-title {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #0b1c30;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.5rem 0;
+}
+
+.stitch-hero-desc {
+  font-size: 16px;
+  color: #444651;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.stitch-search-card {
+  background-color: #ffffff;
+  border-radius: 2rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 10px 30px -5px rgba(30, 58, 138, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.stitch-search-card:hover {
+  box-shadow: 0 14px 40px -5px rgba(30, 58, 138, 0.09);
+}
+
+.stitch-search-input-pill {
+  display: flex;
+  align-items: center;
+  background-color: #eff4ff;
+  border-radius: 9999px;
+  padding: 0.35rem 0.5rem 0.35rem 1.25rem;
+  border: 1.5px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.stitch-search-input-pill:focus-within {
+  background-color: #ffffff;
+  border-color: #0058be;
+  box-shadow: 0 0 0 4px rgba(0, 88, 190, 0.15);
+}
+
+.stitch-search-input-field {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #0b1c30;
+  padding: 0.5rem 0.5rem 0.5rem 0.25rem;
+}
+
+.stitch-search-input-field::placeholder {
+  color: #757682;
+}
+
+.stitch-search-submit-btn {
+  height: 46px;
+  padding: 0 1.5rem;
+  border-radius: 9999px;
+  background-color: #0058be;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 88, 190, 0.25);
+  transition: all 0.25s ease;
+}
+
+.stitch-search-submit-btn:hover {
+  background-color: #00236f;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 35, 111, 0.3);
+}
+
+.stitch-search-submit-btn:active {
+  transform: scale(0.97);
+}
+
+.stitch-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stitch-chip-btn {
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  background-color: #e5eeff;
+  color: #0b1c30;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.stitch-chip-btn:hover {
+  background-color: #dce9ff;
+  transform: translateY(-1px);
+}
+
+.stitch-chip-btn.is-active {
+  background-color: #00236f;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 35, 111, 0.2);
+}
+
+.stitch-chip-advance-btn {
+  margin-left: auto;
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  background-color: #dce9ff;
+  color: #00236f;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.stitch-chip-advance-btn:hover {
+  background-color: #d3e4fe;
+  transform: translateY(-1px);
+}
+
+.stitch-advanced-panel {
+  background-color: #eff4ff;
+  border-radius: 1.25rem;
+  padding: 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 0.25rem;
+  animation: fadeInUp 0.3s ease both;
+}
+
+.stitch-advanced-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.stitch-advanced-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444651;
+}
+
+.stitch-advanced-field select {
+  height: 40px;
+  padding: 0 0.75rem;
+  border-radius: 1rem;
+  background-color: #ffffff;
+  border: 1px solid #dce9ff;
+  color: #0b1c30;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.stitch-advanced-field select:focus {
+  border-color: #0058be;
+}
+
+.stitch-district-strip {
+  background-color: #eff4ff;
+  border-radius: 1.5rem;
+  padding: 0.85rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (min-width: 640px) {
+  .stitch-district-strip {
+    flex-direction: row;
+  }
+}
+
+.stitch-district-picker-btn {
+  height: 38px;
+  padding: 0 1.25rem;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.stitch-district-picker-btn:hover {
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.stitch-district-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 270px;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.15);
+  padding: 0.6rem;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-height: 360px;
+  overflow-y: auto;
+  border: 1px solid #e5eeff;
+}
+
+.stitch-district-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.75rem;
+  background: transparent;
+  color: #0b1c30;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.stitch-district-option:hover {
+  background-color: #e5eeff;
+}
+
+.stitch-district-option.is-selected {
+  background-color: #dce9ff;
+  color: #00236f;
+  font-weight: 600;
+}
+
+.stitch-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.stitch-stat-pill {
+  background-color: #ffffff;
+  border-radius: 9999px;
+  padding: 0.35rem 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: transform 0.2s ease;
+}
+
+.stitch-stat-pill:hover {
+  transform: translateY(-1px);
+}
+
+.stitch-directory-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .stitch-directory-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.stitch-directory-title {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #00236f;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stitch-directory-count {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  background-color: #dce9ff;
+  color: #00236f;
+}
+
+.stitch-sort-select {
+  height: 40px;
+  padding: 0 2.2rem 0 1.25rem;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  color: #0b1c30;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #e5eeff;
+  outline: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='18' viewBox='0 0 24 24' width='18' fill='%23757682'%3E%3Cpath d='M12 5.83L15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9 12 5.83zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15 12 18.17z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  transition: all 0.2s ease;
+}
+
+.stitch-sort-select:hover {
+  background-color: #e5eeff;
+}
+
+.stitch-view-toggle {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 9999px;
+  padding: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  border: 1px solid #e5eeff;
+}
+
+.stitch-view-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: #444651;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.stitch-view-btn.is-active {
+  background-color: #00236f;
+  color: #ffffff;
+}
+
+.stitch-schools-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .stitch-schools-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .stitch-schools-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.stitch-schools-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.stitch-school-card {
+  background-color: #ffffff;
+  border-radius: 2rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 10px 25px -5px rgba(30, 58, 138, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.stitch-school-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 20px 30px -8px rgba(30, 58, 138, 0.08);
+  border-color: #dce9ff;
+}
+
+.stitch-school-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.stitch-school-name {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #00236f;
+  text-decoration: none;
+  line-height: 1.35;
+  transition: color 0.2s ease;
+}
+
+.stitch-school-name:hover {
+  color: #0058be;
+}
+
+.stitch-favorite-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background-color: #e5eeff;
+  color: #444651;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.stitch-favorite-btn:hover {
+  background-color: #dce9ff;
+  transform: scale(1.08);
+}
+
+.stitch-favorite-btn.is-active {
+  color: #ba1a1a;
+  background-color: #ffdad6;
+}
+
+.stitch-school-card-image-wrap {
+  position: relative;
+  width: 100%;
+  height: 156px;
+  border-radius: 1rem;
+  overflow: hidden;
+  background-color: #eff4ff;
+  margin-top: 1rem;
+}
+
+.stitch-school-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease-out;
+}
+
+.stitch-school-card:hover .stitch-school-card-image {
+  transform: scale(1.05);
+}
+
+.stitch-school-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 1rem;
+}
+
+.stitch-badge {
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.15s ease;
+}
+
+.stitch-badge-public {
+  background-color: #dce9ff;
+  color: #00236f;
+}
+
+.stitch-badge-private {
+  background-color: #eef2ff;
+  color: #4338ca;
+}
+
+.stitch-badge-type {
+  background-color: #e5eeff;
+  color: #444651;
+}
+
+.stitch-badge-gender {
+  background-color: #d8e2ff;
+  color: #001a42;
+}
+
+.stitch-badge-feature {
+  background-color: #89f5e7;
+  color: #00201d;
+}
+
+.stitch-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 0.25rem;
+}
+
+.stitch-card-compare-btn {
+  flex: 1;
+  height: 40px;
+  border-radius: 9999px;
+  background-color: #e5eeff;
+  color: #00236f;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.stitch-card-compare-btn:hover {
+  background-color: #dce9ff;
+}
+
+.stitch-card-compare-btn.is-active {
+  background-color: #d8e2ff;
+  color: #0058be;
+}
+
+.stitch-card-detail-btn {
+  height: 40px;
+  padding: 0 1rem;
+  border-radius: 9999px;
+  background-color: #00236f;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0, 35, 111, 0.2);
+  transition: all 0.2s ease;
+}
+
+.stitch-card-detail-btn:hover {
+  background-color: #1e3a8a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 35, 111, 0.3);
+}
+
+.stitch-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+.stitch-page-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  background-color: #e5eeff;
+  color: #0b1c30;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.stitch-page-btn:hover:not(:disabled) {
+  background-color: #dce9ff;
+  transform: scale(1.05);
+}
+
+.stitch-page-btn.is-active {
+  background-color: #00236f;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 35, 111, 0.25);
+}
+
+.stitch-page-btn:disabled {
+  background-color: #eff4ff;
+  color: #757682;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.stitch-drawer {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  background: rgba(11, 28, 48, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+

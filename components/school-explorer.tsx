@@ -5,7 +5,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { getRegionRegistry } from "@/lib/region-registry";
 import { DEFAULT_POPULAR_SCHOOLS } from "@/lib/popular-schools-data";
 import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
-import "@/components/schools-v2.css";
 
 export type SchoolExplorerFilters = {
   query?: string;
@@ -16,31 +15,57 @@ export type SchoolExplorerFilters = {
   program?: string;
   gender?: string;
   department?: string;
+  scoreTier?: string;
+  transit?: string;
+  specialFeature?: string;
 };
 
 const normalized = (value: string) => value.toLowerCase().replaceAll("台", "臺").replace(/\s/g, "");
 const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
 const regions = getRegionRegistry();
-const defaultDistrict = "ct";
+const defaultDistrict = "tp";
 
-// High-fidelity campus photography matching Stitch screen design
-const campusPhotos = [
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCRrEnrzlgHNsFv6aragJM5oTEib7Uz1lq741lcsOIcaqz2ia2NGlE4GHLtrz52ZdAqwvp9r8gATREeNNzJa83zlT-YZKiPKzAzaJyatktw4hOIZHRUTQBRB2VF1nCXY6m2fizz3Xx0MrLCFsFQmuGWyZnBEDaRwL_KPUcHPCGda1S6mvnyDkq6F1xnXC7SbpmE5QmdAIWVTIGU8md56_NKksgNJPzoV12UOfPZJHIQKoKSuxbFqlaghQ",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuA5xwMpRPdwmh-oFH3DFBQDLSi3dU2yt7EztUhtDoVSJPYapF7RPwDa8Ee7b5mLHaw_9G8-6N5slgi7VoVgKRaERRetASuOh5YytadlRULDFyBU-dRNz5EklmgiJMZN_ePmiRhCKF0-esKktJMBw9tGDwa4Wu9dUKgKgkSCC5bzYWaOPds-JdnO_GS1RDD8bLnTWKkTiB6ZhyXVXz2dJ8l7W2PkM7FpgTHLrdSszn03LayTayAGdCfVcw",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBrOyDxrtLVcehUBcyajoTPv-ZevaUpbF8ZcCZ3ZzQUWmnPPZRzPVwWKBjF5URmhb43_Of1EQ_bNL-5u4_WQeW8Tey8v_Lt4SKccx0igZ35VTCIDVb1-GBaRp7yvDS1zgCcj-3gd0jD1jYNt2dBSPaHY5Z5Gg-xTmrVAwzIfCMM3DOC__g7-YcLA3jevxHb11_jIS9GzYAoyJzJBWqfHWd5zrFA2iFKXCJBLzLL-Fgnr_lPXuV8HY0fqw",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBC-__vmCd9yEK4WE8C0Mcdc-Fdu4ViiDDgvsx5LD_019kt1vXrlPxKLQF6pxVeKdEvrO_M8K7FQF6o6LZGas9ymua8JXDFx2Y0D1uG5cCOMep0vfNA0gPGoMPl_hgW1klMFame1o9UPCw_4yXqn_fBp_90bVImwMWKpL6yFthUf3hMAO7EVcoODvXmyhrj3TlXpW6GMGS5EDWXQVE5LhhSkW7Csnu99QOlD2EsZY_CpR3mNIzu-WyomA",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuAxqQh8HVsYNv5NEAHAWAqgvs1qEx7lusD9BP6pboLMYjTYEpfkgQZ37Y6Fnvguuj_R6CR0bSJRWkdq5YKEO1ml2Q8laXiPdG5W_RkC1RsHhFUkJOy8KF7arWY509vVnL6Zl_fngfToPpnladDaLqRPdXDA4KF-bKk5lsUvXqYH-gqhvJaP4SsoKFSgASp9JeonM3s4V9MK8XFu3u4KyQx9mr-LAnmUJ2bvv2ubewN_GaIaFGGS87qPTw",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuAQZbd5fB1xhligqib55HFXBFkNZ7Kczfg4PXpQwzSIggFmpiC0SHNN--3_qeuwxtiSpIE2-KsJ5OzvkFR6Z0_fmRqrhCrgv9ZjUwbnpwovOmcqHTnBrDunUMEUuHhS7hzgedLxoIhI91MzTFsAuftXBnXY5EvBKk1y2nSHBuxuyhwyrfkFj9qG5Ohlka5I1CWW1XU2jp4aflxVtPc9_V_DvP8isoAdc2imR5MD5aBXorm-30Ajywu8bQ",
-];
+// ImageKit dynamic loader: reads from database ImageKit metadata via /api/school-image
+// "没有就没有，不要硬塞" — if no cover image exists, renders nothing.
+function SchoolCardImage({ code, name }: { code: string; name: string }) {
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-const schoolPhotosByCode: Record<string, string> = {
-  "353301": campusPhotos[0], // 建中
-  "353303": campusPhotos[1], // 北一女
-  "330301": campusPhotos[2], // 師大附中
-  "353302": campusPhotos[3], // 成功高中
-  "343301": campusPhotos[4], // 中山女高
-  "333401": campusPhotos[5], // 大安高工
-};
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/school-image?code=${encodeURIComponent(code)}`)
+      .then((res) =>
+        res.ok
+          ? (res.json() as Promise<{ adminMedia?: { coverImage?: string } | null; image?: { localPath?: string } | null }>)
+          : null,
+      )
+      .then((data) => {
+        if (cancelled || !data) return;
+        const url = data.adminMedia?.coverImage || data.image?.localPath;
+        if (url && (url.startsWith("https://") || url.startsWith("/images/") || url.startsWith("/media/"))) {
+          setImageUrl(url);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [code]);
+
+  if (!imageUrl) {
+    return null;
+  }
+
+  return (
+    <div className="stitch-school-card-image-wrap">
+      <img
+        className="stitch-school-card-image"
+        src={imageUrl}
+        alt={`${name}校園圖片`}
+        loading="lazy"
+      />
+    </div>
+  );
+}
 
 function FilterPanel({
   prefix,
@@ -57,7 +82,7 @@ function FilterPanel({
 }) {
   const fields: [keyof SchoolExplorerFilters, string, string[]][] = [
     ["ownership", "公私立", unique(schools.map((school) => school.ownership))],
-    ["program", "學校類型／學制", unique(schools.flatMap((school) => school.schoolTypes || [school.schoolType]))],
+    ["program", "學制", unique(schools.flatMap((school) => school.schoolTypes || [school.schoolType]))],
     ["city", "縣市", unique(schools.map((school) => school.city))],
     ["department", "科別", unique(schools.flatMap((school) => school.departmentNames))],
   ];
@@ -90,76 +115,75 @@ function FilterPanel({
 
 function SchoolCard({
   school,
-  selected,
-  onCompare,
-  compact = false,
-  index = 0,
+  isCompared,
+  onToggleCompare,
+  isFavorited,
+  onToggleFavorite,
+  viewMode = "grid",
 }: {
   school: SchoolSearchIndexEntry;
-  selected?: boolean;
-  onCompare?: (code: string) => void;
-  compact?: boolean;
-  index?: number;
+  isCompared?: boolean;
+  onToggleCompare?: (code: string) => void;
+  isFavorited?: boolean;
+  onToggleFavorite?: (code: string) => void;
+  viewMode?: "grid" | "list";
 }) {
+  const [animatingHeart, setAnimatingHeart] = useState(false);
   const isPublic = (school.ownership || "").includes("公立");
-  const campusPhoto =
-    schoolPhotosByCode[school.code] ||
-    campusPhotos[Math.abs(school.code.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0)) % campusPhotos.length];
+
+  const handleFavoriteClick = () => {
+    setAnimatingHeart(true);
+    setTimeout(() => setAnimatingHeart(false), 450);
+    onToggleFavorite?.(school.code);
+  };
 
   return (
-    <article className={`group bg-surface-container-lowest rounded-lg p-space-lg shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between relative overflow-hidden animate-fadeInUp delay-card-${(index % 6) + 1} border border-transparent hover:border-surface-container`}>
-      <div className="flex flex-col gap-space-md">
-        {/* Header: Visual + Status Badges */}
-        <div className="flex items-start justify-between gap-space-sm">
-          <div className="flex items-center gap-space-sm">
-            <div className="flex flex-col">
-              <div className="flex items-center gap-space-xs">
-                <span className="sv-school-card-symbol sr-only" />
-                <h3 className="m-0 font-headline-md text-headline-md text-primary transition-colors group-hover:text-secondary">
-                  <Link href={`/schools/${school.code}`}>{school.name}</Link>
-                </h3>
-              </div>
-            </div>
+    <article className={`stitch-school-card ${viewMode === "list" ? "stitch-school-card-list" : ""}`}>
+      <div>
+        {/* Header: School Name & Favorite Heart Button */}
+        <div className="stitch-school-card-header">
+          <div className="flex items-center gap-2">
+            <span className="sv-school-card-symbol sr-only" aria-hidden="true" />
+            <h3 className="m-0">
+              <Link href={`/schools/${school.code}`} className="stitch-school-name">
+                {school.name}
+              </Link>
+            </h3>
           </div>
           <button
-            aria-label="加入收藏"
-            className={`favorite-toggle w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high ${selected ? "text-red-600 heart-pop-anim" : "text-on-surface-variant"} flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer`}
+            aria-label={isFavorited ? "取消收藏" : "加入收藏"}
+            className={`stitch-favorite-btn ${isFavorited ? "is-active" : ""} ${
+              animatingHeart ? "heart-pop-anim" : ""
+            }`}
             type="button"
-            onClick={() => onCompare?.(school.code)}
+            onClick={handleFavoriteClick}
           >
-            <span className={`material-symbols-outlined text-[20px] transition-transform duration-200 ${selected ? "text-red-600" : ""}`}>
-              {selected ? "favorite" : "favorite_border"}
+            <span className="material-symbols-outlined text-[20px]">
+              {isFavorited ? "favorite" : "favorite_border"}
             </span>
           </button>
         </div>
 
-        {/* School Photo */}
-        <div className="relative w-full h-36 rounded-DEFAULT overflow-hidden bg-surface-container">
-          <img
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-            src={campusPhoto}
-            alt={school.name}
-            loading="lazy"
-          />
-        </div>
+        {/* Dynamic ImageKit Photo: only shown if exists in database, no fakes */}
+        <SchoolCardImage code={school.code} name={school.name} />
 
         {/* Academic Classification Badges */}
-        <div className="flex flex-wrap gap-space-xs">
-          <span className="px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm hover:brightness-95 transition-all">
+        <div className="stitch-school-badges">
+          <span className={`stitch-badge ${isPublic ? "stitch-badge-public" : "stitch-badge-private"}`}>
             {school.ownership || "公立"}
           </span>
-          <span className="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm hover:brightness-95 transition-all">
+          <span className="stitch-badge stitch-badge-type">
             {school.schoolType || "普通型高中"}
           </span>
-          <span className="px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm hover:brightness-95 transition-all">
+          <span className="stitch-badge stitch-badge-gender">
             {school.gender || "男女兼收"}
           </span>
           {school.departmentNames && school.departmentNames.length > 0 ? (
-            <span className="px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm hover:brightness-95 transition-all">
+            <span className="stitch-badge stitch-badge-feature">
               {school.departmentNames[0]}
             </span>
           ) : (
-            <span className="px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm hover:brightness-95 transition-all">
+            <span className="stitch-badge stitch-badge-feature">
               科學班認證
             </span>
           )}
@@ -167,30 +191,30 @@ function SchoolCard({
       </div>
 
       {/* Action Footer */}
-      <div className="pt-space-md flex items-center gap-space-xs">
+      <div className="stitch-card-actions">
         <button
-          className="compare-btn group/cmp flex-1 h-10 rounded-full bg-surface-container hover:bg-surface-container-high text-primary font-title-md text-label-md flex items-center justify-center gap-1 transition-all duration-200 active:scale-95 cursor-pointer"
+          className={`stitch-card-compare-btn ${isCompared ? "is-active" : ""}`}
           type="button"
-          onClick={() => onCompare?.(school.code)}
+          onClick={() => onToggleCompare?.(school.code)}
         >
-          {selected ? (
+          {isCompared ? (
             <>
               <span className="material-symbols-outlined text-[16px] text-secondary">check</span>
               <span>已加入比較</span>
             </>
           ) : (
             <>
-              <span className="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover/cmp:rotate-90">add</span>
+              <span className="material-symbols-outlined text-[16px]">add</span>
               <span>加入志願比較</span>
             </>
           )}
         </button>
         <Link
-          className="group/act h-10 px-space-md rounded-full bg-primary text-on-primary font-title-md text-label-md flex items-center justify-center gap-1 hover:bg-primary-container transition-all duration-200 shadow-sm hover:shadow-md active:scale-95 cursor-pointer"
+          className="stitch-card-detail-btn"
           href={`/schools/${school.code}`}
         >
           <span>查看簡章</span>
-          <span className="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover/act:translate-x-1">arrow_forward</span>
+          <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
         </Link>
       </div>
     </article>
@@ -225,15 +249,29 @@ export function SchoolExplorer({
     ...initialFilters,
     district: initialFilters.district || defaultDistrict,
   });
-  const [activeCategory, setActiveCategory] = useState<string>("popular");
-  const [sort, setSort] = useState("name");
+  const [activeChip, setActiveChip] = useState<string>("popular");
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const [sort, setSort] = useState("popular");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [compareCodes, setCompareCodes] = useState<readonly string[]>(["353301"]); // Initialized with Jianguo High as in Stitch mockup
+  const [favorites, setFavorites] = useState<Set<string>>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = window.localStorage.getItem("jshs-favorite-schools");
+        if (saved) return new Set(JSON.parse(saved));
+      } catch {}
+    }
+    return new Set(["353301"]);
+  });
   const [isDistrictMenuOpen, setIsDistrictMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 6;
+
   const drawer = useRef<HTMLDialogElement>(null);
   const districtDropdownRef = useRef<HTMLDivElement>(null);
+  const directoryHeaderRef = useRef<HTMLDivElement>(null);
 
+  // Close district dropdown when clicking outside
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
       if (
@@ -251,6 +289,7 @@ export function SchoolExplorer({
     };
   }, [isDistrictMenuOpen]);
 
+  // Load school index
   useEffect(() => {
     if (!initialSchools.length) {
       const controller = new AbortController();
@@ -260,10 +299,16 @@ export function SchoolExplorer({
       })
         .then((response) =>
           response.ok
-            ? (response.json() as Promise<{ schools?: SchoolSearchIndexEntry[] }>)
+            ? (response.json() as Promise<SchoolSearchIndexEntry[] | { schools?: SchoolSearchIndexEntry[] }>)
             : Promise.reject(new Error("index unavailable")),
         )
-        .then((payload) => setSchools(payload.schools || []))
+        .then((payload) => {
+          if (Array.isArray(payload)) {
+            setSchools(payload);
+          } else if (payload?.schools && Array.isArray(payload.schools)) {
+            setSchools(payload.schools);
+          }
+        })
         .catch((error) => {
           if (error.name !== "AbortError")
             setLoadError("目前無法載入學校資料，請稍後再試。");
@@ -273,6 +318,7 @@ export function SchoolExplorer({
     }
   }, [initialSchools]);
 
+  // Load popular schools config
   useEffect(() => {
     fetch("/api/schools/popular", { headers: { accept: "application/json" } })
       .then((res) =>
@@ -284,10 +330,12 @@ export function SchoolExplorer({
       .catch(() => undefined);
   }, []);
 
+  // Save district preference
   useEffect(() => {
     window.localStorage.setItem("jshs-school-district", district);
   }, [district]);
 
+  // Debounce search input
   useEffect(() => {
     const timer = window.setTimeout(
       () => setFilters((current) => ({ ...current, query: queryInput })),
@@ -322,10 +370,10 @@ export function SchoolExplorer({
     () => scopedSchools.filter((s) => (s.ownership || "").includes("私立")).length,
     [scopedSchools],
   );
-  const vocationalCount = useMemo(
+  const collegeCount = useMemo(
     () =>
       scopedSchools.filter((s) =>
-        (s.schoolTypes || [s.schoolType]).some((t) => /高職|技術|五專/.test(t || "")),
+        (s.schoolTypes || [s.schoolType]).some((t) => /五專|專科/.test(t || "")),
       ).length,
     [scopedSchools],
   );
@@ -340,7 +388,8 @@ export function SchoolExplorer({
     );
   }, [popularConfig, district]);
 
-  const result = useMemo(() => {
+  // Filtered and Sorted schools
+  const filteredSchools = useMemo(() => {
     return scopedSchools
       .filter((school) => {
         const tokens = (filters.query || "")
@@ -353,29 +402,43 @@ export function SchoolExplorer({
             (token === "餐飲" && /餐旅|烘焙/.test(school.normalizedSearchText)),
         );
 
-        if (activeCategory === "popular" && !popularSchoolCodes.includes(school.code)) {
+        if (activeChip === "popular" && !popularSchoolCodes.includes(school.code)) {
           return false;
         }
-        if (activeCategory === "public" && !(school.ownership || "").includes("公立")) {
+        if (activeChip === "public" && !(school.ownership || "").includes("公立")) {
           return false;
         }
-        if (activeCategory === "private" && !(school.ownership || "").includes("私立")) {
+        if (activeChip === "private" && !(school.ownership || "").includes("私立")) {
           return false;
         }
         if (
-          activeCategory === "vocational" &&
+          activeChip === "vocational" &&
           !(school.schoolTypes || [school.schoolType]).some((t) => /高職|技術/.test(t || ""))
         ) {
           return false;
         }
         if (
-          activeCategory === "college" &&
-          !(school.schoolTypes || [school.schoolType]).some((t) => /五專/.test(t || ""))
+          activeChip === "college" &&
+          !(school.schoolTypes || [school.schoolType]).some((t) => /五專|專科/.test(t || ""))
         ) {
           return false;
         }
-        if (activeCategory === "coed" && school.gender !== "男女兼收" && school.gender) {
+        if (activeChip === "coed" && school.gender !== "男女兼收" && school.gender) {
           return false;
+        }
+        if (
+          activeChip === "special" &&
+          !(school.departmentNames && school.departmentNames.some((d) => /實驗|雙語|資優|科學/.test(d)))
+        ) {
+          return false;
+        }
+
+        // Advanced filter fields
+        if (filters.specialFeature && filters.specialFeature !== "不限專案") {
+          const feat = filters.specialFeature;
+          const match = school.departmentNames.some((dept) => dept.includes(feat)) ||
+            school.name.includes(feat);
+          if (!match) return false;
         }
 
         return (
@@ -387,31 +450,49 @@ export function SchoolExplorer({
           (!filters.department || school.departmentNames.includes(filters.department))
         );
       })
-      .sort((a, b) =>
-        String(sort === "city" ? a.city : sort === "ownership" ? a.ownership : a.name).localeCompare(
-          String(sort === "city" ? b.city : sort === "ownership" ? b.ownership : b.name),
-          "zh-Hant",
-        ),
-      );
-  }, [scopedSchools, filters, sort, activeCategory, popularSchoolCodes]);
+      .sort((a, b) => {
+        if (sort === "popular") {
+          const aPop = popularSchoolCodes.indexOf(a.code);
+          const bPop = popularSchoolCodes.indexOf(b.code);
+          if (aPop !== -1 && bPop !== -1) return aPop - bPop;
+          if (aPop !== -1) return -1;
+          if (bPop !== -1) return 1;
+          return a.name.localeCompare(b.name, "zh-Hant");
+        }
+        if (sort === "city") {
+          return (a.city + a.area).localeCompare(b.city + b.area, "zh-Hant");
+        }
+        if (sort === "ownership") {
+          return (a.ownership || "").localeCompare(b.ownership || "", "zh-Hant");
+        }
+        return a.name.localeCompare(b.name, "zh-Hant");
+      });
+  }, [scopedSchools, filters, sort, activeChip, popularSchoolCodes]);
 
-  const active = Object.entries(filters).filter(
-    ([key, value]) => key !== "query" && key !== "district" && value,
-  ).length;
+  const totalPages = Math.max(1, Math.ceil(filteredSchools.length / pageSize));
+  const currentSafePage = Math.min(currentPage, totalPages);
+  const paginatedSchools = filteredSchools.slice(
+    (currentSafePage - 1) * pageSize,
+    currentSafePage * pageSize,
+  );
 
-  const update = (key: keyof SchoolExplorerFilters, value: string) =>
+  const update = (key: keyof SchoolExplorerFilters, value: string) => {
     setFilters((current) => ({ ...current, [key]: value }));
+    setCurrentPage(1);
+  };
 
   const clear = () => {
     setFilters((current) => ({ district: current.district }));
-    setActiveCategory("all");
+    setActiveChip("popular");
     setQueryInput("");
+    setCurrentPage(1);
   };
 
   const changeDistrict = (value: string) => {
     setDistrict(value);
     setFilters((current) => ({ ...current, district: value }));
     setIsDistrictMenuOpen(false);
+    setCurrentPage(1);
   };
 
   const toggleCompare = (code: string) =>
@@ -423,10 +504,31 @@ export function SchoolExplorer({
         : current,
     );
 
+  const toggleFavorite = (code: string) => {
+    setFavorites((prev) => {
+      const next = new Set(prev);
+      if (next.has(code)) next.delete(code);
+      else next.add(code);
+      if (typeof window !== "undefined") {
+        try {
+          window.localStorage.setItem("jshs-favorite-schools", JSON.stringify([...next]));
+        } catch {}
+      }
+      return next;
+    });
+  };
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    if (directoryHeaderRef.current) {
+      directoryHeaderRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   if (loading)
     return (
-      <div className="sv-root">
-        <div className="sv-container sv-loading-shell">
+      <div className="sv-root stitch-portal-canvas">
+        <div className="stitch-portal-container">
           <div className="sv-skeleton sv-skeleton-hero" />
           <div className="sv-skeleton sv-skeleton-row" />
           <div className="sv-skeleton sv-skeleton-row" />
@@ -436,12 +538,12 @@ export function SchoolExplorer({
 
   if (loadError)
     return (
-      <div className="sv-root">
-        <div className="sv-container sv-empty">
-          <h1>學校資料暫時無法載入</h1>
-          <p>{loadError}</p>
+      <div className="sv-root stitch-portal-canvas">
+        <div className="stitch-portal-container text-center py-16">
+          <h1 className="text-2xl font-bold text-primary mb-4">學校資料暫時無法載入</h1>
+          <p className="text-muted mb-6">{loadError}</p>
           <button
-            className="sv-button sv-primary"
+            className="stitch-search-submit-btn mx-auto"
             type="button"
             onClick={() => window.location.reload()}
           >
@@ -452,535 +554,513 @@ export function SchoolExplorer({
     );
 
   return (
-    <div className="sv-root sv-explorer-root w-full bg-background min-h-screen text-on-surface antialiased">
-      <div className="flex flex-col w-full">
-        {/* Subtle Ambient Glow */}
-        <div className="relative w-full overflow-hidden">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[480px] bg-gradient-to-b from-secondary-fixed/30 via-surface-container-high/20 to-transparent blur-3xl pointer-events-none -z-10" />
+    <div className="sv-root stitch-portal-canvas">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-          {/* Main Content Container matching Stitch max-w-7xl */}
-          <div className="max-w-7xl mx-auto px-margin md:px-margin-md lg:px-margin-lg pt-space-md pb-space-xl flex flex-col gap-space-lg">
-            {/* Hero Header Section */}
-            <header className="sv-hero border-0 bg-transparent p-0 m-0">
-              <span className="sr-only">找到適合你的學校</span>
-              <section className="flex flex-col gap-space-sm max-w-4xl animate-fadeInUp delay-1">
-                <h1 className="font-headline-xl text-headline-xl text-on-surface tracking-tight font-bold transition-colors m-0">
-                  找學校
-                </h1>
-                <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed m-0">
-                  探索全臺公私立高中職、五專與特色科別，精準掌握升學志願方向
-                </p>
-              </section>
-            </header>
+      {/* Subtle Ambient Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[480px] bg-gradient-to-b from-secondary-fixed/30 via-surface-container-high/20 to-transparent blur-3xl pointer-events-none -z-10" />
 
-            {/* Central Search Architecture Module */}
-            <section className="relative bg-surface-container-lowest rounded-lg p-space-md shadow-xl flex flex-col gap-space-md animate-fadeInUp delay-2 transition-shadow duration-300 hover:shadow-2xl">
-              {/* Input Layer: Integrated district selector + Search input + Action button */}
-              <div className="group/search flex flex-col lg:flex-row items-stretch lg:items-center gap-space-sm bg-surface-container-low p-space-xs rounded-lg lg:rounded-full border border-transparent focus-within:border-secondary focus-within:ring-4 focus-within:ring-secondary/15 focus-within:bg-surface-container-lowest transition-all duration-300 shadow-sm">
-                <div className="flex-1 flex items-center px-space-md py-space-xs">
-                  <span className="material-symbols-outlined text-outline group-focus-within/search:text-secondary text-[22px] mr-space-xs transition-colors duration-200">
-                    search
-                  </span>
-                  <label className="sr-only" htmlFor="school-search">
-                    搜尋學校、科別或課程方向
-                  </label>
-                  <input
-                    id="school-search"
-                    className="w-full bg-transparent border-0 outline-none font-body-md text-body-md text-on-surface placeholder:text-outline py-space-xs transition-colors"
-                    placeholder="搜尋學校名稱、地區或科別..."
-                    type="text"
-                    value={queryInput}
-                    onChange={(e) => setQueryInput(e.target.value)}
-                    autoComplete="off"
-                  />
-                  {queryInput ? (
-                    <button
-                      aria-label="清除文字"
-                      className="text-outline hover:text-on-surface p-1 transition-transform hover:scale-110 active:scale-90 cursor-pointer"
-                      id="clearSearchBtn"
-                      type="button"
-                      onClick={() => setQueryInput("")}
-                    >
-                      <span className="material-symbols-outlined text-[18px]">cancel</span>
-                    </button>
-                  ) : null}
-                </div>
-                <button
-                  className="h-12 px-space-lg rounded-full bg-secondary text-on-secondary font-title-md text-title-md flex items-center justify-center gap-space-xs hover:bg-primary shadow-md hover:shadow-lg hover:shadow-secondary/25 transition-all duration-300 active:scale-95 group/btn cursor-pointer"
-                  type="button"
-                >
-                  <span className="tracking-wide">開始搜尋</span>
-                  <span className="material-symbols-outlined text-[18px] transition-transform duration-300 group-hover/btn:translate-x-1">
-                    arrow_forward
-                  </span>
-                </button>
-              </div>
+      {/* Main Content Container matching Stitch 1280px Grid */}
+      <div className="stitch-portal-container">
+        {/* Hero Header Section */}
+        <header className="sv-hero border-0 bg-transparent p-0 m-0">
+          <span className="sr-only">找到適合你的學校</span>
+          <section className="flex flex-col gap-2 max-w-4xl animate-fadeInUp delay-1">
+            <h1 className="stitch-hero-title">找學校</h1>
+            <p className="stitch-hero-desc">
+              探索全臺公私立高中職、五專與特色科別，精準掌握升學志願方向
+            </p>
+          </section>
+        </header>
 
-              {/* Filter Chips Strip */}
-              <div className="flex flex-wrap items-center gap-space-xs pt-space-xs">
-                <button
-                  className={`filter-pill px-space-md py-space-xs rounded-full ${
-                    activeCategory === "popular"
-                      ? "bg-primary text-on-primary shadow-sm hover:shadow-md"
-                      : "bg-surface-container hover:bg-surface-container-high text-on-surface hover:shadow-sm"
-                  } font-label-md text-label-md flex items-center gap-space-xs hover:-translate-y-0.5 transition-all duration-200 active:scale-95 cursor-pointer`}
-                  type="button"
-                  onClick={() => setActiveCategory(activeCategory === "popular" ? "all" : "popular")}
-                >
-                  <span className="material-symbols-outlined text-[16px] transition-transform group-hover:scale-110">
-                    local_fire_department
-                  </span>
-                  <span>熱門學校</span>
-                </button>
-                <button
-                  className={`filter-pill px-space-md py-space-xs rounded-full ${
-                    activeCategory === "public"
-                      ? "bg-primary text-on-primary shadow-sm hover:shadow-md"
-                      : "bg-surface-container hover:bg-surface-container-high text-on-surface hover:shadow-sm"
-                  } font-label-md text-label-md flex items-center gap-space-xs hover:-translate-y-0.5 transition-all duration-200 active:scale-95 cursor-pointer`}
-                  type="button"
-                  onClick={() => setActiveCategory(activeCategory === "public" ? "all" : "public")}
-                >
-                  <span className="material-symbols-outlined text-[16px]">account_balance</span>
-                  <span>公立優先</span>
-                </button>
-                <button
-                  className={`filter-pill px-space-md py-space-xs rounded-full ${
-                    activeCategory === "private"
-                      ? "bg-primary text-on-primary shadow-sm hover:shadow-md"
-                      : "bg-surface-container hover:bg-surface-container-high text-on-surface hover:shadow-sm"
-                  } font-label-md text-label-md flex items-center gap-space-xs hover:-translate-y-0.5 transition-all duration-200 active:scale-95 cursor-pointer`}
-                  type="button"
-                  onClick={() => setActiveCategory(activeCategory === "private" ? "all" : "private")}
-                >
-                  <span className="material-symbols-outlined text-[16px]">corporate_fare</span>
-                  <span>私立高中</span>
-                </button>
-                <button
-                  className={`filter-pill px-space-md py-space-xs rounded-full ${
-                    activeCategory === "vocational"
-                      ? "bg-primary text-on-primary shadow-sm hover:shadow-md"
-                      : "bg-surface-container hover:bg-surface-container-high text-on-surface hover:shadow-sm"
-                  } font-label-md text-label-md flex items-center gap-space-xs hover:-translate-y-0.5 transition-all duration-200 active:scale-95 cursor-pointer`}
-                  type="button"
-                  onClick={() => setActiveCategory(activeCategory === "vocational" ? "all" : "vocational")}
-                >
-                  <span className="material-symbols-outlined text-[16px]">precision_manufacturing</span>
-                  <span>技術型高中 (高職)</span>
-                </button>
-                <button
-                  className={`filter-pill px-space-md py-space-xs rounded-full ${
-                    activeCategory === "college"
-                      ? "bg-primary text-on-primary shadow-sm hover:shadow-md"
-                      : "bg-surface-container hover:bg-surface-container-high text-on-surface hover:shadow-sm"
-                  } font-label-md text-label-md flex items-center gap-space-xs hover:-translate-y-0.5 transition-all duration-200 active:scale-95 cursor-pointer`}
-                  type="button"
-                  onClick={() => setActiveCategory(activeCategory === "college" ? "all" : "college")}
-                >
-                  <span className="material-symbols-outlined text-[16px]">school</span>
-                  <span>五專專區</span>
-                </button>
-                <button
-                  className={`filter-pill px-space-md py-space-xs rounded-full ${
-                    activeCategory === "coed"
-                      ? "bg-primary text-on-primary shadow-sm hover:shadow-md"
-                      : "bg-surface-container hover:bg-surface-container-high text-on-surface hover:shadow-sm"
-                  } font-label-md text-label-md flex items-center gap-space-xs hover:-translate-y-0.5 transition-all duration-200 active:scale-95 cursor-pointer`}
-                  type="button"
-                  onClick={() => setActiveCategory(activeCategory === "coed" ? "all" : "coed")}
-                >
-                  <span className="material-symbols-outlined text-[16px]">wc</span>
-                  <span>男女兼收</span>
-                </button>
-                <button
-                  className="filter-pill px-space-md py-space-xs rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-space-xs hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200 active:scale-95 cursor-pointer"
-                  type="button"
-                  onClick={() => drawer.current?.showModal()}
-                >
-                  <span className="material-symbols-outlined text-[16px]">explore</span>
-                  <span>依行政區</span>
-                </button>
-                <button
-                  className="filter-pill px-space-md py-space-xs rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-space-xs hover:-translate-y-0.5 hover:shadow-sm transition-all duration-200 active:scale-95 cursor-pointer"
-                  type="button"
-                  onClick={() => drawer.current?.showModal()}
-                >
-                  <span className="material-symbols-outlined text-[16px]">science</span>
-                  <span>特色實驗班</span>
-                </button>
-                <button
-                  className="filter-pill ml-auto px-space-md py-space-xs rounded-full bg-surface-container-high hover:bg-secondary hover:text-on-secondary text-primary font-title-md text-label-md flex items-center gap-space-xs transition-all duration-200 active:scale-95 cursor-pointer"
-                  id="toggleAdvancedFilter"
-                  type="button"
-                  onClick={() => drawer.current?.showModal()}
-                >
-                  <span className="material-symbols-outlined text-[16px]">tune</span>
-                  <span>進階篩選</span>
-                  <span className="material-symbols-outlined text-[16px] transition-transform duration-200" id="filterChevron">
-                    expand_more
-                  </span>
-                </button>
-              </div>
-            </section>
-
-            {/* Section 2: District Control + Stats Bar */}
-            <section className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-space-md bg-surface-container-low/60 p-space-sm rounded-lg border border-surface-container animate-fadeInUp delay-3">
-              <div className="flex items-center gap-space-sm" ref={districtDropdownRef}>
-                <div className="relative">
-                  <button
-                    aria-expanded={isDistrictMenuOpen}
-                    aria-haspopup="true"
-                    className="group flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-lowest hover:bg-surface-container-high text-on-surface font-title-md text-body-md border border-surface-container transition-all duration-200 shadow-sm cursor-pointer"
-                    id="districtBtn"
-                    type="button"
-                    onClick={() => setIsDistrictMenuOpen(!isDistrictMenuOpen)}
-                  >
-                    <div className="flex items-center gap-1 text-primary">
-                      <span className="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:scale-110">
-                        near_me
-                      </span>
-                      <span className="text-on-surface font-title-md text-label-md">目前就學區：</span>
-                      <span className="text-primary font-headline-md text-title-md" id="currentDistrictText">
-                        {regionName}
-                      </span>
-                    </div>
-                    <span
-                      className={`material-symbols-outlined text-outline group-hover:text-primary text-[18px] transition-transform duration-300 ${
-                        isDistrictMenuOpen ? "rotate-180" : ""
-                      }`}
-                      id="districtChevron"
-                    >
-                      expand_more
-                    </span>
-                  </button>
-
-                  {/* Accessible native select */}
-                  <select
-                    className="sr-only"
-                    value={district}
-                    onChange={(event) => changeDistrict(event.target.value)}
-                    aria-label="選擇目前就學區"
-                  >
-                    {regions.map((item) => (
-                      <option
-                        key={item.id}
-                        value={item.id}
-                        disabled={item.schoolDataStatus !== "available"}
-                      >
-                        {item.name}
-                        {item.schoolDataStatus === "verifying"
-                          ? "（資料驗證中）"
-                          : item.schoolDataStatus === "unavailable"
-                          ? "（尚未開放）"
-                          : ""}
-                      </option>
-                    ))}
-                  </select>
-
-                  {isDistrictMenuOpen ? (
-                    <div
-                      className="absolute top-full left-0 mt-space-xs w-64 bg-surface-container-lowest rounded-DEFAULT shadow-xl p-space-sm z-30 flex flex-col gap-space-xs transition-all duration-200"
-                      id="districtMenu"
-                    >
-                      <span className="font-label-sm text-label-sm text-outline px-space-xs py-1">
-                        切換全臺 15 個就學區
-                      </span>
-                      <button
-                        className={`district-option flex items-center justify-between px-space-sm py-space-xs rounded-DEFAULT ${
-                          district === "tp"
-                            ? "bg-surface-container-high text-primary font-title-md"
-                            : "hover:bg-surface-container text-on-surface font-body-md"
-                        } text-body-md text-left transition-colors duration-150 cursor-pointer`}
-                        type="button"
-                        onClick={() => changeDistrict("tp")}
-                      >
-                        <span>基北區 (北北基)</span>
-                        {district === "tp" ? <span className="material-symbols-outlined text-[16px]">check</span> : null}
-                      </button>
-                      <button
-                        className={`district-option flex items-center justify-between px-space-sm py-space-xs rounded-DEFAULT ${
-                          district === "taoyuan-lienchiang"
-                            ? "bg-surface-container-high text-primary font-title-md"
-                            : "hover:bg-surface-container text-on-surface font-body-md"
-                        } text-body-md text-left transition-colors duration-150 cursor-pointer`}
-                        type="button"
-                        onClick={() => changeDistrict("taoyuan-lienchiang")}
-                      >
-                        <span>桃連區 (桃園/連江)</span>
-                        {district === "taoyuan-lienchiang" ? <span className="material-symbols-outlined text-[16px]">check</span> : null}
-                      </button>
-                      <button
-                        className={`district-option flex items-center justify-between px-space-sm py-space-xs rounded-DEFAULT ${
-                          district === "ct"
-                            ? "bg-surface-container-high text-primary font-title-md"
-                            : "hover:bg-surface-container text-on-surface font-body-md"
-                        } text-body-md text-left transition-colors duration-150 cursor-pointer`}
-                        type="button"
-                        onClick={() => changeDistrict("ct")}
-                      >
-                        <span>中投區 (臺中/南投)</span>
-                        {district === "ct" ? <span className="material-symbols-outlined text-[16px]">check</span> : null}
-                      </button>
-                      <button
-                        className={`district-option flex items-center justify-between px-space-sm py-space-xs rounded-DEFAULT ${
-                          district === "tainan"
-                            ? "bg-surface-container-high text-primary font-title-md"
-                            : "hover:bg-surface-container text-on-surface font-body-md"
-                        } text-body-md text-left transition-colors duration-150 cursor-pointer`}
-                        type="button"
-                        onClick={() => changeDistrict("tainan")}
-                      >
-                        <span>臺南區</span>
-                        {district === "tainan" ? <span className="material-symbols-outlined text-[16px]">check</span> : null}
-                      </button>
-                      <button
-                        className={`district-option flex items-center justify-between px-space-sm py-space-xs rounded-DEFAULT ${
-                          district === "kaohsiung"
-                            ? "bg-surface-container-high text-primary font-title-md"
-                            : "hover:bg-surface-container text-on-surface font-body-md"
-                        } text-body-md text-left transition-colors duration-150 cursor-pointer`}
-                        type="button"
-                        onClick={() => changeDistrict("kaohsiung")}
-                      >
-                        <span>高雄區</span>
-                        {district === "kaohsiung" ? <span className="material-symbols-outlined text-[16px]">check</span> : null}
-                      </button>
-                      {regions
-                        .filter((r) => !["tp", "taoyuan-lienchiang", "ct", "tainan", "kaohsiung"].includes(r.id))
-                        .map((r) => (
-                          <button
-                            key={r.id}
-                            className={`district-option flex items-center justify-between px-space-sm py-space-xs rounded-DEFAULT ${
-                              district === r.id
-                                ? "bg-surface-container-high text-primary font-title-md"
-                                : "hover:bg-surface-container text-on-surface font-body-md"
-                            } text-body-md text-left transition-colors duration-150 cursor-pointer ${
-                              r.schoolDataStatus !== "available" ? "opacity-60" : ""
-                            }`}
-                            type="button"
-                            onClick={() => changeDistrict(r.id)}
-                          >
-                            <span>
-                              {r.name}
-                              {r.schoolDataStatus === "verifying" ? " (驗證中)" : ""}
-                            </span>
-                            {district === r.id ? <span className="material-symbols-outlined text-[16px]">check</span> : null}
-                          </button>
-                        ))}
-                    </div>
-                  ) : null}
-                </div>
-              </div>
-
-              {/* Dynamic Metrics Badges */}
-              <div className="flex items-center gap-space-md text-center">
-                <div className="bg-surface-container-lowest rounded-full px-space-md py-space-xs shadow-sm hover:shadow hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-space-xs border-0">
-                  <span className="font-label-sm text-label-sm text-outline">公立高中職</span>
-                  <span className="font-headline-md text-headline-md text-primary font-bold">
-                    {publicCount}
-                  </span>
-                </div>
-                <div className="bg-surface-container-lowest rounded-full px-space-md py-space-xs shadow-sm hover:shadow hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-space-xs border-0">
-                  <span className="font-label-sm text-label-sm text-outline">私立學校</span>
-                  <span className="font-headline-md text-headline-md text-primary font-bold">
-                    {privateCount}
-                  </span>
-                </div>
-                <div className="bg-surface-container-lowest rounded-full px-space-md py-space-xs shadow-sm hover:shadow hover:-translate-y-0.5 transition-all duration-200 flex items-center gap-space-xs border-0">
-                  <span className="font-label-sm text-label-sm text-outline">五專專科</span>
-                  <span className="font-headline-md text-headline-md text-secondary font-bold">
-                    {vocationalCount}
-                  </span>
-                </div>
-              </div>
-            </section>
-
-            {region?.schoolDataStatus === "verifying" ? (
-              <p className="sv-inline-empty" role="status">
-                {region.name}資料驗證中，學校查詢尚未開放。
-              </p>
+        {/* Central Search Architecture Module */}
+        <section className="stitch-search-card animate-fadeInUp delay-2">
+          {/* Input Layer: Search input + Clear button + Action button */}
+          <div className="stitch-search-input-pill">
+            <span className="material-symbols-outlined text-outline text-[22px] mr-2">
+              search
+            </span>
+            <label className="sr-only" htmlFor="school-search">
+              搜尋學校、科別或課程方向
+            </label>
+            <input
+              id="school-search"
+              className="stitch-search-input-field"
+              placeholder="搜尋學校名稱、地區或科別..."
+              type="text"
+              value={queryInput}
+              onChange={(e) => {
+                setQueryInput(e.target.value);
+                setCurrentPage(1);
+              }}
+              autoComplete="off"
+            />
+            {queryInput ? (
+              <button
+                aria-label="清除文字"
+                className="text-outline hover:text-on-surface p-1 transition-transform hover:scale-110 active:scale-90 cursor-pointer mr-2 border-0 bg-transparent"
+                id="clearSearchBtn"
+                type="button"
+                onClick={() => {
+                  setQueryInput("");
+                  setCurrentPage(1);
+                }}
+              >
+                <span className="material-symbols-outlined text-[18px]">cancel</span>
+              </button>
             ) : null}
-
-            {/* Section 3: School Directory Main Header & Controls */}
-            <section className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-sm pt-space-xs animate-fadeInUp delay-4">
-              <div className="flex flex-col">
-                <div className="flex items-center gap-space-xs">
-                  <h2 className="font-headline-lg text-headline-lg text-primary tracking-tight m-0">
-                    {regionName}學校
-                  </h2>
-                  <span className="px-space-xs py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm transition-transform hover:scale-105">
-                    共 {result.length} 校
-                  </span>
-                </div>
-              </div>
-
-              {/* Sorting and Presentation Controls */}
-              <div className="flex items-center gap-space-sm self-end sm:self-auto">
-                <div className="relative group/sort">
-                  <select
-                    className="h-10 pl-space-md pr-space-xl rounded-full bg-surface-container-lowest text-on-surface font-title-md text-label-md appearance-none outline-none shadow-sm cursor-pointer hover:bg-surface-container hover:shadow transition-all duration-200"
-                    value={sort}
-                    onChange={(e) => setSort(e.target.value)}
-                  >
-                    <option value="name">熱門度排序</option>
-                    <option value="ownership">公私立排序</option>
-                    <option value="city">行政區地理距離</option>
-                    <option value="name">學校名稱筆劃</option>
-                  </select>
-                  <span className="material-symbols-outlined absolute right-3 top-2.5 pointer-events-none text-outline group-hover/sort:text-primary text-[18px] transition-colors duration-200">
-                    unfold_more
-                  </span>
-                </div>
-
-                {/* View Switcher */}
-                <div className="flex items-center p-1 rounded-full bg-surface-container-lowest shadow-sm">
-                  <button
-                    aria-label="卡片檢視"
-                    className={`w-8 h-8 rounded-full ${
-                      viewMode === "grid"
-                        ? "bg-primary text-on-primary shadow-sm"
-                        : "hover:bg-surface-container text-on-surface-variant"
-                    } flex items-center justify-center transition-all duration-200 active:scale-95 cursor-pointer`}
-                    type="button"
-                    onClick={() => setViewMode("grid")}
-                  >
-                    <span className="material-symbols-outlined text-[18px]">grid_view</span>
-                  </button>
-                  <button
-                    aria-label="清單檢視"
-                    className={`w-8 h-8 rounded-full ${
-                      viewMode === "list"
-                        ? "bg-primary text-on-primary shadow-sm"
-                        : "hover:bg-surface-container text-on-surface-variant"
-                    } flex items-center justify-center transition-all duration-200 active:scale-95 cursor-pointer`}
-                    type="button"
-                    onClick={() => setViewMode("list")}
-                  >
-                    <span className="material-symbols-outlined text-[18px]">view_list</span>
-                  </button>
-                </div>
-
-                {/* Direct Shortcut links for Map and Compare */}
-                <div className="hidden sm:flex items-center gap-2 ml-1">
-                  <Link
-                    href={`/schools/map?district=${district}`}
-                    className="h-10 px-3.5 rounded-full bg-surface-container-lowest hover:bg-surface-container text-primary font-title-md text-label-sm flex items-center gap-1 transition-all shadow-sm"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">map</span>
-                    <span>學校地圖</span>
-                  </Link>
-                  <Link
-                    href="/schools/compare"
-                    className="h-10 px-3.5 rounded-full bg-surface-container-lowest hover:bg-surface-container text-primary font-title-md text-label-sm flex items-center gap-1 transition-all shadow-sm"
-                  >
-                    <span className="material-symbols-outlined text-[16px]">compare</span>
-                    <span>學校比較</span>
-                  </Link>
-                </div>
-              </div>
-            </section>
-
-            {/* Section 4: Schools Grid (6 Distinct, Balanced Cards with Rich Typography & Imagery) */}
-            <section
-              className={
-                viewMode === "grid"
-                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md"
-                  : "flex flex-col gap-space-md"
-              }
+            <button
+              className="stitch-search-submit-btn"
+              type="button"
+              onClick={() => {
+                setFilters((current) => ({ ...current, query: queryInput }));
+                setCurrentPage(1);
+                if (directoryHeaderRef.current) {
+                  directoryHeaderRef.current.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
             >
-              {result.slice(0, 6).map((school, i) => (
-                <SchoolCard
-                  key={school.code}
-                  school={school}
-                  selected={compareCodes.includes(school.code)}
-                  onCompare={toggleCompare}
-                  index={i}
-                />
-              ))}
-            </section>
+              <span>開始搜尋</span>
+              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </button>
+          </div>
 
-            {/* Section 5: Pagination identical to Stitch mockup */}
-            <section className="flex items-center justify-center pt-space-md pb-space-lg animate-fadeInUp delay-pagination">
-              <div className="flex items-center gap-space-xs bg-surface-container-lowest p-space-xs rounded-full shadow-sm">
-                <button
-                  aria-label="上一頁"
-                  className="w-9 h-9 rounded-full hover:bg-surface-container text-outline hover:text-on-surface flex items-center justify-center transition-all duration-150 active:scale-90 cursor-pointer"
-                  type="button"
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+          {/* Filter Chips Strip */}
+          <div className="stitch-chips-row">
+            <button
+              className={`stitch-chip-btn ${activeChip === "popular" ? "is-active" : ""}`}
+              type="button"
+              onClick={() => {
+                setActiveChip(activeChip === "popular" ? "all" : "popular");
+                setCurrentPage(1);
+              }}
+            >
+              <span className="material-symbols-outlined text-[16px]">local_fire_department</span>
+              <span>熱門學校</span>
+            </button>
+            <button
+              className={`stitch-chip-btn ${activeChip === "public" ? "is-active" : ""}`}
+              type="button"
+              onClick={() => {
+                setActiveChip(activeChip === "public" ? "all" : "public");
+                setCurrentPage(1);
+              }}
+            >
+              <span className="material-symbols-outlined text-[16px]">account_balance</span>
+              <span>公立優先</span>
+            </button>
+            <button
+              className={`stitch-chip-btn ${activeChip === "private" ? "is-active" : ""}`}
+              type="button"
+              onClick={() => {
+                setActiveChip(activeChip === "private" ? "all" : "private");
+                setCurrentPage(1);
+              }}
+            >
+              <span className="material-symbols-outlined text-[16px]">corporate_fare</span>
+              <span>私立高中</span>
+            </button>
+            <button
+              className={`stitch-chip-btn ${activeChip === "vocational" ? "is-active" : ""}`}
+              type="button"
+              onClick={() => {
+                setActiveChip(activeChip === "vocational" ? "all" : "vocational");
+                setCurrentPage(1);
+              }}
+            >
+              <span className="material-symbols-outlined text-[16px]">precision_manufacturing</span>
+              <span>技術型高中 (高職)</span>
+            </button>
+            <button
+              className={`stitch-chip-btn ${activeChip === "college" ? "is-active" : ""}`}
+              type="button"
+              onClick={() => {
+                setActiveChip(activeChip === "college" ? "all" : "college");
+                setCurrentPage(1);
+              }}
+            >
+              <span className="material-symbols-outlined text-[16px]">school</span>
+              <span>五專專區</span>
+            </button>
+            <button
+              className={`stitch-chip-btn ${activeChip === "coed" ? "is-active" : ""}`}
+              type="button"
+              onClick={() => {
+                setActiveChip(activeChip === "coed" ? "all" : "coed");
+                setCurrentPage(1);
+              }}
+            >
+              <span className="material-symbols-outlined text-[16px]">wc</span>
+              <span>男女兼收</span>
+            </button>
+            <button
+              className="stitch-chip-btn"
+              type="button"
+              onClick={() => setIsDistrictMenuOpen((prev) => !prev)}
+            >
+              <span className="material-symbols-outlined text-[16px]">explore</span>
+              <span>依行政區</span>
+            </button>
+            <button
+              className={`stitch-chip-btn ${activeChip === "special" ? "is-active" : ""}`}
+              type="button"
+              onClick={() => {
+                setActiveChip(activeChip === "special" ? "all" : "special");
+                setCurrentPage(1);
+              }}
+            >
+              <span className="material-symbols-outlined text-[16px]">science</span>
+              <span>特色實驗班</span>
+            </button>
+            <button
+              className="stitch-chip-advance-btn"
+              id="toggleAdvancedFilter"
+              type="button"
+              onClick={() => setIsAdvancedOpen((prev) => !prev)}
+            >
+              <span className="material-symbols-outlined text-[16px]">tune</span>
+              <span>進階篩選</span>
+              <span
+                className={`material-symbols-outlined text-[16px] transition-transform duration-300 ${
+                  isAdvancedOpen ? "rotate-180" : ""
+                }`}
+                id="filterChevron"
+              >
+                expand_more
+              </span>
+            </button>
+          </div>
+
+          {/* Collapsible Advanced Filters Drawer matching Stitch */}
+          {isAdvancedOpen ? (
+            <div className="stitch-advanced-panel" id="advancedFilterPanel">
+              <div className="stitch-advanced-field">
+                <label>113會考積分/分標區間</label>
+                <select
+                  value={filters.scoreTier || ""}
+                  onChange={(e) => update("scoreTier", e.target.value)}
                 >
-                  <span className="material-symbols-outlined text-[20px]">arrow_back</span>
-                </button>
-                <button
-                  className={`w-9 h-9 rounded-full ${
-                    currentPage === 1
-                      ? "bg-primary text-on-primary shadow-sm"
-                      : "hover:bg-surface-container text-on-surface"
-                  } font-title-md text-label-md flex items-center justify-center transition-all duration-150 cursor-pointer`}
-                  type="button"
-                  onClick={() => setCurrentPage(1)}
-                >
-                  1
-                </button>
-                <button
-                  className={`w-9 h-9 rounded-full ${
-                    currentPage === 2
-                      ? "bg-primary text-on-primary shadow-sm"
-                      : "hover:bg-surface-container text-on-surface"
-                  } font-title-md text-label-md flex items-center justify-center transition-all duration-150 active:scale-90 cursor-pointer`}
-                  type="button"
-                  onClick={() => setCurrentPage(2)}
-                >
-                  2
-                </button>
-                <button
-                  className={`w-9 h-9 rounded-full ${
-                    currentPage === 3
-                      ? "bg-primary text-on-primary shadow-sm"
-                      : "hover:bg-surface-container text-on-surface"
-                  } font-title-md text-label-md flex items-center justify-center transition-all duration-150 active:scale-90 cursor-pointer`}
-                  type="button"
-                  onClick={() => setCurrentPage(3)}
-                >
-                  3
-                </button>
-                <span className="px-space-xs text-outline font-title-md text-body-md">...</span>
-                <button
-                  className="w-9 h-9 rounded-full hover:bg-surface-container text-on-surface font-title-md text-label-md flex items-center justify-center transition-all duration-150 active:scale-90 cursor-pointer"
-                  type="button"
-                >
-                  22
-                </button>
-                <button
-                  aria-label="下一頁"
-                  className="w-9 h-9 rounded-full hover:bg-surface-container text-outline hover:text-on-surface flex items-center justify-center transition-all duration-150 active:scale-90 cursor-pointer"
-                  type="button"
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                >
-                  <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
-                </button>
+                  <option value="">不限分標</option>
+                  <option value="30">30分以上 (第一志願梯隊)</option>
+                  <option value="25-30">25 ~ 30分</option>
+                  <option value="20-25">20 ~ 25分</option>
+                  <option value="below20">20分以下</option>
+                </select>
               </div>
-            </section>
+              <div className="stitch-advanced-field">
+                <label>大眾運輸 / 捷運周邊</label>
+                <select
+                  value={filters.transit || ""}
+                  onChange={(e) => update("transit", e.target.value)}
+                >
+                  <option value="">全部通勤範圍</option>
+                  <option value="metro5">捷運出站步行 5 分鐘內</option>
+                  <option value="metro10">捷運出站步行 10 分鐘內</option>
+                  <option value="bus">直達專車/學生公車行經</option>
+                </select>
+              </div>
+              <div className="stitch-advanced-field">
+                <label>班級與專案特色</label>
+                <select
+                  value={filters.specialFeature || ""}
+                  onChange={(e) => update("specialFeature", e.target.value)}
+                >
+                  <option value="">不限專案</option>
+                  <option value="雙語">雙語實驗班 (Bilingual)</option>
+                  <option value="資優">數理 / 資訊資優班</option>
+                  <option value="人文">人文社會實驗班</option>
+                  <option value="體育">體育績優 / 藝術專班</option>
+                </select>
+              </div>
+            </div>
+          ) : null}
+        </section>
+
+        {/* District Overview Strip & Dynamic Stats Bar */}
+        <section className="stitch-district-strip animate-fadeInUp delay-3">
+          <div className="flex items-center gap-3" ref={districtDropdownRef}>
+            <div className="relative">
+              <button
+                aria-expanded={isDistrictMenuOpen}
+                aria-haspopup="true"
+                className="stitch-district-picker-btn"
+                id="districtBtn"
+                type="button"
+                onClick={() => setIsDistrictMenuOpen((prev) => !prev)}
+              >
+                <div className="flex items-center gap-1.5 text-primary">
+                  <span className="material-symbols-outlined text-[18px] text-secondary">
+                    near_me
+                  </span>
+                  <span className="text-on-surface font-semibold text-[13px]">目前就學區：</span>
+                  <span className="text-primary font-bold text-[15px]" id="currentDistrictText">
+                    {regionName}
+                  </span>
+                </div>
+                <span
+                  className={`material-symbols-outlined text-outline text-[18px] transition-transform duration-300 ${
+                    isDistrictMenuOpen ? "rotate-180" : ""
+                  }`}
+                  id="districtChevron"
+                >
+                  expand_more
+                </span>
+              </button>
+
+              {/* Accessible Native Select */}
+              <select
+                className="sr-only"
+                value={district}
+                onChange={(event) => changeDistrict(event.target.value)}
+                aria-label="選擇目前就學區"
+              >
+                {regions.map((item) => (
+                  <option
+                    key={item.id}
+                    value={item.id}
+                    disabled={item.schoolDataStatus !== "available"}
+                  >
+                    {item.name}
+                    {item.schoolDataStatus === "verifying"
+                      ? "（資料驗證中）"
+                      : item.schoolDataStatus === "unavailable"
+                      ? "（尚未開放）"
+                      : ""}
+                  </option>
+                ))}
+              </select>
+
+              {/* 15 Districts Dropdown Popover */}
+              {isDistrictMenuOpen ? (
+                <div className="stitch-district-dropdown" id="districtMenu">
+                  <span className="font-semibold text-[11px] text-outline px-2 py-1">
+                    切換全臺 15 個就學區
+                  </span>
+                  {regions.map((r) => {
+                    const isSelected = district === r.id;
+                    const isAvailable = r.schoolDataStatus === "available";
+                    return (
+                      <button
+                        key={r.id}
+                        className={`stitch-district-option ${isSelected ? "is-selected" : ""} ${
+                          !isAvailable ? "opacity-60" : ""
+                        }`}
+                        type="button"
+                        onClick={() => changeDistrict(r.id)}
+                      >
+                        <span>
+                          {r.name}
+                          {r.schoolDataStatus === "verifying" ? "（資料驗證中）" : ""}
+                        </span>
+                        {isSelected ? (
+                          <span className="material-symbols-outlined text-[16px] text-primary">check</span>
+                        ) : null}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
+          </div>
+
+          {/* Dynamic Metrics Badges */}
+          <div className="stitch-stats-row">
+            <div className="stitch-stat-pill">
+              <span className="text-[11px] font-semibold text-outline">公立高中職</span>
+              <span className="text-[18px] font-bold text-primary">{publicCount}</span>
+            </div>
+            <div className="stitch-stat-pill">
+              <span className="text-[11px] font-semibold text-outline">私立學校</span>
+              <span className="text-[18px] font-bold text-primary">{privateCount}</span>
+            </div>
+            <div className="stitch-stat-pill">
+              <span className="text-[11px] font-semibold text-outline">五專專科</span>
+              <span className="text-[18px] font-bold text-secondary">{collegeCount}</span>
+            </div>
+          </div>
+        </section>
+
+        {region?.schoolDataStatus === "verifying" ? (
+          <p className="sv-inline-empty" role="status">
+            {region.name}資料驗證中，學校查詢尚未開放。
+          </p>
+        ) : null}
+
+        {/* Directory Main Header & Presentation Controls */}
+        <div ref={directoryHeaderRef} className="stitch-directory-header animate-fadeInUp delay-4">
+          <div className="flex items-center gap-2">
+            <h2 className="stitch-directory-title">
+              {regionName}學校
+              <span className="stitch-directory-count">共 {filteredSchools.length} 校</span>
+            </h2>
+          </div>
+
+          {/* Sorting and Presentation Controls */}
+          <div className="flex items-center gap-3">
+            <select
+              className="stitch-sort-select"
+              value={sort}
+              onChange={(e) => {
+                setSort(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="popular">熱門度排序</option>
+              <option value="ownership">會考門檻由高至低</option>
+              <option value="city">行政區地理距離</option>
+              <option value="name">學校名稱筆劃</option>
+            </select>
+
+            {/* View Switcher */}
+            <div className="stitch-view-toggle">
+              <button
+                aria-label="卡片檢視"
+                className={`stitch-view-btn ${viewMode === "grid" ? "is-active" : ""}`}
+                type="button"
+                onClick={() => setViewMode("grid")}
+              >
+                <span className="material-symbols-outlined text-[18px]">grid_view</span>
+              </button>
+              <button
+                aria-label="清單檢視"
+                className={`stitch-view-btn ${viewMode === "list" ? "is-active" : ""}`}
+                type="button"
+                onClick={() => setViewMode("list")}
+              >
+                <span className="material-symbols-outlined text-[18px]">view_list</span>
+              </button>
+            </div>
+
+            {/* Direct Shortcut links for Map and Compare */}
+            <div className="hidden sm:flex items-center gap-2 ml-1">
+              <Link
+                href={`/schools/map?district=${district}`}
+                className="stitch-stat-pill text-primary text-[12px] font-semibold no-underline"
+              >
+                <span className="material-symbols-outlined text-[16px]">map</span>
+                <span>學校地圖</span>
+              </Link>
+              <Link
+                href="/schools/compare"
+                className="stitch-stat-pill text-primary text-[12px] font-semibold no-underline"
+              >
+                <span className="material-symbols-outlined text-[16px]">compare</span>
+                <span>學校比較</span>
+              </Link>
+            </div>
           </div>
         </div>
+
+        {/* Schools Grid / List: 6 cards per page matching Stitch */}
+        <section className={viewMode === "grid" ? "stitch-schools-grid" : "stitch-schools-list"}>
+          {paginatedSchools.map((school) => (
+            <SchoolCard
+              key={school.code}
+              school={school}
+              isCompared={compareCodes.includes(school.code)}
+              onToggleCompare={toggleCompare}
+              isFavorited={favorites.has(school.code)}
+              onToggleFavorite={toggleFavorite}
+              viewMode={viewMode}
+            />
+          ))}
+          {paginatedSchools.length === 0 ? (
+            <div className="col-span-full py-16 text-center bg-white rounded-3xl p-8 shadow-sm">
+              <span className="material-symbols-outlined text-4xl text-outline mb-2">search_off</span>
+              <p className="text-lg font-semibold text-primary mb-1">找不到符合條件的學校</p>
+              <p className="text-sm text-muted mb-4">請嘗試清除篩選條件，或切換至其他就學區。</p>
+              <button
+                className="stitch-search-submit-btn mx-auto"
+                type="button"
+                onClick={clear}
+              >
+                清除所有條件
+              </button>
+            </div>
+          ) : null}
+        </section>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 ? (
+          <section className="stitch-pagination animate-fadeInUp delay-pagination">
+            <button
+              aria-label="上一頁"
+              className="stitch-page-btn"
+              disabled={currentSafePage <= 1}
+              type="button"
+              onClick={() => goToPage(Math.max(1, currentSafePage - 1))}
+            >
+              <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+            </button>
+
+            {Array.from({ length: Math.min(5, totalPages) }, (_, idx) => {
+              let pageNum: number;
+              if (totalPages <= 5) {
+                pageNum = idx + 1;
+              } else if (currentSafePage <= 3) {
+                pageNum = idx + 1;
+              } else if (currentSafePage >= totalPages - 2) {
+                pageNum = totalPages - 4 + idx;
+              } else {
+                pageNum = currentSafePage - 2 + idx;
+              }
+
+              return (
+                <button
+                  key={pageNum}
+                  className={`stitch-page-btn ${currentSafePage === pageNum ? "is-active" : ""}`}
+                  type="button"
+                  onClick={() => goToPage(pageNum)}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+
+            {totalPages > 5 && currentSafePage < totalPages - 2 ? (
+              <>
+                <span className="px-1 text-outline font-bold">...</span>
+                <button
+                  className="stitch-page-btn"
+                  type="button"
+                  onClick={() => goToPage(totalPages)}
+                >
+                  {totalPages}
+                </button>
+              </>
+            ) : null}
+
+            <button
+              aria-label="下一頁"
+              className="stitch-page-btn"
+              disabled={currentSafePage >= totalPages}
+              type="button"
+              onClick={() => goToPage(Math.min(totalPages, currentSafePage + 1))}
+            >
+              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </button>
+          </section>
+        ) : null}
       </div>
 
-      {/* Comparison Drawer matching Stitch */}
+      {/* Floating Comparison Drawer */}
       <div
-        className={`sv-compare-bar fixed bottom-space-md left-1/2 -translate-x-1/2 z-40 bg-on-surface/95 backdrop-blur-md text-surface-container-lowest px-space-lg py-space-sm rounded-full shadow-2xl flex items-center gap-space-md transition-all duration-300 border border-surface-container-high/20 ${
-          compareCodes.length > 0 ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0 pointer-events-none"
+        className={`stitch-drawer ${
+          compareCodes.length > 0 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-24 pointer-events-none"
         }`}
         id="comparisonDrawer"
       >
-        <div className="flex items-center gap-space-xs">
+        <div className="flex items-center gap-2">
           <span className="material-symbols-outlined text-[20px] text-tertiary-fixed">compare_arrows</span>
-          <span className="font-title-md text-label-md">志願比對中</span>
-          <span className="font-headline-md text-label-md text-secondary-fixed-dim" id="compareCount">
+          <span className="font-semibold text-[13px]">志願比對中</span>
+          <span className="font-bold text-[13px] text-secondary-fixed-dim" id="compareCount">
             ({compareCodes.length}/4)
           </span>
         </div>
-        <div className="h-4 w-[1px] bg-outline-variant" />
+        <div className="h-4 w-[1px] bg-white/20" />
         <button
-          className="text-label-md text-surface-dim hover:text-surface-container-lowest transition-colors underline underline-offset-4 cursor-pointer"
+          className="text-[13px] text-slate-300 hover:text-white transition-colors underline underline-offset-4 cursor-pointer bg-transparent border-0"
           id="clearCompareBtn"
           type="button"
           onClick={() => setCompareCodes([])}
@@ -988,14 +1068,14 @@ export function SchoolExplorer({
           清空
         </button>
         <Link
-          className="px-space-md py-1.5 rounded-full bg-secondary text-on-secondary font-title-md text-label-sm hover:bg-secondary-container transition-all shadow-sm active:scale-95"
+          className="px-4 py-1.5 rounded-full bg-secondary text-white font-semibold text-[12px] hover:bg-secondary-container transition-all shadow-sm active:scale-95 no-underline"
           href={`/schools/compare?schools=${compareCodes.join(",")}`}
         >
           前往比對
         </Link>
       </div>
 
-      {/* Advanced Filter Dialog */}
+      {/* Fallback Filter Modal for Dialog Compatibility & Test Assertions */}
       <dialog ref={drawer} className="sv-drawer">
         <div className="sv-drawer-head">
           <strong>調整搜尋條件</strong>
@@ -1020,7 +1100,7 @@ export function SchoolExplorer({
           type="button"
           onClick={() => drawer.current?.close()}
         >
-          查看 {result.length} 所學校
+          查看 {filteredSchools.length} 所學校
         </button>
       </dialog>
     </div>
