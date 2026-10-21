@@ -19,4 +19,5 @@ For all UI, styling, and animation tasks:
 2. Adhere to Apple-inspired design principles: clean layout, generous whitespace, unified typography, and restrained physics-based micro-interactions.
 3. All colors, borders, shadows, radii, and typography must reference design tokens from `public/design-tokens.css`. Do not introduce ad-hoc hardcoded values.
 4. Verify responsive viewports (Desktop 1280px, Mobile 390px) and preserve accessibility (`prefers-reduced-motion` compliance).
+5. Execute the 3-phase quality acceptance loop (Visual, Functional, Code) defined in `.agents/rules/frontend-quality-workflow.md`.
 
