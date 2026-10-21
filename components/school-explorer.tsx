@@ -356,7 +356,8 @@ export function SchoolExplorer({
       ? schools
       : schools.filter((school) =>
           school.admissionDistricts.some((admissionDistrict) =>
-            admissionDistrict.includes(scopeName),
+            admissionDistrict === scopeName ||
+            (scopeName !== "基北區" && admissionDistrict.includes(scopeName)),
           ),
         );
   }, [schools, district, filters.query]);
@@ -402,9 +403,8 @@ export function SchoolExplorer({
             (token === "餐飲" && /餐旅|烘焙/.test(school.normalizedSearchText)),
         );
 
-        if (activeChip === "popular" && !popularSchoolCodes.includes(school.code)) {
-          return false;
-        }
+        // NOTE: "popular" chip is a prioritization mode, NOT an exclusive filter
+        // (preserves all schools in the district, e.g. 129 schools in 基北區).
         if (activeChip === "public" && !(school.ownership || "").includes("公立")) {
           return false;
         }
@@ -451,7 +451,7 @@ export function SchoolExplorer({
         );
       })
       .sort((a, b) => {
-        if (sort === "popular") {
+        if (sort === "popular" || activeChip === "popular") {
           const aPop = popularSchoolCodes.indexOf(a.code);
           const bPop = popularSchoolCodes.indexOf(b.code);
           if (aPop !== -1 && bPop !== -1) return aPop - bPop;
@@ -524,6 +524,26 @@ export function SchoolExplorer({
       directoryHeaderRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  const paginationItems = useMemo(() => {
+    const pages: (number | "...")[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (currentSafePage <= 2) {
+        pages.push(1, 2, 3, "...", totalPages);
+      } else if (currentSafePage === 3) {
+        pages.push(1, 2, 3, 4, "...", totalPages);
+      } else if (currentSafePage >= totalPages - 1) {
+        pages.push(1, "...", totalPages - 2, totalPages - 1, totalPages);
+      } else if (currentSafePage === totalPages - 2) {
+        pages.push(1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push(1, "...", currentSafePage - 1, currentSafePage, currentSafePage + 1, "...", totalPages);
+      }
+    }
+    return pages;
+  }, [totalPages, currentSafePage]);
 
   if (loading)
     return (
@@ -862,6 +882,23 @@ export function SchoolExplorer({
                 </div>
               ) : null}
             </div>
+
+            <div className="hidden md:flex items-center gap-2">
+              <Link
+                href={`/schools/map?district=${district}`}
+                className="stitch-stat-pill text-primary text-[12px] font-semibold no-underline"
+              >
+                <span className="material-symbols-outlined text-[16px]">map</span>
+                <span>學校地圖</span>
+              </Link>
+              <Link
+                href="/schools/compare"
+                className="stitch-stat-pill text-primary text-[12px] font-semibold no-underline"
+              >
+                <span className="material-symbols-outlined text-[16px]">compare</span>
+                <span>學校比較</span>
+              </Link>
+            </div>
           </div>
 
           {/* Dynamic Metrics Badges */}
@@ -931,24 +968,6 @@ export function SchoolExplorer({
                 <span className="material-symbols-outlined text-[18px]">view_list</span>
               </button>
             </div>
-
-            {/* Direct Shortcut links for Map and Compare */}
-            <div className="hidden sm:flex items-center gap-2 ml-1">
-              <Link
-                href={`/schools/map?district=${district}`}
-                className="stitch-stat-pill text-primary text-[12px] font-semibold no-underline"
-              >
-                <span className="material-symbols-outlined text-[16px]">map</span>
-                <span>學校地圖</span>
-              </Link>
-              <Link
-                href="/schools/compare"
-                className="stitch-stat-pill text-primary text-[12px] font-semibold no-underline"
-              >
-                <span className="material-symbols-outlined text-[16px]">compare</span>
-                <span>學校比較</span>
-              </Link>
-            </div>
           </div>
         </div>
 
@@ -994,42 +1013,22 @@ export function SchoolExplorer({
               <span className="material-symbols-outlined text-[18px]">arrow_back</span>
             </button>
 
-            {Array.from({ length: Math.min(5, totalPages) }, (_, idx) => {
-              let pageNum: number;
-              if (totalPages <= 5) {
-                pageNum = idx + 1;
-              } else if (currentSafePage <= 3) {
-                pageNum = idx + 1;
-              } else if (currentSafePage >= totalPages - 2) {
-                pageNum = totalPages - 4 + idx;
-              } else {
-                pageNum = currentSafePage - 2 + idx;
-              }
-
-              return (
+            {paginationItems.map((p, idx) =>
+              p === "..." ? (
+                <span key={`ellipsis-${idx}`} className="px-1 text-outline font-bold select-none">
+                  ...
+                </span>
+              ) : (
                 <button
-                  key={pageNum}
-                  className={`stitch-page-btn ${currentSafePage === pageNum ? "is-active" : ""}`}
+                  key={p}
+                  className={`stitch-page-btn ${currentSafePage === p ? "is-active" : ""}`}
                   type="button"
-                  onClick={() => goToPage(pageNum)}
+                  onClick={() => goToPage(p)}
                 >
-                  {pageNum}
+                  {p}
                 </button>
-              );
-            })}
-
-            {totalPages > 5 && currentSafePage < totalPages - 2 ? (
-              <>
-                <span className="px-1 text-outline font-bold">...</span>
-                <button
-                  className="stitch-page-btn"
-                  type="button"
-                  onClick={() => goToPage(totalPages)}
-                >
-                  {totalPages}
-                </button>
-              </>
-            ) : null}
+              ),
+            )}
 
             <button
               aria-label="下一頁"
