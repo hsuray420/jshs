@@ -21,6 +21,7 @@ export type SiteIconName =
   | "check"
   | "file"
   | "history"
+  | "heart"
   | "messages"
   | "route"
   | "target";
@@ -55,6 +56,8 @@ export function SiteIcon({ name, size = 20, className }: SiteIconProps) {
       return <svg {...props}><path d="M7 3.5h6l4 4V20H7a2 2 0 0 1-2-2V5.5a2 2 0 0 1 2-2Z" /><path d="M13 3.5v4h4M8.5 12h7M8.5 15.5h5" /></svg>;
     case "history":
       return <svg {...props}><path d="M4.5 12a7.5 7.5 0 1 0 2-5.1" /><path d="M4.5 5.5v3.8h3.8M12 7.5V12l3 1.8" /></svg>;
+    case "heart":
+      return <svg {...props}><path d="M20.5 8.8c0 5.1-8.5 10-8.5 10s-8.5-4.9-8.5-10A4.5 4.5 0 0 1 12 6.2a4.5 4.5 0 0 1 8.5 2.6Z" /></svg>;
     case "messages":
       return <svg {...props}><path d="M5.5 5.5h10a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3h-6l-4 3v-10a3 3 0 0 1 3-3Z" /><path d="M9 10h.01M12 10h.01M15 10h.01" /></svg>;
     case "route":
