@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { getRegionRegistry } from "@/lib/region-registry";
 import { DEFAULT_POPULAR_SCHOOLS } from "@/lib/popular-schools-data";
 import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
+import { SiteIcon } from "@/components/site-icons";
 
 export type SchoolExplorerFilters = {
   query?: string;
@@ -24,6 +25,12 @@ const normalized = (value: string) => value.toLowerCase().replaceAll("台", "臺
 const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
 const regions = getRegionRegistry();
 const defaultDistrict = "tp";
+
+type ExplorerIconName = "search" | "close" | "chevron-right" | "check" | "school" | "compare" | "chevron-down" | "more" | "sparkle" | "heart";
+
+function ExplorerIcon({ name, className }: { name: ExplorerIconName; className?: string }) {
+  return <SiteIcon name={name} size={18} className={className} />;
+}
 
 // ImageKit dynamic loader: reads from database ImageKit metadata via /api/school-image
 // "没有就没有，不要硬塞" — if no cover image exists, renders nothing.
@@ -158,9 +165,7 @@ function SchoolCard({
             type="button"
             onClick={handleFavoriteClick}
           >
-            <span className="material-symbols-outlined text-[20px]">
-              {isFavorited ? "favorite" : "favorite_border"}
-            </span>
+            <ExplorerIcon name="heart" className={isFavorited ? "text-primary" : undefined} />
           </button>
         </div>
 
@@ -199,12 +204,12 @@ function SchoolCard({
         >
           {isCompared ? (
             <>
-              <span className="material-symbols-outlined text-[16px] text-secondary">check</span>
+              <ExplorerIcon name="check" className="text-secondary" />
               <span>已加入比較</span>
             </>
           ) : (
             <>
-              <span className="material-symbols-outlined text-[16px]">add</span>
+              <ExplorerIcon name="sparkle" />
               <span>加入志願比較</span>
             </>
           )}
@@ -214,7 +219,7 @@ function SchoolCard({
           href={`/schools/${school.code}`}
         >
           <span>查看簡章</span>
-          <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+          <ExplorerIcon name="chevron-right" />
         </Link>
       </div>
     </article>
@@ -575,9 +580,6 @@ export function SchoolExplorer({
 
   return (
     <div className="sv-root stitch-portal-canvas">
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
       {/* Subtle Ambient Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[480px] bg-gradient-to-b from-secondary-fixed/30 via-surface-container-high/20 to-transparent blur-3xl pointer-events-none -z-10" />
 
@@ -598,9 +600,7 @@ export function SchoolExplorer({
         <section className="stitch-search-card animate-fadeInUp delay-2">
           {/* Input Layer: Search input + Clear button + Action button */}
           <div className="stitch-search-input-pill">
-            <span className="material-symbols-outlined text-outline text-[22px] mr-2">
-              search
-            </span>
+            <ExplorerIcon name="search" className="text-outline mr-2" />
             <label className="sr-only" htmlFor="school-search">
               搜尋學校、科別或課程方向
             </label>
@@ -627,7 +627,7 @@ export function SchoolExplorer({
                   setCurrentPage(1);
                 }}
               >
-                <span className="material-symbols-outlined text-[18px]">cancel</span>
+                <ExplorerIcon name="close" />
               </button>
             ) : null}
             <button
@@ -642,7 +642,7 @@ export function SchoolExplorer({
               }}
             >
               <span>開始搜尋</span>
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              <ExplorerIcon name="chevron-right" />
             </button>
           </div>
 
@@ -656,7 +656,7 @@ export function SchoolExplorer({
                 setCurrentPage(1);
               }}
             >
-              <span className="material-symbols-outlined text-[16px]">local_fire_department</span>
+              <ExplorerIcon name="sparkle" />
               <span>熱門學校</span>
             </button>
             <button
@@ -667,7 +667,7 @@ export function SchoolExplorer({
                 setCurrentPage(1);
               }}
             >
-              <span className="material-symbols-outlined text-[16px]">account_balance</span>
+              <ExplorerIcon name="school" />
               <span>公立優先</span>
             </button>
             <button
@@ -678,7 +678,7 @@ export function SchoolExplorer({
                 setCurrentPage(1);
               }}
             >
-              <span className="material-symbols-outlined text-[16px]">corporate_fare</span>
+              <ExplorerIcon name="school" />
               <span>私立高中</span>
             </button>
             <button
@@ -689,7 +689,7 @@ export function SchoolExplorer({
                 setCurrentPage(1);
               }}
             >
-              <span className="material-symbols-outlined text-[16px]">precision_manufacturing</span>
+              <ExplorerIcon name="sparkle" />
               <span>技術型高中 (高職)</span>
             </button>
             <button
@@ -700,7 +700,7 @@ export function SchoolExplorer({
                 setCurrentPage(1);
               }}
             >
-              <span className="material-symbols-outlined text-[16px]">school</span>
+              <ExplorerIcon name="school" />
               <span>五專專區</span>
             </button>
             <button
@@ -711,7 +711,7 @@ export function SchoolExplorer({
                 setCurrentPage(1);
               }}
             >
-              <span className="material-symbols-outlined text-[16px]">wc</span>
+              <ExplorerIcon name="compare" />
               <span>男女兼收</span>
             </button>
             <button
@@ -719,7 +719,7 @@ export function SchoolExplorer({
               type="button"
               onClick={() => setIsDistrictMenuOpen((prev) => !prev)}
             >
-              <span className="material-symbols-outlined text-[16px]">explore</span>
+              <ExplorerIcon name="search" />
               <span>依行政區</span>
             </button>
             <button
@@ -730,7 +730,7 @@ export function SchoolExplorer({
                 setCurrentPage(1);
               }}
             >
-              <span className="material-symbols-outlined text-[16px]">science</span>
+              <ExplorerIcon name="sparkle" />
               <span>特色實驗班</span>
             </button>
             <button
@@ -739,16 +739,9 @@ export function SchoolExplorer({
               type="button"
               onClick={() => setIsAdvancedOpen((prev) => !prev)}
             >
-              <span className="material-symbols-outlined text-[16px]">tune</span>
+              <ExplorerIcon name="more" />
               <span>進階篩選</span>
-              <span
-                className={`material-symbols-outlined text-[16px] transition-transform duration-300 ${
-                  isAdvancedOpen ? "rotate-180" : ""
-                }`}
-                id="filterChevron"
-              >
-                expand_more
-              </span>
+              <ExplorerIcon name="chevron-down" className={isAdvancedOpen ? "rotate-180 transition-transform duration-300" : "transition-transform duration-300"} />
             </button>
           </div>
 
@@ -810,22 +803,13 @@ export function SchoolExplorer({
                 onClick={() => setIsDistrictMenuOpen((prev) => !prev)}
               >
                 <div className="flex items-center gap-1.5 text-primary">
-                  <span className="material-symbols-outlined text-[18px] text-secondary">
-                    near_me
-                  </span>
+                  <ExplorerIcon name="search" className="text-secondary" />
                   <span className="text-on-surface font-semibold text-[13px]">目前就學區：</span>
                   <span className="text-primary font-bold text-[15px]" id="currentDistrictText">
                     {regionName}
                   </span>
                 </div>
-                <span
-                  className={`material-symbols-outlined text-outline text-[18px] transition-transform duration-300 ${
-                    isDistrictMenuOpen ? "rotate-180" : ""
-                  }`}
-                  id="districtChevron"
-                >
-                  expand_more
-                </span>
+                <ExplorerIcon name="chevron-down" className={`text-outline transition-transform duration-300 ${isDistrictMenuOpen ? "rotate-180" : ""}`} />
               </button>
 
               {/* Accessible Native Select */}
@@ -874,7 +858,7 @@ export function SchoolExplorer({
                           {r.schoolDataStatus === "verifying" ? "（資料驗證中）" : ""}
                         </span>
                         {isSelected ? (
-                          <span className="material-symbols-outlined text-[16px] text-primary">check</span>
+                          <ExplorerIcon name="check" className="text-primary" />
                         ) : null}
                       </button>
                     );
@@ -888,14 +872,14 @@ export function SchoolExplorer({
                 href={`/schools/map?district=${district}`}
                 className="stitch-stat-pill text-primary text-[12px] font-semibold no-underline"
               >
-                <span className="material-symbols-outlined text-[16px]">map</span>
+                <ExplorerIcon name="school" />
                 <span>學校地圖</span>
               </Link>
               <Link
                 href="/schools/compare"
                 className="stitch-stat-pill text-primary text-[12px] font-semibold no-underline"
               >
-                <span className="material-symbols-outlined text-[16px]">compare</span>
+                <ExplorerIcon name="compare" />
                 <span>學校比較</span>
               </Link>
             </div>
@@ -957,7 +941,7 @@ export function SchoolExplorer({
                 type="button"
                 onClick={() => setViewMode("grid")}
               >
-                <span className="material-symbols-outlined text-[18px]">grid_view</span>
+                <ExplorerIcon name="more" />
               </button>
               <button
                 aria-label="清單檢視"
@@ -965,7 +949,7 @@ export function SchoolExplorer({
                 type="button"
                 onClick={() => setViewMode("list")}
               >
-                <span className="material-symbols-outlined text-[18px]">view_list</span>
+                <ExplorerIcon name="more" />
               </button>
             </div>
           </div>
@@ -986,7 +970,7 @@ export function SchoolExplorer({
           ))}
           {paginatedSchools.length === 0 ? (
             <div className="col-span-full py-16 text-center bg-white rounded-3xl p-8 shadow-sm">
-              <span className="material-symbols-outlined text-4xl text-outline mb-2">search_off</span>
+              <ExplorerIcon name="search" className="text-outline mb-2" />
               <p className="text-lg font-semibold text-primary mb-1">找不到符合條件的學校</p>
               <p className="text-sm text-muted mb-4">請嘗試清除篩選條件，或切換至其他就學區。</p>
               <button
@@ -1010,7 +994,7 @@ export function SchoolExplorer({
               type="button"
               onClick={() => goToPage(Math.max(1, currentSafePage - 1))}
             >
-              <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+              <ExplorerIcon name="chevron-right" className="rotate-180" />
             </button>
 
             {paginationItems.map((p, idx) =>
@@ -1037,7 +1021,7 @@ export function SchoolExplorer({
               type="button"
               onClick={() => goToPage(Math.min(totalPages, currentSafePage + 1))}
             >
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              <ExplorerIcon name="chevron-right" />
             </button>
           </section>
         ) : null}
@@ -1051,7 +1035,7 @@ export function SchoolExplorer({
         id="comparisonDrawer"
       >
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-[20px] text-tertiary-fixed">compare_arrows</span>
+          <ExplorerIcon name="compare" className="text-tertiary-fixed" />
           <span className="font-semibold text-[13px]">志願比對中</span>
           <span className="font-bold text-[13px] text-secondary-fixed-dim" id="compareCount">
             ({compareCodes.length}/4)
@@ -1083,7 +1067,7 @@ export function SchoolExplorer({
             onClick={() => drawer.current?.close()}
             aria-label="關閉更多篩選"
           >
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <ExplorerIcon name="close" />
           </button>
         </div>
         <FilterPanel
