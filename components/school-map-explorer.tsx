@@ -61,7 +61,7 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
   const [mapRevision, setMapRevision] = useState(0);
   const [mobileSheetMode, setMobileSheetMode] = useState<"collapsed" | "half" | "full">("half");
 
-  const [favorites] = useState<Set<string>>(() => {
+  const [favorites, setFavorites] = useState<Set<string>>(() => {
     if (typeof window === "undefined") return new Set<string>();
     try {
       return new Set(JSON.parse(window.localStorage.getItem("jshs-favorite-schools") || "[]"));
@@ -69,6 +69,23 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
       return new Set<string>();
     }
   });
+
+  const toggleFavorite = (code: string) => {
+    setFavorites((prev) => {
+      const next = new Set(prev);
+      if (next.has(code)) {
+        next.delete(code);
+      } else {
+        next.add(code);
+      }
+      try {
+        window.localStorage.setItem("jshs-favorite-schools", JSON.stringify(Array.from(next)));
+      } catch {
+        // ignore storage errors
+      }
+      return next;
+    });
+  };
 
   const mapElement = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<LeafletMap | null>(null);
@@ -739,6 +756,19 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
                       </div>
 
                       <div className="sm-item-actions">
+                        <button
+                          type="button"
+                          className={`sm-fav-btn ${favorites.has(school.code) ? "is-active" : ""}`}
+                          aria-label={favorites.has(school.code) ? `取消收藏 ${school.name}` : `收藏 ${school.name}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleFavorite(school.code);
+                          }}
+                        >
+                          <span className="material-symbols-outlined">
+                            {favorites.has(school.code) ? "bookmark" : "bookmark_border"}
+                          </span>
+                        </button>
                         {hasCoord ? (
                           <button
                             type="button"
@@ -857,6 +887,26 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
                   <Link href={`/schools/${encodeURIComponent(activeSchool.code)}`} className="sm-primary-link">
                     查看學校詳情 →
                   </Link>
+                  <button
+                    type="button"
+                    className={`sm-preview-fav-btn ${favorites.has(activeSchool.code) ? "is-active" : ""}`}
+                    onClick={() => toggleFavorite(activeSchool.code)}
+                  >
+                    <span className="material-symbols-outlined">
+                      {favorites.has(activeSchool.code) ? "bookmark" : "bookmark_border"}
+                    </span>
+                    <span>{favorites.has(activeSchool.code) ? "已收藏" : "收藏"}</span>
+                  </button>
+                  {coordinateMap.has(activeSchool.code) ? (
+                    <button
+                      type="button"
+                      className="sm-preview-recenter-btn"
+                      onClick={() => selectSchool(activeSchool.code, true)}
+                    >
+                      <span className="material-symbols-outlined">my_location</span>
+                      <span>定位</span>
+                    </button>
+                  ) : null}
                 </div>
               </aside>
             ) : null}
