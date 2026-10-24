@@ -19,11 +19,12 @@ test("popular-schools module defines default region maps and D1 integration", as
   assert.match(lib, /export async function savePopularSchoolsMap/);
 });
 
-test("school explorer uses dynamic popular schools and updated wording", async () => {
+test("school explorer defaults to the complete district directory", async () => {
   const explorer = await read("components/school-explorer.tsx");
-  assert.match(explorer, /熱門學校/);
+  assert.match(explorer, /全部學校/);
+  assert.match(explorer, /useState<string>\("all"\)/);
   assert.doesNotMatch(explorer, /curatedPopularCodes\s*=\s*\["060322"/);
-  assert.match(explorer, /\/api\/schools\/popular/);
+  assert.doesNotMatch(explorer, /\/api\/schools\/popular/);
 });
 
 test("admin backend provides popular schools editor and navigation entries", async () => {

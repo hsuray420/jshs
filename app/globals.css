@@ -2075,33 +2075,6 @@ main.min-h-screen button:disabled { cursor: not-allowed; opacity: .55; }
 .jshs-v2-home .jshs-home-header-search { align-items:center; color:#111923; display:inline-flex; height:44px; justify-content:center; width:44px; }
 @media (max-width:760px) { .jshs-v2-home .jshs-header-inner { padding-inline:16px; }.jshs-v2-home .jshs-brand-logo { display:none; }.jshs-v2-home .jshs-brand-wordmark strong { font-size:18px; } }
 
-/* Shared page hero language: canvas-native Apple stage with ambient light diffusion */
-.jshs-feature-hero.is-schools,
-.jshs-feature-hero.is-mock-exam,
-.jshs-feature-hero.is-analytics,
-.jshs-feature-hero.is-planner,
-.jshs-feature-hero.is-schedule,
-.jshs-feature-hero.is-guide,
-.jshs-feature-hero.is-trust,
-.jshs-feature-hero.is-official,
-.jshs-feature-hero.is-other {
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-.jshs-feature-hero.is-schools h1,
-.jshs-feature-hero.is-mock-exam h1,
-.jshs-feature-hero.is-analytics h1,
-.jshs-feature-hero.is-planner h1,
-.jshs-feature-hero.is-schedule h1,
-.jshs-feature-hero.is-guide h1,
-.jshs-feature-hero.is-trust h1,
-.jshs-feature-hero.is-official h1,
-.jshs-feature-hero.is-other h1 {
-  color: #0F172A !important;
-  letter-spacing: -0.035em !important;
-}
 .jshs-feature-hero.is-schools .jshs-feature-eyebrow { color: #2563EB !important; border-color: rgba(37, 99, 235, 0.2); }
 .jshs-feature-hero.is-mock-exam .jshs-feature-eyebrow { color: #7C3AED !important; border-color: rgba(124, 58, 237, 0.2); }
 .jshs-feature-mock-exam { --brand-primary: #7c3aed; --brand-primary-hover: #6d28d9; --brand-tint: #f5f3ff; }
@@ -3211,9 +3184,7 @@ button:active:not(:disabled) {
 .jshs-delay-3 { transition-delay: 210ms; }
 .jshs-delay-4 { transition-delay: 280ms; }
 
-/* 8. Contrast and Feature Brand Protection */
-.jshs-feature-score { --brand-primary: #047857; }
-.jshs-feature-planner { --brand-primary: #c2410c; }
+/* 8. Feature page footer transition */
 
 .jshs-page-shell.jshs-feature-school > footer::before {
   content: "";
@@ -3405,5 +3376,33 @@ button:active:not(:disabled) {
   .jshs-feature-hero::before {
     animation: none !important;
     transform: none !important;
+  }
+}
+/* Keep the site-wide assistant clear of directory controls. */
+.ai-chat-root .ai-chat-floating-button {
+  align-items: center;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(255, 255, 255, .88);
+  border: .5px solid rgba(255, 255, 255, .6);
+  bottom: 28px;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, .12), 0 12px 32px -4px rgba(37, 99, 235, .16);
+  color: #2563eb;
+  height: 44px;
+  min-width: 0;
+  padding: 0 16px 0 12px;
+  right: 28px;
+  z-index: 99;
+}
+
+.ai-chat-root .ai-chat-floating-button:hover {
+  background: rgba(255, 255, 255, .96);
+  transform: translateY(-2px) scale(1.02);
+}
+
+@media (max-width: 768px) {
+  .ai-chat-root .ai-chat-floating-button {
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    right: 16px;
   }
 }

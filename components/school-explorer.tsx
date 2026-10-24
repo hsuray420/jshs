@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getRegionRegistry } from "@/lib/region-registry";
-import { DEFAULT_POPULAR_SCHOOLS } from "@/lib/popular-schools-data";
 import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
-import { SiteIcon } from "@/components/site-icons";
+import { SiteIcon, type SiteIconName } from "@/components/site-icons";
 
 export type SchoolExplorerFilters = {
   query?: string;
@@ -16,25 +15,80 @@ export type SchoolExplorerFilters = {
   program?: string;
   gender?: string;
   department?: string;
-  scoreTier?: string;
   transit?: string;
   specialFeature?: string;
 };
 
 const normalized = (value: string) => value.toLowerCase().replaceAll("台", "臺").replace(/\s/g, "");
+const POPULAR_SCHOOL_ALIASES: Record<string, string[]> = {
+  "193301": ["台中女中", "臺中女中", "中女中", "女中"],
+  "193302": ["中一中", "台中一中", "臺中一中", "一中"],
+  "194303": ["中二中", "台中二中", "臺中二中", "二中"],
+  "210305": ["南一中", "台南一中", "臺南一中"],
+  "210306": ["南女", "台南女中", "臺南女中"],
+  "210303": ["南二中", "台南二中", "臺南二中"],
+  "330301": ["師大附中", "附中"],
+  "343301": ["中山女高", "中山女中"],
+  "353301": ["建中", "建國中學", "建國高中"],
+  "353302": ["成功高中", "成功"],
+  "353303": ["北一女", "北一", "北一女中"],
+  "553301": ["雄中", "高雄中學"],
+  "573301": ["雄女", "高雄女中"],
+};
+const matchesSchoolQuery = (school: SchoolSearchIndexEntry, query: string) => {
+  if (
+    school.normalizedSearchText.includes(query) ||
+    (query === "餐飲" && /餐旅|烘焙/.test(school.normalizedSearchText))
+  ) {
+    return true;
+  }
+
+  const aliases = POPULAR_SCHOOL_ALIASES[school.code] || [];
+  if (aliases.some((alias) => normalized(alias).includes(query))) return true;
+
+  const digitMatch = query.match(/^([一二三四五六七八九])中$/);
+  return Boolean(
+    digitMatch && new RegExp(`第${digitMatch[1]}.*中`).test(normalized(school.name)),
+  );
+};
 const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
 const regions = getRegionRegistry();
 const defaultDistrict = "tp";
 
-type ExplorerIconName = "search" | "close" | "chevron-right" | "check" | "school" | "compare" | "chevron-down" | "more" | "sparkle" | "heart";
-
-function ExplorerIcon({ name, className }: { name: ExplorerIconName; className?: string }) {
-  return <SiteIcon name={name} size={18} className={className} />;
+type ExplorerIconName = SiteIconName | "grid" | "list" | "pin";
+function ExplorerIcon({ name, size = 18, className }: { name: ExplorerIconName; size?: number; className?: string }) {
+  const props = {
+    "aria-hidden": true,
+    className,
+    fill: "none",
+    height: size,
+    stroke: "currentColor",
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    strokeWidth: 1.8,
+    viewBox: "0 0 24 24",
+    width: size,
+  };
+  if (name === "grid") return <svg {...props}><rect x="4" y="4" width="6" height="6" rx="1.25" /><rect x="14" y="4" width="6" height="6" rx="1.25" /><rect x="4" y="14" width="6" height="6" rx="1.25" /><rect x="14" y="14" width="6" height="6" rx="1.25" /></svg>;
+  if (name === "list") return <svg {...props}><path d="M9 6h11M9 12h11M9 18h11" /><circle cx="4.5" cy="6" r=".5" /><circle cx="4.5" cy="12" r=".5" /><circle cx="4.5" cy="18" r=".5" /></svg>;
+  if (name === "pin") return <svg {...props}><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>;
+  return <SiteIcon name={name} size={size} className={className} />;
 }
+
 
 // ImageKit dynamic loader: reads from database ImageKit metadata via /api/school-image
 // "没有就没有，不要硬塞" — if no cover image exists, renders nothing.
-function SchoolCardImage({ code, name }: { code: string; name: string }) {
+function SchoolCardImage({
+  code,
+  name,
+  isFavorited,
+  onToggleFavorite,
+}: {
+  code: string;
+  name: string;
+  isFavorited?: boolean;
+  onToggleFavorite?: (code: string) => void;
+}) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -58,18 +112,31 @@ function SchoolCardImage({ code, name }: { code: string; name: string }) {
     };
   }, [code]);
 
-  if (!imageUrl) {
-    return null;
-  }
-
   return (
     <div className="stitch-school-card-image-wrap">
-      <img
-        className="stitch-school-card-image"
-        src={imageUrl}
-        alt={`${name}校園圖片`}
-        loading="lazy"
-      />
+      {imageUrl ? (
+        <img
+          className="stitch-school-card-image"
+          src={imageUrl}
+          alt={`${name}校園圖片`}
+          loading="lazy"
+        />
+      ) : (
+        <div className="stitch-school-card-image-fallback" role="img" aria-label={`${name}校園照片收集`}>
+          <span className="stitch-school-card-image-collection-icon" aria-hidden="true">
+            <ExplorerIcon name="school" size={18} />
+          </span>
+          <span className="stitch-school-card-image-collection-label">照片收集</span>
+        </div>
+      )}
+      <button
+        type="button"
+        className={`stitch-card-bookmark ${isFavorited ? "is-active heart-pop-anim" : ""}`}
+        aria-label={isFavorited ? "取消收藏" : "收藏學校"}
+        onClick={() => onToggleFavorite?.(code)}
+      >
+        <ExplorerIcon name="heart" size={18} className={isFavorited ? "text-primary" : undefined} />
+      </button>
     </div>
   );
 }
@@ -122,58 +189,36 @@ function FilterPanel({
 
 function SchoolCard({
   school,
-  isCompared,
-  onToggleCompare,
   isFavorited,
   onToggleFavorite,
   viewMode = "grid",
 }: {
   school: SchoolSearchIndexEntry;
-  isCompared?: boolean;
-  onToggleCompare?: (code: string) => void;
   isFavorited?: boolean;
   onToggleFavorite?: (code: string) => void;
   viewMode?: "grid" | "list";
 }) {
-  const [animatingHeart, setAnimatingHeart] = useState(false);
   const isPublic = (school.ownership || "").includes("公立");
 
   const handleFavoriteClick = () => {
-    setAnimatingHeart(true);
-    setTimeout(() => setAnimatingHeart(false), 450);
     onToggleFavorite?.(school.code);
   };
 
+  const locationText = [school.city, school.area].filter(Boolean).join(" · ");
+
   return (
-    <article className={`stitch-school-card ${viewMode === "list" ? "stitch-school-card-list" : ""}`}>
-      <div>
-        {/* Header: School Name & Favorite Heart Button */}
-        <div className="stitch-school-card-header">
-          <div className="flex items-center gap-2">
-            <span className="sv-school-card-symbol sr-only" aria-hidden="true" />
-            <h3 className="m-0">
-              <Link href={`/schools/${school.code}`} className="stitch-school-name">
-                {school.name}
-              </Link>
-            </h3>
-          </div>
-          <button
-            aria-label={isFavorited ? "取消收藏" : "加入收藏"}
-            className={`stitch-favorite-btn ${isFavorited ? "is-active" : ""} ${
-              animatingHeart ? "heart-pop-anim" : ""
-            }`}
-            type="button"
-            onClick={handleFavoriteClick}
-          >
-            <ExplorerIcon name="heart" className={isFavorited ? "text-primary" : undefined} />
-          </button>
-        </div>
+    <article className={`stitch-school-card group ${viewMode === "list" ? "stitch-school-card-list" : ""}`}>
+      <div className="flex flex-col gap-2.5">
+        <SchoolCardImage
+          code={school.code}
+          name={school.name}
+          isFavorited={isFavorited}
+          onToggleFavorite={handleFavoriteClick}
+        />
 
-        {/* Dynamic ImageKit Photo: only shown if exists in database, no fakes */}
-        <SchoolCardImage code={school.code} name={school.name} />
-
-        {/* Academic Classification Badges */}
-        <div className="stitch-school-badges">
+        <div className="stitch-school-card-content">
+          <span className="sv-school-card-symbol sr-only" aria-hidden="true" />
+          <div className="stitch-school-badges">
           <span className={`stitch-badge ${isPublic ? "stitch-badge-public" : "stitch-badge-private"}`}>
             {school.ownership || "公立"}
           </span>
@@ -183,43 +228,27 @@ function SchoolCard({
           <span className="stitch-badge stitch-badge-gender">
             {school.gender || "男女兼收"}
           </span>
-          {school.departmentNames && school.departmentNames.length > 0 ? (
-            <span className="stitch-badge stitch-badge-feature">
-              {school.departmentNames[0]}
-            </span>
-          ) : (
-            <span className="stitch-badge stitch-badge-feature">
-              科學班認證
-            </span>
-          )}
+          </div>
+          <h3 className="m-0 text-[17px] font-bold leading-snug">
+            <Link href={`/schools/${school.code}`} className="stitch-school-name">
+              {school.name}
+            </Link>
+          </h3>
+          <div className="stitch-school-address">
+            <ExplorerIcon name="pin" size={18} />
+            <span>{school.address || locationText || "地址資料依官方公開紀錄"}</span>
+          </div>
         </div>
+
       </div>
 
-      {/* Action Footer */}
       <div className="stitch-card-actions">
-        <button
-          className={`stitch-card-compare-btn ${isCompared ? "is-active" : ""}`}
-          type="button"
-          onClick={() => onToggleCompare?.(school.code)}
-        >
-          {isCompared ? (
-            <>
-              <ExplorerIcon name="check" className="text-secondary" />
-              <span>已加入比較</span>
-            </>
-          ) : (
-            <>
-              <ExplorerIcon name="sparkle" />
-              <span>加入志願比較</span>
-            </>
-          )}
-        </button>
         <Link
-          className="stitch-card-detail-btn"
+          className="stitch-card-detail-link"
           href={`/schools/${school.code}`}
         >
-          <span>查看簡章</span>
-          <ExplorerIcon name="chevron-right" />
+          <span>查看學校詳情</span>
+          <span aria-hidden="true">→</span>
         </Link>
       </div>
     </article>
@@ -229,16 +258,11 @@ function SchoolCard({
 export function SchoolExplorer({
   schools: initialSchools = [],
   initialFilters = {},
-  initialPopularConfig,
 }: {
   schools?: readonly SchoolSearchIndexEntry[];
   initialFilters?: SchoolExplorerFilters;
-  initialPopularConfig?: Record<string, string[]>;
 }) {
   const [schools, setSchools] = useState<readonly SchoolSearchIndexEntry[]>(initialSchools);
-  const [popularConfig, setPopularConfig] = useState<Record<string, string[]>>(
-    () => initialPopularConfig || DEFAULT_POPULAR_SCHOOLS,
-  );
   const [loading, setLoading] = useState(initialSchools.length === 0);
   const [loadError, setLoadError] = useState("");
   const [district, setDistrict] = useState(() => {
@@ -254,11 +278,12 @@ export function SchoolExplorer({
     ...initialFilters,
     district: initialFilters.district || defaultDistrict,
   });
-  const [activeChip, setActiveChip] = useState<string>("popular");
+  const [activeChip, setActiveChip] = useState<string>("all");
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
-  const [sort, setSort] = useState("popular");
+  const [sort, setSort] = useState("name");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [compareCodes, setCompareCodes] = useState<readonly string[]>(["353301"]); // Initialized with Jianguo High as in Stitch mockup
+  const [compareCodes, setCompareCodes] = useState<readonly string[]>([]);
+  const [showFavorites, setShowFavorites] = useState(false);
   const [favorites, setFavorites] = useState<Set<string>>(() => {
     if (typeof window !== "undefined") {
       try {
@@ -266,11 +291,11 @@ export function SchoolExplorer({
         if (saved) return new Set(JSON.parse(saved));
       } catch {}
     }
-    return new Set(["353301"]);
+    return new Set();
   });
   const [isDistrictMenuOpen, setIsDistrictMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 6;
+  const pageSize = 12;
 
   const drawer = useRef<HTMLDialogElement>(null);
   const districtDropdownRef = useRef<HTMLDivElement>(null);
@@ -323,18 +348,6 @@ export function SchoolExplorer({
     }
   }, [initialSchools]);
 
-  // Load popular schools config
-  useEffect(() => {
-    fetch("/api/schools/popular", { headers: { accept: "application/json" } })
-      .then((res) =>
-        res.ok ? (res.json() as Promise<{ popular?: Record<string, string[]> }>) : null,
-      )
-      .then((data) => {
-        if (data?.popular) setPopularConfig(data.popular);
-      })
-      .catch(() => undefined);
-  }, []);
-
   // Save district preference
   useEffect(() => {
     window.localStorage.setItem("jshs-school-district", district);
@@ -355,61 +368,28 @@ export function SchoolExplorer({
   const scopedSchools = useMemo(() => {
     if (district !== "all" && regions.find((region) => region.id === district)?.schoolDataStatus !== "available") return [];
     const scopeName = regions.find((region) => region.id === district)?.name || district;
-    return filters.query?.trim()
-      ? schools
-      : district === "all"
-      ? schools
-      : schools.filter((school) =>
-          school.admissionDistricts.some((admissionDistrict) =>
-            admissionDistrict === scopeName ||
-            (scopeName !== "基北區" && admissionDistrict.includes(scopeName)),
-          ),
-        );
-  }, [schools, district, filters.query]);
+    if (district === "all") return schools;
+    return schools.filter((school) =>
+      school.admissionDistricts.some(
+        (admissionDistrict) =>
+          admissionDistrict === scopeName ||
+          (scopeName !== "基北區" && admissionDistrict.includes(scopeName)),
+      ),
+    );
+  }, [schools, district]);
 
   // Dynamic Metrics for the selected school district
-  const publicCount = useMemo(
-    () => scopedSchools.filter((s) => (s.ownership || "").includes("公立")).length,
-    [scopedSchools],
-  );
-  const privateCount = useMemo(
-    () => scopedSchools.filter((s) => (s.ownership || "").includes("私立")).length,
-    [scopedSchools],
-  );
-  const collegeCount = useMemo(
-    () =>
-      scopedSchools.filter((s) =>
-        (s.schoolTypes || [s.schoolType]).some((t) => /五專|專科/.test(t || "")),
-      ).length,
-    [scopedSchools],
-  );
-
-  const popularSchoolCodes = useMemo(() => {
-    return (
-      popularConfig[district] ||
-      DEFAULT_POPULAR_SCHOOLS[district] ||
-      popularConfig.all ||
-      DEFAULT_POPULAR_SCHOOLS.all ||
-      []
-    );
-  }, [popularConfig, district]);
-
   // Filtered and Sorted schools
   const filteredSchools = useMemo(() => {
     return scopedSchools
+      .filter((school) => !showFavorites || favorites.has(school.code))
       .filter((school) => {
         const tokens = (filters.query || "")
           .split(/[\s、,;；]+/)
           .map(normalized)
           .filter(Boolean);
-        const queryMatch = tokens.every(
-          (token) =>
-            school.normalizedSearchText.includes(token) ||
-            (token === "餐飲" && /餐旅|烘焙/.test(school.normalizedSearchText)),
-        );
+        const queryMatch = tokens.every((token) => matchesSchoolQuery(school, token));
 
-        // NOTE: "popular" chip is a prioritization mode, NOT an exclusive filter
-        // (preserves all schools in the district, e.g. 129 schools in 基北區).
         if (activeChip === "public" && !(school.ownership || "").includes("公立")) {
           return false;
         }
@@ -423,12 +403,18 @@ export function SchoolExplorer({
           return false;
         }
         if (
+          activeChip === "comprehensive" &&
+          !(school.schoolTypes || [school.schoolType]).some((t) => /綜合/.test(t || ""))
+        ) {
+          return false;
+        }
+        if (
           activeChip === "college" &&
           !(school.schoolTypes || [school.schoolType]).some((t) => /五專|專科/.test(t || ""))
         ) {
           return false;
         }
-        if (activeChip === "coed" && school.gender !== "男女兼收" && school.gender) {
+        if (activeChip === "coed" && !/(男女|兼收|不限)/.test(school.gender || "")) {
           return false;
         }
         if (
@@ -456,14 +442,6 @@ export function SchoolExplorer({
         );
       })
       .sort((a, b) => {
-        if (sort === "popular" || activeChip === "popular") {
-          const aPop = popularSchoolCodes.indexOf(a.code);
-          const bPop = popularSchoolCodes.indexOf(b.code);
-          if (aPop !== -1 && bPop !== -1) return aPop - bPop;
-          if (aPop !== -1) return -1;
-          if (bPop !== -1) return 1;
-          return a.name.localeCompare(b.name, "zh-Hant");
-        }
         if (sort === "city") {
           return (a.city + a.area).localeCompare(b.city + b.area, "zh-Hant");
         }
@@ -472,7 +450,7 @@ export function SchoolExplorer({
         }
         return a.name.localeCompare(b.name, "zh-Hant");
       });
-  }, [scopedSchools, filters, sort, activeChip, popularSchoolCodes]);
+  }, [scopedSchools, filters, sort, activeChip, favorites, showFavorites]);
 
   const totalPages = Math.max(1, Math.ceil(filteredSchools.length / pageSize));
   const currentSafePage = Math.min(currentPage, totalPages);
@@ -488,7 +466,8 @@ export function SchoolExplorer({
 
   const clear = () => {
     setFilters((current) => ({ district: current.district }));
-    setActiveChip("popular");
+    setActiveChip("all");
+    setShowFavorites(false);
     setQueryInput("");
     setCurrentPage(1);
   };
@@ -499,15 +478,6 @@ export function SchoolExplorer({
     setIsDistrictMenuOpen(false);
     setCurrentPage(1);
   };
-
-  const toggleCompare = (code: string) =>
-    setCompareCodes((current) =>
-      current.includes(code)
-        ? current.filter((item) => item !== code)
-        : current.length < 4
-        ? [...current, code]
-        : current,
-    );
 
   const toggleFavorite = (code: string) => {
     setFavorites((prev) => {
@@ -580,84 +550,181 @@ export function SchoolExplorer({
 
   return (
     <div className="sv-root stitch-portal-canvas">
-      {/* Subtle Ambient Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[480px] bg-gradient-to-b from-secondary-fixed/30 via-surface-container-high/20 to-transparent blur-3xl pointer-events-none -z-10" />
 
       {/* Main Content Container matching Stitch 1280px Grid */}
       <div className="stitch-portal-container">
-        {/* Hero Header Section */}
+        {/* Refined Compact Apple Hero Header */}
         <header className="sv-hero border-0 bg-transparent p-0 m-0">
           <span className="sr-only">找到適合你的學校</span>
-          <section className="flex flex-col gap-2 max-w-4xl animate-fadeInUp delay-1">
-            <h1 className="stitch-hero-title">找學校</h1>
-            <p className="stitch-hero-desc">
-              探索全臺公私立高中職、五專與特色科別，精準掌握升學志願方向
-            </p>
-          </section>
-        </header>
-
-        {/* Central Search Architecture Module */}
-        <section className="stitch-search-card animate-fadeInUp delay-2">
-          {/* Input Layer: Search input + Clear button + Action button */}
-          <div className="stitch-search-input-pill">
-            <ExplorerIcon name="search" className="text-outline mr-2" />
-            <label className="sr-only" htmlFor="school-search">
-              搜尋學校、科別或課程方向
-            </label>
-            <input
-              id="school-search"
-              className="stitch-search-input-field"
-              placeholder="搜尋學校名稱、地區或科別..."
-              type="text"
-              value={queryInput}
-              onChange={(e) => {
-                setQueryInput(e.target.value);
-                setCurrentPage(1);
-              }}
-              autoComplete="off"
-            />
-            {queryInput ? (
+          <nav className="sr-only" aria-label="學校工具入口">
+            <Link href={`/schools/map?district=${district}`}>學校地圖</Link>
+            <Link href="/schools/compare">志願比對</Link>
+          </nav>
+          <div className="stitch-hero-wrap animate-fadeInUp delay-1">
+            <div className="stitch-page-header flex flex-col md:flex-row md:items-end justify-between gap-5">
+              <div className="stitch-hero-copy">
+                <div className="stitch-hero-eyebrow">
+                  <ExplorerIcon name="book" size={18} />
+                  <span>找學校</span>
+                </div>
+                <h1 className="stitch-hero-title">精準找到你要的學校</h1>
+              </div>
               <button
-                aria-label="清除文字"
-                className="text-outline hover:text-on-surface p-1 transition-transform hover:scale-110 active:scale-90 cursor-pointer mr-2 border-0 bg-transparent"
-                id="clearSearchBtn"
                 type="button"
+                aria-pressed={showFavorites}
+                className={`stitch-favorites-pill ${showFavorites ? "is-active" : ""}`}
                 onClick={() => {
-                  setQueryInput("");
+                  setShowFavorites((current) => !current);
                   setCurrentPage(1);
                 }}
               >
-                <ExplorerIcon name="close" />
+                <ExplorerIcon name="heart" size={18} />
+                <span>{showFavorites ? "顯示全部學校" : "查看已收藏學校"}</span>
+                <strong>{favorites.size} 所</strong>
               </button>
-            ) : null}
-            <button
-              className="stitch-search-submit-btn"
-              type="button"
-              onClick={() => {
-                setFilters((current) => ({ ...current, query: queryInput }));
-                setCurrentPage(1);
-                if (directoryHeaderRef.current) {
-                  directoryHeaderRef.current.scrollIntoView({ behavior: "smooth" });
-                }
-              }}
-            >
-              <span>開始搜尋</span>
-              <ExplorerIcon name="chevron-right" />
-            </button>
+            </div>
+          </div>
+        </header>
+
+        {/* Unified Search & Discovery Console */}
+        <section className="stitch-search-card animate-fadeInUp delay-2">
+          {/* Top Row: Search Input + Embedded District Picker */}
+          <div className="stitch-search-top-row">
+            {/* Search Input Layer */}
+            <div className="stitch-search-input-pill">
+              <ExplorerIcon name="search" size={20} className="text-slate-400 text-[20px] mr-2" />
+              <label className="sr-only" htmlFor="school-search">
+                搜尋學校、科別或課程方向
+              </label>
+              <input
+                id="school-search"
+                className="stitch-search-input-field"
+                placeholder="搜尋學校名稱、地區或科別（例如：建國中學、商業經營...）"
+                type="text"
+                value={queryInput}
+                onChange={(e) => {
+                  setQueryInput(e.target.value);
+                  setCurrentPage(1);
+                }}
+                autoComplete="off"
+              />
+              {queryInput ? (
+                <button
+                  aria-label="清除文字"
+                  className="text-slate-400 hover:text-slate-600 p-1 transition-transform hover:scale-110 active:scale-90 cursor-pointer mr-2 border-0 bg-transparent"
+                  id="clearSearchBtn"
+                  type="button"
+                  onClick={() => {
+                    setQueryInput("");
+                    setCurrentPage(1);
+                  }}
+                >
+                  <ExplorerIcon name="close" size={18} className="text-[18px]" />
+                </button>
+              ) : null}
+              <button
+                className="stitch-search-submit-btn"
+                type="button"
+                onClick={() => {
+                  setFilters((current) => ({ ...current, query: queryInput }));
+                  setCurrentPage(1);
+                  if (directoryHeaderRef.current) {
+                    directoryHeaderRef.current.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+                <span>搜尋</span>
+                <ExplorerIcon name="chevron-right" size={16} className="text-[16px]" />
+              </button>
+            </div>
+
+            {/* Embedded District Picker with Popover */}
+            <div className="relative shrink-0" ref={districtDropdownRef}>
+              <button
+                aria-expanded={isDistrictMenuOpen}
+                aria-haspopup="true"
+                className="stitch-district-picker-btn"
+                id="districtBtn"
+                type="button"
+                onClick={() => setIsDistrictMenuOpen((prev) => !prev)}
+              >
+                <ExplorerIcon name="route" size={17} className="text-[17px] text-blue-600" />
+                <span className="text-slate-500 font-medium text-[12px]">就學區：</span>
+                <span className="text-slate-900 font-bold text-[14px]" id="currentDistrictText">
+                  {regionName}
+                </span>
+                <ExplorerIcon name="chevron-down" size={16} className={`text-slate-400 text-[16px] transition-transform duration-200 ${ isDistrictMenuOpen ? "rotate-180" : "" }`} />
+              </button>
+
+              {/* Accessible Native Select */}
+              <select
+                className="sr-only"
+                value={district}
+                onChange={(event) => changeDistrict(event.target.value)}
+                aria-label="選擇目前就學區"
+              >
+                {regions.map((item) => (
+                  <option
+                    key={item.id}
+                    value={item.id}
+                    disabled={item.schoolDataStatus !== "available"}
+                  >
+                    {item.name}
+                    {item.schoolDataStatus === "verifying"
+                      ? "（資料驗證中）"
+                      : item.schoolDataStatus === "unavailable"
+                      ? "（尚未開放）"
+                      : ""}
+                  </option>
+                ))}
+              </select>
+
+              {/* 15 Districts Dropdown Popover */}
+              {isDistrictMenuOpen ? (
+                <div className="stitch-district-dropdown" id="districtMenu">
+                  <span className="font-semibold text-[11px] text-slate-400 px-2 py-1">
+                    切換全臺 15 個就學區
+                  </span>
+                  {regions.map((r) => {
+                    const isSelected = district === r.id;
+                    const isAvailable = r.schoolDataStatus === "available";
+                    return (
+                      <button
+                        key={r.id}
+                        className={`stitch-district-option ${isSelected ? "is-selected" : ""} ${
+                          !isAvailable ? "opacity-60" : ""
+                        }`}
+                        type="button"
+                        onClick={() => changeDistrict(r.id)}
+                      >
+                        <span>
+                          {r.name}
+                          {r.schoolDataStatus === "verifying" ? "（資料驗證中）" : ""}
+                        </span>
+                        {isSelected ? (
+                          <ExplorerIcon name="check" size={16} className="text-[16px] text-blue-600" />
+                        ) : null}
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
           </div>
 
-          {/* Filter Chips Strip */}
+          {/* Categorized Filter Chips Strip */}
           <div className="stitch-chips-row">
             <button
-              className={`stitch-chip-btn ${activeChip === "popular" ? "is-active" : ""}`}
+              className={`stitch-chip-btn ${activeChip === "all" ? "is-active" : ""}`}
               type="button"
               onClick={() => {
-                setActiveChip(activeChip === "popular" ? "all" : "popular");
+                setActiveChip("all");
+                setShowFavorites(false);
                 setCurrentPage(1);
               }}
             >
-              <ExplorerIcon name="sparkle" />
-              <span>熱門學校</span>
+              <ExplorerIcon name="grid" size={15} className="text-[15px]" />
+              <span>全部學校</span>
             </button>
             <button
               className={`stitch-chip-btn ${activeChip === "public" ? "is-active" : ""}`}
@@ -667,8 +734,8 @@ export function SchoolExplorer({
                 setCurrentPage(1);
               }}
             >
-              <ExplorerIcon name="school" />
-              <span>公立優先</span>
+              <ExplorerIcon name="school" size={15} className="text-[15px]" />
+              <span>公立高中</span>
             </button>
             <button
               className={`stitch-chip-btn ${activeChip === "private" ? "is-active" : ""}`}
@@ -678,7 +745,7 @@ export function SchoolExplorer({
                 setCurrentPage(1);
               }}
             >
-              <ExplorerIcon name="school" />
+              <ExplorerIcon name="school" size={15} className="text-[15px]" />
               <span>私立高中</span>
             </button>
             <button
@@ -689,38 +756,19 @@ export function SchoolExplorer({
                 setCurrentPage(1);
               }}
             >
-              <ExplorerIcon name="sparkle" />
+              <ExplorerIcon name="sparkle" size={15} className="text-[15px]" />
               <span>技術型高中 (高職)</span>
             </button>
             <button
-              className={`stitch-chip-btn ${activeChip === "college" ? "is-active" : ""}`}
+              className={`stitch-chip-btn ${activeChip === "comprehensive" ? "is-active" : ""}`}
               type="button"
               onClick={() => {
-                setActiveChip(activeChip === "college" ? "all" : "college");
+                setActiveChip(activeChip === "comprehensive" ? "all" : "comprehensive");
                 setCurrentPage(1);
               }}
             >
-              <ExplorerIcon name="school" />
-              <span>五專專區</span>
-            </button>
-            <button
-              className={`stitch-chip-btn ${activeChip === "coed" ? "is-active" : ""}`}
-              type="button"
-              onClick={() => {
-                setActiveChip(activeChip === "coed" ? "all" : "coed");
-                setCurrentPage(1);
-              }}
-            >
-              <ExplorerIcon name="compare" />
-              <span>男女兼收</span>
-            </button>
-            <button
-              className="stitch-chip-btn"
-              type="button"
-              onClick={() => setIsDistrictMenuOpen((prev) => !prev)}
-            >
-              <ExplorerIcon name="search" />
-              <span>依行政區</span>
+              <ExplorerIcon name="book" size={15} className="text-[15px]" />
+              <span>綜合高中</span>
             </button>
             <button
               className={`stitch-chip-btn ${activeChip === "special" ? "is-active" : ""}`}
@@ -730,8 +778,19 @@ export function SchoolExplorer({
                 setCurrentPage(1);
               }}
             >
-              <ExplorerIcon name="sparkle" />
+              <ExplorerIcon name="sparkle" size={15} className="text-[15px]" />
               <span>特色實驗班</span>
+            </button>
+            <button
+              className={`stitch-chip-btn ${activeChip === "college" ? "is-active" : ""}`}
+              type="button"
+              onClick={() => {
+                setActiveChip(activeChip === "college" ? "all" : "college");
+                setCurrentPage(1);
+              }}
+            >
+              <ExplorerIcon name="school" size={15} className="text-[15px]" />
+              <span>五專專區</span>
             </button>
             <button
               className="stitch-chip-advance-btn"
@@ -739,28 +798,14 @@ export function SchoolExplorer({
               type="button"
               onClick={() => setIsAdvancedOpen((prev) => !prev)}
             >
-              <ExplorerIcon name="more" />
-              <span>進階篩選</span>
-              <ExplorerIcon name="chevron-down" className={isAdvancedOpen ? "rotate-180 transition-transform duration-300" : "transition-transform duration-300"} />
+              <ExplorerIcon name="more" size={15} className="text-[15px]" />
+              <span>更多篩選</span>
             </button>
           </div>
 
-          {/* Collapsible Advanced Filters Drawer matching Stitch */}
+          {/* Collapsible Advanced Filters Drawer */}
           {isAdvancedOpen ? (
-            <div className="stitch-advanced-panel" id="advancedFilterPanel">
-              <div className="stitch-advanced-field">
-                <label>113會考積分/分標區間</label>
-                <select
-                  value={filters.scoreTier || ""}
-                  onChange={(e) => update("scoreTier", e.target.value)}
-                >
-                  <option value="">不限分標</option>
-                  <option value="30">30分以上 (第一志願梯隊)</option>
-                  <option value="25-30">25 ~ 30分</option>
-                  <option value="20-25">20 ~ 25分</option>
-                  <option value="below20">20分以下</option>
-                </select>
-              </div>
+            <div className="stitch-advanced-panel stitch-advanced-dropdown" id="advancedFilterPanel">
               <div className="stitch-advanced-field">
                 <label>大眾運輸 / 捷運周邊</label>
                 <select
@@ -790,135 +835,22 @@ export function SchoolExplorer({
           ) : null}
         </section>
 
-        {/* District Overview Strip & Dynamic Stats Bar */}
-        <section className="stitch-district-strip animate-fadeInUp delay-3">
-          <div className="flex items-center gap-3" ref={districtDropdownRef}>
-            <div className="relative">
-              <button
-                aria-expanded={isDistrictMenuOpen}
-                aria-haspopup="true"
-                className="stitch-district-picker-btn"
-                id="districtBtn"
-                type="button"
-                onClick={() => setIsDistrictMenuOpen((prev) => !prev)}
-              >
-                <div className="flex items-center gap-1.5 text-primary">
-                  <ExplorerIcon name="search" className="text-secondary" />
-                  <span className="text-on-surface font-semibold text-[13px]">目前就學區：</span>
-                  <span className="text-primary font-bold text-[15px]" id="currentDistrictText">
-                    {regionName}
-                  </span>
-                </div>
-                <ExplorerIcon name="chevron-down" className={`text-outline transition-transform duration-300 ${isDistrictMenuOpen ? "rotate-180" : ""}`} />
-              </button>
-
-              {/* Accessible Native Select */}
-              <select
-                className="sr-only"
-                value={district}
-                onChange={(event) => changeDistrict(event.target.value)}
-                aria-label="選擇目前就學區"
-              >
-                {regions.map((item) => (
-                  <option
-                    key={item.id}
-                    value={item.id}
-                    disabled={item.schoolDataStatus !== "available"}
-                  >
-                    {item.name}
-                    {item.schoolDataStatus === "verifying"
-                      ? "（資料驗證中）"
-                      : item.schoolDataStatus === "unavailable"
-                      ? "（尚未開放）"
-                      : ""}
-                  </option>
-                ))}
-              </select>
-
-              {/* 15 Districts Dropdown Popover */}
-              {isDistrictMenuOpen ? (
-                <div className="stitch-district-dropdown" id="districtMenu">
-                  <span className="font-semibold text-[11px] text-outline px-2 py-1">
-                    切換全臺 15 個就學區
-                  </span>
-                  {regions.map((r) => {
-                    const isSelected = district === r.id;
-                    const isAvailable = r.schoolDataStatus === "available";
-                    return (
-                      <button
-                        key={r.id}
-                        className={`stitch-district-option ${isSelected ? "is-selected" : ""} ${
-                          !isAvailable ? "opacity-60" : ""
-                        }`}
-                        type="button"
-                        onClick={() => changeDistrict(r.id)}
-                      >
-                        <span>
-                          {r.name}
-                          {r.schoolDataStatus === "verifying" ? "（資料驗證中）" : ""}
-                        </span>
-                        {isSelected ? (
-                          <ExplorerIcon name="check" className="text-primary" />
-                        ) : null}
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : null}
-            </div>
-
-            <div className="hidden md:flex items-center gap-2">
-              <Link
-                href={`/schools/map?district=${district}`}
-                className="stitch-stat-pill text-primary text-[12px] font-semibold no-underline"
-              >
-                <ExplorerIcon name="school" />
-                <span>學校地圖</span>
-              </Link>
-              <Link
-                href="/schools/compare"
-                className="stitch-stat-pill text-primary text-[12px] font-semibold no-underline"
-              >
-                <ExplorerIcon name="compare" />
-                <span>學校比較</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Dynamic Metrics Badges */}
-          <div className="stitch-stats-row">
-            <div className="stitch-stat-pill">
-              <span className="text-[11px] font-semibold text-outline">公立高中職</span>
-              <span className="text-[18px] font-bold text-primary">{publicCount}</span>
-            </div>
-            <div className="stitch-stat-pill">
-              <span className="text-[11px] font-semibold text-outline">私立學校</span>
-              <span className="text-[18px] font-bold text-primary">{privateCount}</span>
-            </div>
-            <div className="stitch-stat-pill">
-              <span className="text-[11px] font-semibold text-outline">五專專科</span>
-              <span className="text-[18px] font-bold text-secondary">{collegeCount}</span>
-            </div>
-          </div>
-        </section>
-
         {region?.schoolDataStatus === "verifying" ? (
           <p className="sv-inline-empty" role="status">
             {region.name}資料驗證中，學校查詢尚未開放。
           </p>
         ) : null}
 
-        {/* Directory Main Header & Presentation Controls */}
-        <div ref={directoryHeaderRef} className="stitch-directory-header animate-fadeInUp delay-4">
-          <div className="flex items-center gap-2">
-            <h2 className="stitch-directory-title">
-              {regionName}學校
-              <span className="stitch-directory-count">共 {filteredSchools.length} 校</span>
-            </h2>
+        {/* Directory Sub-Header & Live Metrics */}
+        <div ref={directoryHeaderRef} className="stitch-directory-header animate-fadeInUp delay-3">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+            <p className="stitch-directory-count">
+              共找到 <strong>{filteredSchools.length}</strong> 所符合學校
+            </p>
           </div>
 
-          {/* Sorting and Presentation Controls */}
-          <div className="flex items-center gap-3">
+          {/* Presentation and Sorting Controls */}
+          <div className="flex items-center gap-2.5">
             <select
               className="stitch-sort-select"
               value={sort}
@@ -926,11 +858,11 @@ export function SchoolExplorer({
                 setSort(e.target.value);
                 setCurrentPage(1);
               }}
+              aria-label="排序方式"
             >
-              <option value="popular">熱門度排序</option>
-              <option value="ownership">會考門檻由高至低</option>
+              <option value="name">依學校名稱筆畫</option>
               <option value="city">行政區地理距離</option>
-              <option value="name">學校名稱筆劃</option>
+              <option value="ownership">會考門檻由高至低</option>
             </select>
 
             {/* View Switcher */}
@@ -941,7 +873,7 @@ export function SchoolExplorer({
                 type="button"
                 onClick={() => setViewMode("grid")}
               >
-                <ExplorerIcon name="more" />
+                <ExplorerIcon name="grid" size={18} className="text-[18px]" />
               </button>
               <button
                 aria-label="清單檢視"
@@ -949,7 +881,7 @@ export function SchoolExplorer({
                 type="button"
                 onClick={() => setViewMode("list")}
               >
-                <ExplorerIcon name="more" />
+                <ExplorerIcon name="list" size={18} className="text-[18px]" />
               </button>
             </div>
           </div>
@@ -961,8 +893,6 @@ export function SchoolExplorer({
             <SchoolCard
               key={school.code}
               school={school}
-              isCompared={compareCodes.includes(school.code)}
-              onToggleCompare={toggleCompare}
               isFavorited={favorites.has(school.code)}
               onToggleFavorite={toggleFavorite}
               viewMode={viewMode}
@@ -970,7 +900,7 @@ export function SchoolExplorer({
           ))}
           {paginatedSchools.length === 0 ? (
             <div className="col-span-full py-16 text-center bg-white rounded-3xl p-8 shadow-sm">
-              <ExplorerIcon name="search" className="text-outline mb-2" />
+              <ExplorerIcon name="search" size={36} className="text-outline mb-2" />
               <p className="text-lg font-semibold text-primary mb-1">找不到符合條件的學校</p>
               <p className="text-sm text-muted mb-4">請嘗試清除篩選條件，或切換至其他就學區。</p>
               <button
@@ -994,7 +924,7 @@ export function SchoolExplorer({
               type="button"
               onClick={() => goToPage(Math.max(1, currentSafePage - 1))}
             >
-              <ExplorerIcon name="chevron-right" className="rotate-180" />
+              <ExplorerIcon name="chevron-right" size={18} className="text-[18px] rotate-180" />
             </button>
 
             {paginationItems.map((p, idx) =>
@@ -1021,10 +951,19 @@ export function SchoolExplorer({
               type="button"
               onClick={() => goToPage(Math.min(totalPages, currentSafePage + 1))}
             >
-              <ExplorerIcon name="chevron-right" />
+              <ExplorerIcon name="chevron-right" size={18} className="text-[18px]" />
             </button>
           </section>
         ) : null}
+
+        <aside className="stitch-trust-callout" aria-label="教育部公開資料規範">
+          <ExplorerIcon name="shield" size={18} />
+          <div>
+            <strong>教育部主管機關公開資料規範</strong>
+            <p>本網站目前依教育部與各招生區官方公開資料整理，學校資訊、核校狀態與資料來源均以公開紀錄為準。</p>
+          </div>
+          <Link href="/trust/sources">校核記錄</Link>
+        </aside>
       </div>
 
       {/* Floating Comparison Drawer */}
@@ -1035,7 +974,7 @@ export function SchoolExplorer({
         id="comparisonDrawer"
       >
         <div className="flex items-center gap-2">
-          <ExplorerIcon name="compare" className="text-tertiary-fixed" />
+          <ExplorerIcon name="compare" size={20} className="text-[20px] text-tertiary-fixed" />
           <span className="font-semibold text-[13px]">志願比對中</span>
           <span className="font-bold text-[13px] text-secondary-fixed-dim" id="compareCount">
             ({compareCodes.length}/4)
@@ -1067,7 +1006,7 @@ export function SchoolExplorer({
             onClick={() => drawer.current?.close()}
             aria-label="關閉更多篩選"
           >
-            <ExplorerIcon name="close" />
+            <ExplorerIcon name="close" size={20} className="text-[20px]" />
           </button>
         </div>
         <FilterPanel
