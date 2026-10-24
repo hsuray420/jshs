@@ -649,19 +649,53 @@
 }
 
 /* ------------------------------------------------------------------
-   15. DESKTOP NAVIGATION — Apple-style Calibrated Interaction
-   Emil: press feedback (scale 0.97), subtle pill hover, crisp dark text,
-   gliding slide-down entrance, and immersive backdrop
+   15. DESKTOP NAVIGATION — Apple-style Calibrated Interaction & Layout
+   Emil: press feedback (scale 0.96), subtle pill hover, crisp dark text,
+   gliding slide-down entrance, proportional spacing without collision
    ------------------------------------------------------------------ */
+
+/* Brand & utilities containment: prevent navigation overflow from ever colliding */
+.jshs-site-header .jshs-brand,
+.jshs-v2-home .jshs-brand {
+  margin-right: 24px !important;
+  flex-shrink: 0 !important;
+  position: relative;
+  z-index: 2;
+}
+
+.jshs-site-header .jshs-header-utilities,
+.jshs-v2-home .jshs-header-utilities {
+  margin-left: 20px !important;
+  flex-shrink: 0 !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* Apple-calibrated desktop navigation bar:
+   Tightens excessive gap (28px -> 6-10px) and eliminates overflow collision */
+.jshs-site-header .jshs-desktop-nav,
+.jshs-v2-home .jshs-desktop-nav {
+  gap: clamp(4px, 0.65vw, 10px) !important;
+  justify-content: center !important;
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
 
 .jshs-desktop-more {
   position: relative;
+  flex-shrink: 0;
 }
 
 /* Nav button: calibrated Apple-style pill bounding box */
-.jshs-site-header .jshs-desktop-more > button {
+.jshs-site-header .jshs-desktop-more > button,
+.jshs-v2-home .jshs-desktop-more > button {
   border-radius: 9999px !important;
-  padding: 8px 12px !important;
+  padding: 6px 9px !important;
+  font-size: 13.5px !important;
+  gap: 4px !important;
+  height: 36px !important;
+  min-height: 36px !important;
   color: #475569 !important;
   font-weight: 560 !important;
   letter-spacing: -0.01em;
@@ -675,7 +709,8 @@
 
 /* Hover: distinct text darkening + frosted pill background (clear selection, never jarring) */
 @media (hover: hover) and (pointer: fine) {
-  .jshs-site-header .jshs-desktop-more > button:hover {
+  .jshs-site-header .jshs-desktop-more > button:hover,
+  .jshs-v2-home .jshs-desktop-more > button:hover {
     color: #0f172a !important;
     background-color: rgba(15, 23, 42, 0.055) !important;
     transform: translateY(-0.5px);
@@ -683,19 +718,22 @@
 }
 
 /* Open state: refined slightly deeper pill */
-.jshs-site-header .jshs-desktop-more.is-open > button {
+.jshs-site-header .jshs-desktop-more.is-open > button,
+.jshs-v2-home .jshs-desktop-more.is-open > button {
   color: #0f172a !important;
   background-color: rgba(15, 23, 42, 0.08) !important;
 }
 
 /* Active current route */
-.jshs-site-header .jshs-desktop-more.is-current > button {
+.jshs-site-header .jshs-desktop-more.is-current > button,
+.jshs-v2-home .jshs-desktop-more.is-current > button {
   color: #2563eb !important;
   font-weight: 600 !important;
 }
 
 /* Press feedback per Emil */
-.jshs-site-header .jshs-desktop-more > button:active {
+.jshs-site-header .jshs-desktop-more > button:active,
+.jshs-v2-home .jshs-desktop-more > button:active {
   transform: scale(0.96) !important;
 }
 
@@ -715,6 +753,17 @@
   transform-origin: top center;
   will-change: transform, opacity;
   animation: sa-mega-menu-slide-down 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Emil: invisible safe hover bridge between trigger and dropdown panel */
+.jshs-nav-mega-panel::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 0;
+  right: 0;
+  height: 14px;
+  pointer-events: auto;
 }
 
 /* Cascading entrance for sections inside the mega dropdown */
