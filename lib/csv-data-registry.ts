@@ -1,40 +1,20 @@
 /**
- * Single Source of Truth CSV Data Registry
+ * 4 大功能獨立分割槽 (Segmented Slots) 資料登錄中心
  * 
- * Maps front-end features directly to their canonical GitHub CSV files:
- * 1. 【找學校】15 就學區學校主檔 (data/schools_master.csv & data/schools/*.csv)
- * 2. 【學校地圖】學校座標檔 (data/school_coordinates.csv)
- * 3. 【歷年錄取成績】落點分數庫 (data/admission_scores.csv)
- * 4. 【學長姐分享】已審核經驗分享 (data/senior_shares.csv)
+ * 全站依功能強制切分為 4 個獨立分割槽，絕不將資料雜揉或自製肥大總表：
+ * 
+ * 1. 【找學校】15 就學區獨立 CSV 槽 (15 District Slots)：
+ *    直接讀取 content/schools/regions/ 下 15 區獨立 CSV，一區一檔，改哪一區就只動該區。
+ * 2. 【學校地圖】經緯度座標 CSV 槽：
+ *    data/school_coordinates.csv（TGOS 與地政核對經緯度 538 筆）
+ * 3. 【歷年錄取成績】分數落點 CSV 槽：
+ *    data/admission_scores.csv（44 筆歷年會考錄取標準）
+ * 4. 【學長姐分享】經驗分享 CSV 與稽核槽：
+ *    data/senior_shares.csv（經管理員後台核准之真實經驗分享）
  */
 
-export type CsvDataSource = Readonly<{
-  id: string;
-  name: string;
-  featureName: string;
-  featureHref: string;
-  fileName: string;
-  filePath: string;
-  rowCount: number;
-  columnsCount: number;
-  lastUpdated: string;
-  status: "active" | "verifying";
-  description: string;
-  githubEditUrl: string;
-  githubRawUrl: string;
-  districtSubFiles?: readonly Readonly<{
-    id: string;
-    name: string;
-    fileName: string;
-    filePath: string;
-    rowCount: number;
-    status: "available" | "verifying";
-    githubEditUrl: string;
-  }>[];
-}>;
-
-const GITHUB_REPO_BASE = "https://github.com/hsuray420/jshs";
-const GITHUB_BRANCH = "main";
+export const GITHUB_REPO_BASE = "https://github.com/hsuray420/jshs";
+export const GITHUB_BRANCH = "main";
 
 export const getGitHubEditUrl = (path: string) =>
   `${GITHUB_REPO_BASE}/edit/${GITHUB_BRANCH}/${path.replace(/^\//, "")}`;
@@ -42,92 +22,230 @@ export const getGitHubEditUrl = (path: string) =>
 export const getGitHubRawUrl = (path: string) =>
   `${GITHUB_REPO_BASE}/blob/${GITHUB_BRANCH}/${path.replace(/^\//, "")}`;
 
-export const DISTRICT_CSV_FILES = [
-  { id: "tp", name: "基北區", fileName: "01_tp_基北區.csv", filePath: "data/schools/01_tp_基北區.csv", rowCount: 135, status: "available" as const },
-  { id: "taoyuan-lienchiang", name: "桃連區", fileName: "02_taoyuan-lienchiang_桃連區.csv", filePath: "data/schools/02_taoyuan-lienchiang_桃連區.csv", rowCount: 50, status: "available" as const },
-  { id: "hsinchu-miaoli", name: "竹苗區", fileName: "03_hsinchu-miaoli_竹苗區.csv", filePath: "data/schools/03_hsinchu-miaoli_竹苗區.csv", rowCount: 39, status: "available" as const },
-  { id: "ct", name: "中投區", fileName: "04_ct_中投區.csv", filePath: "data/schools/04_ct_中投區.csv", rowCount: 96, status: "available" as const },
-  { id: "kaohsiung", name: "高雄區", fileName: "05_kaohsiung_高雄區.csv", filePath: "data/schools/05_kaohsiung_高雄區.csv", rowCount: 53, status: "available" as const },
-  { id: "changhua", name: "彰化區", fileName: "06_changhua_彰化區.csv", filePath: "data/schools/06_changhua_彰化區.csv", rowCount: 49, status: "available" as const },
-  { id: "yunlin", name: "雲林區", fileName: "07_yunlin_雲林區.csv", filePath: "data/schools/07_yunlin_雲林區.csv", rowCount: 22, status: "verifying" as const },
-  { id: "chiayi", name: "嘉義區", fileName: "08_chiayi_嘉義區.csv", filePath: "data/schools/08_chiayi_嘉義區.csv", rowCount: 21, status: "verifying" as const },
-  { id: "tainan", name: "臺南區", fileName: "09_tainan_臺南區.csv", filePath: "data/schools/09_tainan_臺南區.csv", rowCount: 73, status: "available" as const },
-  { id: "pingtung", name: "屏東區", fileName: "10_pingtung_屏東區.csv", filePath: "data/schools/10_pingtung_屏東區.csv", rowCount: 23, status: "verifying" as const },
-  { id: "ilan", name: "宜蘭區", fileName: "11_ilan_宜蘭區.csv", filePath: "data/schools/11_ilan_宜蘭區.csv", rowCount: 12, status: "verifying" as const },
-  { id: "hualien", name: "花蓮區", fileName: "12_hualien_花蓮區.csv", filePath: "data/schools/12_hualien_花蓮區.csv", rowCount: 16, status: "verifying" as const },
-  { id: "taitung", name: "臺東區", fileName: "13_taitung_臺東區.csv", filePath: "data/schools/13_taitung_臺東區.csv", rowCount: 11, status: "verifying" as const },
-  { id: "penghu", name: "澎湖區", fileName: "14_penghu_澎湖區.csv", filePath: "data/schools/14_penghu_澎湖區.csv", rowCount: 2, status: "verifying" as const },
-  { id: "kinmen", name: "金門區", fileName: "15_kinmen_金門區.csv", filePath: "data/schools/15_kinmen_金門區.csv", rowCount: 2, status: "verifying" as const },
-].map((item) => ({
-  ...item,
-  githubEditUrl: getGitHubEditUrl(item.filePath),
-}));
+export type RegionalSchoolSlot = Readonly<{
+  id: string;
+  name: string;
+  fileName: string;
+  csvPath: string;
+  rowCount: number;
+  schoolYear: number;
+  status: "available" | "verifying";
+  githubEditUrl: string;
+  githubRawUrl: string;
+}>;
 
-export function getCoreCsvDataSources(): readonly CsvDataSource[] {
-  return [
-    {
-      id: "schools",
-      name: "15 就學區學校主檔資料庫",
-      featureName: "找學校",
-      featureHref: "/schools",
-      fileName: "schools.csv",
-      filePath: "data/schools.csv",
-      rowCount: 495, // Active canonical rows; 545 schools nationally
-      columnsCount: 30,
-      lastUpdated: "2026-09-08",
-      status: "active",
-      description: "全臺 15 就學區公私立高中職、五專招生名額、學制分類與科別主檔，改動後觸發全站資料自動同步。",
-      githubEditUrl: getGitHubEditUrl("data/schools.csv"),
-      githubRawUrl: getGitHubRawUrl("data/schools.csv"),
-      districtSubFiles: DISTRICT_CSV_FILES,
-    },
-    {
-      id: "coordinates",
-      name: "全臺學校經緯度座標檔",
-      featureName: "學校地圖",
-      featureHref: "/schools/map",
-      fileName: "school_coordinates.csv",
-      filePath: "data/school_coordinates.csv",
-      rowCount: 538,
-      columnsCount: 12,
-      lastUpdated: "2026-09-05",
-      status: "active",
-      description: "供學校地圖讀取之官方 TGOS 與地政核對經緯度座標檔，絕無漂移假點。",
-      githubEditUrl: getGitHubEditUrl("data/school_coordinates.csv"),
-      githubRawUrl: getGitHubRawUrl("data/school_coordinates.csv"),
-    },
-    {
-      id: "admission_scores",
-      name: "歷年錄取分數與會考落點庫",
-      featureName: "歷年錄取成績",
-      featureHref: "/scores/history",
-      fileName: "admission_scores.csv",
-      filePath: "data/admission_scores.csv",
-      rowCount: 44,
-      columnsCount: 11,
-      lastUpdated: "2026-08-10",
-      status: "active",
-      description: "收錄社群與公開整理之歷年高中職最低錄取分數與門檻紀錄。",
-      githubEditUrl: getGitHubEditUrl("data/admission_scores.csv"),
-      githubRawUrl: getGitHubRawUrl("data/admission_scores.csv"),
-    },
-    {
-      id: "senior_shares",
-      name: "學長姐經驗分享公開庫",
-      featureName: "學長姐經驗分享",
-      featureHref: "/schools",
-      fileName: "senior_shares.csv",
-      filePath: "data/senior_shares.csv",
-      rowCount: 0,
-      columnsCount: 12,
-      lastUpdated: "2026-10-24",
-      status: "active",
-      description: "經後台管理員嚴格審核通過後，自動寫入並公開至前台的學長姐升學經驗與會考回報檔。",
-      githubEditUrl: getGitHubEditUrl("data/senior_shares.csv"),
-      githubRawUrl: getGitHubRawUrl("data/senior_shares.csv"),
-    },
-  ];
-}
+export const REGIONAL_SCHOOL_SLOTS: readonly RegionalSchoolSlot[] = [
+  {
+    id: "tp",
+    name: "基北區",
+    fileName: "JSHS_基北區_135校_完成版_無排序分數_2026-09-07.csv",
+    csvPath: "content/schools/regions/基北區_tp/JSHS_基北區_135校_完成版_無排序分數_2026-09-07.csv",
+    rowCount: 135,
+    schoolYear: 115,
+    status: "available",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/基北區_tp/JSHS_基北區_135校_完成版_無排序分數_2026-09-07.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/基北區_tp/JSHS_基北區_135校_完成版_無排序分數_2026-09-07.csv"),
+  },
+  {
+    id: "taoyuan-lienchiang",
+    name: "桃連區",
+    fileName: "JSHS_桃連區_50校_最終完成版_2026-09-08.csv",
+    csvPath: "content/schools/regions/桃連區_taoyuan-lienchiang/JSHS_桃連區_50校_最終完成版_2026-09-08.csv",
+    rowCount: 50,
+    schoolYear: 115,
+    status: "available",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/桃連區_taoyuan-lienchiang/JSHS_桃連區_50校_最終完成版_2026-09-08.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/桃連區_taoyuan-lienchiang/JSHS_桃連區_50校_最終完成版_2026-09-08.csv"),
+  },
+  {
+    id: "hsinchu-miaoli",
+    name: "竹苗區",
+    fileName: "JSHS_竹苗區_39校_最終完成版_2026-09-08.csv",
+    csvPath: "content/schools/regions/竹苗區_hsinchu-miaoli/JSHS_竹苗區_39校_最終完成版_2026-09-08.csv",
+    rowCount: 39,
+    schoolYear: 115,
+    status: "available",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/竹苗區_hsinchu-miaoli/JSHS_竹苗區_39校_最終完成版_2026-09-08.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/竹苗區_hsinchu-miaoli/JSHS_竹苗區_39校_最終完成版_2026-09-08.csv"),
+  },
+  {
+    id: "ct",
+    name: "中投區",
+    fileName: "JSHS_中投區_96校_最終版_2026-09-07.csv",
+    csvPath: "content/schools/regions/中投區_ct/JSHS_中投區_96校_最終版_2026-09-07.csv",
+    rowCount: 96,
+    schoolYear: 115,
+    status: "available",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/中投區_ct/JSHS_中投區_96校_最終版_2026-09-07.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/中投區_ct/JSHS_中投區_96校_最終版_2026-09-07.csv"),
+  },
+  {
+    id: "kaohsiung",
+    name: "高雄區",
+    fileName: "JSHS_高雄區_53校_最終完成版_2026-09-07.csv",
+    csvPath: "content/schools/regions/高雄區_kaohsiung/JSHS_高雄區_53校_最終完成版_2026-09-07.csv",
+    rowCount: 53,
+    schoolYear: 115,
+    status: "available",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/高雄區_kaohsiung/JSHS_高雄區_53校_最終完成版_2026-09-07.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/高雄區_kaohsiung/JSHS_高雄區_53校_最終完成版_2026-09-07.csv"),
+  },
+  {
+    id: "changhua",
+    name: "彰化區",
+    fileName: "JSHS_彰化區_49校_最終完成版_2026-09-08.csv",
+    csvPath: "content/schools/regions/彰化區_changhua/JSHS_彰化區_49校_最終完成版_2026-09-08.csv",
+    rowCount: 49,
+    schoolYear: 115,
+    status: "available",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/彰化區_changhua/JSHS_彰化區_49校_最終完成版_2026-09-08.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/彰化區_changhua/JSHS_彰化區_49校_最終完成版_2026-09-08.csv"),
+  },
+  {
+    id: "yunlin",
+    name: "雲林區",
+    fileName: "schools.csv",
+    csvPath: "content/schools/regions/雲林區_yunlin/schools.csv",
+    rowCount: 22,
+    schoolYear: 115,
+    status: "verifying",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/雲林區_yunlin/schools.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/雲林區_yunlin/schools.csv"),
+  },
+  {
+    id: "chiayi",
+    name: "嘉義區",
+    fileName: "schools.csv",
+    csvPath: "content/schools/regions/嘉義區_chiayi/schools.csv",
+    rowCount: 21,
+    schoolYear: 115,
+    status: "verifying",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/嘉義區_chiayi/schools.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/嘉義區_chiayi/schools.csv"),
+  },
+  {
+    id: "tainan",
+    name: "臺南區",
+    fileName: "JSHS_臺南區_73校_最終完成版_2026-09-08.csv",
+    csvPath: "content/schools/regions/臺南區_tainan/JSHS_臺南區_73校_最終完成版_2026-09-08.csv",
+    rowCount: 73,
+    schoolYear: 115,
+    status: "available",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/臺南區_tainan/JSHS_臺南區_73校_最終完成版_2026-09-08.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/臺南區_tainan/JSHS_臺南區_73校_最終完成版_2026-09-08.csv"),
+  },
+  {
+    id: "pingtung",
+    name: "屏東區",
+    fileName: "schools.csv",
+    csvPath: "content/schools/regions/屏東區_pingtung/schools.csv",
+    rowCount: 23,
+    schoolYear: 115,
+    status: "verifying",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/屏東區_pingtung/schools.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/屏東區_pingtung/schools.csv"),
+  },
+  {
+    id: "ilan",
+    name: "宜蘭區",
+    fileName: "schools.csv",
+    csvPath: "content/schools/regions/宜蘭區_ilan/schools.csv",
+    rowCount: 12,
+    schoolYear: 115,
+    status: "verifying",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/宜蘭區_ilan/schools.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/宜蘭區_ilan/schools.csv"),
+  },
+  {
+    id: "hualien",
+    name: "花蓮區",
+    fileName: "schools.csv",
+    csvPath: "content/schools/regions/花蓮區_hualien/schools.csv",
+    rowCount: 16,
+    schoolYear: 115,
+    status: "verifying",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/花蓮區_hualien/schools.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/花蓮區_hualien/schools.csv"),
+  },
+  {
+    id: "taitung",
+    name: "臺東區",
+    fileName: "schools.csv",
+    csvPath: "content/schools/regions/臺東區_taitung/schools.csv",
+    rowCount: 11,
+    schoolYear: 115,
+    status: "verifying",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/臺東區_taitung/schools.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/臺東區_taitung/schools.csv"),
+  },
+  {
+    id: "penghu",
+    name: "澎湖區",
+    fileName: "schools.csv",
+    csvPath: "content/schools/regions/澎湖區_penghu/schools.csv",
+    rowCount: 2,
+    schoolYear: 115,
+    status: "verifying",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/澎湖區_penghu/schools.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/澎湖區_penghu/schools.csv"),
+  },
+  {
+    id: "kinmen",
+    name: "金門區",
+    fileName: "schools.csv",
+    csvPath: "content/schools/regions/金門區_kinmen/schools.csv",
+    rowCount: 2,
+    schoolYear: 115,
+    status: "verifying",
+    githubEditUrl: getGitHubEditUrl("content/schools/regions/金門區_kinmen/schools.csv"),
+    githubRawUrl: getGitHubRawUrl("content/schools/regions/金門區_kinmen/schools.csv"),
+  },
+];
+
+export const MAP_COORDINATES_SLOT = {
+  id: "coordinates",
+  name: "學校經緯度座標主檔",
+  featureName: "學校地圖",
+  featureHref: "/schools/map",
+  fileName: "school_coordinates.csv",
+  filePath: "data/school_coordinates.csv",
+  rowCount: 538,
+  columnsCount: 12,
+  lastUpdated: "2026-09-05",
+  description: "TGOS 官方與地政核對經緯度座標檔，絕無人工捏造或漂移假點。",
+  githubEditUrl: getGitHubEditUrl("data/school_coordinates.csv"),
+  githubRawUrl: getGitHubRawUrl("data/school_coordinates.csv"),
+} as const;
+
+export const ADMISSION_SCORES_SLOT = {
+  id: "admission_scores",
+  name: "歷年錄取分數與會考落點庫",
+  featureName: "歷年錄取成績",
+  featureHref: "/scores/history",
+  fileName: "admission_scores.csv",
+  filePath: "data/admission_scores.csv",
+  rowCount: 44,
+  columnsCount: 11,
+  lastUpdated: "2026-08-10",
+  description: "歷年各高中職最低錄取門檻、積分累積與採計標準紀錄。",
+  githubEditUrl: getGitHubEditUrl("data/admission_scores.csv"),
+  githubRawUrl: getGitHubRawUrl("data/admission_scores.csv"),
+} as const;
+
+export const SENIOR_SHARES_SLOT = {
+  id: "senior_shares",
+  name: "學長姐經驗分享正式資料庫",
+  featureName: "學長姐經驗分享",
+  featureHref: "/schools",
+  fileName: "senior_shares.csv",
+  filePath: "data/senior_shares.csv",
+  rowCount: 0,
+  columnsCount: 12,
+  lastUpdated: "2026-10-24",
+  description: "經後台管理員審核通過之經驗分享，點擊核准後自動加入此檔並公開至前台。",
+  githubEditUrl: getGitHubEditUrl("data/senior_shares.csv"),
+  githubRawUrl: getGitHubRawUrl("data/senior_shares.csv"),
+} as const;
 
 export function formatReviewToCsvRow(review: {
   id: string;
@@ -161,4 +279,3 @@ export function formatReviewToCsvRow(review: {
     escape(new Date().toISOString()),
   ].join(",");
 }
-

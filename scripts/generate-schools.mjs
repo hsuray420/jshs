@@ -72,8 +72,6 @@ write('school-search-index',searchIndex);
 write('geocode-metadata',geocodeAudit);
 fs.mkdirSync(path.join(root,'public/data'),{recursive:true});
 fs.writeFileSync(path.join(root,'public/data/schools.csv'),getAllSchoolsCsv(rows));
-fs.mkdirSync(path.join(root,'data'),{recursive:true});
-fs.writeFileSync(path.join(root,'data/schools.csv'),getAllSchoolsCsv(rows));
 if(audit.errors.length){
   console.error(audit.errors.join('\n'));
   process.exitCode=1;
