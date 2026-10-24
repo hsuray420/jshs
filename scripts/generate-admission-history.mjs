@@ -1,4 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseCsvRows } from "../lib/school-catalog.mjs";
 import { enabledRegions, regionalAdmissionHistoryPath } from "./school-csv-source.mjs";
@@ -6,8 +7,63 @@ import { enabledRegions, regionalAdmissionHistoryPath } from "./school-csv-sourc
 const root = process.cwd();
 const metadata = JSON.parse(await readFile(resolve(root, "public/it_hs/district-metadata.json"), "utf8"));
 const districtCodes = enabledRegions.map((region) => region.code);
+const centralScoresPath = resolve(root, "data/admission_scores.csv");
+
+let centralScoresByDistrict = new Map();
+if (existsSync(centralScoresPath)) {
+  const centralCsv = await readFile(centralScoresPath, "utf8");
+  const centralRows = parseCsvRows(centralCsv);
+  const centralHeaders = (centralRows[0] || []).map((h) => h.replace(/^\uFEFF/, "").trim());
+  const cIndexes = new Map(centralHeaders.map((h, i) => [h, i]));
+  const cAt = (row, name) => row[cIndexes.get(name)]?.trim() || "";
+
+  // District label to code mapping
+  const labelToCode = Object.fromEntries(Object.entries(metadata.districts).map(([code, d]) => [d.label, code]));
+  labelToCode["中投區"] = "ct";
+  labelToCode["基北區"] = "tp";
+  labelToCode["桃連區"] = "taoyuan-lienchiang";
+  labelToCode["竹苗區"] = "hsinchu-miaoli";
+  labelToCode["高雄區"] = "kaohsiung";
+  labelToCode["彰化區"] = "changhua";
+  labelToCode["臺南區"] = "tainan";
+
+  for (const row of centralRows.slice(1)) {
+    if (!row.some(Boolean)) continue;
+    const districtLabel = cAt(row, "就學區");
+    const dCode = labelToCode[districtLabel] || districtCodes.find((c) => metadata.districts[c]?.label === districtLabel) || districtLabel;
+    if (!dCode) continue;
+    const list = centralScoresByDistrict.get(dCode) || [];
+    list.push({
+      districtCode: dCode,
+      districtLabel: metadata.districts[dCode]?.label || districtLabel,
+      academicYear: metadata.districts[dCode]?.academicYear || "115",
+      dataStatus: metadata.districts[dCode]?.dataStatus || "available",
+      sourceName: cAt(row, "資料性質") || "非官方整理",
+      sourceUrl: "",
+      code: cAt(row, "學校代碼"),
+      name: cAt(row, "學校名稱"),
+      program: cAt(row, "學制分類"),
+      city: cAt(row, "縣市"),
+      area: cAt(row, "區"),
+      departmentsRaw: cAt(row, "科系與名額"),
+      referenceScore: cAt(row, "最低錄取分數"),
+      scoreYear: cAt(row, "分數年度"),
+      sourceNote: cAt(row, "分數來源備註"),
+      sourceType: "community",
+      sourceId: `history-community-${dCode}-115`,
+    });
+    centralScoresByDistrict.set(dCode, list);
+  }
+}
 
 const districtEntries = await Promise.all(districtCodes.map(async (districtCode) => {
+  // 1. Prefer central canonical CSV if it has records for this district
+  const centralList = centralScoresByDistrict.get(districtCode);
+  if (centralList && centralList.length > 0) {
+    return centralList.filter((school) => school.code && school.name && school.referenceScore);
+  }
+
+  // 2. Fall back to regional CSV file
   const district = metadata.districts[districtCode];
   const csv = await readFile(regionalAdmissionHistoryPath(districtCode), "utf8");
   const rows = parseCsvRows(csv);

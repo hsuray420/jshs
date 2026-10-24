@@ -1,259 +1,207 @@
 import Link from "next/link";
-import { countPendingSchoolDataDrafts, listSchoolDataAudit } from "../../db/admin-store";
-import { listSchoolMediaMetadata } from "../../db/school-media-store";
+import { requireAdmin } from "./auth";
 import { listPendingSchoolReviews } from "../../db/school-review-store";
 import { countPendingDataReports } from "../../db/data-report-store";
-import { requireAdmin } from "./auth";
-import { getSchools, schoolMetadata } from "../../lib/school-repository";
-import validation from "../../content/schools/generated/validation.json";
+import { getCoreCsvDataSources } from "../../lib/csv-data-registry";
+import { AdminModerationQueue } from "../../components/admin-moderation-queue";
 
 export const dynamic = "force-dynamic";
 
-// 15 就學區預設學校統計清單
-const DISTRICT_SUMMARY = [
-  { name: "基北區", count: 135, code: "tp" },
-  { name: "中投區", count: 96, code: "tc" },
-  { name: "臺南區", count: 73, code: "tn" },
-  { name: "高雄區", count: 53, code: "kh" },
-  { name: "桃連區", count: 50, code: "ty" },
-  { name: "彰化區", count: 49, code: "ch" },
-  { name: "竹苗區", count: 39, code: "hsinchu" },
-  { name: "屏東區", count: 23, code: "pt" },
-  { name: "雲林區", count: 22, code: "yl" },
-  { name: "嘉義區", count: 21, code: "cy" },
-  { name: "花蓮區", count: 16, code: "hl" },
-  { name: "宜蘭區", count: 12, code: "il" },
-  { name: "臺東區", count: 11, code: "tt" },
-  { name: "澎湖區", count: 2, code: "ph" },
-  { name: "金門區", count: 2, code: "km" },
-];
-
 export default async function AdminDashboard() {
   const admin = await requireAdmin();
-  const schools = getSchools();
-  const [reviews, dataReports, media, pendingDrafts, recentAudit] = await Promise.all([
+  const [reviews, dataReportsCount] = await Promise.all([
     listPendingSchoolReviews(),
     countPendingDataReports(),
-    listSchoolMediaMetadata(),
-    countPendingSchoolDataDrafts(),
-    listSchoolDataAudit(),
   ]);
 
-  const imageCodes = new Set(media.map((item) => item.school_code));
-  const missingImages = schools.filter((school) => !imageCodes.has(school.code)).length;
-  const missingCore = schools.filter((school) => !school.address || !school.phone || !school.website).length;
-  const completeness = schools.length ? (((schools.length - missingCore) / schools.length) * 100).toFixed(1) : "0.0";
+  const csvSources = getCoreCsvDataSources();
 
   return (
-    <>
-      {/* 業務後台主標題 */}
-      <section className="admin-page-heading">
+    <div className="space-y-10 pb-12">
+      {/* 1. Apple HIG Minimalist Page Header */}
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200/80 pb-6">
         <div>
-          <p className="admin-eyebrow">Business Console · 業務營運工作台</p>
-          <h1>業務營運總覽</h1>
-          <p className="admin-muted">
-            早安，{admin.user.displayName}。本站專注於全國 15 就學區、545 所高中職升學資料維護、勘誤審核與內容營運。
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-2">
+            <span>●</span>
+            <span>GitOps 單一真實資料源架構 (SSOT)</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 m-0">
+            GitHub CSV 資料源中控台
+          </h1>
+          <p className="text-slate-500 text-sm mt-1.5 mb-0 max-w-2xl leading-relaxed">
+            管理員 {admin.user.displayName} 您好。全站所有前台頁面 100% 僅讀取標準 CSV 檔案；在 GitHub 修改並 Commit 後，直接觸發自動建置與無縫釋出。
           </p>
         </div>
-        <div className="admin-actions">
-          <Link className="admin-button" href="/admin/schools">
-            維護學校主檔
-          </Link>
-          <Link className="admin-button-secondary" href="/admin/data/reports">
-            審核勘誤 ({dataReports})
-          </Link>
-          <Link className="admin-button-secondary" href="/admin/system">
-            前往技術後台 ⚙️
-          </Link>
-        </div>
-      </section>
 
-      {/* 考季時程與學年度進度橫幅 */}
-      <section className="admin-exam-banner" aria-label="考季與學年度進度">
-        <div className="admin-exam-banner-left">
-          <span className="admin-exam-tag">考季與學年度週期</span>
-          <h2>正式學年度：{schoolMetadata.academicYear} 學年度｜準備推進：{Number(schoolMetadata.academicYear) + 1} 學年度 ({completeness}%)</h2>
-          <p className="admin-muted">
-            前台公開展示資料以教育部與各區簡章核定之 {schoolMetadata.academicYear} 學年度為基準；{Number(schoolMetadata.academicYear) + 1} 學年度籌備草稿均經 Diff 隔離保護。
-          </p>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Link
+            href="/"
+            className="px-4 py-2 rounded-full text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition shadow-sm"
+          >
+            看前台首頁 ↗
+          </Link>
+          <Link
+            href="/admin/data/reports"
+            className="px-4 py-2 rounded-full text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition shadow-sm flex items-center gap-1.5"
+          >
+            <span>使用者勘誤回報</span>
+            {dataReportsCount > 0 ? (
+              <span className="px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">
+                {dataReportsCount}
+              </span>
+            ) : null}
+          </Link>
+          <a
+            href={admin.signOutPath}
+            className="px-4 py-2 rounded-full text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 transition"
+          >
+            登出
+          </a>
         </div>
-        <div className="admin-exam-banner-stats">
-          <div className="admin-exam-stat-item">
-            <span>全國涵蓋學校</span>
-            <strong>{schools.length} 所</strong>
-          </div>
-          <div className="admin-exam-stat-item">
-            <span>就學區涵蓋</span>
-            <strong>15 區完整</strong>
-          </div>
-          <div className="admin-exam-stat-item">
-            <span>招生關聯筆數</span>
-            <strong>{schoolMetadata.admissionRecordCount || 604} 筆</strong>
-          </div>
-        </div>
-      </section>
+      </header>
 
-      {/* 營運指標與待辦警報卡片 */}
-      <section className="admin-dashboard-grid" aria-label="業務營運指標摘要">
-        <DashboardCard
-          label="使用者勘誤回報"
-          value={`${dataReports} 筆`}
-          detail={dataReports ? "有考生/家長回報資料，待查核確認" : "目前無待處理資料回報"}
-          tone={dataReports ? "warn" : "ok"}
-          href="/admin/data/reports"
-        />
-        <DashboardCard
-          label="學長姐心得審核"
-          value={`${reviews.length} 筆`}
-          detail={reviews.length ? "待放行匿名就讀分享" : "所有心得均已審核完畢"}
-          tone={reviews.length ? "warn" : "ok"}
-          href="/admin/data/reviews"
-        />
-        <DashboardCard
-          label="缺少核心聯絡資料"
-          value={`${missingCore} 所`}
-          detail="缺地址、電話或官方網址"
-          tone={missingCore ? "warn" : "ok"}
-          href="/admin/schools"
-        />
-        <DashboardCard
-          label="缺少校園形象圖片"
-          value={`${missingImages} 所`}
-          detail="需要管理員補上授權照片"
-          tone={missingImages ? "warn" : "ok"}
-          href="/admin/media?mode=missing"
-        />
-        <DashboardCard
-          label="待發布修改草稿"
-          value={`${pendingDrafts} 筆`}
-          detail="D1 暫存中，發布前提供 Diff 比對"
-          tone={pendingDrafts ? "warn" : "ok"}
-          href="/admin/audit"
-        />
-        <DashboardCard
-          label="15 區資料管線校驗"
-          value={validation.errors.length ? `${validation.errors.length} 筆阻擋` : "全部通過"}
-          detail={`${validation.warnings.length} 個非阻擋提醒；0 孤立關聯`}
-          tone={validation.errors.length ? "warn" : "ok"}
-          href="/admin/data"
-        />
-      </section>
-
-      {/* 15 就學區推進狀態看板 */}
-      <section className="admin-panel" aria-label="15 就學區資料推進看板">
-        <div className="admin-section-head">
+      {/* 2. Block 1: 四大功能 CSV 資料源中控台 (CSV Data Source Hub) */}
+      <section aria-label="四大功能 CSV 資料源中控台">
+        <div className="flex items-center justify-between mb-5">
           <div>
-            <p className="admin-eyebrow">15 Districts Coverage</p>
-            <h2>15 就學區學校分佈與資料推進看板</h2>
-            <p className="admin-muted">點擊任一就學區可快速過濾該區學校名錄與招生關聯。</p>
+            <h2 className="text-xl font-bold text-slate-900 m-0">四大核心 CSV 資料源</h2>
+            <p className="text-slate-500 text-xs mt-1 mb-0">
+              點擊「前往 GitHub 編輯 ↗」可直接在瀏覽器修改 CSV，Commit 後自動重新部署更新全站前台。
+            </p>
           </div>
-          <Link className="admin-plain-link" href="/admin/data">
-            檢視資料健康中心 →
-          </Link>
+          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200/60">
+            ✓ 4 大模組已連線
+          </span>
         </div>
-        <div className="admin-district-grid">
-          {DISTRICT_SUMMARY.map((district) => (
-            <Link
-              key={district.code}
-              href={`/admin/schools?region=${district.code}`}
-              className="admin-district-badge"
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {csvSources.map((source) => (
+            <article
+              key={source.id}
+              className="rounded-2xl bg-white border border-slate-200/90 p-6 shadow-sm flex flex-col justify-between transition hover:shadow-md"
             >
-              <span className="admin-district-name">{district.name}</span>
-              <strong className="admin-district-count">{district.count} 所</strong>
-              <small className="admin-district-tag">已校驗</small>
-            </Link>
+              <div>
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">
+                    <span className="text-[#0071e3]">●</span>
+                    <span>對應功能：{source.featureName}</span>
+                  </span>
+                  <span className="text-xs text-slate-400">
+                    最後更新：{source.lastUpdated}
+                  </span>
+                </div>
+
+                <h3 className="text-lg font-bold text-slate-900 mb-1.5">
+                  {source.name}
+                </h3>
+                <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                  {source.description}
+                </p>
+
+                {/* File info pill */}
+                <div className="rounded-xl bg-slate-50 border border-slate-100 p-3 mb-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base">📄</span>
+                    <div>
+                      <code className="text-xs font-bold text-slate-800 block">
+                        {source.fileName}
+                      </code>
+                      <span className="text-[11px] text-slate-400">
+                        路徑：{source.filePath}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <strong className="text-sm font-bold text-slate-900 block">
+                      {source.rowCount.toLocaleString()} 筆
+                    </strong>
+                    <span className="text-[11px] text-slate-400">
+                      {source.columnsCount} 個標準欄位
+                    </span>
+                  </div>
+                </div>
+
+                {/* If it has 15 district subfiles, show disclosure */}
+                {source.districtSubFiles && (
+                  <details className="mb-4 text-xs group">
+                    <summary className="cursor-pointer font-semibold text-blue-600 hover:text-blue-800 py-1 flex items-center justify-between select-none">
+                      <span>檢視 15 就學區獨立 CSV 分檔清單 ({source.districtSubFiles.length} 區)</span>
+                      <span className="text-[10px] text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div className="mt-2.5 space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                      {source.districtSubFiles.map((sub) => (
+                        <div
+                          key={sub.id}
+                          className="flex items-center justify-between py-1.5 px-2.5 rounded-lg bg-slate-50 border border-slate-100 text-slate-700"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-slate-800">{sub.name}</span>
+                            <span className="text-[10px] text-slate-400 font-mono">({sub.fileName})</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="font-semibold text-slate-600">{sub.rowCount} 校</span>
+                            <a
+                              href={sub.githubEditUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-blue-600 hover:underline font-bold text-[11px]"
+                            >
+                              編輯 ↗
+                            </a>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </details>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100">
+                <a
+                  href={source.githubRawUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 transition"
+                >
+                  預覽 / 下載 CSV
+                </a>
+                <a
+                  href={source.githubEditUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="px-4 py-1.5 rounded-full text-xs font-semibold text-white bg-[#0071e3] hover:bg-[#0077ed] transition shadow-sm flex items-center gap-1"
+                >
+                  <span>在 GitHub 編輯 ↗</span>
+                </a>
+              </div>
+            </article>
           ))}
         </div>
       </section>
 
-      {/* 雙欄：需要處理清單 + 最近業務修改紀錄 */}
-      <section className="admin-dashboard-columns">
-        <section className="admin-panel">
-          <div className="admin-section-head">
-            <div>
-              <p className="admin-eyebrow">Needs attention</p>
-              <h2>需要處理的營運項目</h2>
+      {/* 3. Block 2: 學長姐分享「投稿稽核工作流」 (Submission Moderation Queue) */}
+      <section aria-label="學長姐分享投稿稽核中心">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-bold text-slate-900 m-0">
+                學長姐分享投稿稽核中心
+              </h2>
+              <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
+                reviews.length > 0 ? "bg-amber-100 text-amber-800" : "bg-emerald-50 text-emerald-700"
+              }`}>
+                {reviews.length} 筆待處理
+              </span>
             </div>
+            <p className="text-slate-500 text-xs mt-1 mb-0">
+              前台隔離保護：學長姐提交之經驗分享先進入此待審佇列；審核通過後點擊「核准並寫入 CSV」直接加入正式 `senior_shares.csv` 釋出。
+            </p>
           </div>
-          <div className="admin-quick-links">
-            <Link href="/admin/data/reports">
-              審核資料勘誤回報
-              <span>{dataReports} 件待查證</span>
-            </Link>
-            <Link href="/admin/data/reviews">
-              審核學長姐心得
-              <span>{reviews.length} 則待放行</span>
-            </Link>
-            <Link href="/admin/schools">
-              補齊學校電話與地址
-              <span>{missingCore} 所缺基本聯絡資訊</span>
-            </Link>
-            <Link href="/admin/media?mode=missing">
-              補齊學校校園照片
-              <span>{missingImages} 所尚無封面</span>
-            </Link>
-            <Link href="/admin/editor">
-              前台鏡像可視化編輯
-              <span>在真實前台介面預覽編輯</span>
-            </Link>
-            <Link href="/admin/content">
-              升學專題與指南文章
-              <span>編輯與發布升學快訊</span>
-            </Link>
-          </div>
-        </section>
+        </div>
 
-        <section className="admin-panel">
-          <div className="admin-section-head">
-            <div>
-              <p className="admin-eyebrow">Recent activity</p>
-              <h2>最近資料修改與發布</h2>
-            </div>
-            <Link href="/admin/audit" className="admin-plain-link">
-              完整日誌 →
-            </Link>
-          </div>
-          <ul className="admin-activity-list">
-            {recentAudit.slice(0, 6).map((entry) => (
-              <li key={entry.id}>
-                <span>
-                  <strong>{entry.school_name || "系統變更"}</strong> · {entry.field || entry.action}
-                </span>
-                <time>{entry.status}</time>
-              </li>
-            ))}
-            {!recentAudit.length ? (
-              <li>
-                <span>尚無學校資料修改紀錄</span>
-                <time>Audit</time>
-              </li>
-            ) : null}
-          </ul>
-        </section>
+        <AdminModerationQueue initialReviews={reviews} />
       </section>
-    </>
+    </div>
   );
 }
-
-function DashboardCard({
-  label,
-  value,
-  detail,
-  tone,
-  href,
-}: {
-  label: string;
-  value: string;
-  detail: string;
-  tone: "ok" | "warn" | "info";
-  href: string;
-}) {
-  return (
-    <Link href={href} className={`admin-dashboard-card ${tone}`}>
-      <span>{label}</span>
-      <strong>{value}</strong>
-      <small>{detail}</small>
-    </Link>
-  );
-}
-

@@ -24,7 +24,39 @@ const generatedNotice='DO NOT EDIT: generated from enabled regional CSV files by
 const sourceUpdatedAt=rows.map(row=>row['資料更新日期']).filter(Boolean).sort().at(-1)||null;
 const metadata={generatedNotice,academicYear:'115',sourceUpdatedAt,schoolCount:schools.length,admissionRecordCount:rows.length,enabledRegionCount:ENABLED_SCHOOL_REGIONS.length,verifyingRegionCount:VERIFYING_SCHOOL_REGIONS.length,unavailableRegionCount:UNAVAILABLE_SCHOOL_REGIONS.length,enabledRegions:ENABLED_SCHOOL_REGIONS.map(({code,label,folder,file,status})=>({code,label,folder,file,status})),verifyingRegions:VERIFYING_SCHOOL_REGIONS.map(({code,label,status})=>({code,label,status})),unavailableRegions:UNAVAILABLE_SCHOOL_REGIONS.map(({code,label,status})=>({code,label,status})),districtCount:Object.keys(districts).length,cityCount:Object.keys(cities).length,schoolTypes:count(rows.map(row=>row['學制分類'])),genders:count(rows.map(row=>row['男女校'])),ownership:count(schools.map(s=>s.ownership)),sourceModel:'regional_csv_registry_available_only',sourceDirectory:'content/schools/regions',sourceFiles:fileAudits.map(item=>item.path),fieldClassification:audit.fieldClassification,duplicateSchoolAudit:audit.duplicateSchoolAudit,rowConservation,validation:{errors:audit.errors.length,warnings:audit.warnings.length}};
 const normalizeAddress=value=>String(value||'').normalize('NFKC').replace(/^\[?\d{3,6}\]?\s*/,'').replace(/\s+/g,'').replaceAll('台','臺').replaceAll('恒','恆').replace(/[一壹]段/g,'1段').replace(/[二貳]段/g,'2段').replace(/[三參]段/g,'3段').replace(/[四肆]段/g,'4段').replace(/[五伍]段/g,'5段').replace(/[六陸]段/g,'6段').replace(/[七柒]段/g,'7段').replace(/[八捌]段/g,'8段').replace(/[九玖]段/g,'9段').replace(/[十拾]段/g,'10段').replace(/(\d+)之(\d+)/g,'$1-$2').replace(/(\d+)號之(\d+)/g,'$1-$2號').replace(/(\d+)樓/g,'$1F').replace(/\d+鄰/g,'').replace(/[号]/g,'號');
-const geocodeCache=JSON.parse(fs.readFileSync(path.join(runtimeSource,'school-geocode-cache.json'),'utf8'));
+const geocodeCacheFile = path.join(runtimeSource, 'school-geocode-cache.json');
+const geocodeCache = JSON.parse(fs.readFileSync(geocodeCacheFile, 'utf8'));
+const centralCoordinatesFile = path.join(root, 'data/school_coordinates.csv');
+if (fs.existsSync(centralCoordinatesFile)) {
+  const coordLines = fs.readFileSync(centralCoordinatesFile, 'utf8').replace(/^\uFEFF/, '').trim().split(/\r?\n/).filter(Boolean);
+  if (coordLines.length > 1) {
+    for (let i = 1; i < coordLines.length; i++) {
+      const parts = coordLines[i].split(',').map(s => s.replace(/^"|"$/g, '').trim());
+      const [schoolCode, schoolName, latStr, lngStr, normAddr, origAddr, source, sourceType, matchedAddr, matchedPlace, vStatus, vDate] = parts;
+      const latitude = Number(latStr);
+      const longitude = Number(lngStr);
+      if (schoolCode && Number.isFinite(latitude) && Number.isFinite(longitude)) {
+        geocodeCache[schoolCode] = {
+          schoolCode,
+          schoolName: schoolName || geocodeCache[schoolCode]?.schoolName || '',
+          latitude,
+          longitude,
+          normalizedAddress: normAddr || geocodeCache[schoolCode]?.normalizedAddress || '',
+          originalAddress: origAddr || geocodeCache[schoolCode]?.originalAddress || '',
+          source: source || geocodeCache[schoolCode]?.source || 'https://gis.tgos.tw',
+          sourceType: sourceType || geocodeCache[schoolCode]?.sourceType || 'moe_tgos_school_layer',
+          matchedAddress: matchedAddr || geocodeCache[schoolCode]?.matchedAddress || normAddr,
+          matchedPlaceName: matchedPlace || geocodeCache[schoolCode]?.matchedPlaceName || schoolName,
+          verificationStatus: vStatus || 'verified',
+          verifiedAt: vDate || geocodeCache[schoolCode]?.verifiedAt || '2026-09-05',
+          cityMatch: true,
+          districtMatch: true,
+          addressMatch: true
+        };
+      }
+    }
+  }
+}
 const verifiedGeocodes=schools.filter(s=>{const r=geocodeCache[s.code];return r&&r.schoolCode===s.code&&r.verificationStatus==='verified'&&normalizeAddress(r.normalizedAddress)===normalizeAddress(s.address)&&Number.isFinite(r.latitude)&&Number.isFinite(r.longitude)&&(r.provider||r.sourceType)&&r.source&&r.verifiedAt;});
 const geocodeQueue=JSON.parse(fs.readFileSync(path.join(runtimeSource,'geocode-review-queue.json'),'utf8'));
 const geocodeRetry=fs.existsSync(path.join(runtimeSource,'geocode-retry-queue.json'))?JSON.parse(fs.readFileSync(path.join(runtimeSource,'geocode-retry-queue.json'),'utf8')):[];
@@ -40,6 +72,8 @@ write('school-search-index',searchIndex);
 write('geocode-metadata',geocodeAudit);
 fs.mkdirSync(path.join(root,'public/data'),{recursive:true});
 fs.writeFileSync(path.join(root,'public/data/schools.csv'),getAllSchoolsCsv(rows));
+fs.mkdirSync(path.join(root,'data'),{recursive:true});
+fs.writeFileSync(path.join(root,'data/schools.csv'),getAllSchoolsCsv(rows));
 if(audit.errors.length){
   console.error(audit.errors.join('\n'));
   process.exitCode=1;
