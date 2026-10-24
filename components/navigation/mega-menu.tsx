@@ -79,7 +79,27 @@ export function NavDropdownFooter({ group, onNavigate }: { group: MenuGroup; onN
 
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-export function NavDropdown({ item, group, active, open, onToggle, onNavigate }: { item: NavigationItem; group: MenuGroup; active: boolean; open: boolean; onToggle: () => void; onNavigate: () => void }) {
+export function NavDropdown({
+  item,
+  group,
+  active,
+  open,
+  onToggle,
+  onHover,
+  onLeave,
+  onPanelEnter,
+  onNavigate,
+}: {
+  item: NavigationItem;
+  group: MenuGroup;
+  active: boolean;
+  open: boolean;
+  onToggle: () => void;
+  onHover?: () => void;
+  onLeave?: () => void;
+  onPanelEnter?: () => void;
+  onNavigate: () => void;
+}) {
   const [panelStyle, setPanelStyle] = useState<CSSProperties>({});
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -95,6 +115,12 @@ export function NavDropdown({ item, group, active, open, onToggle, onNavigate }:
     const left = Math.max(padding, Math.min(window.innerWidth - width - padding, trigger.left + trigger.width / 2 - width / 2));
     return { left: `${Math.round(left - trigger.left)}px`, right: "auto" };
   }, []);
+
+  const handleMouseEnter = () => {
+    const pos = calculatePosition();
+    if (pos) setPanelStyle(pos);
+    onHover?.();
+  };
 
   const handleToggle = () => {
     if (!open) {
@@ -122,9 +148,32 @@ export function NavDropdown({ item, group, active, open, onToggle, onNavigate }:
   }, [open, calculatePosition]);
 
   const stateClasses = [open ? "is-open" : "", active ? "is-current" : ""].filter(Boolean).join(" ");
-  return <div ref={rootRef} className={`jshs-desktop-more jshs-nav-dropdown jshs-nav-theme--${featureThemeFor(item.label)} ${stateClasses}`}>
-    <button type="button" aria-label={`${item.label}，展開副選單`} aria-haspopup="menu" aria-expanded={open} aria-controls={panelId} onClick={handleToggle}><span>{item.label}</span><SiteIcon name="chevron-down" size={16} className="jshs-nav-dropdown-chevron" /></button>
-    {open ? <div ref={panelRef} id={panelId} role="menu" style={panelStyle} className="jshs-nav-mega-panel">
+  return <div
+    ref={rootRef}
+    className={`jshs-desktop-more jshs-nav-dropdown jshs-nav-theme--${featureThemeFor(item.label)} ${stateClasses}`}
+    onMouseEnter={handleMouseEnter}
+    onMouseLeave={onLeave}
+  >
+    <button
+      type="button"
+      aria-label={`${item.label}，展開副選單`}
+      aria-haspopup="menu"
+      aria-expanded={open}
+      aria-controls={panelId}
+      onClick={handleToggle}
+    >
+      <span>{item.label}</span>
+      <SiteIcon name="chevron-down" size={16} className="jshs-nav-dropdown-chevron" />
+    </button>
+    {open ? <div
+      ref={panelRef}
+      id={panelId}
+      role="menu"
+      style={panelStyle}
+      className="jshs-nav-mega-panel"
+      onMouseEnter={onPanelEnter}
+      onMouseLeave={onLeave}
+    >
       <NavDropdownHeader group={group} />
       <NavDropdownGrid group={group} onNavigate={onNavigate} />
       <NavDropdownFooter group={group} onNavigate={onNavigate} />

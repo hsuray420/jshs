@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { SiteIcon } from "@/components/site-icons";
 import { NavDropdown, NavMegaMenuItem, NavMobileAccordion, type NavigationItem } from "@/components/navigation/mega-menu";
 import { getDistrictLabel, readStoredDistrict, subscribeToDistrict } from "@/lib/district-context";
@@ -90,26 +90,108 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
 
   function openDrawer() { lastFocusRef.current = document.activeElement as HTMLElement | null; setDrawerOpen(true); }
   function closeDrawer() { setDrawerOpen(false); setQuery(""); window.setTimeout(() => lastFocusRef.current?.focus(), 0); }
-  function closeDesktopMenus() { setOpenDesktopMenu(null); }
-  function keepSingleDesktopMenu(label: string) {
+  const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const closeDesktopMenus = useCallback(() => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    setOpenDesktopMenu(null);
+  }, []);
+
+  const openDesktopMenuNow = useCallback((label: string) => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    setOpenDesktopMenu(label);
+    document.dispatchEvent(new Event("jshs:nav-open"));
+  }, []);
+
+  const handleNavHover = useCallback((label: string) => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    // If a menu is already open, switch immediately without delay
+    if (openDesktopMenu) {
+      if (openDesktopMenu !== label) {
+        openDesktopMenuNow(label);
+      }
+      return;
+    }
+    // If opening from resting state, use 70ms intent debounce
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => {
+      openDesktopMenuNow(label);
+    }, 70);
+  }, [openDesktopMenu, openDesktopMenuNow]);
+
+  const handleNavLeave = useCallback(() => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    // 180ms grace window allowing cursor to travel between trigger and dropdown
+    closeTimerRef.current = setTimeout(() => {
+      setOpenDesktopMenu(null);
+    }, 180);
+  }, []);
+
+  const handlePanelEnter = useCallback(() => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+  }, []);
+
+  const keepSingleDesktopMenu = useCallback((label: string) => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
     const willOpen = openDesktopMenu !== label;
     setOpenDesktopMenu(willOpen ? label : null);
     if (!willOpen) return;
     document.dispatchEvent(new Event("jshs:nav-open"));
-  }
+  }, [openDesktopMenu]);
+
+  useEffect(() => {
+    return () => {
+      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    };
+  }, []);
 
   return <>
     <header className={`sticky top-0 z-40 w-full jshs-site-header ${isScrolled ? "is-scrolled shadow-sm" : "border-b border-[var(--jshs-border)] bg-white"}`}>
       <div className="jshs-header-inner">
         <Brand />
-        <nav ref={desktopNavRef} aria-label="主要導覽" className="jshs-desktop-nav">{desktopNavigation.map((item) => {
-          const group = navigationGroups.get(item.label);
-          const active = activeHref === item.activeHref;
-          return group ? <NavDropdown key={item.label} item={item} group={group} active={active} open={openDesktopMenu === item.label} onToggle={() => keepSingleDesktopMenu(item.label)} onNavigate={closeDesktopMenus} /> : null;
-        })}</nav>
+        <nav
+          ref={desktopNavRef}
+          aria-label="主要導覽"
+          className="jshs-desktop-nav"
+          onMouseLeave={handleNavLeave}
+        >
+          {desktopNavigation.map((item) => {
+            const group = navigationGroups.get(item.label);
+            const active = activeHref === item.activeHref;
+            return group ? (
+              <NavDropdown
+                key={item.label}
+                item={item}
+                group={group}
+                active={active}
+                open={openDesktopMenu === item.label}
+                onToggle={() => keepSingleDesktopMenu(item.label)}
+                onHover={() => handleNavHover(item.label)}
+                onLeave={handleNavLeave}
+                onPanelEnter={handlePanelEnter}
+                onNavigate={closeDesktopMenus}
+              />
+            ) : null;
+          })}
+        </nav>
         <div className="jshs-header-utilities"><Link href="/search" aria-label="搜尋網站" className="jshs-home-header-search"><SiteIcon name="search" size={19} /></Link><Link href="/account" aria-label="帳號" className="jshs-login-link"><SiteIcon name="account" size={18} /><span>{memberName || "登入"}</span></Link><button type="button" onClick={openDrawer} aria-label="開啟全站導覽" aria-expanded={drawerOpen} className="jshs-header-action jshs-header-menu-button grid place-items-center xl:hidden"><SiteIcon name="menu" size={23} /></button></div>
       </div>
     </header>
+
+    {openDesktopMenu ? (
+      <div
+        className="jshs-nav-desktop-backdrop"
+        onClick={closeDesktopMenus}
+        onMouseEnter={handleNavLeave}
+        aria-hidden="true"
+      />
+    ) : null}
 
     {drawerOpen ? <div className="jshs-mobile-drawer-backdrop" onClick={closeDrawer} role="dialog" aria-modal="true" aria-label="全站導覽"><div className="jshs-mobile-drawer" onClick={(event) => event.stopPropagation()}><div className="jshs-drawer-grabber" aria-hidden="true" /><div className="jshs-mobile-drawer-head"><Brand /><button type="button" onClick={closeDrawer} aria-label="關閉全站導覽" className="jshs-close-action grid h-10 w-10 place-items-center"><SiteIcon name="close" size={21} /></button></div><div className="jshs-mobile-drawer-body"><Link href="/districts" onClick={closeDrawer} className="jshs-mobile-district-card"><span><small className="block jshs-muted-copy">目前就學區</small><b className="mt-1 block">目前：{districtLabel}</b></span><span className="flex items-center gap-1 text-sm font-black">切換<SiteIcon name="chevron-right" size={16} /></span></Link><form action="/search" method="get" className="mt-4"><label className="jshs-mobile-search flex items-center gap-2 rounded-xl bg-[var(--jshs-muted-surface)] px-4"><SiteIcon name="search" size={19} /><span className="sr-only">搜尋內容與功能</span><input ref={searchRef} name="q" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜尋學校、會考、志願、資格…" className="w-full border-0 bg-transparent shadow-none" /></label></form>{query.trim() ? <div className="mt-5 grid gap-2">{results.map((item) => <NavMegaMenuItem key={item.id} item={{ label: item.title, href: item.href, description: `${item.category} · ${item.body}` }} onNavigate={closeDrawer} mobile theme="trust" />)}<Link href={`/search?q=${encodeURIComponent(query.trim())}`} onClick={closeDrawer} className="p-4 text-sm font-bold text-[var(--jshs-primary)] jshs-surface-card">查看完整搜尋結果 →</Link>{!results.length ? <p className="p-4 text-sm jshs-muted-copy">找不到相符內容，試試「中投志願序」、「超額比序」、「資訊科」或「官方簡章」。</p> : null}</div> : <section aria-labelledby="mobile-groups-title" className="mt-6"><div><p className="jshs-eyebrow">完整功能</p><h2 id="mobile-groups-title" className="mt-1 text-xl">依需求找工具</h2><p className="mt-1 text-sm jshs-muted-copy">桌機與手機使用相同主要分類；往下即可直接查看每個功能。</p></div><div className="mt-4 grid gap-5">{mobileNavigation.map((item) => { const group = navigationGroups.get(item.label); return group ? <NavMobileAccordion key={item.label} item={item} group={group} onNavigate={closeDrawer} /> : null; })}</div></section>}</div></div></div> : null}
 
