@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { SiteIcon, type SiteIconName } from "@/components/site-icons";
 import type { MenuGroup, MenuItem, PrimaryNavigationItem } from "@/lib/site-map";
 import { featureThemeFor, type FeatureTheme } from "@/components/navigation/feature-theme";
@@ -77,33 +77,53 @@ export function NavDropdownFooter({ group, onNavigate }: { group: MenuGroup; onN
   return <footer className="jshs-nav-mega-footer"><Link href={href} onClick={onNavigate}>查看全部{group.label}<SiteIcon name="chevron-right" size={16} /></Link></footer>;
 }
 
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 export function NavDropdown({ item, group, active, open, onToggle, onNavigate }: { item: NavigationItem; group: MenuGroup; active: boolean; open: boolean; onToggle: () => void; onNavigate: () => void }) {
   const [panelStyle, setPanelStyle] = useState<CSSProperties>({});
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const panelId = `jshs-nav-mega-${item.label}`;
 
-  const positionPanel = useCallback(() => {
+  const calculatePosition = useCallback((): CSSProperties | null => {
     const details = rootRef.current;
-    const panel = panelRef.current;
-    if (!details || !panel || !open) return;
+    if (!details || typeof window === "undefined") return null;
     const trigger = details.getBoundingClientRect();
-    const width = panel.getBoundingClientRect().width;
+    const panel = panelRef.current;
+    const width = panel ? panel.getBoundingClientRect().width : Math.min(window.innerWidth - 48, 680);
     const padding = 24;
     const left = Math.max(padding, Math.min(window.innerWidth - width - padding, trigger.left + trigger.width / 2 - width / 2));
-    setPanelStyle({ left: `${left - trigger.left}px`, right: "auto" });
-  }, [open]);
+    return { left: `${Math.round(left - trigger.left)}px`, right: "auto" };
+  }, []);
+
+  const handleToggle = () => {
+    if (!open) {
+      const pos = calculatePosition();
+      if (pos) setPanelStyle(pos);
+    }
+    onToggle();
+  };
+
+  useIsomorphicLayoutEffect(() => {
+    if (open) {
+      const pos = calculatePosition();
+      if (pos) setPanelStyle(pos);
+    }
+  }, [open, calculatePosition]);
 
   useEffect(() => {
     if (!open) return undefined;
-    const frame = window.requestAnimationFrame(positionPanel);
-    window.addEventListener("resize", positionPanel);
-    return () => { window.cancelAnimationFrame(frame); window.removeEventListener("resize", positionPanel); };
-  }, [open, positionPanel]);
+    const handleResize = () => {
+      const pos = calculatePosition();
+      if (pos) setPanelStyle(pos);
+    };
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, [open, calculatePosition]);
 
   const stateClasses = [open ? "is-open" : "", active ? "is-current" : ""].filter(Boolean).join(" ");
   return <div ref={rootRef} className={`jshs-desktop-more jshs-nav-dropdown jshs-nav-theme--${featureThemeFor(item.label)} ${stateClasses}`}>
-    <button type="button" aria-label={`${item.label}，展開副選單`} aria-haspopup="menu" aria-expanded={open} aria-controls={panelId} onClick={onToggle}><span>{item.label}</span><SiteIcon name="chevron-down" size={16} /></button>
+    <button type="button" aria-label={`${item.label}，展開副選單`} aria-haspopup="menu" aria-expanded={open} aria-controls={panelId} onClick={handleToggle}><span>{item.label}</span><SiteIcon name="chevron-down" size={16} className="jshs-nav-dropdown-chevron" /></button>
     {open ? <div ref={panelRef} id={panelId} role="menu" style={panelStyle} className="jshs-nav-mega-panel">
       <NavDropdownHeader group={group} />
       <NavDropdownGrid group={group} onNavigate={onNavigate} />

@@ -5007,9 +5007,10 @@ input.stitch-search-input-field {
   background: #fff !important;
   border: 1px solid rgba(15, 23, 42, .1);
   border-radius: 16px;
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  box-shadow: 0 20px 48px -8px rgba(15, 23, 42, .2), 0 4px 12px rgba(15, 23, 42, .06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 16px 40px -8px rgba(15, 23, 42, .16), 0 2px 6px rgba(15, 23, 42, .04);
+  will-change: transform, opacity;
 }
 
 .stitch-district-dropdown,
@@ -5022,13 +5023,14 @@ input.stitch-search-input-field {
   overflow-y: auto !important;
   overscroll-behavior: contain;
   background: #fff !important;
-  backdrop-filter: blur(24px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   border: 1px solid rgba(15, 23, 42, .08) !important;
   border-radius: 16px !important;
   box-shadow: 0 16px 40px -8px rgba(15, 23, 42, .16), 0 2px 6px rgba(15, 23, 42, .04) !important;
   padding: 8px !important;
   z-index: 999 !important;
+  will-change: transform, opacity;
 }
 
 .stitch-directory-header,

@@ -225,14 +225,14 @@
   }
 }
 
+/* Dropdown menu animation handled exclusively by Framer Motion in React (prevents CSS/JS keyframe conflict) */
 .stitch-district-dropdown {
-  animation: sa-dropdown-in 180ms var(--sa-ease-out) both;
-  transform-origin: top center; /* Scale from trigger */
+  transform-origin: top right;
+  will-change: transform, opacity;
 }
 
 /* ------------------------------------------------------------------
-   5. ADVANCED FILTER PANEL — Height expand animation
-   Emil: use clip-path / height for panel reveals — transitions beat keyframes
+   5. ADVANCED FILTER PANEL — Smooth reveal
    ------------------------------------------------------------------ */
 
 @keyframes sa-panel-in {
@@ -246,10 +246,10 @@
   }
 }
 
-.stitch-advanced-panel,
 .sm-advanced-panel {
-  animation: sa-panel-in 200ms var(--sa-ease-out) both;
+  animation: sa-panel-in 180ms var(--sa-ease-out) both;
   transform-origin: top;
+  will-change: transform, opacity;
 }
 
 /* ------------------------------------------------------------------
@@ -604,84 +604,6 @@
   animation: sa-clear-in 160ms var(--sa-ease-out) both;
 }
 
-.stitch-search-quick-tags {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 6px 8px;
-  margin-top: 12px;
-  padding-left: 4px;
-}
-
-.stitch-quick-tag-chip {
-  background: rgba(241, 245, 249, 0.85);
-  border: 1px solid rgba(226, 232, 240, 0.95);
-  border-radius: 9999px;
-  padding: 4px 12px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #475569;
-  cursor: pointer;
-  transition:
-    background-color 140ms var(--sa-ease-out),
-    color 140ms var(--sa-ease-out),
-    border-color 140ms var(--sa-ease-out),
-    transform 120ms var(--sa-ease-out);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .stitch-quick-tag-chip:hover {
-    background: #ffffff;
-    border-color: #2563eb;
-    color: #2563eb;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
-  }
-}
-
-.stitch-quick-tag-chip:active {
-  transform: scale(0.93) !important;
-}
-
-/* Floating scroll-to-top button */
-.stitch-float-top-btn {
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 999;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 22px;
-  border-radius: 9999px;
-  background: rgba(15, 23, 42, 0.9);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.28);
-  cursor: pointer;
-  transition:
-    background-color 160ms var(--sa-ease-out),
-    transform 160ms var(--sa-ease-out),
-    box-shadow 160ms var(--sa-ease-out);
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .stitch-float-top-btn:hover {
-    background: rgba(15, 23, 42, 0.98);
-    transform: translateX(-50%) translateY(-2px);
-    box-shadow: 0 12px 36px rgba(15, 23, 42, 0.36);
-  }
-}
-
-.stitch-float-top-btn:active {
-  transform: translateX(-50%) scale(0.95) !important;
-}
-
 /* Map search clear button */
 .sm-search-clear {
   background: transparent;
@@ -739,7 +661,16 @@
 
 .jshs-nav-mega-panel {
   transform-origin: top center;
-  animation: sa-mega-menu-in 180ms var(--sa-ease-out) both;
+  will-change: transform, opacity;
+  animation: sa-mega-menu-in 160ms var(--sa-ease-out) both;
+}
+
+.jshs-nav-dropdown-chevron {
+  transition: transform 160ms var(--sa-ease-out) !important;
+}
+
+.jshs-nav-dropdown.is-open .jshs-nav-dropdown-chevron {
+  transform: rotate(180deg) !important;
 }
 
 .jshs-nav-mega-item {

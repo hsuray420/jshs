@@ -297,22 +297,12 @@ export function SchoolExplorer({
   });
   const [isDistrictMenuOpen, setIsDistrictMenuOpen] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [showScrollTop, setShowScrollTop] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
 
   const drawer = useRef<HTMLDialogElement>(null);
   const districtDropdownRef = useRef<HTMLDivElement>(null);
   const directoryHeaderRef = useRef<HTMLDivElement>(null);
-
-  // Monitor scroll for floating quick-navigation button
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Close district dropdown when clicking outside
   useEffect(() => {
@@ -717,8 +707,8 @@ export function SchoolExplorer({
                     initial={{ opacity: 0, scale: 0.96, y: -6 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.97, y: -4 }}
-                    transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
-                    style={{ transformOrigin: "top center" }}
+                    transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}
+                    style={{ transformOrigin: "top right" }}
                   >
                     <span className="font-semibold text-[11px] text-slate-400 px-2 py-1">
                       切換全臺 15 個就學區
@@ -749,30 +739,6 @@ export function SchoolExplorer({
                 )}
               </AnimatePresence>
             </div>
-          </div>
-
-          {/* Quick Keyword Suggestions with Spring Tap */}
-          <div className="stitch-search-quick-tags">
-            <span className="text-[12px] text-slate-400 font-medium">熱門搜尋：</span>
-            {["建國中學", "北一女", "台中一中", "台南一中", "高雄中學", "師大附中", "雙語實驗班"].map((tag) => (
-              <motion.button
-                key={tag}
-                type="button"
-                className="stitch-quick-tag-chip"
-                whileTap={{ scale: 0.94 }}
-                transition={{ duration: 0.12 }}
-                onClick={() => {
-                  setQueryInput(tag);
-                  setFilters((current) => ({ ...current, query: tag }));
-                  setCurrentPage(1);
-                  if (directoryHeaderRef.current) {
-                    directoryHeaderRef.current.scrollIntoView({ behavior: "smooth" });
-                  }
-                }}
-              >
-                {tag}
-              </motion.button>
-            ))}
           </div>
 
           {/* Categorized Filter Chips Strip */}
@@ -886,11 +852,11 @@ export function SchoolExplorer({
               <motion.div
                 className="stitch-advanced-panel stitch-advanced-dropdown"
                 id="advancedFilterPanel"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-                style={{ overflow: "hidden" }}
+                initial={{ opacity: 0, scaleY: 0.96, y: -6 }}
+                animate={{ opacity: 1, scaleY: 1, y: 0 }}
+                exit={{ opacity: 0, scaleY: 0.96, y: -4 }}
+                transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}
+                style={{ transformOrigin: "top right", overflow: "hidden" }}
               >
                 <div className="stitch-advanced-field">
                   <label>大眾運輸 / 捷運周邊</label>
@@ -1138,28 +1104,6 @@ export function SchoolExplorer({
           查看 {filteredSchools.length} 所學校
         </button>
       </dialog>
-
-      {/* Floating Scroll-to-Top Quick Navigation */}
-      <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            type="button"
-            className="stitch-float-top-btn"
-            onClick={() => {
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
-            initial={{ opacity: 0, y: 16, scale: 0.94 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 12, scale: 0.96 }}
-            whileTap={{ scale: 0.94 }}
-            transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-            aria-label="回到搜尋頂部"
-          >
-            <ExplorerIcon name="chevron-up" size={16} />
-            <span>回到搜尋頂部</span>
-          </motion.button>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
