@@ -3,6 +3,7 @@
 @import "tailwindcss";
 @import "../components/schools-v2.css";
 @import "../components/school-comparison.css";
+@import "../components/school-animations.css";
 
 .jshs-article-copy { margin-top: 2.5rem; display: grid; gap: 1rem; line-height: 2; }
 .jshs-article-copy h1, .jshs-article-copy h2, .jshs-article-copy h3 { margin-top: 1.5rem; line-height: 1.35; font-weight: 900; }
@@ -13,6 +14,12 @@
 :root {
   --background: var(--bg-page);
   --foreground: var(--text-primary);
+
+  /* Emil Kowalski easing tokens — strong custom curves beat browser defaults */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);      /* entering elements: instant response */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);  /* on-screen movement: natural arc */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);   /* drawer/sheet: iOS-like feel */
+  --ease-ui: cubic-bezier(0.16, 1, 0.3, 1);        /* general UI: snappy, punchy */
 }
 
 @theme inline {
@@ -114,8 +121,9 @@ main :where(.font-black, .font-extrabold, .font-bold, .font-semibold) { font-wei
 .jshs-state-card p { margin: 0; max-width: 42rem; }
 .jshs-state-action { margin-top: 4px; }
 .jshs-state-error { border-color: color-mix(in srgb, var(--danger) 35%, var(--border-light)); }
-.jshs-loading-dot { animation: jshs-loading-pulse 1s ease-in-out infinite; background: var(--brand-primary); border-radius: 999px; height: 10px; width: 10px; }
-@keyframes jshs-loading-pulse { 0%, 100% { opacity: .35; transform: scale(.85); } 50% { opacity: 1; transform: scale(1); } }
+/* Emil: a faster spinner makes loading feel faster (same actual time, different perception) */
+.jshs-loading-dot { animation: jshs-loading-pulse 0.7s ease-in-out infinite; background: var(--brand-primary); border-radius: 999px; height: 10px; width: 10px; }
+@keyframes jshs-loading-pulse { 0%, 100% { opacity: .3; transform: scale(.8); } 50% { opacity: 1; transform: scale(1); } }
 .jshs-hero-section { background: var(--bg-page) !important; border-bottom: 0 !important; }
 .jshs-section { background: var(--bg-page) !important; padding-block: var(--space-12); }
 .jshs-section-subtle { background: var(--bg-page) !important; }
@@ -208,13 +216,18 @@ main :where(.font-black, .font-extrabold, .font-bold, .font-semibold) { font-wei
   font-weight: var(--font-weight-strong) !important;
   justify-content: center;
   min-height: 44px;
-  transition: transform 150ms cubic-bezier(.4, 0, .2, 1), opacity 150ms ease, background 150ms ease, color 150ms ease;
+  /* Emil: specify exact properties — never `transition: all` */
+  transition: transform 160ms var(--ease-out), opacity 160ms ease-out, background-color 160ms ease-out, color 160ms ease-out;
 }
 
-.jshs-button:hover,
-.jshs-button-primary:hover,
-.jshs-button-secondary:hover,
-.jshs-button-ghost:hover { opacity: .9; transform: scale(1.03); }
+/* Emil: gate hover transforms behind pointer media query — touch devices trigger hover on tap */
+@media (hover: hover) and (pointer: fine) {
+  .jshs-button:hover,
+  .jshs-button-primary:hover,
+  .jshs-button-secondary:hover,
+  .jshs-button-ghost:hover { opacity: .9; transform: scale(1.02); }
+}
+/* Emil: scale(0.97) on :active gives instant feedback, makes UI feel it's listening */
 .jshs-button:active,
 .jshs-button-primary:active,
 .jshs-button-secondary:active { transform: scale(.97); }
@@ -3335,7 +3348,7 @@ button:active:not(:disabled) {
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
-  transition: all 0.15s ease;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out;
 }
 .jshs-pill-ghost-btn:hover {
   background: #F8FAFC;
@@ -3355,13 +3368,19 @@ button:active:not(:disabled) {
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: background-color 150ms ease-out, box-shadow 150ms ease-out, transform 160ms var(--ease-out);
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
 }
-.jshs-pill-primary-btn:hover {
-  background: #1E293B;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+/* Emil: gate hover transform behind pointer media query */
+@media (hover: hover) and (pointer: fine) {
+  .jshs-pill-primary-btn:hover {
+    background: #1E293B;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+  }
+}
+.jshs-pill-primary-btn:active {
+  transform: scale(0.97);
 }
 
 @media (prefers-reduced-motion: reduce) {

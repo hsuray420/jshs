@@ -27,12 +27,22 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
   const [query, setQuery] = useState("");
   const [memberName, setMemberName] = useState<string | null>(null);
   const [openDesktopMenu, setOpenDesktopMenu] = useState<string | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
   const desktopNavRef = useRef<HTMLElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
   const lastFocusRef = useRef<HTMLElement | null>(null);
   const districtLabel = useSyncExternalStore(subscribeToDistrict, districtSnapshot, () => "選擇就學區");
   const results = useMemo(() => searchSite(query, 12), [query]);
   const desktopNavigation = useMemo(() => mobileNavigation, []);
+
+  // Apple-style scroll-responsive floating header
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 16);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     document.body.classList.toggle("jshs-nav-open", drawerOpen);
@@ -89,7 +99,7 @@ export function SiteHeader({ activeHref }: { activeHref?: string }) {
   }
 
   return <>
-    <header className="sticky top-0 z-40 w-full border-b border-[var(--jshs-border)] bg-white jshs-site-header">
+    <header className={`sticky top-0 z-40 w-full jshs-site-header ${isScrolled ? "is-scrolled shadow-sm" : "border-b border-[var(--jshs-border)] bg-white"}`}>
       <div className="jshs-header-inner">
         <Brand />
         <nav ref={desktopNavRef} aria-label="主要導覽" className="jshs-desktop-nav">{desktopNavigation.map((item) => {

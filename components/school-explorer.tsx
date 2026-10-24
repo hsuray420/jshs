@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { getRegionRegistry } from "@/lib/region-registry";
 import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
 import { SiteIcon, type SiteIconName } from "@/components/site-icons";
@@ -55,7 +56,7 @@ const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort((
 const regions = getRegionRegistry();
 const defaultDistrict = "tp";
 
-type ExplorerIconName = SiteIconName | "grid" | "list" | "pin";
+type ExplorerIconName = SiteIconName | "grid" | "list" | "pin" | "chevron-up";
 function ExplorerIcon({ name, size = 18, className }: { name: ExplorerIconName; size?: number; className?: string }) {
   const props = {
     "aria-hidden": true,
@@ -72,6 +73,7 @@ function ExplorerIcon({ name, size = 18, className }: { name: ExplorerIconName; 
   if (name === "grid") return <svg {...props}><rect x="4" y="4" width="6" height="6" rx="1.25" /><rect x="14" y="4" width="6" height="6" rx="1.25" /><rect x="4" y="14" width="6" height="6" rx="1.25" /><rect x="14" y="14" width="6" height="6" rx="1.25" /></svg>;
   if (name === "list") return <svg {...props}><path d="M9 6h11M9 12h11M9 18h11" /><circle cx="4.5" cy="6" r=".5" /><circle cx="4.5" cy="12" r=".5" /><circle cx="4.5" cy="18" r=".5" /></svg>;
   if (name === "pin") return <svg {...props}><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" /><circle cx="12" cy="10" r="2.5" /></svg>;
+  if (name === "chevron-up") return <svg {...props}><path d="m18 15-6-6-6 6" /></svg>;
   return <SiteIcon name={name} size={size} className={className} />;
 }
 
@@ -294,12 +296,23 @@ export function SchoolExplorer({
     return new Set();
   });
   const [isDistrictMenuOpen, setIsDistrictMenuOpen] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
 
   const drawer = useRef<HTMLDialogElement>(null);
   const districtDropdownRef = useRef<HTMLDivElement>(null);
   const directoryHeaderRef = useRef<HTMLDivElement>(null);
+
+  // Monitor scroll for floating quick-navigation button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Close district dropdown when clicking outside
   useEffect(() => {
@@ -591,7 +604,11 @@ export function SchoolExplorer({
           {/* Top Row: Search Input + Embedded District Picker */}
           <div className="stitch-search-top-row">
             {/* Search Input Layer */}
-            <div className="stitch-search-input-pill">
+            <motion.div
+              className="stitch-search-input-pill"
+              animate={{ scale: isSearchFocused ? 1.012 : 1 }}
+              transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+            >
               <ExplorerIcon name="search" size={20} className="text-slate-400 text-[20px] mr-2" />
               <label className="sr-only" htmlFor="school-search">
                 搜尋學校、科別或課程方向
@@ -606,21 +623,33 @@ export function SchoolExplorer({
                   setQueryInput(e.target.value);
                   setCurrentPage(1);
                 }}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
                 autoComplete="off"
               />
               {queryInput ? (
-                <button
+                <span className="stitch-search-live-badge">
+                  {filteredSchools.length} 所
+                </span>
+              ) : null}
+              {queryInput ? (
+                <motion.button
                   aria-label="清除文字"
-                  className="text-slate-400 hover:text-slate-600 p-1 transition-transform hover:scale-110 active:scale-90 cursor-pointer mr-2 border-0 bg-transparent"
+                  className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer mr-1.5 border-0 bg-transparent flex items-center justify-center"
                   id="clearSearchBtn"
                   type="button"
+                  initial={{ opacity: 0, scale: 0.7, rotate: -90 }}
+                  animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                  exit={{ opacity: 0, scale: 0.8, rotate: -45 }}
+                  whileTap={{ scale: 0.88 }}
+                  transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
                   onClick={() => {
                     setQueryInput("");
                     setCurrentPage(1);
                   }}
                 >
                   <ExplorerIcon name="close" size={18} className="text-[18px]" />
-                </button>
+                </motion.button>
               ) : null}
               <button
                 className="stitch-search-submit-btn"
@@ -636,7 +665,7 @@ export function SchoolExplorer({
                 <span>搜尋</span>
                 <ExplorerIcon name="chevron-right" size={16} className="text-[16px]" />
               </button>
-            </div>
+            </motion.div>
 
             {/* Embedded District Picker with Popover */}
             <div className="relative shrink-0" ref={districtDropdownRef}>
@@ -680,43 +709,79 @@ export function SchoolExplorer({
               </select>
 
               {/* 15 Districts Dropdown Popover */}
-              {isDistrictMenuOpen ? (
-                <div className="stitch-district-dropdown" id="districtMenu">
-                  <span className="font-semibold text-[11px] text-slate-400 px-2 py-1">
-                    切換全臺 15 個就學區
-                  </span>
-                  {regions.map((r) => {
-                    const isSelected = district === r.id;
-                    const isAvailable = r.schoolDataStatus === "available";
-                    return (
-                      <button
-                        key={r.id}
-                        className={`stitch-district-option ${isSelected ? "is-selected" : ""} ${
-                          !isAvailable ? "opacity-60" : ""
-                        }`}
-                        type="button"
-                        onClick={() => changeDistrict(r.id)}
-                      >
-                        <span>
-                          {r.name}
-                          {r.schoolDataStatus === "verifying" ? "（資料驗證中）" : ""}
-                        </span>
-                        {isSelected ? (
-                          <ExplorerIcon name="check" size={16} className="text-[16px] text-blue-600" />
-                        ) : null}
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : null}
+              <AnimatePresence>
+                {isDistrictMenuOpen && (
+                  <motion.div
+                    className="stitch-district-dropdown"
+                    id="districtMenu"
+                    initial={{ opacity: 0, scale: 0.96, y: -6 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.97, y: -4 }}
+                    transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
+                    style={{ transformOrigin: "top center" }}
+                  >
+                    <span className="font-semibold text-[11px] text-slate-400 px-2 py-1">
+                      切換全臺 15 個就學區
+                    </span>
+                    {regions.map((r) => {
+                      const isSelected = district === r.id;
+                      const isAvailable = r.schoolDataStatus === "available";
+                      return (
+                        <button
+                          key={r.id}
+                          className={`stitch-district-option ${isSelected ? "is-selected" : ""} ${
+                            !isAvailable ? "opacity-60" : ""
+                          }`}
+                          type="button"
+                          onClick={() => changeDistrict(r.id)}
+                        >
+                          <span>
+                            {r.name}
+                            {r.schoolDataStatus === "verifying" ? "（資料驗證中）" : ""}
+                          </span>
+                          {isSelected ? (
+                            <ExplorerIcon name="check" size={16} className="text-[16px] text-blue-600" />
+                          ) : null}
+                        </button>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
+          </div>
+
+          {/* Quick Keyword Suggestions with Spring Tap */}
+          <div className="stitch-search-quick-tags">
+            <span className="text-[12px] text-slate-400 font-medium">熱門搜尋：</span>
+            {["建國中學", "北一女", "台中一中", "台南一中", "高雄中學", "師大附中", "雙語實驗班"].map((tag) => (
+              <motion.button
+                key={tag}
+                type="button"
+                className="stitch-quick-tag-chip"
+                whileTap={{ scale: 0.94 }}
+                transition={{ duration: 0.12 }}
+                onClick={() => {
+                  setQueryInput(tag);
+                  setFilters((current) => ({ ...current, query: tag }));
+                  setCurrentPage(1);
+                  if (directoryHeaderRef.current) {
+                    directoryHeaderRef.current.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+                {tag}
+              </motion.button>
+            ))}
           </div>
 
           {/* Categorized Filter Chips Strip */}
           <div className="stitch-chips-row">
-            <button
+            <motion.button
               className={`stitch-chip-btn ${activeChip === "all" ? "is-active" : ""}`}
               type="button"
+              whileTap={{ scale: 0.94 }}
+              transition={{ duration: 0.12 }}
               onClick={() => {
                 setActiveChip("all");
                 setShowFavorites(false);
@@ -725,10 +790,12 @@ export function SchoolExplorer({
             >
               <ExplorerIcon name="grid" size={15} className="text-[15px]" />
               <span>全部學校</span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               className={`stitch-chip-btn ${activeChip === "public" ? "is-active" : ""}`}
               type="button"
+              whileTap={{ scale: 0.94 }}
+              transition={{ duration: 0.12 }}
               onClick={() => {
                 setActiveChip(activeChip === "public" ? "all" : "public");
                 setCurrentPage(1);
@@ -736,10 +803,12 @@ export function SchoolExplorer({
             >
               <ExplorerIcon name="school" size={15} className="text-[15px]" />
               <span>公立高中</span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               className={`stitch-chip-btn ${activeChip === "private" ? "is-active" : ""}`}
               type="button"
+              whileTap={{ scale: 0.94 }}
+              transition={{ duration: 0.12 }}
               onClick={() => {
                 setActiveChip(activeChip === "private" ? "all" : "private");
                 setCurrentPage(1);
@@ -747,10 +816,12 @@ export function SchoolExplorer({
             >
               <ExplorerIcon name="school" size={15} className="text-[15px]" />
               <span>私立高中</span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               className={`stitch-chip-btn ${activeChip === "vocational" ? "is-active" : ""}`}
               type="button"
+              whileTap={{ scale: 0.94 }}
+              transition={{ duration: 0.12 }}
               onClick={() => {
                 setActiveChip(activeChip === "vocational" ? "all" : "vocational");
                 setCurrentPage(1);
@@ -758,10 +829,12 @@ export function SchoolExplorer({
             >
               <ExplorerIcon name="sparkle" size={15} className="text-[15px]" />
               <span>技術型高中 (高職)</span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               className={`stitch-chip-btn ${activeChip === "comprehensive" ? "is-active" : ""}`}
               type="button"
+              whileTap={{ scale: 0.94 }}
+              transition={{ duration: 0.12 }}
               onClick={() => {
                 setActiveChip(activeChip === "comprehensive" ? "all" : "comprehensive");
                 setCurrentPage(1);
@@ -769,10 +842,12 @@ export function SchoolExplorer({
             >
               <ExplorerIcon name="book" size={15} className="text-[15px]" />
               <span>綜合高中</span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               className={`stitch-chip-btn ${activeChip === "special" ? "is-active" : ""}`}
               type="button"
+              whileTap={{ scale: 0.94 }}
+              transition={{ duration: 0.12 }}
               onClick={() => {
                 setActiveChip(activeChip === "special" ? "all" : "special");
                 setCurrentPage(1);
@@ -780,10 +855,12 @@ export function SchoolExplorer({
             >
               <ExplorerIcon name="sparkle" size={15} className="text-[15px]" />
               <span>特色實驗班</span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               className={`stitch-chip-btn ${activeChip === "college" ? "is-active" : ""}`}
               type="button"
+              whileTap={{ scale: 0.94 }}
+              transition={{ duration: 0.12 }}
               onClick={() => {
                 setActiveChip(activeChip === "college" ? "all" : "college");
                 setCurrentPage(1);
@@ -791,7 +868,7 @@ export function SchoolExplorer({
             >
               <ExplorerIcon name="school" size={15} className="text-[15px]" />
               <span>五專專區</span>
-            </button>
+            </motion.button>
             <button
               className="stitch-chip-advance-btn"
               id="toggleAdvancedFilter"
@@ -804,35 +881,45 @@ export function SchoolExplorer({
           </div>
 
           {/* Collapsible Advanced Filters Drawer */}
-          {isAdvancedOpen ? (
-            <div className="stitch-advanced-panel stitch-advanced-dropdown" id="advancedFilterPanel">
-              <div className="stitch-advanced-field">
-                <label>大眾運輸 / 捷運周邊</label>
-                <select
-                  value={filters.transit || ""}
-                  onChange={(e) => update("transit", e.target.value)}
-                >
-                  <option value="">全部通勤範圍</option>
-                  <option value="metro5">捷運出站步行 5 分鐘內</option>
-                  <option value="metro10">捷運出站步行 10 分鐘內</option>
-                  <option value="bus">直達專車/學生公車行經</option>
-                </select>
-              </div>
-              <div className="stitch-advanced-field">
-                <label>班級與專案特色</label>
-                <select
-                  value={filters.specialFeature || ""}
-                  onChange={(e) => update("specialFeature", e.target.value)}
-                >
-                  <option value="">不限專案</option>
-                  <option value="雙語">雙語實驗班 (Bilingual)</option>
-                  <option value="資優">數理 / 資訊資優班</option>
-                  <option value="人文">人文社會實驗班</option>
-                  <option value="體育">體育績優 / 藝術專班</option>
-                </select>
-              </div>
-            </div>
-          ) : null}
+          <AnimatePresence>
+            {isAdvancedOpen && (
+              <motion.div
+                className="stitch-advanced-panel stitch-advanced-dropdown"
+                id="advancedFilterPanel"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+                style={{ overflow: "hidden" }}
+              >
+                <div className="stitch-advanced-field">
+                  <label>大眾運輸 / 捷運周邊</label>
+                  <select
+                    value={filters.transit || ""}
+                    onChange={(e) => update("transit", e.target.value)}
+                  >
+                    <option value="">全部通勤範圍</option>
+                    <option value="metro5">捷運出站步行 5 分鐘內</option>
+                    <option value="metro10">捷運出站步行 10 分鐘內</option>
+                    <option value="bus">直達專車/學生公車行經</option>
+                  </select>
+                </div>
+                <div className="stitch-advanced-field">
+                  <label>班級與專案特色</label>
+                  <select
+                    value={filters.specialFeature || ""}
+                    onChange={(e) => update("specialFeature", e.target.value)}
+                  >
+                    <option value="">不限專案</option>
+                    <option value="雙語">雙語實驗班 (Bilingual)</option>
+                    <option value="資優">數理 / 資訊資優班</option>
+                    <option value="人文">人文社會實驗班</option>
+                    <option value="體育">體育績優 / 藝術專班</option>
+                  </select>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </section>
 
         {region?.schoolDataStatus === "verifying" ? (
@@ -845,7 +932,20 @@ export function SchoolExplorer({
         <div ref={directoryHeaderRef} className="stitch-directory-header animate-fadeInUp delay-3">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
             <p className="stitch-directory-count">
-              共找到 <strong>{filteredSchools.length}</strong> 所符合學校
+              共找到{" "}
+              <AnimatePresence mode="popLayout">
+                <motion.strong
+                  key={filteredSchools.length}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
+                  style={{ display: "inline-block" }}
+                >
+                  {filteredSchools.length}
+                </motion.strong>
+              </AnimatePresence>{" "}
+              所符合學校
             </p>
           </div>
 
@@ -889,15 +989,28 @@ export function SchoolExplorer({
 
         {/* Schools Grid / List: 6 cards per page matching Stitch */}
         <section className={viewMode === "grid" ? "stitch-schools-grid" : "stitch-schools-list"}>
-          {paginatedSchools.map((school) => (
-            <SchoolCard
-              key={school.code}
-              school={school}
-              isFavorited={favorites.has(school.code)}
-              onToggleFavorite={toggleFavorite}
-              viewMode={viewMode}
-            />
-          ))}
+          <AnimatePresence mode="popLayout">
+            {paginatedSchools.map((school, index) => (
+              <motion.div
+                key={school.code}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{
+                  duration: 0.35,
+                  ease: [0.23, 1, 0.32, 1],
+                  delay: index * 0.04,
+                }}
+              >
+                <SchoolCard
+                  school={school}
+                  isFavorited={favorites.has(school.code)}
+                  onToggleFavorite={toggleFavorite}
+                  viewMode={viewMode}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
           {paginatedSchools.length === 0 ? (
             <div className="col-span-full py-16 text-center bg-white rounded-3xl p-8 shadow-sm">
               <ExplorerIcon name="search" size={36} className="text-outline mb-2" />
@@ -1025,6 +1138,28 @@ export function SchoolExplorer({
           查看 {filteredSchools.length} 所學校
         </button>
       </dialog>
+
+      {/* Floating Scroll-to-Top Quick Navigation */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            type="button"
+            className="stitch-float-top-btn"
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            initial={{ opacity: 0, y: 16, scale: 0.94 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.96 }}
+            whileTap={{ scale: 0.94 }}
+            transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+            aria-label="回到搜尋頂部"
+          >
+            <ExplorerIcon name="chevron-up" size={16} />
+            <span>回到搜尋頂部</span>
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

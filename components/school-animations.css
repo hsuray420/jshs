@@ -1,0 +1,989 @@
+/* ==========================================================================
+   School Search & Map — Animation System
+   Emil Kowalski principles: unseen details compound, ease-out for entering elements,
+   spring-like transforms, purposeful motion only.
+   ========================================================================== */
+
+/* ------------------------------------------------------------------
+   0. CUSTOM EASING TOKENS (local scope)
+   ------------------------------------------------------------------ */
+:root {
+  --sa-ease-out: cubic-bezier(0.23, 1, 0.32, 1);    /* instant response on entry */
+  --sa-ease-ui:  cubic-bezier(0.16, 1, 0.3, 1);     /* punchy UI interactions */
+  --sa-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* gentle spring with bounce */
+}
+
+/* ------------------------------------------------------------------
+   1. SEARCH INPUT — Focus expansion & glow
+   Emil: input focus should feel like opening something, not flipping a switch
+   ------------------------------------------------------------------ */
+
+/* Search box in School Explorer */
+.stitch-search-box {
+  transition:
+    border-color 180ms var(--sa-ease-out),
+    box-shadow 180ms var(--sa-ease-out),
+    background-color 180ms var(--sa-ease-out);
+  will-change: box-shadow;
+}
+
+.stitch-search-box:focus-within {
+  /* Slightly elevated glow — suggests the box is "open" and ready */
+  box-shadow:
+    0 0 0 3.5px rgba(0, 88, 190, 0.14),
+    0 8px 24px -4px rgba(0, 88, 190, 0.10) !important;
+}
+
+/* Search icon reacts to focus — subtle shift inward */
+.stitch-search-box:focus-within .stitch-search-lead-icon {
+  transform: translateX(2px);
+  transition: transform 200ms var(--sa-ease-out);
+  color: #0058be;
+}
+
+/* Placeholder text fades slightly on focus */
+.stitch-search-box:focus-within .stitch-search-input::placeholder {
+  opacity: 0.5;
+  transition: opacity 200ms ease;
+}
+
+/* Map search (school-map-explorer) */
+.sm-map-search {
+  transition:
+    border-color 180ms var(--sa-ease-out),
+    box-shadow 200ms var(--sa-ease-out),
+    background-color 180ms var(--sa-ease-out);
+}
+
+/* Clear button — spin on appear */
+@keyframes sa-clear-in {
+  from { opacity: 0; transform: scale(0.6) rotate(-90deg); }
+  to   { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.stitch-search-clear {
+  animation: sa-clear-in 180ms var(--sa-ease-spring) both;
+  /* Emil: `:active` gives instant press feedback */
+  transition:
+    background-color 140ms ease-out,
+    color 140ms ease-out,
+    transform 120ms ease-out;
+}
+
+.stitch-search-clear:hover {
+  transform: scale(1.08);
+}
+
+.stitch-search-clear:active {
+  transform: scale(0.9);
+}
+
+/* Submit button — refined press feel */
+.stitch-search-submit-btn {
+  transition:
+    background-color 160ms var(--sa-ease-out),
+    box-shadow 160ms var(--sa-ease-out),
+    transform 160ms var(--sa-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stitch-search-submit-btn:hover {
+    transform: translateY(-1px) scale(1.02);
+  }
+}
+
+.stitch-search-submit-btn:active {
+  transform: scale(0.96) !important;
+}
+
+/* ------------------------------------------------------------------
+   2. FILTER CHIPS — Snappy toggle with clip-path reveal
+   Emil: chip selection should feel like pressing a physical button
+   ------------------------------------------------------------------ */
+
+.stitch-chip-btn,
+.sm-quick-filters button {
+  transition:
+    background-color 160ms var(--sa-ease-out),
+    color 160ms var(--sa-ease-out),
+    border-color 160ms var(--sa-ease-out),
+    transform 140ms var(--sa-ease-out),
+    box-shadow 160ms var(--sa-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stitch-chip-btn:hover,
+  .sm-quick-filters button:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.stitch-chip-btn:active,
+.sm-quick-filters button:active {
+  transform: scale(0.94) !important;
+}
+
+/* Active chip — subtle inner glow shows it's "on" */
+.stitch-chip-btn.is-active {
+  box-shadow: inset 0 1px 3px rgba(0, 35, 111, 0.15), 0 0 0 1.5px rgba(0, 88, 190, 0.3);
+}
+
+/* ------------------------------------------------------------------
+   3. SCHOOL CARDS — Scroll-in stagger via @starting-style (modern)
+   + hover lift with blur-bridge for content transitions
+   ------------------------------------------------------------------ */
+
+/* Stagger classes for JS-driven animation (used by React motion) */
+.stitch-school-card {
+  transition:
+    border-color 240ms var(--sa-ease-ui),
+    box-shadow 240ms var(--sa-ease-ui),
+    transform 200ms var(--sa-ease-ui),
+    opacity 200ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stitch-school-card:hover {
+    transform: translateY(-4px) scale(1.005);
+    box-shadow:
+      0 2px 6px -1px rgba(0, 35, 111, 0.04),
+      0 20px 40px -8px rgba(0, 35, 111, 0.13);
+  }
+}
+
+/* Active/press on card */
+.stitch-school-card:active {
+  transform: scale(0.98) translateY(0px) !important;
+  transition-duration: 80ms;
+}
+
+/* Card favorite/bookmark button — heart pop */
+.stitch-card-bookmark {
+  transition:
+    color 180ms var(--sa-ease-out),
+    background-color 180ms var(--sa-ease-out),
+    transform 140ms var(--sa-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stitch-card-bookmark:hover {
+    transform: scale(1.12);
+  }
+}
+
+.stitch-card-bookmark:active {
+  transform: scale(0.88) !important;
+}
+
+/* Card image: subtle reveal on load */
+.stitch-school-card-image {
+  transition: transform 400ms var(--sa-ease-out), opacity 300ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stitch-school-card:hover .stitch-school-card-image {
+    transform: scale(1.04);
+  }
+}
+
+/* Card detail link arrow — slides right on hover */
+.stitch-card-detail-link span:last-child {
+  display: inline-block;
+  transition: transform 180ms var(--sa-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stitch-card-detail-link:hover span:last-child {
+    transform: translateX(4px);
+  }
+}
+
+/* ------------------------------------------------------------------
+   4. DISTRICT DROPDOWN — Origin-aware scale from trigger
+   Emil: popovers should scale from their trigger, not from center
+   ------------------------------------------------------------------ */
+
+@keyframes sa-dropdown-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes sa-dropdown-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.97) translateY(-4px);
+  }
+}
+
+.stitch-district-dropdown {
+  animation: sa-dropdown-in 180ms var(--sa-ease-out) both;
+  transform-origin: top center; /* Scale from trigger */
+}
+
+/* ------------------------------------------------------------------
+   5. ADVANCED FILTER PANEL — Height expand animation
+   Emil: use clip-path / height for panel reveals — transitions beat keyframes
+   ------------------------------------------------------------------ */
+
+@keyframes sa-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stitch-advanced-panel,
+.sm-advanced-panel {
+  animation: sa-panel-in 200ms var(--sa-ease-out) both;
+  transform-origin: top;
+}
+
+/* ------------------------------------------------------------------
+   6. MAP MARKERS — Animated entry + active state spring
+   Emil: elements appearing should never come from scale(0)
+   ------------------------------------------------------------------ */
+
+@keyframes sa-marker-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.7);
+  }
+  70% {
+    transform: translateY(3px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes sa-marker-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.65), 0 0 0 6px rgba(37, 99, 235, 0.12);
+  }
+}
+
+.sm-marker span {
+  animation: sa-marker-drop 320ms var(--sa-ease-spring) both;
+  transition:
+    background-color 200ms var(--sa-ease-out),
+    box-shadow 200ms var(--sa-ease-out),
+    transform 200ms var(--sa-ease-out),
+    width 200ms var(--sa-ease-out),
+    height 200ms var(--sa-ease-out);
+}
+
+.sm-marker.is-active span {
+  animation: sa-marker-pulse 2.2s ease-in-out infinite !important;
+}
+
+/* Dual-ring radar wave ping from the active pin tip (Apple Find-My style) */
+.sm-marker.is-active::after,
+.sm-marker.is-active::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 36px;
+  width: 44px;
+  height: 44px;
+  margin-left: -22px;
+  margin-top: -22px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.sm-marker.is-active::after {
+  background: rgba(234, 88, 12, 0.28);
+  box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.45);
+  animation: sm-radar-ping 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.sm-marker.is-active::before {
+  background: rgba(234, 88, 12, 0.16);
+  animation: sm-radar-ping 2s cubic-bezier(0.16, 1, 0.3, 1) infinite 0.7s;
+}
+
+@keyframes sm-radar-ping {
+  0% {
+    transform: scale(0.4);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+/* Cluster pill */
+.sm-cluster {
+  animation: sa-marker-drop 280ms var(--sa-ease-spring) both;
+  transition:
+    background-color 180ms var(--sa-ease-out),
+    transform 160ms var(--sa-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sm-cluster:hover {
+    transform: scale(1.06);
+  }
+}
+
+/* ------------------------------------------------------------------
+   7. MAP PREVIEW PANEL — Slide-up from bottom
+   Emil: entering elements use ease-out, exits are faster
+   ------------------------------------------------------------------ */
+
+@keyframes sa-preview-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.sm-preview {
+  animation: sa-preview-in 220ms var(--sa-ease-out) both;
+  transform-origin: bottom left;
+}
+
+/* Close button on preview */
+.sm-preview > button {
+  transition:
+    color 140ms ease-out,
+    background-color 140ms ease-out,
+    transform 120ms ease-out;
+  border-radius: 50%;
+}
+
+.sm-preview > button:hover {
+  background: rgba(0, 0, 0, 0.06);
+  transform: scale(1.12);
+}
+
+.sm-preview > button:active {
+  transform: scale(0.88);
+}
+
+/* Map "搜尋此區域" floating button */
+.sm-search-area,
+.sm-reset-area {
+  transition:
+    background-color 160ms var(--sa-ease-out),
+    box-shadow 160ms var(--sa-ease-out),
+    transform 160ms var(--sa-ease-out);
+}
+
+@keyframes sa-search-area-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes sa-reset-area-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.sm-search-area {
+  animation: sa-search-area-in 200ms var(--sa-ease-out) both;
+}
+
+.sm-reset-area {
+  animation: sa-reset-area-in 200ms var(--sa-ease-out) both;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sm-search-area:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 8px 22px rgba(29, 62, 95, 0.24);
+  }
+
+  .sm-reset-area:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(29, 62, 95, 0.24);
+  }
+}
+
+.sm-search-area:active {
+  transform: translateX(-50%) scale(0.96) !important;
+}
+
+.sm-reset-area:active {
+  transform: scale(0.96) !important;
+}
+
+/* ------------------------------------------------------------------
+   8. MAP SEARCH SUGGESTIONS — Stagger list items
+   Emil: stagger delays 30-80ms between items
+   ------------------------------------------------------------------ */
+
+@keyframes sa-suggestion-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.sm-search-suggestions {
+  animation: sa-dropdown-in 160ms var(--sa-ease-out) both;
+  transform-origin: top center;
+}
+
+.sm-search-suggestions button {
+  animation: sa-suggestion-in 200ms var(--sa-ease-out) both;
+  transition:
+    background-color 140ms ease-out,
+    transform 120ms ease-out;
+}
+
+/* Stagger each suggestion */
+.sm-search-suggestions button:nth-child(1) { animation-delay: 30ms; }
+.sm-search-suggestions button:nth-child(2) { animation-delay: 60ms; }
+.sm-search-suggestions button:nth-child(3) { animation-delay: 90ms; }
+.sm-search-suggestions button:nth-child(4) { animation-delay: 120ms; }
+.sm-search-suggestions button:nth-child(5) { animation-delay: 150ms; }
+.sm-search-suggestions button:nth-child(6) { animation-delay: 180ms; }
+
+.sm-search-suggestions button:active {
+  transform: scale(0.97);
+}
+
+/* ------------------------------------------------------------------
+   9. MAP SIDEBAR LIST ITEMS — Hover with directional translate
+   Emil: translateX on list items suggests "this is clickable, push in"
+   ------------------------------------------------------------------ */
+
+.sm-list article {
+  transition:
+    transform 180ms var(--sa-ease-out),
+    box-shadow 180ms var(--sa-ease-out),
+    border-color 180ms var(--sa-ease-out),
+    background-color 180ms var(--sa-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sm-list article:hover {
+    transform: translateX(3px) !important;
+  }
+}
+
+.sm-list article.is-active {
+  /* Emil: active state should feel "selected", not just colored */
+  box-shadow: inset 2px 0 0 #2563eb, 0 2px 10px rgba(37, 99, 235, 0.08);
+}
+
+/* ------------------------------------------------------------------
+   10. SCHOOL EXPLORER HERO — Entrance animation
+   ------------------------------------------------------------------ */
+
+.stitch-hero-wrap {
+  animation: sa-hero-in 480ms var(--sa-ease-out) both;
+}
+
+@keyframes sa-hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stitch-search-card {
+  animation: sa-hero-in 480ms var(--sa-ease-out) 80ms both;
+}
+
+/* ------------------------------------------------------------------
+   11. DIRECTORY COUNT — Number flip placeholder
+   (actual animation handled by Framer Motion in React component)
+   ------------------------------------------------------------------ */
+
+.stitch-directory-count strong {
+  display: inline-block;
+  /* Prevents layout shift during number animation */
+  min-width: 2ch;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------
+   12. PAGINATION BUTTONS — Page navigation
+   ------------------------------------------------------------------ */
+
+.stitch-page-btn {
+  transition:
+    background-color 150ms var(--sa-ease-out),
+    color 150ms var(--sa-ease-out),
+    border-color 150ms var(--sa-ease-out),
+    transform 130ms var(--sa-ease-out);
+}
+
+.stitch-page-btn:active {
+  transform: scale(0.92);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stitch-page-btn:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* ------------------------------------------------------------------
+   13. SCROLL-DRIVEN VIEWPORT REVEAL (CSS Native)
+   Emil: off main thread GPU acceleration, no JS scroll overhead
+   ------------------------------------------------------------------ */
+@supports (animation-timeline: view()) {
+  @keyframes sa-card-scroll-reveal {
+    from {
+      opacity: 0.25;
+      transform: translateY(22px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .stitch-schools-grid > * {
+    animation: sa-card-scroll-reveal 0.4s var(--sa-ease-out) both;
+    animation-timeline: view();
+    animation-range: entry 5% cover 25%;
+  }
+}
+
+/* ------------------------------------------------------------------
+   14. QUICK KEYWORD CHIPS & FLOATING SCROLL BUTTON
+   ------------------------------------------------------------------ */
+.stitch-search-live-badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: #0058be;
+  background: rgba(0, 88, 190, 0.08);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  margin-right: 6px;
+  flex-shrink: 0;
+  user-select: none;
+  animation: sa-clear-in 160ms var(--sa-ease-out) both;
+}
+
+.stitch-search-quick-tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 8px;
+  margin-top: 12px;
+  padding-left: 4px;
+}
+
+.stitch-quick-tag-chip {
+  background: rgba(241, 245, 249, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  transition:
+    background-color 140ms var(--sa-ease-out),
+    color 140ms var(--sa-ease-out),
+    border-color 140ms var(--sa-ease-out),
+    transform 120ms var(--sa-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stitch-quick-tag-chip:hover {
+    background: #ffffff;
+    border-color: #2563eb;
+    color: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+  }
+}
+
+.stitch-quick-tag-chip:active {
+  transform: scale(0.93) !important;
+}
+
+/* Floating scroll-to-top button */
+.stitch-float-top-btn {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(15, 23, 42, 0.28);
+  cursor: pointer;
+  transition:
+    background-color 160ms var(--sa-ease-out),
+    transform 160ms var(--sa-ease-out),
+    box-shadow 160ms var(--sa-ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stitch-float-top-btn:hover {
+    background: rgba(15, 23, 42, 0.98);
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 12px 36px rgba(15, 23, 42, 0.36);
+  }
+}
+
+.stitch-float-top-btn:active {
+  transform: translateX(-50%) scale(0.95) !important;
+}
+
+/* Map search clear button */
+.sm-search-clear {
+  background: transparent;
+  border: 0;
+  color: #86868b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  margin-right: 4px;
+  transition: background-color 140ms ease-out, color 140ms ease-out, transform 120ms ease-out;
+}
+
+.sm-search-clear:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #1d1d1f;
+  transform: scale(1.1);
+}
+
+.sm-search-clear:active {
+  transform: scale(0.9);
+}
+
+/* ------------------------------------------------------------------
+   15. SITEWIDE NAVIGATION & HEADER (Apple Frosted Glass Transition)
+   ------------------------------------------------------------------ */
+
+.jshs-site-header {
+  transition: background-color 220ms var(--sa-ease-out),
+              border-color 220ms var(--sa-ease-out),
+              box-shadow 220ms var(--sa-ease-out),
+              backdrop-filter 220ms var(--sa-ease-out);
+}
+
+.jshs-site-header.is-scrolled {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: saturate(180%) blur(20px) !important;
+  -webkit-backdrop-filter: saturate(180%) blur(20px) !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06) !important;
+}
+
+@keyframes sa-mega-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.jshs-nav-mega-panel {
+  transform-origin: top center;
+  animation: sa-mega-menu-in 180ms var(--sa-ease-out) both;
+}
+
+.jshs-nav-mega-item {
+  transition: background-color 160ms var(--sa-ease-out),
+              border-color 160ms var(--sa-ease-out),
+              transform 160ms var(--sa-ease-out) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .jshs-nav-mega-item:hover {
+    transform: translateX(4px) !important;
+  }
+  .jshs-nav-mega-item:hover .jshs-nav-mega-chevron {
+    transform: translateX(3px) !important;
+  }
+}
+
+.jshs-nav-mega-item:active {
+  transform: scale(0.98) !important;
+}
+
+.jshs-nav-mega-chevron {
+  transition: transform 160ms var(--sa-ease-out), color 160ms ease-out !important;
+}
+
+/* ------------------------------------------------------------------
+   16. HOMEPAGE HERO SEARCH & BENTO GRID INTERACTIVITY
+   ------------------------------------------------------------------ */
+
+.jshs-v2-home .jshs-v2-search {
+  transition: border-color 200ms var(--sa-ease-out),
+              box-shadow 200ms var(--sa-ease-out),
+              transform 200ms var(--sa-ease-out) !important;
+}
+
+.jshs-v2-home .jshs-v2-search:focus-within {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14),
+              0 12px 36px -4px rgba(15, 23, 42, 0.08) !important;
+  transform: translateY(-1px) scale(1.008);
+}
+
+.jshs-v2-home .jshs-v2-search button {
+  transition: background-color 160ms var(--sa-ease-out),
+              transform 160ms var(--sa-ease-out),
+              box-shadow 160ms var(--sa-ease-out) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .jshs-v2-home .jshs-v2-search button:hover {
+    transform: scale(1.06);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  }
+}
+
+.jshs-v2-home .jshs-v2-search button:active {
+  transform: scale(0.92) !important;
+}
+
+/* Bento Visual Elements Micro-Interactions */
+.jshs-visual-pin-pulse {
+  animation: sm-radar-ping 2.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes sa-gauge-charge {
+  from { stroke-dashoffset: 251.2; }
+  to { stroke-dashoffset: 65; }
+}
+
+.jshs-gauge-svg circle:last-child {
+  animation: sa-gauge-charge 1.6s var(--sa-ease-out) forwards;
+}
+
+@keyframes sa-rank-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.jshs-visual-rank-cards {
+  animation: sa-rank-bob 4s ease-in-out infinite;
+}
+
+@keyframes sa-cal-check-pop {
+  0% { transform: scale(0.8); opacity: 0; }
+  70% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.jshs-cal-check {
+  display: inline-block;
+  animation: sa-cal-check-pop 0.6s var(--sa-ease-spring) 0.3s both;
+}
+
+/* Bento Cards & Featured Schools Viewport Scroll Reveal */
+@supports (animation-timeline: view()) {
+  .jshs-bento-card {
+    animation: sa-card-scroll-reveal 0.45s var(--sa-ease-out) both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 30%;
+  }
+
+  .jshs-home-school-card {
+    animation: sa-card-scroll-reveal 0.4s var(--sa-ease-out) both;
+    animation-timeline: view();
+    animation-range: entry 5% cover 25%;
+  }
+
+  .jshs-home-belief {
+    animation: sa-card-scroll-reveal 0.45s var(--sa-ease-out) both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 25%;
+  }
+}
+
+/* Homepage Featured School Card Hover */
+.jshs-home-school-card {
+  transition: transform 220ms var(--sa-ease-ui),
+              box-shadow 220ms var(--sa-ease-ui),
+              border-color 220ms var(--sa-ease-ui) !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .jshs-home-school-card:hover {
+    transform: translateY(-4px) scale(1.008);
+    box-shadow: 0 16px 36px -6px rgba(15, 23, 42, 0.12),
+                0 4px 12px -2px rgba(15, 23, 42, 0.05);
+  }
+  .jshs-home-school-card:hover .jshs-card-arrow {
+    transform: translateX(4px);
+  }
+}
+
+.jshs-home-school-card:active {
+  transform: scale(0.98) translateY(0) !important;
+}
+
+.jshs-card-arrow {
+  transition: transform 180ms var(--sa-ease-out) !important;
+}
+
+/* ------------------------------------------------------------------
+   17. POPOVERS, ACCORDIONS & RULE HELPERS (Origin-Aware)
+   ------------------------------------------------------------------ */
+
+@keyframes sa-rule-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.admission-rule-popover {
+  transform-origin: top left;
+  animation: sa-rule-popover-in 180ms var(--sa-ease-out) both;
+}
+
+/* Accordion details summary transition */
+.admission-section > summary,
+.jshs-planner-filters summary,
+.jshs-mobile-group-heading {
+  transition: background-color 140ms ease-out, color 140ms ease-out;
+}
+
+.admission-section > summary::before {
+  display: inline-block;
+  transition: transform 180ms var(--sa-ease-out);
+}
+
+.admission-section[open] > summary::before {
+  transform: rotate(180deg);
+}
+
+/* ------------------------------------------------------------------
+   18. DRAG-AND-DROP & FORM CONTROLS
+   ------------------------------------------------------------------ */
+
+[draggable="true"] {
+  cursor: grab;
+  transition: transform 160ms var(--sa-ease-out), box-shadow 160ms var(--sa-ease-out);
+}
+
+[draggable="true"]:active {
+  cursor: grabbing;
+  transform: scale(1.012);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+}
+
+/* Sitewide Form Input Focus Glow */
+main :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea):focus,
+main :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea):focus-visible {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.14),
+              0 4px 16px -2px rgba(37, 99, 235, 0.08) !important;
+  transition: border-color 160ms var(--sa-ease-out), box-shadow 160ms var(--sa-ease-out);
+}
+
+/* ------------------------------------------------------------------
+   19. REDUCED MOTION — Respect user preference
+   Emil: reduced motion means fewer + gentler animations, not zero
+   Keep opacity transitions that aid comprehension, remove movement
+   ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .sm-marker span,
+  .sm-cluster,
+  .sm-preview,
+  .sm-search-area,
+  .sm-reset-area,
+  .stitch-district-dropdown,
+  .stitch-advanced-panel,
+  .sm-advanced-panel,
+  .sm-search-suggestions,
+  .sm-search-suggestions button,
+  .stitch-search-clear,
+  .stitch-hero-wrap,
+  .stitch-search-card,
+  .jshs-nav-mega-panel,
+  .admission-rule-popover,
+  .jshs-bento-card,
+  .jshs-home-school-card,
+  .jshs-home-belief,
+  .jshs-visual-rank-cards,
+  .jshs-cal-check,
+  .jshs-gauge-svg circle:last-child {
+    animation: none !important;
+  }
+
+  .jshs-bento-card:hover,
+  .jshs-home-school-card:hover,
+  .jshs-nav-mega-item:hover,
+  .stitch-school-card:hover,
+  .sm-list article:hover,
+  .stitch-chip-btn:hover,
+  .sm-quick-filters button:hover {
+    transform: none !important;
+  }
+
+  /* Keep color/opacity transitions — they aid comprehension */
+  .sm-marker.is-active span {
+    animation: none !important;
+    box-shadow: 0 6px 18px rgba(234, 88, 12, 0.5) !important;
+  }
+}

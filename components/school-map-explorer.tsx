@@ -10,6 +10,7 @@ import { getAvailableSchoolDataRegions, getRegionById } from "@/lib/region-regis
 import { SCHOOL_MAP_ATTRIBUTION, SCHOOL_MAP_DEFAULT_CENTER, SCHOOL_MAP_DEFAULT_ZOOM, SCHOOL_MAP_MAX_ZOOM, SCHOOL_MAP_TILE_URL } from "@/lib/school-map-config";
 import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
 import "@/components/school-discovery.css";
+import "@/components/school-animations.css";
 
 type LocatedSchool = Readonly<{ school: SchoolSearchIndexEntry; latitude: number; longitude: number }>;
 type Bounds = Readonly<{ north: number; south: number; east: number; west: number }>;
@@ -119,7 +120,12 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
   const selectSchool = useCallback((code: string) => {
     setActiveSchoolCode(code);
     const point = mapSchoolPoints.find((item) => item.school.code === code);
-    if (point) mapInstance.current?.flyTo([point.latitude, point.longitude], Math.max(mapInstance.current.getZoom(), 14));
+    if (point) {
+      mapInstance.current?.flyTo([point.latitude, point.longitude], Math.max(mapInstance.current.getZoom(), 14), {
+        duration: 0.75,
+        easeLinearity: 0.25,
+      });
+    }
   }, [mapSchoolPoints]);
   const showWholeRegion = useCallback(() => {
     setQuery(""); setCity(""); setOwnership(""); setGender(""); setMetroOnly(false); setDormOnly(false); setSchoolType(""); setDepartment("");
@@ -229,7 +235,30 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
       <section className="sm-filter-hub" aria-label="地圖搜尋與篩選">
         <div className="sm-filter-primary">
           <div className="sm-search-shell">
-            <label className="sm-map-search"><span className="material-symbols-outlined">search</span><input type="search" value={query} onFocus={() => setSearchOpen(true)} onChange={(event) => { setQuery(event.target.value); setSearchOpen(true); }} onBlur={() => window.setTimeout(() => setSearchOpen(false), 120)} placeholder="搜尋學校名稱、地區或科別（例如：建國中學、商業經營...）" /><button type="button" onClick={() => { setQuery(query.trim()); setSearchOpen(false); }}>搜尋 <span aria-hidden="true">→</span></button></label>
+            <label className="sm-map-search">
+              <span className="material-symbols-outlined">search</span>
+              <input
+                type="search"
+                value={query}
+                onFocus={() => setSearchOpen(true)}
+                onChange={(event) => { setQuery(event.target.value); setSearchOpen(true); }}
+                onBlur={() => window.setTimeout(() => setSearchOpen(false), 120)}
+                placeholder="搜尋學校名稱、地區或科別（例如：建國中學、商業經營...）"
+              />
+              {query ? (
+                <button
+                  type="button"
+                  className="sm-search-clear"
+                  aria-label="清除搜尋文字"
+                  onMouseDown={(e) => { e.preventDefault(); setQuery(""); setSearchOpen(false); }}
+                >
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              ) : null}
+              <button type="button" onClick={() => { setQuery(query.trim()); setSearchOpen(false); }}>
+                搜尋 <span aria-hidden="true">→</span>
+              </button>
+            </label>
             {searchOpen ? <div className="sm-search-suggestions" role="listbox" aria-label="預設學校搜尋建議">
               {searchSuggestions.map((school) => <button key={school.code} type="button" onMouseDown={(event) => event.preventDefault()} onClick={() => { setQuery(school.name); setSearchOpen(false); selectSchool(school.code); }}><span className="material-symbols-outlined">school</span><span><strong>{school.name}</strong><small>{school.city}{school.area ? ` · ${school.area}` : ""}</small></span></button>)}
               {!searchSuggestions.length ? <span className="sm-search-empty">輸入關鍵字搜尋學校</span> : null}
@@ -265,7 +294,7 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
     </header>
     <section className="sm-layout" aria-label="學校地圖探索器">
       <div className="sm-map-wrap">{!mapError ? <div ref={mapElement} className="sm-map" aria-label={`${regionName}學校位置地圖`} /> : <div className="sm-map-fallback" role="status"><h2>地圖暫時無法載入</h2><p>仍可使用學校清單與詳情頁；重新整理後可再次嘗試。</p></div>}<div className="sm-map-controls"><div className="sm-zoom-control"><button type="button" aria-label="放大地圖" onClick={() => zoomMap(1)}>+</button><button type="button" aria-label="縮小地圖" onClick={() => zoomMap(-1)}>−</button></div><button type="button" className="sm-locate-control" aria-label="回到地圖中心" onClick={() => mapInstance.current?.setView([...SCHOOL_MAP_DEFAULT_CENTER], SCHOOL_MAP_DEFAULT_ZOOM)}><span className="material-symbols-outlined">my_location</span></button></div>{mapMoved ? <button className="sm-search-area" type="button" onClick={searchViewport}>搜尋此區域</button> : null}{viewportBounds ? <button className="sm-reset-area" type="button" onClick={showWholeRegion}>顯示整個{regionName}</button> : null}<div className="sm-map-attribution"><span>2 km</span><span>教育部統計處經緯驗證資料庫</span></div>
-        {active ? <aside className="sm-preview" aria-live="polite"><button type="button" aria-label="關閉學校預覽" onClick={() => setActiveSchoolCode("")}>×</button><strong>{active.name}</strong><span>{active.ownership} · {active.schoolType} · {active.city}{active.area ? ` · ${active.area}` : ""}</span><span>{active.departmentNames.slice(0, 3).join(" · ") || "科別資料未提供"}</span><Link href={`/schools/${encodeURIComponent(active.code)}`}>查看學校詳情 →</Link></aside> : null}
+        {active ? <aside key={activeSchoolCode} className="sm-preview" aria-live="polite"><button type="button" aria-label="關閉學校預覽" onClick={() => setActiveSchoolCode("")}>×</button><strong>{active.name}</strong><span>{active.ownership} · {active.schoolType} · {active.city}{active.area ? ` · ${active.area}` : ""}</span><span>{active.departmentNames.slice(0, 3).join(" · ") || "科別資料未提供"}</span><Link href={`/schools/${encodeURIComponent(active.code)}`}>查看學校詳情 →</Link></aside> : null}
       </div>
     </section>
   </div>;
