@@ -1297,6 +1297,9 @@
   .whitespace-pre-wrap {
     white-space: pre-wrap;
   }
+  .text-\[\#0071e3\] {
+    color: #0071e3;
+  }
   .text-\[var\(--jshs-danger\)\] {
     color: var(--jshs-danger);
   }

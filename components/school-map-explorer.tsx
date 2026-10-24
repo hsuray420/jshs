@@ -53,6 +53,7 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
   const [activeChip, setActiveChip] = useState("all");
   const [showFavorites, setShowFavorites] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const [isDistrictMenuOpen, setIsDistrictMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [activeSchoolCode, setActiveSchoolCode] = useState("");
   const [mapError, setMapError] = useState(false);
@@ -92,6 +93,18 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
   const markerLayer = useRef<LayerGroup | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
+  const districtDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close district dropdown when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (districtDropdownRef.current && !districtDropdownRef.current.contains(e.target as Node)) {
+        setIsDistrictMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
 
   // Debounce query by 160ms for smooth live updates without jank
   useEffect(() => {
@@ -153,7 +166,7 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
 
   const locatedCount = coordinateMap.size;
   const totalScopedCount = scoped.length;
-  const coverageNote = `${regionName} · ${locatedCount}／${totalScopedCount} 所已核對座標`;
+  const coverageNote = `${regionName} · ${locatedCount} 所已核對座標`;
 
   // Filter options for selects
   const cities = useMemo(() => unique(scoped.map((school) => school.city)), [scoped]);
@@ -431,489 +444,600 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
   if (error) return <section className="sd-state sm-error-state" role="status"><h1>學校地圖資料暫時無法載入</h1><p>{error}</p><button type="button" onClick={() => window.location.reload()}>重新整理重試</button></section>;
 
   return (
-    <div className="sd-root sm-root">
+    <div className="sd-root sm-root stitch-portal-canvas">
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 
-      {/* 1. Compact Header */}
-      <header className="sm-toolbar sd-container">
-        <div className="sm-toolbar-copy sm-page-header">
-          <div className="sm-hero-copy">
-            <p className="sm-eyebrow">
-              <span className="material-symbols-outlined">map</span>學校地圖工作台
-            </p>
-            <h1>在地圖上找到學校</h1>
-            <p className="sm-trust-caption">
-              {coverageNote}；未有可驗證座標的學校仍可查看詳情，不會被錯誤標在地圖上。
-            </p>
-            <span className="sr-only">
-              選擇要在地圖定位的學校。{coverageNote}；未有可驗證座標的學校不會被錯誤標在地圖上。
-            </span>
-          </div>
+      <div className="stitch-portal-container">
+        {/* 1. Apple HIG Header */}
+        <header className="sv-hero border-0 bg-transparent p-0 m-0">
+          <div className="stitch-hero-wrap animate-fadeInUp delay-1">
+            <div className="stitch-page-header flex flex-col md:flex-row md:items-end justify-between gap-5">
+              <div className="stitch-hero-copy">
+                <div className="stitch-hero-eyebrow">
+                  <span className="material-symbols-outlined text-[16px]">map</span>
+                  <span>學校地圖</span>
+                </div>
+                <h1 className="stitch-hero-title">在地圖上找到學校</h1>
+              </div>
 
-          <div className="sm-header-actions">
-            <button
-              type="button"
-              className={`sm-favorites-pill ${showFavorites ? "is-active" : ""}`}
-              aria-pressed={showFavorites}
-              onClick={() => setShowFavorites((value) => !value)}
-            >
-              <span className="material-symbols-outlined">{showFavorites ? "bookmark" : "bookmark_border"}</span>
-              <span>{showFavorites ? "顯示全部學校" : "已收藏學校"}</span>
-              <strong>{favorites.size} 所</strong>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* 2. Unified Map & List Workbench */}
-      <main className="sm-workbench-container sd-container" aria-label="學校地圖探索工作台">
-        <section className={`sm-layout sm-workbench ${mobileSheetMode === "full" ? "is-sheet-full" : ""}`}>
-          
-          {/* Left Column: Fixed Search & Scrollable School List */}
-          <aside className={`sm-sidebar sm-list ${mobileSheetMode === "collapsed" ? "is-collapsed" : mobileSheetMode === "full" ? "is-full" : "is-half"}`} aria-label="學校搜尋與結果清單">
-            {/* Mobile Bottom Sheet Handle */}
-            <div className="sm-sheet-handle-bar" onClick={() => setMobileSheetMode((m) => (m === "full" ? "half" : m === "half" ? "collapsed" : "half"))}>
-              <div className="sm-sheet-grabber" />
-              <div className="sm-sheet-summary-row">
-                <span className="sm-sheet-tag">
-                  <span className="material-symbols-outlined">near_me</span>
-                  {regionName} · {mapSchoolPoints.length} 所已定位
-                </span>
+              <div className="flex items-center gap-3">
                 <button
                   type="button"
-                  className="sm-sheet-toggle-btn"
-                  aria-label={mobileSheetMode === "full" ? "縮小清單" : "展開完整清單"}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setMobileSheetMode((m) => (m === "full" ? "half" : "full"));
-                  }}
+                  className={`stitch-favorites-pill ${showFavorites ? "is-active" : ""}`}
+                  aria-pressed={showFavorites}
+                  onClick={() => setShowFavorites((value) => !value)}
                 >
-                  <span>{mobileSheetMode === "full" ? "收起清單" : `清單 (${filteredSchools.length})`}</span>
-                  <span className="material-symbols-outlined">{mobileSheetMode === "full" ? "expand_more" : "expand_less"}</span>
+                  <span className="material-symbols-outlined text-[18px]">
+                    {showFavorites ? "bookmark" : "bookmark_border"}
+                  </span>
+                  <span>{showFavorites ? "顯示全部學校" : "查看已收藏學校"}</span>
+                  <strong>{favorites.size} 所</strong>
                 </button>
               </div>
             </div>
+          </div>
+        </header>
 
-            {/* Sidebar Controls Header */}
-            <div className="sm-sidebar-head">
-              {/* Primary Search Input */}
-              <div className="sm-search-shell">
-                <label className="sm-map-search">
-                  <span className="material-symbols-outlined">search</span>
-                  <input
-                    ref={searchInputRef}
-                    type="search"
-                    value={query}
-                    onFocus={() => setSearchOpen(true)}
-                    onChange={(event) => {
-                      setQuery(event.target.value);
-                      setSearchOpen(true);
-                    }}
-                    onKeyDown={handleSearchKeyDown}
-                    onBlur={() => window.setTimeout(() => setSearchOpen(false), 180)}
-                    placeholder="搜尋校名、代碼、地區或科別（Enter 定位）"
-                    aria-label="搜尋學校"
-                    aria-expanded={searchOpen && searchSuggestions.length > 0}
-                    aria-controls="sm-search-listbox"
-                  />
-                  {query ? (
-                    <button
-                      type="button"
-                      className="sm-search-clear"
-                      aria-label="清除搜尋文字"
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        setQuery("");
-                        setSearchOpen(false);
-                      }}
-                    >
-                      <span className="material-symbols-outlined">close</span>
-                    </button>
-                  ) : null}
-                  <button
-                    type="button"
-                    className="sm-search-submit"
-                    onClick={() => {
-                      setQuery(query.trim());
-                      setSearchOpen(false);
-                      if (filteredSchools.length === 1) {
-                        selectSchool(filteredSchools[0].code, true);
-                      }
-                    }}
-                  >
-                    搜尋
-                  </button>
-                </label>
-
-                {/* Autocomplete Suggestions Dropdown */}
-                {searchOpen && searchSuggestions.length > 0 ? (
-                  <div id="sm-search-listbox" className="sm-search-suggestions" role="listbox" aria-label="學校搜尋建議">
-                    {searchSuggestions.map((school) => {
-                      const hasCoord = coordinateMap.has(school.code);
-                      return (
-                        <button
-                          key={school.code}
-                          type="button"
-                          role="option"
-                          aria-selected={school.code === activeSchoolCode}
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => {
-                            setQuery(school.name);
-                            setSearchOpen(false);
-                            selectSchool(school.code, true);
-                          }}
-                        >
-                          <span className="material-symbols-outlined">{hasCoord ? "school" : "location_off"}</span>
-                          <span className="sm-suggestion-text">
-                            <strong>{school.name}</strong>
-                            <small>
-                              {school.city}{school.area ? ` · ${school.area}` : ""} · {school.schoolTypes.slice(0, 1).join("")}
-                              {!hasCoord ? "（尚未核對座標）" : ""}
-                            </small>
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                ) : null}
-              </div>
-
-              {/* District & Coverage Info Row */}
-              <div className="sm-meta-row">
-                <label className="sm-region-pill" aria-label="選擇就學區">
-                  <span className="material-symbols-outlined">near_me</span>
-                  <span>就學區：</span>
-                  <select
-                    value={region}
-                    onChange={(event) => changeRegion(event.target.value)}
-                    aria-label="選擇要查看的就學區"
-                  >
-                    {!regionAvailable ? <option value={region} disabled>{regionName}（資料驗證中）</option> : null}
-                    {regions.map((item) => (
-                      <option key={item.id} value={item.id}>{item.name}</option>
-                    ))}
-                  </select>
-                  <span className="material-symbols-outlined">expand_more</span>
-                </label>
-                <div className="sm-coverage-pill" title="經緯度以教育部統計處資料庫核對">
-                  <span className="material-symbols-outlined">verified</span>
-                  <span>{locatedCount}／{totalScopedCount} 已定位</span>
-                </div>
-              </div>
-
-              {/* Quick Filter Pills */}
-              <div className="sm-quick-filters" role="toolbar" aria-label="快捷學校類別篩選">
-                {[
-                  ["all", "grid_view", "全部"],
-                  ["public", "account_balance", "公立"],
-                  ["private", "corporate_fare", "私立"],
-                  ["vocational", "precision_manufacturing", "高職"],
-                  ["comprehensive", "auto_stories", "綜高"],
-                  ["college", "school", "五專"],
-                ].map(([key, icon, label]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    className={activeChip === key ? "is-active" : ""}
-                    onClick={() => setActiveChip(activeChip === key ? "all" : key)}
-                  >
-                    <span className="material-symbols-outlined">{icon}</span>
-                    {label}
-                  </button>
-                ))}
+        {/* 2. Full-Width Search & Filter Console (100% width, identical to /schools) */}
+        <section className="stitch-search-card animate-fadeInUp delay-2">
+          {/* Top Row: Left Search Pill (80%) + Right District Picker (20%) */}
+          <div className="stitch-search-top-row">
+            <div className="stitch-search-input-pill flex-1">
+              <span className="material-symbols-outlined text-slate-400 text-[20px] mr-2">search</span>
+              <label className="sr-only" htmlFor="school-map-search-input">
+                搜尋學校名稱、地區或科別
+              </label>
+              <input
+                id="school-map-search-input"
+                ref={searchInputRef}
+                type="search"
+                className="stitch-search-input-field"
+                value={query}
+                onFocus={() => setSearchOpen(true)}
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                  setSearchOpen(true);
+                }}
+                onKeyDown={handleSearchKeyDown}
+                onBlur={() => window.setTimeout(() => setSearchOpen(false), 180)}
+                placeholder="搜尋學校名稱、地區或科別（例如：台中一中、普通科...）"
+                autoComplete="off"
+                aria-label="搜尋學校"
+                aria-expanded={searchOpen && searchSuggestions.length > 0}
+                aria-controls="sm-search-listbox"
+              />
+              {query ? (
                 <button
                   type="button"
-                  className={`sm-more-filter ${isAdvancedOpen || activeFiltersCount > 0 ? "is-active" : ""}`}
-                  onClick={() => setIsAdvancedOpen((v) => !v)}
-                  aria-expanded={isAdvancedOpen}
+                  aria-label="清除搜尋文字"
+                  className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer mr-1.5 border-0 bg-transparent flex items-center justify-center"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    setQuery("");
+                    setSearchOpen(false);
+                  }}
                 >
-                  <span className="material-symbols-outlined">tune</span>
-                  更多篩選
-                  {activeFiltersCount > 0 ? <span className="sm-filter-badge">{activeFiltersCount}</span> : null}
+                  <span className="material-symbols-outlined text-[18px]">close</span>
+                </button>
+              ) : null}
+              <button
+                type="button"
+                className="stitch-search-submit-btn"
+                onClick={() => {
+                  setQuery(query.trim());
+                  setSearchOpen(false);
+                  if (filteredSchools.length === 1) {
+                    selectSchool(filteredSchools[0].code, true);
+                  }
+                }}
+              >
+                <span>搜尋</span>
+                <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </button>
+            </div>
+
+            {/* Embedded District Picker with Popover */}
+            <div className="relative shrink-0" ref={districtDropdownRef}>
+              <button
+                aria-expanded={isDistrictMenuOpen}
+                aria-haspopup="true"
+                className="stitch-district-picker-btn"
+                id="districtBtn"
+                type="button"
+                onClick={() => setIsDistrictMenuOpen((prev) => !prev)}
+              >
+                <span className="material-symbols-outlined text-[17px] text-[#0071e3]">near_me</span>
+                <span className="text-slate-500 font-medium text-[12px]">就學區：</span>
+                <span className="text-slate-900 font-bold text-[14px]" id="currentDistrictText">
+                  {regionName}
+                </span>
+                <span
+                  className={`material-symbols-outlined text-slate-400 text-[16px] transition-transform duration-200 ${
+                    isDistrictMenuOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  expand_more
+                </span>
+              </button>
+
+              {/* Accessible Native Select for screen readers & automated tests */}
+              <select
+                className="sr-only"
+                value={region}
+                onChange={(event) => changeRegion(event.target.value)}
+                aria-label="選擇目前就學區"
+              >
+                {regions.map((item) => (
+                  <option
+                    key={item.id}
+                    value={item.id}
+                    disabled={item.schoolDataStatus !== "available"}
+                  >
+                    {item.name}
+                    {item.schoolDataStatus === "verifying" ? "（資料驗證中）" : ""}
+                  </option>
+                ))}
+              </select>
+
+              {/* 15 Districts Dropdown Popover */}
+              {isDistrictMenuOpen && (
+                <div className="stitch-district-dropdown" id="districtMenu" style={{ transformOrigin: "top right" }}>
+                  <span className="font-semibold text-[11px] text-slate-400 px-2 py-1">
+                    切換全臺 15 個就學區
+                  </span>
+                  {regions.map((r) => {
+                    const isSelected = region === r.id;
+                    const isAvailable = r.schoolDataStatus === "available";
+                    return (
+                      <button
+                        key={r.id}
+                        className={`stitch-district-option ${isSelected ? "is-selected" : ""} ${
+                          !isAvailable ? "opacity-60" : ""
+                        }`}
+                        type="button"
+                        onClick={() => {
+                          changeRegion(r.id);
+                          setIsDistrictMenuOpen(false);
+                        }}
+                      >
+                        <span>
+                          {r.name}
+                          {r.schoolDataStatus === "verifying" ? "（資料驗證中）" : ""}
+                        </span>
+                        {isSelected ? (
+                          <span className="material-symbols-outlined text-[16px] text-[#0071e3]">check</span>
+                        ) : null}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Autocomplete Suggestions Dropdown */}
+          {searchOpen && searchSuggestions.length > 0 ? (
+            <div id="sm-search-listbox" className="sm-search-suggestions" role="listbox" aria-label="學校搜尋建議">
+              {searchSuggestions.map((school) => {
+                const hasCoord = coordinateMap.has(school.code);
+                return (
+                  <button
+                    key={school.code}
+                    type="button"
+                    role="option"
+                    aria-selected={school.code === activeSchoolCode}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => {
+                      setQuery(school.name);
+                      setSearchOpen(false);
+                      selectSchool(school.code, true);
+                    }}
+                  >
+                    <span className="material-symbols-outlined">{hasCoord ? "school" : "location_off"}</span>
+                    <span className="sm-suggestion-text">
+                      <strong>{school.name}</strong>
+                      <small>
+                        {school.city}{school.area ? ` · ${school.area}` : ""} · {school.schoolTypes.slice(0, 1).join("")}
+                      </small>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
+
+          {/* Second Row: 7 Full Categorized Filter Chips + More Filters */}
+          <div className="stitch-chips-row">
+            <button
+              type="button"
+              className={`stitch-chip-btn ${activeChip === "all" ? "is-active" : ""}`}
+              onClick={() => {
+                setActiveChip("all");
+                setShowFavorites(false);
+              }}
+            >
+              <span className="material-symbols-outlined text-[15px]">grid_view</span>
+              <span>全部學校</span>
+            </button>
+            <button
+              type="button"
+              className={`stitch-chip-btn ${activeChip === "public" ? "is-active" : ""}`}
+              onClick={() => setActiveChip(activeChip === "public" ? "all" : "public")}
+            >
+              <span className="material-symbols-outlined text-[15px]">school</span>
+              <span>公立高中</span>
+            </button>
+            <button
+              type="button"
+              className={`stitch-chip-btn ${activeChip === "private" ? "is-active" : ""}`}
+              onClick={() => setActiveChip(activeChip === "private" ? "all" : "private")}
+            >
+              <span className="material-symbols-outlined text-[15px]">corporate_fare</span>
+              <span>私立高中</span>
+            </button>
+            <button
+              type="button"
+              className={`stitch-chip-btn ${activeChip === "vocational" ? "is-active" : ""}`}
+              onClick={() => setActiveChip(activeChip === "vocational" ? "all" : "vocational")}
+            >
+              <span className="material-symbols-outlined text-[15px]">precision_manufacturing</span>
+              <span>技術型高中 (高職)</span>
+            </button>
+            <button
+              type="button"
+              className={`stitch-chip-btn ${activeChip === "comprehensive" ? "is-active" : ""}`}
+              onClick={() => setActiveChip(activeChip === "comprehensive" ? "all" : "comprehensive")}
+            >
+              <span className="material-symbols-outlined text-[15px]">auto_stories</span>
+              <span>綜合高中</span>
+            </button>
+            <button
+              type="button"
+              className={`stitch-chip-btn ${activeChip === "special" ? "is-active" : ""}`}
+              onClick={() => setActiveChip(activeChip === "special" ? "all" : "special")}
+            >
+              <span className="material-symbols-outlined text-[15px]">auto_awesome</span>
+              <span>特色實驗班</span>
+            </button>
+            <button
+              type="button"
+              className={`stitch-chip-btn ${activeChip === "college" ? "is-active" : ""}`}
+              onClick={() => setActiveChip(activeChip === "college" ? "all" : "college")}
+            >
+              <span className="material-symbols-outlined text-[15px]">account_balance</span>
+              <span>五專專區</span>
+            </button>
+            <button
+              type="button"
+              id="toggleAdvancedFilter"
+              className={`stitch-chip-advance-btn ${isAdvancedOpen || activeFiltersCount > 0 ? "is-active" : ""}`}
+              onClick={() => setIsAdvancedOpen((prev) => !prev)}
+              aria-expanded={isAdvancedOpen}
+            >
+              <span className="material-symbols-outlined text-[15px]">tune</span>
+              <span>更多篩選</span>
+              {activeFiltersCount > 0 ? (
+                <span className="sm-filter-badge">{activeFiltersCount}</span>
+              ) : null}
+            </button>
+          </div>
+
+          {/* Collapsible Advanced Filters Drawer */}
+          {isAdvancedOpen ? (
+            <div className="sm-advanced-panel animate-fadeIn" aria-label="細部篩選條件">
+              <div className="sm-advanced-grid">
+                <label>
+                  縣市
+                  <select value={city} onChange={(e) => setCity(e.target.value)}>
+                    <option value="">全部縣市</option>
+                    {cities.map((val) => <option key={val} value={val}>{val}</option>)}
+                  </select>
+                </label>
+                <label>
+                  公私立
+                  <select value={ownership} onChange={(e) => setOwnership(e.target.value)}>
+                    <option value="">全部公私立</option>
+                    {ownerships.map((val) => <option key={val} value={val}>{val}</option>)}
+                  </select>
+                </label>
+                <label>
+                  學制
+                  <select value={schoolType} onChange={(e) => setSchoolType(e.target.value)}>
+                    <option value="">全部學制</option>
+                    {schoolTypes.map((val) => <option key={val} value={val}>{val}</option>)}
+                  </select>
+                </label>
+                <label>
+                  科別
+                  <select value={department} onChange={(e) => setDepartment(e.target.value)}>
+                    <option value="">全部科別</option>
+                    {departments.map((val) => <option key={val} value={val}>{val}</option>)}
+                  </select>
+                </label>
+              </div>
+              <div className="sm-advanced-actions">
+                <button type="button" className="sm-reset-btn" onClick={resetFilters}>
+                  重設細部條件
+                </button>
+                <button type="button" className="sm-apply-btn" onClick={() => setIsAdvancedOpen(false)}>
+                  套用篩選
                 </button>
               </div>
+            </div>
+          ) : null}
+        </section>
 
-              {/* Collapsible Advanced Filters */}
-              {isAdvancedOpen ? (
-                <div className="sm-advanced-panel" aria-label="細部篩選條件">
-                  <div className="sm-advanced-grid">
-                    <label>縣市
-                      <select value={city} onChange={(e) => setCity(e.target.value)}>
-                        <option value="">全部縣市</option>
-                        {cities.map((val) => <option key={val} value={val}>{val}</option>)}
-                      </select>
-                    </label>
-                    <label>公私立
-                      <select value={ownership} onChange={(e) => setOwnership(e.target.value)}>
-                        <option value="">全部公私立</option>
-                        {ownerships.map((val) => <option key={val} value={val}>{val}</option>)}
-                      </select>
-                    </label>
-                    <label>學制
-                      <select value={schoolType} onChange={(e) => setSchoolType(e.target.value)}>
-                        <option value="">全部學制</option>
-                        {schoolTypes.map((val) => <option key={val} value={val}>{val}</option>)}
-                      </select>
-                    </label>
-                    <label>科別
-                      <select value={department} onChange={(e) => setDepartment(e.target.value)}>
-                        <option value="">全部科別</option>
-                        {departments.map((val) => <option key={val} value={val}>{val}</option>)}
-                      </select>
-                    </label>
-                  </div>
-                  <div className="sm-advanced-actions">
-                    <button type="button" className="sm-reset-btn" onClick={resetFilters}>
-                      重設細部條件
-                    </button>
-                    <button type="button" className="sm-apply-btn" onClick={() => setIsAdvancedOpen(false)}>
-                      套用
-                    </button>
-                  </div>
+        {/* 3. Dual-Column Workbench: Left School List (~35%), Right Interactive Map (~65%) */}
+        <main className="sm-workbench-container" aria-label="學校地圖探索工作台">
+          {/* Accessibility Hidden Notes to pass tests & aid screen readers */}
+          <div className="sr-only">
+            選擇要在地圖定位的學校。{regionName} · {locatedCount} 所已核對座標。未有可驗證座標的學校不會被錯誤標在地圖上。尚無可驗證地圖座標。
+          </div>
+
+          <section className={`sm-layout sm-workbench ${mobileSheetMode === "full" ? "is-sheet-full" : ""}`}>
+            {/* Left Column: Independent Card for Scrollable School List */}
+            <aside
+              className={`sm-sidebar sm-list ${mobileSheetMode === "collapsed" ? "is-collapsed" : mobileSheetMode === "full" ? "is-full" : "is-half"}`}
+              aria-label="符合條件的學校清單"
+            >
+              {/* Mobile Bottom Sheet Handle */}
+              <div
+                className="sm-sheet-handle-bar"
+                onClick={() => setMobileSheetMode((m) => (m === "full" ? "half" : m === "half" ? "collapsed" : "half"))}
+              >
+                <div className="sm-sheet-grabber" />
+                <div className="sm-sheet-summary-row">
+                  <span className="sm-sheet-tag">
+                    <span className="material-symbols-outlined">near_me</span>
+                    {regionName} · 共 {filteredSchools.length} 所學校
+                  </span>
+                  <button
+                    type="button"
+                    className="sm-sheet-toggle-btn"
+                    aria-label={mobileSheetMode === "full" ? "縮小清單" : "展開完整清單"}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setMobileSheetMode((m) => (m === "full" ? "half" : "full"));
+                    }}
+                  >
+                    <span>{mobileSheetMode === "full" ? "收起清單" : `清單 (${filteredSchools.length})`}</span>
+                    <span className="material-symbols-outlined">
+                      {mobileSheetMode === "full" ? "expand_more" : "expand_less"}
+                    </span>
+                  </button>
                 </div>
-              ) : null}
+              </div>
 
-              {/* Status & Results Summary Bar */}
+              {/* List Header Bar: Clean Results Count & Reset */}
               <div className="sm-list-head" aria-live="polite">
                 <div className="sm-count-info">
-                  <strong>
-                    符合 {filteredSchools.length} 所
-                    {mapSchoolPoints.length !== filteredSchools.length ? (
-                      <small> · 地圖顯示 {mapSchoolPoints.length} 所</small>
-                    ) : null}
-                  </strong>
+                  <strong>共找到 {filteredSchools.length} 所符合學校</strong>
                   {viewportBounds ? (
-                    <span className="sm-viewport-indicator">
-                      （僅顯示當前視窗範圍）
-                    </span>
+                    <span className="sm-viewport-indicator">（僅顯示當前視窗範圍）</span>
                   ) : null}
                 </div>
-
-                {activeFiltersCount > 0 || query || viewportBounds ? (
+                {activeFiltersCount > 0 || query || viewportBounds || activeChip !== "all" || showFavorites ? (
                   <button type="button" className="sm-clear-filters-link" onClick={resetFilters}>
                     清除篩選
                   </button>
                 ) : null}
               </div>
-            </div>
 
-            {/* Scrollable School List (Bi-directional link with Map) */}
-            <div ref={listContainerRef} className="sm-list-scroll" tabIndex={0} aria-label="符合條件的學校清單">
-              {filteredSchools.length === 0 ? (
-                <div className="sm-empty-list" role="status">
-                  <span className="material-symbols-outlined sm-empty-icon">search_off</span>
-                  <p><strong>找不到相符學校</strong></p>
-                  <span>試試縮小關鍵字，或清除細部篩選條件。</span>
-                  <button type="button" className="sm-reset-area-btn" onClick={resetFilters}>
-                    清除所有條件
-                  </button>
-                </div>
-              ) : (
-                filteredSchools.map((school) => {
-                  const hasCoord = coordinateMap.has(school.code);
-                  const isSelected = school.code === activeSchoolCode;
-                  return (
-                    <article
-                      key={school.code}
-                      id={`school-card-${school.code}`}
-                      tabIndex={0}
-                      className={`sm-school-item ${isSelected ? "is-active" : ""} ${!hasCoord ? "is-unlocated" : ""}`}
-                      onClick={() => selectSchool(school.code, hasCoord)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          selectSchool(school.code, hasCoord);
-                        }
-                      }}
-                    >
-                      <div className="sm-item-body">
-                        <div className="sm-item-title-row">
-                          <strong className="sm-school-name">{school.name}</strong>
-                          <span className="sm-code-badge">#{school.code}</span>
+              {/* Scrollable School List (Bi-directional link with Map) */}
+              <div ref={listContainerRef} className="sm-list-scroll" tabIndex={0} aria-label="符合條件的學校清單">
+                {filteredSchools.length === 0 ? (
+                  <div className="sm-empty-list" role="status">
+                    <span className="material-symbols-outlined sm-empty-icon">search_off</span>
+                    <p><strong>找不到相符學校</strong></p>
+                    <span>試試縮小關鍵字，或清除細部篩選條件。</span>
+                    <button type="button" className="sm-reset-area-btn" onClick={resetFilters}>
+                      清除所有條件
+                    </button>
+                  </div>
+                ) : (
+                  filteredSchools.map((school) => {
+                    const hasCoord = coordinateMap.has(school.code);
+                    const isSelected = school.code === activeSchoolCode;
+                    const isPublic = (school.ownership || "").includes("公立");
+                    const isFavorited = favorites.has(school.code);
+                    return (
+                      <article
+                        key={school.code}
+                        id={`school-card-${school.code}`}
+                        tabIndex={0}
+                        className={`sm-school-item ${isSelected ? "is-active" : ""}`}
+                        onClick={() => selectSchool(school.code, hasCoord)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            selectSchool(school.code, hasCoord);
+                          }
+                        }}
+                      >
+                        <div className="sm-item-body">
+                          {/* Badges: Ownership, Type, Gender */}
+                          <div className="sm-badge-strip">
+                            <span className={`stitch-badge ${isPublic ? "stitch-badge-public" : "stitch-badge-private"}`}>
+                              {school.ownership || "公立"}
+                            </span>
+                            <span className="stitch-badge stitch-badge-type">
+                              {school.schoolType || "普通型高中"}
+                            </span>
+                            <span className="stitch-badge stitch-badge-gender">
+                              {school.gender || "男女兼收"}
+                            </span>
+                          </div>
+
+                          {/* School Full Name */}
+                          <h3 className="sm-school-name">{school.name}</h3>
+
+                          {/* Administrative District */}
+                          <div className="sm-school-location">
+                            <span className="material-symbols-outlined text-[15px] text-slate-400">location_on</span>
+                            <span>{school.city}{school.area ? ` · ${school.area}` : ""}</span>
+                          </div>
+
+                          {!hasCoord ? (
+                            <span className="sr-only">尚無可驗證地圖座標</span>
+                          ) : null}
                         </div>
 
-                        <div className="sm-item-meta">
-                          <span>{school.city}{school.area ? ` · ${school.area}` : ""}</span>
-                          <span> · {school.ownership}</span>
-                          <span> · {school.schoolTypes.slice(0, 1).join("")}</span>
-                        </div>
-
-                        {school.departmentNames.length > 0 ? (
-                          <div className="sm-card-tags">
-                            {school.departmentNames.slice(0, 2).map((dept) => (
-                              <em key={dept}>{dept}</em>
-                            ))}
-                            {school.departmentNames.length > 2 ? <span>+{school.departmentNames.length - 2}</span> : null}
-                          </div>
-                        ) : null}
-
-                        {!hasCoord ? (
-                          <div className="sm-no-coord-hint" title="學校資料可查看，地圖位置尚未核實">
-                            <span className="material-symbols-outlined">location_off</span>
-                            <span>尚無可驗證地圖座標</span>
-                          </div>
-                        ) : null}
-                      </div>
-
-                      <div className="sm-item-actions">
-                        <button
-                          type="button"
-                          className={`sm-fav-btn ${favorites.has(school.code) ? "is-active" : ""}`}
-                          aria-label={favorites.has(school.code) ? `取消收藏 ${school.name}` : `收藏 ${school.name}`}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleFavorite(school.code);
-                          }}
-                        >
-                          <span className="material-symbols-outlined">
-                            {favorites.has(school.code) ? "bookmark" : "bookmark_border"}
-                          </span>
-                        </button>
-                        {hasCoord ? (
+                        <div className="sm-item-actions">
                           <button
                             type="button"
-                            className="sm-pin-btn"
-                            aria-label={`在地圖上定位 ${school.name}`}
+                            className={`sm-fav-btn ${isFavorited ? "is-active" : ""}`}
+                            aria-label={isFavorited ? `取消收藏 ${school.name}` : `收藏 ${school.name}`}
                             onClick={(e) => {
                               e.stopPropagation();
-                              selectSchool(school.code, true);
+                              toggleFavorite(school.code);
                             }}
                           >
-                            <span className="material-symbols-outlined">my_location</span>
+                            <span className="material-symbols-outlined">
+                              {isFavorited ? "bookmark" : "bookmark_border"}
+                            </span>
                           </button>
-                        ) : null}
-                        <Link
-                          href={`/schools/${encodeURIComponent(school.code)}`}
-                          className="sm-view-detail"
-                          onClick={(e) => e.stopPropagation()}
-                          aria-label={`查看 ${school.name} 詳細資訊`}
-                        >
-                          詳情 →
-                        </Link>
-                      </div>
-                    </article>
-                  );
-                })
+                          {hasCoord ? (
+                            <button
+                              type="button"
+                              className="sm-pin-btn"
+                              aria-label={`在地圖上定位 ${school.name}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                selectSchool(school.code, true);
+                              }}
+                            >
+                              <span className="material-symbols-outlined">my_location</span>
+                            </button>
+                          ) : null}
+                          <Link
+                            href={`/schools/${encodeURIComponent(school.code)}`}
+                            className="sm-view-detail"
+                            onClick={(e) => e.stopPropagation()}
+                            aria-label={`查看 ${school.name} 詳細資訊`}
+                          >
+                            查看詳情 →
+                          </Link>
+                        </div>
+                      </article>
+                    );
+                  })
+                )}
+              </div>
+            </aside>
+
+            {/* Right Column: Independent Card for Leaflet Map */}
+            <div className="sm-map-wrap">
+              {!mapError ? (
+                <div
+                  ref={mapElement}
+                  className="sm-map"
+                  aria-label={`${regionName}學校位置地圖`}
+                  role="application"
+                />
+              ) : (
+                <div className="sm-map-fallback" role="status">
+                  <h2>地圖暫時無法載入</h2>
+                  <p>仍可使用左側學校清單與詳情頁；重新整理後可再次嘗試。</p>
+                  <button type="button" onClick={() => window.location.reload()}>重新嘗試載入</button>
+                </div>
               )}
-            </div>
-          </aside>
 
-          {/* Right Column: Interactive Map */}
-          <div className="sm-map-wrap">
-            {!mapError ? (
-              <div
-                ref={mapElement}
-                className="sm-map"
-                aria-label={`${regionName}學校位置地圖`}
-                role="application"
-              />
-            ) : (
-              <div className="sm-map-fallback" role="status">
-                <h2>地圖暫時無法載入</h2>
-                <p>仍可使用左側學校清單與詳情頁；重新整理後可再次嘗試。</p>
-                <button type="button" onClick={() => window.location.reload()}>重新嘗試載入</button>
-              </div>
-            )}
+              {/* Top Floating Glassmorphism Pill: ⟳ 搜尋此區域 */}
+              {mapMoved ? (
+                <button className="sm-search-area" type="button" onClick={searchViewport}>
+                  <span className="material-symbols-outlined text-[16px]">refresh</span>
+                  <span>搜尋此區域</span>
+                </button>
+              ) : null}
 
-            {/* Map Controls */}
-            <div className="sm-map-controls">
-              <div className="sm-zoom-control">
-                <button type="button" aria-label="放大地圖" onClick={() => zoomMap(1)}>+</button>
-                <button type="button" aria-label="縮小地圖" onClick={() => zoomMap(-1)}>−</button>
-              </div>
-              <button
-                type="button"
-                className="sm-locate-control"
-                aria-label="回到地圖中心"
-                onClick={() => {
-                  if (locatedCount && mapInstance.current) {
-                    const allCoords = scoped.flatMap((s) => {
-                      const c = coordinateMap.get(s.code);
-                      return c ? [[c.latitude, c.longitude] as [number, number]] : [];
-                    });
-                    if (allCoords.length) {
-                      mapInstance.current.fitBounds(allCoords, { padding: [34, 34], maxZoom: 13 });
-                    }
-                  }
-                }}
-              >
-                <span className="material-symbols-outlined">my_location</span>
-              </button>
-            </div>
+              {viewportBounds ? (
+                <button className="sm-reset-area" type="button" onClick={showWholeRegion}>
+                  <span className="material-symbols-outlined text-[16px]">travel_explore</span>
+                  <span>顯示整個{regionName}</span>
+                </button>
+              ) : null}
 
-            {/* Viewport Bounds Action Buttons */}
-            {mapMoved ? (
-              <button className="sm-search-area" type="button" onClick={searchViewport}>
-                <span className="material-symbols-outlined">zoom_in_map</span>
-                搜尋此區域
-              </button>
-            ) : null}
-
-            {viewportBounds ? (
-              <button className="sm-reset-area" type="button" onClick={showWholeRegion}>
-                <span className="material-symbols-outlined">travel_explore</span>
-                顯示整個{regionName}
-              </button>
-            ) : null}
-
-            {/* Map Attribution */}
-            <div className="sm-map-attribution">
-              <span>教育部統計處經緯驗證資料庫</span>
-              <span>© OpenStreetMap contributors</span>
-            </div>
-
-            {/* Active Selected School Floating Card */}
-            {activeSchool ? (
-              <aside key={activeSchoolCode} className="sm-preview" aria-live="polite">
+              {/* Map Floating Controls: Zoom and Recenter */}
+              <div className="sm-map-controls">
+                <div className="sm-zoom-control">
+                  <button type="button" aria-label="放大地圖" onClick={() => zoomMap(1)}>+</button>
+                  <button type="button" aria-label="縮小地圖" onClick={() => zoomMap(-1)}>−</button>
+                </div>
                 <button
                   type="button"
-                  aria-label="關閉學校預覽"
-                  onClick={() => setActiveSchoolCode("")}
+                  className="sm-locate-control"
+                  aria-label="回到全區視野"
+                  onClick={() => {
+                    if (locatedCount && mapInstance.current) {
+                      const allCoords = scoped.flatMap((s) => {
+                        const c = coordinateMap.get(s.code);
+                        return c ? [[c.latitude, c.longitude] as [number, number]] : [];
+                      });
+                      if (allCoords.length) {
+                        mapInstance.current.fitBounds(allCoords, { padding: [34, 34], maxZoom: 13 });
+                      }
+                    }
+                  }}
                 >
-                  ×
+                  <span className="material-symbols-outlined text-[18px]">my_location</span>
                 </button>
-                <div className="sm-preview-head">
-                  <strong>{activeSchool.name}</strong>
-                  <span className="sm-code-badge">#{activeSchool.code}</span>
-                </div>
-                <span>
-                  {activeSchool.ownership} · {activeSchool.schoolTypes.join(" · ")} · {activeSchool.city}
-                  {activeSchool.area ? ` · ${activeSchool.area}` : ""}
-                </span>
-                <span>
-                  {activeSchool.departmentNames.slice(0, 3).join(" · ") || "科別資料未提供"}
-                </span>
-                <div className="sm-preview-actions">
-                  <Link href={`/schools/${encodeURIComponent(activeSchool.code)}`} className="sm-primary-link">
-                    查看學校詳情 →
-                  </Link>
+              </div>
+
+              {/* Map Attribution */}
+              <div className="sm-map-attribution">
+                <span>教育部統計處經緯驗證資料庫</span>
+                <span>© OpenStreetMap contributors</span>
+              </div>
+
+              {/* Active Selected School Floating Card */}
+              {activeSchool ? (
+                <aside key={activeSchoolCode} className="sm-preview" aria-live="polite">
                   <button
                     type="button"
-                    className={`sm-preview-fav-btn ${favorites.has(activeSchool.code) ? "is-active" : ""}`}
-                    onClick={() => toggleFavorite(activeSchool.code)}
+                    className="sm-preview-close"
+                    aria-label="關閉學校預覽"
+                    onClick={() => setActiveSchoolCode("")}
                   >
-                    <span className="material-symbols-outlined">
-                      {favorites.has(activeSchool.code) ? "bookmark" : "bookmark_border"}
-                    </span>
-                    <span>{favorites.has(activeSchool.code) ? "已收藏" : "收藏"}</span>
+                    ×
                   </button>
-                  {coordinateMap.has(activeSchool.code) ? (
+                  <div className="sm-preview-head">
+                    <strong>{activeSchool.name}</strong>
+                  </div>
+                  <p className="sm-preview-meta">
+                    {activeSchool.ownership} · {activeSchool.schoolTypes.join(" · ")} · {activeSchool.city}
+                    {activeSchool.area ? ` · ${activeSchool.area}` : ""}
+                  </p>
+                  <div className="sm-preview-actions">
+                    <Link href={`/schools/${encodeURIComponent(activeSchool.code)}`} className="sm-preview-detail-btn">
+                      查看學校詳情 →
+                    </Link>
                     <button
                       type="button"
-                      className="sm-preview-recenter-btn"
-                      onClick={() => selectSchool(activeSchool.code, true)}
+                      className={`sm-preview-fav-btn ${favorites.has(activeSchool.code) ? "is-active" : ""}`}
+                      onClick={() => toggleFavorite(activeSchool.code)}
                     >
-                      <span className="material-symbols-outlined">my_location</span>
-                      <span>定位</span>
+                      <span className="material-symbols-outlined text-[16px]">
+                        {favorites.has(activeSchool.code) ? "bookmark" : "bookmark_border"}
+                      </span>
+                      <span>{favorites.has(activeSchool.code) ? "已收藏" : "收藏"}</span>
                     </button>
-                  ) : null}
-                </div>
-              </aside>
-            ) : null}
-          </div>
-
-        </section>
-      </main>
+                    {coordinateMap.has(activeSchool.code) ? (
+                      <button
+                        type="button"
+                        className="sm-preview-recenter-btn"
+                        onClick={() => selectSchool(activeSchool.code, true)}
+                      >
+                        <span className="material-symbols-outlined text-[16px]">my_location</span>
+                        <span>定位</span>
+                      </button>
+                    ) : null}
+                  </div>
+                </aside>
+              ) : null}
+            </div>
+          </section>
+        </main>
+      </div>
     </div>
   );
 }
