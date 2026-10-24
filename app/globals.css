@@ -2,6 +2,7 @@
 @import "leaflet/dist/leaflet.css";
 @import "tailwindcss";
 @import "../components/schools-v2.css";
+@import "../components/school-comparison.css";
 
 .jshs-article-copy { margin-top: 2.5rem; display: grid; gap: 1rem; line-height: 2; }
 .jshs-article-copy h1, .jshs-article-copy h2, .jshs-article-copy h3 { margin-top: 1.5rem; line-height: 1.35; font-weight: 900; }
