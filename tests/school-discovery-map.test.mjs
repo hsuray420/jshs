@@ -62,3 +62,35 @@ test("verified coordinate coverage is audited for every available region", async
   for (const region of ["雲林區", "嘉義區", "屏東區", "宜蘭區", "花蓮區", "臺東區", "澎湖區", "金門區"]) assert.doesNotMatch(audit, new RegExp(region));
   assert.match(audit, /座標可用合計：441／448/);
 });
+
+test("school map workbench unifies search, dual-sync list, viewport search, and unlocated school hints", async () => {
+  const [map, css] = await Promise.all([
+    read("components/school-map-explorer.tsx"),
+    read("components/school-discovery.css"),
+  ]);
+
+  // Integrated workbench layout tokens
+  assert.match(map, /sm-workbench/);
+  assert.match(map, /sm-sidebar/);
+  assert.match(map, /sm-sheet-handle-bar/);
+  assert.match(map, /sm-sheet-toggle-btn/);
+  assert.match(css, /\.sm-layout\s*\{[^}]*grid-template-columns:\s*370px minmax\(0,1fr\);/s);
+
+  // Unified search matching across multiple fields
+  assert.match(map, /matchesSchool/);
+  assert.match(map, /school\.code/);
+  assert.match(map, /school\.city/);
+  assert.match(map, /school\.departmentNames/);
+
+  // Coordinate coverage & unlocated school handling
+  assert.match(map, /所已核對座標/);
+  assert.match(map, /尚無可驗證地圖座標/);
+  assert.match(map, /未有可驗證座標的學校不會被錯誤標在地圖上/);
+
+  // Bi-directional Enter & click positioning
+  assert.match(map, /handleSearchKeyDown/);
+  assert.match(map, /school-card-/);
+  assert.match(map, /scrollIntoView/);
+  assert.match(map, /searchViewport/);
+  assert.match(map, /showWholeRegion/);
+});
