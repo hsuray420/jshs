@@ -258,6 +258,9 @@
   .collapse {
     visibility: collapse;
   }
+  .invisible {
+    visibility: hidden;
+  }
   .visible {
     visibility: visible;
   }

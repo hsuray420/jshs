@@ -737,59 +737,10 @@
   transform: scale(0.96) !important;
 }
 
-/* Mega menu dropdown: Apple-style downward glide */
-@keyframes sa-mega-menu-slide-down {
-  from {
-    opacity: 0;
-    transform: translateY(-12px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.jshs-nav-mega-panel {
-  transform-origin: top center;
-  will-change: transform, opacity;
-  animation: sa-mega-menu-slide-down 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* Emil: invisible safe hover bridge between trigger and dropdown panel */
-.jshs-nav-mega-panel::before {
-  content: "";
-  position: absolute;
-  top: -14px;
-  left: 0;
-  right: 0;
-  height: 14px;
-  pointer-events: auto;
-}
-
-/* Cascading entrance for sections inside the mega dropdown */
-.jshs-nav-mega-panel .jshs-nav-mega-section {
-  animation: sa-mega-section-in 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(1) { animation-delay: 20ms; }
-.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(2) { animation-delay: 45ms; }
-.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(3) { animation-delay: 70ms; }
-.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(4) { animation-delay: 95ms; }
-
-@keyframes sa-mega-section-in {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 /* Chevron rotation animation */
 .jshs-nav-dropdown-chevron {
   display: inline-block;
-  transition: transform 180ms var(--sa-ease-out), color 160ms ease !important;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), color 160ms ease !important;
 }
 
 .jshs-desktop-more.is-open .jshs-nav-dropdown-chevron {
@@ -803,10 +754,10 @@
   inset: 0;
   top: 76px;
   background: rgba(15, 23, 42, 0.18);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   z-index: 35;
-  animation: sa-nav-backdrop-fade 200ms ease-out both;
+  animation: sa-nav-backdrop-fade 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
   pointer-events: auto;
 }
 
@@ -815,27 +766,153 @@
   to { opacity: 1; }
 }
 
-.jshs-nav-mega-item {
+/* ==================================================================
+   APPLE-STYLE MEGA MENU SLIDE-DOWN & STAGGERED ITEM CASCADE
+   - Calm, fluid curtain slide down (pure vertical glide, zero balloon scaling)
+   - Every single item unfurls rhythmically one by one (40ms waterfall stagger)
+   - Weighted deceleration curve cubic-bezier(0.16, 1, 0.3, 1)
+   ================================================================== */
+
+@keyframes sa-apple-menu-glide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.jshs-nav-mega-panel {
+  transform-origin: top center;
+  will-change: transform, opacity;
+  animation: sa-apple-menu-glide-down 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  box-shadow:
+    0 24px 48px -12px rgba(15, 23, 42, 0.12),
+    0 8px 24px -4px rgba(15, 23, 42, 0.05),
+    0 0 0 1px rgba(15, 23, 42, 0.06) !important;
+  border-radius: 20px !important;
+}
+
+/* Emil: invisible safe hover bridge between trigger and dropdown panel */
+.jshs-nav-mega-panel::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 0;
+  right: 0;
+  height: 14px;
+  pointer-events: auto;
+}
+
+/* Cascading slide-down animation: items smoothly glide downward from above */
+@keyframes sa-apple-item-slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 1. Header eyebrow context */
+.jshs-nav-mega-panel .jshs-nav-mega-header {
+  will-change: transform, opacity;
+  animation: sa-apple-item-slide-down 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 35ms;
+}
+
+/* 2. Section titles */
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(1) h3 {
+  will-change: transform, opacity;
+  animation: sa-apple-item-slide-down 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 60ms;
+}
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(2) h3 {
+  will-change: transform, opacity;
+  animation: sa-apple-item-slide-down 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 95ms;
+}
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(3) h3 {
+  will-change: transform, opacity;
+  animation: sa-apple-item-slide-down 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 130ms;
+}
+
+/* 3. Base item animation */
+.jshs-nav-mega-panel .jshs-nav-mega-item {
+  will-change: transform, opacity;
+  animation: sa-apple-item-slide-down 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
   transition: background-color 160ms var(--sa-ease-out),
-              border-color 160ms var(--sa-ease-out),
-              transform 160ms var(--sa-ease-out) !important;
+              border-color 160ms var(--sa-ease-out) !important;
+}
+
+/* 4. Section 1: Item-by-item sequential waterfall cascade (40ms rhythmic stagger) */
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(1) .jshs-nav-mega-item:nth-child(1) { animation-delay: 80ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(1) .jshs-nav-mega-item:nth-child(2) { animation-delay: 120ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(1) .jshs-nav-mega-item:nth-child(3) { animation-delay: 160ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(1) .jshs-nav-mega-item:nth-child(4) { animation-delay: 200ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(1) .jshs-nav-mega-item:nth-child(5) { animation-delay: 240ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(1) .jshs-nav-mega-item:nth-child(6) { animation-delay: 280ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(1) .jshs-nav-mega-item:nth-child(7) { animation-delay: 320ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(1) .jshs-nav-mega-item:nth-child(8) { animation-delay: 360ms; }
+
+/* 5. Section 2: Item-by-item sequential cascade (offset by 30ms) */
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(2) .jshs-nav-mega-item:nth-child(1) { animation-delay: 110ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(2) .jshs-nav-mega-item:nth-child(2) { animation-delay: 150ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(2) .jshs-nav-mega-item:nth-child(3) { animation-delay: 190ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(2) .jshs-nav-mega-item:nth-child(4) { animation-delay: 230ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(2) .jshs-nav-mega-item:nth-child(5) { animation-delay: 270ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(2) .jshs-nav-mega-item:nth-child(6) { animation-delay: 310ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(2) .jshs-nav-mega-item:nth-child(7) { animation-delay: 350ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(2) .jshs-nav-mega-item:nth-child(8) { animation-delay: 390ms; }
+
+/* 6. Section 3: Item-by-item cascade */
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(3) .jshs-nav-mega-item:nth-child(1) { animation-delay: 140ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(3) .jshs-nav-mega-item:nth-child(2) { animation-delay: 180ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(3) .jshs-nav-mega-item:nth-child(3) { animation-delay: 220ms; }
+.jshs-nav-mega-panel .jshs-nav-mega-section:nth-child(3) .jshs-nav-mega-item:nth-child(4) { animation-delay: 260ms; }
+
+/* 7. Footer glide */
+.jshs-nav-mega-panel .jshs-nav-mega-footer {
+  will-change: transform, opacity;
+  animation: sa-apple-item-slide-down 340ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 260ms;
+}
+
+/* Item hover micro-interactions */
+.jshs-nav-mega-item .jshs-nav-mega-item-copy {
+  transition: transform 140ms var(--sa-ease-out), color 140ms ease !important;
+}
+.jshs-nav-mega-item .jshs-nav-mega-icon {
+  transition: transform 140ms var(--sa-ease-out) !important;
+}
+.jshs-nav-mega-item .jshs-nav-mega-chevron {
+  transition: transform 160ms var(--sa-ease-out), color 140ms ease !important;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .jshs-nav-mega-item:hover {
-    transform: translateX(4px) !important;
+    background-color: rgba(15, 23, 42, 0.045) !important;
+  }
+  .jshs-nav-mega-item:hover .jshs-nav-mega-item-copy {
+    transform: translateX(2px);
+    color: #0f172a !important;
+  }
+  .jshs-nav-mega-item:hover .jshs-nav-mega-icon {
+    transform: scale(1.08);
   }
   .jshs-nav-mega-item:hover .jshs-nav-mega-chevron {
     transform: translateX(3px) !important;
+    color: #2563eb !important;
   }
 }
 
 .jshs-nav-mega-item:active {
-  transform: scale(0.98) !important;
-}
-
-.jshs-nav-mega-chevron {
-  transition: transform 160ms var(--sa-ease-out), color 160ms ease-out !important;
+  background-color: rgba(15, 23, 42, 0.075) !important;
 }
 
 /* ------------------------------------------------------------------
@@ -1034,6 +1111,8 @@ main :where(input:not([type="checkbox"]):not([type="radio"]), select, textarea):
   .stitch-hero-wrap,
   .stitch-search-card,
   .jshs-nav-mega-panel,
+  .jshs-nav-mega-panel *,
+  .jshs-nav-desktop-backdrop,
   .admission-rule-popover,
   .jshs-bento-card,
   .jshs-home-school-card,
