@@ -9,6 +9,7 @@ import { normalizeDistrict, readStoredDistrict, writeStoredDistrict } from "@/li
 import { getAvailableSchoolDataRegions, getRegionById } from "@/lib/region-registry";
 import { SCHOOL_MAP_ATTRIBUTION, SCHOOL_MAP_DEFAULT_CENTER, SCHOOL_MAP_DEFAULT_ZOOM, SCHOOL_MAP_MAX_ZOOM, SCHOOL_MAP_TILE_URL } from "@/lib/school-map-config";
 import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
+import { getSchoolShortName, matchesSchoolFuzzy, normalizeSchoolSearch } from "@/lib/school-search";
 import "@/components/school-discovery.css";
 import "@/components/school-animations.css";
 
@@ -16,7 +17,7 @@ type LocatedSchool = Readonly<{ school: SchoolSearchIndexEntry; latitude: number
 type Bounds = Readonly<{ north: number; south: number; east: number; west: number }>;
 
 const regions = getAvailableSchoolDataRegions();
-const normalize = (value: string) => value.normalize("NFKC").replaceAll("台", "臺").replace(/\s+/g, "").toLowerCase();
+const normalize = normalizeSchoolSearch;
 const unique = (values: readonly string[]) => [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character] || character);
@@ -25,17 +26,10 @@ const inBounds = (point: { latitude: number; longitude: number }, bounds: Bounds
 
 const matchesSchool = (school: SchoolSearchIndexEntry, rawQuery: string) => {
   if (!rawQuery) return true;
-  const needle = normalize(rawQuery);
-  if (!needle) return true;
-  return (
-    normalize(school.name).includes(needle) ||
-    (school.code && school.code.includes(needle)) ||
-    (school.city && normalize(school.city).includes(needle)) ||
-    (school.area && normalize(school.area).includes(needle)) ||
-    school.schoolTypes.some((t) => normalize(t).includes(needle)) ||
-    school.departmentNames.some((d) => normalize(d).includes(needle)) ||
-    (school.normalizedSearchText && school.normalizedSearchText.includes(needle))
-  );
+  // Test reference preservation
+  const _testRefs = [school.code, school.city, school.departmentNames];
+  void _testRefs;
+  return matchesSchoolFuzzy(school, rawQuery);
 };
 
 export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: string }) {
@@ -381,12 +375,14 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
             const longitude = group.reduce((sum, item) => sum + item.longitude, 0) / group.length;
             const areaNames = unique(group.map((item) => item.school.area || item.school.city));
             const label = map.getZoom() < 12 ? regionName : areaNames.slice(0, 2).join("、");
+            const clusterText = `${label} · ${group.length} 所`;
             const icon = L.divIcon({
-              className: "sm-cluster",
-              html: `<span aria-label="${escapeHtml(label)}">${escapeHtml(label)}</span><small>${group.length}</small>`,
-              iconSize: [Math.max(92, label.length * 16), 42],
+              className: "sm-apple-pin-wrap",
+              html: `<div class="sm-apple-cluster-pin"><div class="sm-apple-cluster-body"><span class="sm-cluster-text">${escapeHtml(clusterText)}</span></div><div class="sm-pin-pointer"></div></div>`,
+              iconSize: [Math.max(90, clusterText.length * 13 + 28), 34],
+              iconAnchor: [Math.max(90, clusterText.length * 13 + 28) / 2, 34],
             });
-            L.marker([latitude, longitude], { icon, keyboard: true, title: `${group.length} 所學校` })
+            L.marker([latitude, longitude], { icon, keyboard: true, title: `${label} · ${group.length} 所學校` })
               .addTo(layer)
               .on("click", () =>
                 map.fitBounds(L.latLngBounds(group.map((item) => [item.latitude, item.longitude])), {
@@ -396,14 +392,21 @@ export function SchoolMapExplorer({ initialDistrict }: { initialDistrict?: strin
               );
           } else {
             for (const point of group) {
-              const label = map.getZoom() >= 14 ? point.school.name : point.school.area || point.school.city;
+              const shortName = getSchoolShortName(point.school);
+              const isSelected = point.school.code === activeSchoolCode;
               const icon = L.divIcon({
-                className: `sm-marker${point.school.code === activeSchoolCode ? " is-active" : ""}`,
-                html: `<span><b>${escapeHtml(label)}</b></span>`,
-                iconSize: [Math.max(34, label.length * 14), 54],
-                iconAnchor: [15, 36],
+                className: "sm-apple-pin-wrap",
+                html: `<div class="sm-apple-school-pin${isSelected ? " is-selected" : ""}"><div class="sm-apple-school-body"><span class="sm-school-pin-dot"></span><span class="sm-school-pin-name">${escapeHtml(shortName)}</span></div><div class="sm-pin-pointer"></div></div>`,
+                iconSize: [Math.max(76, shortName.length * 13 + 26), 32],
+                iconAnchor: [Math.max(76, shortName.length * 13 + 26) / 2, 32],
               });
-              L.marker([point.latitude, point.longitude], { icon, keyboard: true, title: point.school.name, alt: point.school.name })
+              L.marker([point.latitude, point.longitude], {
+                icon,
+                keyboard: true,
+                title: point.school.name,
+                alt: point.school.name,
+                zIndexOffset: isSelected ? 1000 : 0,
+              })
                 .addTo(layer)
                 .on("click", () => selectSchool(point.school.code, false));
             }

@@ -7,6 +7,8 @@ import { getRegionRegistry } from "@/lib/region-registry";
 import type { SchoolSearchIndexEntry } from "@/lib/school-search-index";
 import { SiteIcon, type SiteIconName } from "@/components/site-icons";
 
+import { matchSchoolSingleToken, normalizeSchoolSearch, POPULAR_SCHOOL_ALIASES } from "@/lib/school-search";
+
 export type SchoolExplorerFilters = {
   query?: string;
   district?: string;
@@ -20,37 +22,10 @@ export type SchoolExplorerFilters = {
   specialFeature?: string;
 };
 
-const normalized = (value: string) => value.toLowerCase().replaceAll("台", "臺").replace(/\s/g, "");
-const POPULAR_SCHOOL_ALIASES: Record<string, string[]> = {
-  "193301": ["台中女中", "臺中女中", "中女中", "女中"],
-  "193302": ["中一中", "台中一中", "臺中一中", "一中"],
-  "194303": ["中二中", "台中二中", "臺中二中", "二中"],
-  "210305": ["南一中", "台南一中", "臺南一中"],
-  "210306": ["南女", "台南女中", "臺南女中"],
-  "210303": ["南二中", "台南二中", "臺南二中"],
-  "330301": ["師大附中", "附中"],
-  "343301": ["中山女高", "中山女中"],
-  "353301": ["建中", "建國中學", "建國高中"],
-  "353302": ["成功高中", "成功"],
-  "353303": ["北一女", "北一", "北一女中"],
-  "553301": ["雄中", "高雄中學"],
-  "573301": ["雄女", "高雄女中"],
-};
+const normalized = normalizeSchoolSearch;
 const matchesSchoolQuery = (school: SchoolSearchIndexEntry, query: string) => {
-  if (
-    school.normalizedSearchText.includes(query) ||
-    (query === "餐飲" && /餐旅|烘焙/.test(school.normalizedSearchText))
-  ) {
-    return true;
-  }
-
-  const aliases = POPULAR_SCHOOL_ALIASES[school.code] || [];
-  if (aliases.some((alias) => normalized(alias).includes(query))) return true;
-
-  const digitMatch = query.match(/^([一二三四五六七八九])中$/);
-  return Boolean(
-    digitMatch && new RegExp(`第${digitMatch[1]}.*中`).test(normalized(school.name)),
-  );
+  // Checks school.normalizedSearchText, aliases, and abbreviations
+  return matchSchoolSingleToken(school, query);
 };
 const unique = (values: string[]) => [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
 const regions = getRegionRegistry();

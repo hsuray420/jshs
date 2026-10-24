@@ -4825,7 +4825,8 @@ input.stitch-search-input-field {
 }
 
 .stitch-search-submit-btn {
-  background: #2563eb !important;
+  background: #0071e3 !important;
+  border-radius: 9999px !important;
   flex-shrink: 0;
   height: 38px;
   letter-spacing: -.01em;
@@ -4833,7 +4834,7 @@ input.stitch-search-input-field {
 }
 
 .stitch-search-submit-btn:hover {
-  background: #1d4ed8 !important;
+  background: #0077ed !important;
   transform: scale(1.02);
 }
 
@@ -4848,19 +4849,22 @@ input.stitch-search-input-field {
 .stitch-chip-btn {
   background: #f8fafc;
   border-color: rgba(15, 23, 42, .06);
+  border-radius: 9999px !important;
   height: 34px;
   padding: 0 14px;
 }
 
 .stitch-chip-btn.is-active {
-  background: #0f172a !important;
-  border-color: #0f172a !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, .15);
+  background: #0071e3 !important;
+  border-color: #0071e3 !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 113, 227, .25);
 }
 
 .stitch-chip-advance-btn {
   background: transparent;
   border: 1px solid rgba(15, 23, 42, .1);
+  border-radius: 9999px !important;
   height: 34px;
   margin-left: auto;
   padding: 0 14px;
@@ -4868,8 +4872,8 @@ input.stitch-search-input-field {
 
 .stitch-chip-advance-btn:hover {
   background: #f8fafc;
-  border-color: #2563eb;
-  color: #2563eb;
+  border-color: #0071e3;
+  color: #0071e3;
 }
 
 .stitch-metric-pill {
